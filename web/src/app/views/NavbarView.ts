@@ -36,7 +36,7 @@ export default class NavbarView extends Backbone.View {
         const profile = new Profile();
         const profileView = new ProfileView({
             model: profile,
-            el: "#nav-profil"
+            el: "#nav-profile"
         });
         profile.fetch();
         profileView.render();
