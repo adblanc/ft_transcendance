@@ -28,6 +28,7 @@ export default class ModalView extends Backbone.View {
     }
 
     render() {
+        console.log("render modal");
         const template = $("#modalTemplate").html();
         const html = Mustache.render(template, {});
         this.$el.append(html);

@@ -27,6 +27,8 @@ export default class NavbarView extends Backbone.View {
         const html = Mustache.render(template, {});
         this.$el.html(html);
 
+        console.log(this.el);
+
         this.renderProfile();
 
         return this;
@@ -35,10 +37,10 @@ export default class NavbarView extends Backbone.View {
     renderProfile() {
         const profile = new Profile();
         const profileView = new ProfileView({
-            model: profile,
-            el: "#nav-profile"
+            model: profile
         });
         profile.fetch();
+        console.log("render profileView");
         profileView.render();
     }
 }

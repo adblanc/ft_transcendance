@@ -16,15 +16,14 @@
         "backbone": "^1.4.0",
         "jquery": "^3.5.1",
         "mustache": "^4.0.1",
-        "oauth": "^0.9.15",
         "tailwindcss": "^1.9.6",
+        "toastify-js": "^1.9.3",
         "underscore": "^1.11.0"
     },
     "devDependencies": {
         "@types/backbone": "^1.4.5",
         "@types/jquery": "^3.5.4",
         "@types/mustache": "^4.0.1",
-        "@types/oauth": "^0.9.1",
         "@types/underscore": "^1.10.24",
         "@typescript-eslint/eslint-plugin": "^4.6.0",
         "@typescript-eslint/parser": "^4.6.0",

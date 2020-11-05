@@ -3,9 +3,10 @@ import axios from "axios";
 import { RouterOptions } from "../types/router";
 import AuthView from "../views/AuthView";
 import { addAuthHeaders } from "../utils/auth";
+import { viewsHandler } from "../lib/ViewsHandler";
 
 export default class AuthRouter extends Backbone.Router {
-    constructor(options?: RouterOptions<AuthRouter>) {
+    constructor(options: RouterOptions<AuthRouter>) {
         super(options);
     }
 
@@ -23,10 +24,8 @@ export default class AuthRouter extends Backbone.Router {
     }
 
     auth() {
-        const authView = new AuthView({
-            el: "#container"
-        });
+        const authView = new AuthView({});
 
-        authView.render();
+        viewsHandler.showView(authView);
     }
 }

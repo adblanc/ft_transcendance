@@ -2,7 +2,6 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import $ from "jquery";
 import Profile from "../models/Profile";
-import ModalView from "./MovalView";
 import ModifyProfileView from "./ModifyProfileView";
 
 export default class ProfileView extends Backbone.View<Profile> {
@@ -31,6 +30,8 @@ export default class ProfileView extends Backbone.View<Profile> {
         const template = $("#profileTemplate").html();
         const html = Mustache.render(template, this.model.toJSON());
         this.$el.html(html);
+
+        $("#nav-profile").html(this.el);
         return this;
     }
 }
