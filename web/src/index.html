@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ft_transcendance</title>
+        <link rel="stylesheet" href="styles/index.css" />
+    </head>
+    <body class="bg-gray-100">
+        <div class="container" id="container"></div>
+        <script src="app/index.ts"></script>
+
+        <script type="text/html" id="profileTemplate">
+            <div class="flex flex-col items-center justify-center">
+                <img class="w-16 h-16" src="{{avatar_url}}" />
+                <div class="text-center flex flex-col">
+                    <span class="text-gray-900">{{name}}</span>
+                    <span class="text-gray-600 text-sm">{{login}}</span>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/html" id="loginTemplate">
+            <div class="flex flex-col items-center justify-center h-screen">
+                <h1 class="text-3xl text-gray-900 mb-24">ft_transcendance</h1>
+                <a
+                    class="px-4 py-2 border-2 bg-gray-800 text-white rounded-xl uppercase tracking-tighter"
+                    href="{{42_LOGIN_URL}}"
+                    >Login with 42</a
+                >
+            </div>
+        </script>
+    </body>
+</html>
