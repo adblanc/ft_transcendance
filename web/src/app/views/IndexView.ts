@@ -1,6 +1,5 @@
 import Backbone from "backbone";
-import Profile from "../models/Profile";
-import ProfileView from "./ProfileView";
+import NavbarView from "./NavbarView";
 
 export default class IndexView extends Backbone.View {
     constructor(options?: Backbone.ViewOptions) {
@@ -8,16 +7,12 @@ export default class IndexView extends Backbone.View {
     }
 
     render() {
-        const profile = new Profile();
-        const profileView = new ProfileView({
-            model: profile,
+        const navbarView = new NavbarView({
             el: "#container"
         });
 
-        profileView.render();
+        navbarView.render();
 
-        profile.fetch();
-        //this.$el.html(`Index page`);
         return this;
     }
 }

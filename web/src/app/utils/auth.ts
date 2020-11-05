@@ -7,3 +7,7 @@ export const addAuthHeaders = (headers: Record<"Authorization", string>) => {
         return BackboneAjax({ ...options, headers });
     };
 };
+
+export const clearAuthHeaders = () => {
+    Backbone.ajax = BackboneAjax;
+};

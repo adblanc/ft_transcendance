@@ -15,10 +15,11 @@ export default class AuthRouter extends Backbone.Router {
                 "http://localhost:5000/auth/42?code=" + code
             );
             addAuthHeaders({ Authorization: `Bearer ${data}` });
-            this.navigate("/", { trigger: true });
         } catch (ex) {
+            console.error(ex);
             this.navigate("/auth", { trigger: true });
         }
+        this.navigate("/", { trigger: true });
     }
 
     auth() {
