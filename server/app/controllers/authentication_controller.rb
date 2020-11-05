@@ -1,5 +1,20 @@
 
 class AuthenticationController < ApplicationController
+
+	def loginGuest
+
+		if (User.exists?(login: params[:login]))
+
+			token = TokiToki.encode(params[:login])
+			render json: token
+
+		else
+			render :status => :unauthorized
+		end
+
+
+	end
+
 	def login42
 	  authenticator = Authenticator.new
 	  user_info = authenticator.auth42(params[:code])

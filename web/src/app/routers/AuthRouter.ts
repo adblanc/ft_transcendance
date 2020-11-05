@@ -11,10 +11,10 @@ export default class AuthRouter extends Backbone.Router {
 
     async authCallBack(code: string) {
         try {
-            const { data } = await axios.get(
-                "http://localhost:5000/auth/42?code=" + code
+            const { data: token } = await axios.get(
+                `http://localhost:5000/auth/42?code=${code}`
             );
-            addAuthHeaders({ Authorization: `Bearer ${data}` });
+            addAuthHeaders(token);
         } catch (ex) {
             console.error(ex);
             this.navigate("/auth", { trigger: true });
@@ -24,7 +24,7 @@ export default class AuthRouter extends Backbone.Router {
 
     auth() {
         const authView = new AuthView({
-            el: "body"
+            el: "#container"
         });
 
         authView.render();
