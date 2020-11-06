@@ -19,7 +19,6 @@ const mainRouter = new MainRouter({
 $.ajaxSetup({
     statusCode: {
         401: () => {
-            console.log("we got a 401");
             authRouter.navigate("auth", { trigger: true });
         },
         403: () => {

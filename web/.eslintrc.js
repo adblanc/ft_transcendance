@@ -13,6 +13,12 @@ module.exports = {
     rules: {
         "prettier/prettier": "error",
         "global-require": "off",
-        quotes: "double"
+        quotes: ["error", "double"],
+        "import/no-unresolved": "off",
+        "import/extensions": "off",
+        "class-methods-use-this": "off",
+        "no-undef": "off",
+        camelcase: "off",
+        "import/prefer-default-export": "off"
     }
 };

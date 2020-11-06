@@ -1,18 +1,13 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import Toastify from "toastify-js";
-import "toastify-js/src/toastify.css";
 import $ from "jquery";
 import axios from "axios";
 import { get42LoginUrl } from "../utils/api";
 import { addAuthHeaders } from "../utils/auth";
 import BaseView from "./BaseView";
+import { displayErrorToast } from "../utils/toast";
 
 export default class AuthView extends BaseView {
-    constructor(options?: Backbone.ViewOptions) {
-        super(options);
-    }
-
     events() {
         return {
             "keypress #input-guest": "loginGuest"
@@ -32,11 +27,9 @@ export default class AuthView extends BaseView {
                 );
                 addAuthHeaders(token);
             } catch (ex) {
-                Toastify({
-                    text: `${input} n'est pas un guest valide.`,
-                    backgroundColor:
-                        "linear-gradient(90deg, rgba(247,122,16,1) 30%, rgba(255,0,46,1) 100%)"
-                }).showToast();
+                displayErrorToast({
+                    text: `${input} n'est pas un guest valide.`
+                });
 
                 this.$("#input-guest").val("");
 

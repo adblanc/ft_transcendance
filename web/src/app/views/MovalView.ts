@@ -2,10 +2,13 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import $ from "jquery";
 
-export default class ModalView extends Backbone.View {
+export default class ModalView<
+    TModel extends Backbone.Model = Backbone.Model
+> extends Backbone.View<TModel> {
     $content: any;
-    constructor(options?: Backbone.ViewOptions) {
-        super({ ...options, el: "body" });
+
+    constructor(options?: Backbone.ViewOptions<TModel>) {
+        super(options);
 
         this.$content = undefined;
     }
@@ -19,8 +22,8 @@ export default class ModalView extends Backbone.View {
     }
 
     closeModal() {
-        console.log("close modal");
-        this.$("#modal-backdrop").remove();
+        this.remove();
+        this.unbind();
     }
 
     dismissClick(e: JQuery.Event) {
@@ -28,10 +31,10 @@ export default class ModalView extends Backbone.View {
     }
 
     render() {
-        console.log("render modal");
         const template = $("#modalTemplate").html();
         const html = Mustache.render(template, {});
-        this.$el.append(html);
+        this.$el.html(html);
+        $("body").append(this.$el);
 
         if (!this.$content) {
             this.$content = $("#modal-content");

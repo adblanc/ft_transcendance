@@ -3,3 +3,11 @@
 @tailwind components;
 
 @tailwind utilities;
+
+.btn-primary {
+    @apply text-center py-2 px-4 bg-teal-500 text-white rounded-lg shadow-lg;
+}
+
+.btn-primary:hover {
+    @apply bg-teal-600 transition-colors duration-300 ease-in-out;
+}

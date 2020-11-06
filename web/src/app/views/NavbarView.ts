@@ -6,10 +6,6 @@ import ProfileView from "./ProfileView";
 import { clearAuthHeaders } from "../utils/auth";
 
 export default class NavbarView extends Backbone.View {
-    constructor(options?: Backbone.ViewOptions) {
-        super(options);
-    }
-
     events() {
         return {
             "click #btn-logout": "onLogout"
@@ -17,7 +13,6 @@ export default class NavbarView extends Backbone.View {
     }
 
     onLogout() {
-        console.log("logout");
         clearAuthHeaders();
         this.renderProfile(); // to fetch profile and therefore get a 401 and get redirected to login page
     }
@@ -26,9 +21,6 @@ export default class NavbarView extends Backbone.View {
         const template = $("#navbarTemplate").html();
         const html = Mustache.render(template, {});
         this.$el.html(html);
-
-        console.log(this.el);
-
         this.renderProfile();
 
         return this;
@@ -40,7 +32,6 @@ export default class NavbarView extends Backbone.View {
             model: profile
         });
         profile.fetch();
-        console.log("render profileView");
         profileView.render();
     }
 }

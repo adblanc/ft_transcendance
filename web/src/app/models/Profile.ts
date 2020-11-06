@@ -9,9 +9,13 @@ interface IProfile {
 }
 
 export default class Profile extends Backbone.Model<IProfile> {
-    constructor(options?: IProfile) {
-        super(options);
-    }
-
     urlRoot = () => "http://localhost:5000/user";
+
+    validate(attrs?: IProfile) {
+        if (attrs?.name && attrs.name.length < 3) {
+            return "name is too short (minimum length is 3)";
+        }
+
+        return null;
+    }
 }
