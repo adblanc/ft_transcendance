@@ -3,7 +3,7 @@ import Mustache from "mustache";
 import $ from "jquery";
 import ModalView from "./MovalView";
 import Profile from "../models/Profile";
-import { displayErrorToast } from "../utils/toast";
+import { displayToast } from "../utils/toast";
 
 export default class ModifyProfileView extends ModalView<Profile> {
     constructor(options?: Backbone.ViewOptions<Profile>) {
@@ -19,39 +19,24 @@ export default class ModifyProfileView extends ModalView<Profile> {
 
     onSubmit(e: JQuery.Event) {
         e.preventDefault();
-        this.model.set({
-            name: this.$("#input-profile-name").val() as string
-        });
-        this.model.save(
-            {},
-            {
-                url: this.model.urlRoot(),
-                error: (_, jqxhsr) => {
-                    // server-side validation error
-                    this.handleServerSideErrors(jqxhsr?.responseJSON);
-                }
-            }
+        this.model.modifyProfil(
+            { name: this.$("#input-profile-name").val() as string },
+            (errors) => {
+                errors.forEach((error) => {
+                    this.displayError(error);
+                });
+            },
+            () => this.profileSaved()
         );
-        if (!this.model.isValid()) {
-            // client side valiation error
-            this.displayError(this.model.validationError);
-        }
     }
 
-    handleServerSideErrors(errors: Record<string, string[]>) {
-        this.mapServerErrors(errors).forEach((error) => {
-            this.displayError(error);
-        });
-    }
-
-    mapServerErrors(errors: Record<string, string[]>) {
-        return Object.keys(errors).map(
-            (key) => `${key} ${errors[key].join(",")}`
-        );
+    profileSaved() {
+        displayToast({ text: "Profile successfully changed." }, "success");
+        this.closeModal();
     }
 
     displayError(error: string) {
-        displayErrorToast({ text: error });
+        displayToast({ text: error }, "error");
     }
 
     render() {

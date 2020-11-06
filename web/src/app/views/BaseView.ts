@@ -1,4 +1,5 @@
 import Backbone from "backbone";
+import $ from "jquery";
 
 export type View<T> = Omit<Backbone.View, "events"> & {
     events: () => Record<string, keyof View<T>>;
@@ -11,6 +12,12 @@ export default class BaseView<
 
     constructor(options?: Backbone.ViewOptions<TModel>) {
         super(options);
+    }
+
+    renderNested(view: Backbone.View, selector: string) {
+        const $element = this.$(selector);
+
+        view.setElement($element).render();
     }
 
     close() {

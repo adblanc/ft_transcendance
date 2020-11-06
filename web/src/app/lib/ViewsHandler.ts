@@ -1,5 +1,5 @@
-import BaseView from "../views/BaseView";
 import $ from "jquery";
+import BaseView from "../views/BaseView";
 
 class ViewsHandler {
     private currentView?: BaseView;

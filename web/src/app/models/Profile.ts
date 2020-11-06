@@ -8,6 +8,8 @@ interface IProfile {
     updated_at: string;
 }
 
+type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar_url">>;
+
 export default class Profile extends Backbone.Model<IProfile> {
     urlRoot = () => "http://localhost:5000/user";
 
@@ -17,5 +19,32 @@ export default class Profile extends Backbone.Model<IProfile> {
         }
 
         return null;
+    }
+
+    modifyProfil(
+        attrs: ModifiableProfileArgs,
+        error: (errors: string[]) => void,
+        success: () => void
+    ) {
+        this.set(attrs);
+
+        this.save(
+            {},
+            {
+                url: this.urlRoot(),
+                error: (_: any, jqxhr) => {
+                    error(this.mapServerErrors(jqxhr?.responseJSON));
+                }
+            }
+        );
+
+        if (this.isValid()) success();
+        else error([this.validationError]);
+    }
+
+    mapServerErrors(errors: Record<string, string[]>) {
+        return Object.keys(errors).map(
+            (key) => `${key} ${errors[key].join(",")}`
+        );
     }
 }

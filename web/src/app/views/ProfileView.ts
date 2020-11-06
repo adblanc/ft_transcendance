@@ -27,11 +27,14 @@ export default class ProfileView extends Backbone.View<Profile> {
     }
 
     render() {
+        console.log("render profile", this.model);
         const template = $("#profileTemplate").html();
         const html = Mustache.render(template, this.model.toJSON());
+        console.log(this.$el);
         this.$el.html(html);
 
-        $("#nav-profile").html(this.el);
+        console.log(html);
+
         return this;
     }
 }

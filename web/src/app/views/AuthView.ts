@@ -5,7 +5,7 @@ import axios from "axios";
 import { get42LoginUrl } from "../utils/api";
 import { addAuthHeaders } from "../utils/auth";
 import BaseView from "./BaseView";
-import { displayErrorToast } from "../utils/toast";
+import { displayToast } from "../utils/toast";
 
 export default class AuthView extends BaseView {
     events() {
@@ -18,6 +18,7 @@ export default class AuthView extends BaseView {
         if (e.key === "Enter") {
             const input = this.$("#input-guest").val();
             e.preventDefault();
+            console.log("we prevented default");
             if (!input) {
                 return;
             }
@@ -27,9 +28,12 @@ export default class AuthView extends BaseView {
                 );
                 addAuthHeaders(token);
             } catch (ex) {
-                displayErrorToast({
-                    text: `${input} n'est pas un guest valide.`
-                });
+                displayToast(
+                    {
+                        text: `${input} n'est pas un guest valide.`
+                    },
+                    "error"
+                );
 
                 this.$("#input-guest").val("");
 

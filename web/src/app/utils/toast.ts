@@ -13,14 +13,29 @@ const ERRORS_COLORS = [
     "linear-gradient(to right, #4b79a1, #283e51)"
 ];
 
-const getRandomErrorcolor = () => {
-    return ERRORS_COLORS[random(ERRORS_COLORS.length - 1)];
+const SUCCESS_COLORS = [
+    "linear-gradient(to right, #11998e, #38ef7d)",
+    "linear-gradient(to right, #67b26f, #4ca2cd)",
+    "linear-gradient(to right, #1d976c, #93f9b9)"
+];
+
+type ToastArgs = Parameters<typeof Toastify>[0];
+type ToastType = "success" | "error";
+
+const getRandomToastColor = (type: ToastType) => {
+    switch (type) {
+        case "success":
+            return SUCCESS_COLORS[random(SUCCESS_COLORS.length - 1)];
+        case "error":
+            return ERRORS_COLORS[random(ERRORS_COLORS.length - 1)];
+        default:
+            throw Error("Provide a toast type.");
+    }
 };
 
-export const displayErrorToast = (args: Parameters<typeof Toastify>[0]) => {
-    const backgroundColor = getRandomErrorcolor();
+export const displayToast = (args: ToastArgs, type: ToastType) => {
     Toastify({
-        backgroundColor,
+        backgroundColor: getRandomToastColor(type),
         ...args
     }).showToast();
 };

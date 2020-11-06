@@ -3,17 +3,19 @@ import BaseView from "./BaseView";
 import NavbarView from "./NavbarView";
 
 export default class IndexView extends BaseView {
+    navbarView: Backbone.View;
+
     constructor(options?: Backbone.ViewOptions) {
         super(options);
+
+        this.navbarView = new NavbarView();
     }
 
     render() {
-        console.log("render index view");
-        const navbarView = new NavbarView({});
+        this.navbarView.render();
+        this.$el.html(this.navbarView.el);
 
-        navbarView.render();
-
-        this.$el.html(navbarView.el);
+        console.log("index el", this.$el);
 
         return this;
     }
