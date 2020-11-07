@@ -2,6 +2,16 @@ import Backbone from "backbone";
 import $ from "jquery";
 import AuthRouter from "./routers/AuthRouter";
 import MainRouter from "./routers/MainRouter";
+import { addAuthHeaders } from "./utils";
+
+if (module.hot) {
+    module.hot.accept();
+}
+
+if (process.env.NODE_ENV === "development") {
+    const token = localStorage.getItem("tokenAuth") || "";
+    addAuthHeaders(token);
+}
 
 const authRouter = new AuthRouter({
     routes: {
@@ -28,7 +38,9 @@ $.ajaxSetup({
 });
 
 $("document").ready(() => {
-    Backbone.history.start({
-        pushState: true
-    });
+    try {
+        Backbone.history.start({
+            pushState: true
+        });
+    } catch (ex) {}
 });

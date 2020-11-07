@@ -24,6 +24,8 @@
         "@types/backbone": "^1.4.5",
         "@types/jquery": "^3.5.4",
         "@types/mustache": "^4.0.1",
+        "@types/node": "^14.14.6",
+        "@types/parcel-env": "^0.0.0",
         "@types/underscore": "^1.10.24",
         "autoprefixer": "^10.0.1",
         "eslint": "^7.12.1",
