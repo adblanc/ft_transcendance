@@ -28,18 +28,20 @@ export default class Profile extends Backbone.Model<IProfile> {
   ) {
     this.set(attrs);
 
-    this.save(
+    const valid = this.save(
       {},
       {
         url: this.urlRoot(),
-        error: (_: any, jqxhr) => {
+        success: () => success(),
+        error: (_, jqxhr) => {
           error(this.mapServerErrors(jqxhr?.responseJSON));
         },
       }
     );
 
-    if (this.isValid()) success();
-    else error([this.validationError]);
+    if (!valid) {
+      error([this.validationError]);
+    }
   }
 
   mapServerErrors(errors: Record<string, string[]>) {
