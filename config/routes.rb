@@ -5,5 +5,6 @@ Rails.application.routes.draw do
 
   resource :user, only: [:show, :update]
 
+  root to: "application#index"
   match '*path', via: [:get, :post], to: "application#index"
 end
