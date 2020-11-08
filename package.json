@@ -6,9 +6,12 @@
     "@rails/ujs": "^6.0.0",
     "@rails/webpacker": "4.3.0",
     "@tailwindcss/custom-forms": "^0.2.1",
+    "axios": "^0.21.0",
     "backbone": "^1.4.0",
     "jquery": "^3.5.1",
+    "mustache": "^4.0.1",
     "tailwindcss": "^1.9.6",
+    "toastify-js": "^1.9.3",
     "ts-loader": "^8.0.10",
     "turbolinks": "^5.2.0",
     "typescript": "^4.0.5",
@@ -16,8 +19,10 @@
   },
   "version": "0.1.0",
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/backbone": "^1.4.5",
     "@types/jquery": "^3.5.4",
+    "@types/mustache": "^4.0.1",
     "@types/underscore": "^1.10.24",
     "webpack-dev-server": "^3.11.0"
   }

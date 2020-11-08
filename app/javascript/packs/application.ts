@@ -8,6 +8,7 @@ require("turbolinks").start();
 require("channels");
 
 import "../stylesheets/application.scss";
+import { start } from "./custom";
 
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
@@ -16,9 +17,4 @@ import "../stylesheets/application.scss";
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
-$(document).on("DOMContentLoaded", () => {
-  console.log($("body").text());
-  $("body").append(
-    "<h2 class='text-blue-600 text-2xl'>Hello from typescript</h2>"
-  );
-});
+start();

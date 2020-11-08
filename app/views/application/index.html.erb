@@ -1,1 +1,125 @@
-<h1 class="text-xl text-purple-600">Hello, world</h1>
+        <div id="container"></div>
+        <script type="text/html" id="loginTemplate">
+            <div class="flex flex-col items-center justify-center h-screen">
+                <h1 class="text-3xl text-gray-900 mb-24">ft_transcendance</h1>
+                <a
+                    class="px-4 py-2 mb-16 border-2 bg-gray-800 text-white rounded-xl uppercase tracking-tighter"
+                    href="{{42_LOGIN_URL}}"
+                    >Login with 42</a
+                >
+                <form action="" method="get">
+                    <label class="block" for="input-guest">
+                        <span class="text-gray-700">Login as guest</span>
+                        <input
+                            class="form-input block mt-1"
+                            type="text"
+                            name="input-guest"
+                            id="input-guest"
+                        />
+                    </label>
+                </form>
+            </div>
+        </script>
+
+        <script type="text/html" id="navbarTemplate">
+            <nav
+                class="fixed top-0 left-0 bg-teal-500 text-white flex flex-row w-full h-16 items-center"
+            >
+                <div
+                    class="uppercase tracking-tighter cursor-pointer text-center p-4 text-lg"
+                >
+                    ft_transcendance
+                </div>
+                <ul class="flex flex-row space-x-8 ml-12">
+                    <li><a href=""></a>Jouer</li>
+                    <li><a href=""></a>Guildes</li>
+                    <li><a href=""></a>Tournois</li>
+                </ul>
+                <div class="ml-auto flex flex-row items-center justify-center">
+                    <svg
+                        id="btn-logout"
+                        class="w-6 h-6 mr-2 cursor-pointer"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                        ></path>
+                    </svg>
+                    <div id="nav-profile" class="cursor-pointer"></div>
+                </div>
+            </nav>
+        </script>
+
+        <script type="text/html" id="profileTemplate">
+            <button id="btn-profile" class="flex items-center justify-center">
+                <img class="w-16 h-16 rounded-full p-2" src="{{avatar_url}}" />
+            </button>
+        </script>
+
+        <script type="text/html" id="modalTemplate">
+            <div
+                id="modal-backdrop"
+                class="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-25 z-50"
+            >
+                <div
+                    id="modal-container"
+                    class="bg-white text-gray-900 relative p-8 rounded-lg"
+                >
+                    <svg
+                        id="close-modal"
+                        class="w-6 h-6 absolute right-0 top-0 mr-2 mt-2 cursor-pointer"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        ></path>
+                    </svg>
+                    <div id="modal-content"></div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/html" id="profileFormTemplate">
+            <form action="">
+                <label class="block" for="profile-name">
+                    <span class="text-gray-700">Pseudo</span>
+                    <input
+                        class="form-input mt-1 block w-full"
+                        type="text"
+                        name="profile-name"
+                        value="{{name}}"
+                        id="input-profile-name"
+                    />
+                </label>
+                <label class="block mt-8" for="input-profile-avatar">
+                    <span class="text-gray-700">Mettre en ligne un avatar</span>
+                    <input
+                        class="form-input mt-1 block w-full"
+                        type="file"
+                        name="profile-avatar"
+                        id="input-profile-avatar"
+                    />
+                </label>
+                <div class="flex justify-center items-center">
+                    <button
+                        class="btn-primary mt-8"
+                        id="input-profile-submit"
+                        type="submit"
+                    >
+                        Enregistrer les modifications
+                    </button>
+                </div>
+            </form>
+        </script>
