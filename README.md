@@ -2,6 +2,16 @@
 
 `bundle install`
 
+## To install the js libraries
+
+`yarn`
+
+## If databases are not created
+
+`rails db:create db:migrate`
+
+You can also seed the db with `rails db:seed`
+
 ## To run webpack server
 
 `./bin/webpack-dev-server`
@@ -24,7 +34,7 @@ It reduces bundling time between changes you make during development.
 
 `bundle exec rails webpacker:install:typescript`
 
-It configures webpack to process correctly our typescript files, creates our tsconfig.json and add `typescript` and `ts-loader` as dependencies.
+It configures webpack to process correctly our typescript files, creates our `tsconfig.json` and add `typescript` and `ts-loader` as dependencies.
 
 3. Create the db
 
