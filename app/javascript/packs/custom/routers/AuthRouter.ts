@@ -13,7 +13,7 @@ export default class AuthRouter extends Backbone.Router {
   async authCallBack(code: string) {
     try {
       const { data: token } = await axios.get(
-        `http://localhost:5000/auth/42?code=${code}`
+        `http://localhost:3000/auth/42?code=${code}`
       );
       addAuthHeaders(token);
     } catch (ex) {

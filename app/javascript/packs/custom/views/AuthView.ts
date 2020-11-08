@@ -23,7 +23,7 @@ export default class AuthView extends BaseView {
       }
       try {
         const { data: token } = await axios.get(
-          `http://localhost:5000/auth/guest?login=${input}`
+          `http://localhost:3000/auth/guest?login=${input}`
         );
         addAuthHeaders(token);
       } catch (ex) {

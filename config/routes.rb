@@ -1,3 +1,9 @@
 Rails.application.routes.draw do
-  root to: "application#index"
+  get '/auth/42', to: 'authentication#login42', format: false
+
+  get '/auth/guest', to: 'authentication#loginGuest', format: false
+
+  resource :user, only: [:show, :update]
+
+  match '*path', via: [:get, :post], to: "application#index"
 end
