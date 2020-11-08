@@ -8,4 +8,5 @@ environment.config.devServer.before = (app, server) => {
     .watch(["config/locales/*.yml", "app/views/**/*.erb"])
     .on("change", () => server.sockWrite(server.sockets, "content-changed"));
 };
+
 module.exports = environment.toWebpackConfig();

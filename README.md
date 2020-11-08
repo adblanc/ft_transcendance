@@ -28,7 +28,7 @@ It reduces bundling time between changes you make during development.
 
 1. Setup this folder
 
-`rails new transcendance --database=postgresql --skip-active-storage --skip-action-mailer --skip-action-mailbox`
+`rails new transcendance --database=postgresql --skip-action-mailer --skip-action-mailbox`
 
 2. Setup typescript
 
@@ -244,3 +244,77 @@ module.exports = environment.toWebpackConfig();
 ## Steps to enable hot module replacement
 
 1. Turn hmr to true in `config/webpacker.yml` (development > dev_server).
+
+## Steps to use active storage to store avatar image for our users
+
+**[Active Storage Guide](https://edgeguides.rubyonrails.org/active_storage_overview.html)**
+
+1. Run some commands
+
+`rails active_storage:install`
+`rails db:migrate`
+
+It creates the necessary migrations to store our files.
+
+2. Attach a file to our user in a one-to-one relation
+
+We can use a macro that does it for us :
+
+```ruby
+# app/models/user.rb
+
+class User < ApplicationRecord
+  has_one_attached :avatar
+end
+```
+
+If we wanted a one-to-many relationship we could use this instead :
+
+```ruby
+class User < ApplicationRecord
+ has_many_attached :images
+end
+```
+
+3. Update our user controller
+
+We need to allow `avatar` or whatever name we gave our attachment in our user params :
+
+```ruby
+# app/controllers/users_controller.rb
+
+ def user_params
+    params.permit(:name, :avatar)
+  end
+
+```
+
+4. Validate our attachment
+
+Here we only want images, so we installed a gem \*\*[activestorage-validator](https://github.com/aki77/activestorage-validator) and used it in our user model:
+
+```ruby
+# app/models/user.rb
+
+ validates :avatar, blob: { content_type: :image }
+
+```
+
+5. Attach an avatar to our user
+
+We can use attach method, for example :
+
+```ruby
+# db/seeds.rb
+
+bob = User.where(login: "bob").first_or_create!(
+	name: "bob",
+);
+
+bob.avatar.attach(
+	io: URI.open("https://cdn.shopify.com/s/files/1/0240/3441/0601/products/135.png?v=1598373418"),
+	filename: "bob.png",
+	"content_type": "image/png",
+)
+
+```

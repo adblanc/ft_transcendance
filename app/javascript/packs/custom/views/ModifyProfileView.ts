@@ -18,8 +18,17 @@ export default class ModifyProfileView extends ModalView<Profile> {
 
   onSubmit(e: JQuery.Event) {
     e.preventDefault();
+    const attrs = {
+      name: this.$("#input-profile-name").val() as string,
+      avatar: (this.$(
+        "#input-profile-avatar"
+      )[0] as HTMLInputElement).files?.item(0),
+    };
+
+    if (!attrs.avatar) delete attrs.avatar;
+
     this.model.modifyProfil(
-      { name: this.$("#input-profile-name").val() as string },
+      attrs,
       (errors) => {
         errors.forEach((error) => {
           this.displayError(error);
@@ -32,6 +41,7 @@ export default class ModifyProfileView extends ModalView<Profile> {
   profileSaved() {
     displayToast({ text: "Profile successfully changed." }, "success");
     this.closeModal();
+    this.model.fetch();
   }
 
   displayError(error: string) {

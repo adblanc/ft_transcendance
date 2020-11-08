@@ -1,3 +1,4 @@
+require 'open-uri'
 
 class AuthenticationController < ApplicationController
 
@@ -26,10 +27,16 @@ class AuthenticationController < ApplicationController
 	  # Generate token...
 	  token = TokiToki.encode(login)
 	  # ... create user if it doesn't exist...
-	  User.where(login: login).first_or_create!(
+	  user = User.where(login: login).first_or_create!(
 		name: name,
-		avatar_url: avatar_url
 	  )
+
+	  user.avatar.attach(
+		io: URI.open(avatar_url),
+		filename: "#{login}.png",
+		"content_type": "image/png",
+	) if !user.avatar.attached?
+
 
 	  render json: token
 	rescue StandardError => error
