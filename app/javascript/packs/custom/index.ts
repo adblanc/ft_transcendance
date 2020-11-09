@@ -1,7 +1,6 @@
 import Backbone from "backbone";
-import AuthRouter from "./routers/AuthRouter";
 import MainRouter from "./routers/MainRouter";
-import { addAuthHeaders } from "./utils";
+import { addAuthHeaders, catchNavigation } from "./utils";
 
 export function start() {
   if (process.env.NODE_ENV === "development") {
@@ -9,37 +8,31 @@ export function start() {
     addAuthHeaders(token);
   }
 
-  const authRouter = new AuthRouter({
-    routes: {
-      auth: "auth",
-      "auth/callback?code=:code": "authCallBack",
-    },
-  });
-
   const mainRouter = new MainRouter({
     routes: {
       "": "index",
+      auth: "auth",
+      "auth/callback?code=:code": "authCallBack",
+      "*path": "notFound",
     },
   });
-
-  console.log(mainRouter);
 
   $.ajaxSetup({
     statusCode: {
       401: () => {
-        authRouter.navigate("auth", { trigger: true });
+        mainRouter.navigate("auth", { trigger: true });
       },
       403: () => {
-        authRouter.navigate("denied", { trigger: true });
+        mainRouter.navigate("denied", { trigger: true });
       },
     },
   });
 
   $("document").ready(() => {
-    try {
-      Backbone.history.start({
-        pushState: true,
-      });
-    } catch (ex) {}
+    Backbone.history.start({
+      pushState: true,
+    });
   });
+
+  catchNavigation();
 }

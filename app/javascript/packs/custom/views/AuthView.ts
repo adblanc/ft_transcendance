@@ -17,7 +17,6 @@ export default class AuthView extends BaseView {
     if (e.key === "Enter") {
       const input = this.$("#input-guest").val();
       e.preventDefault();
-      console.log("we prevented default");
       if (!input) {
         return;
       }
@@ -44,7 +43,6 @@ export default class AuthView extends BaseView {
   }
 
   render() {
-    console.log("render auth");
     const template = $("#loginTemplate").html();
     const html = Mustache.render(template, {
       "42_LOGIN_URL": get42LoginUrl(),

@@ -17,3 +17,7 @@
 .btn-primary:hover {
   @apply bg-teal-600 transition-colors duration-300 ease-in-out;
 }
+
+.svg-btn {
+  @apply w-6 h-6 cursor-pointer;
+}

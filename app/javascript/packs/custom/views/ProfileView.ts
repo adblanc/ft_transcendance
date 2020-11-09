@@ -17,7 +17,6 @@ export default class ProfileView extends Backbone.View<Profile> {
   }
 
   onProfileClicked() {
-    console.log("profile clicked");
     const modifyProfileView = new ModifyProfileView({
       model: this.model,
     });
@@ -26,13 +25,9 @@ export default class ProfileView extends Backbone.View<Profile> {
   }
 
   render() {
-    console.log("render profile", this.model);
     const template = $("#profileTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
-    console.log(this.$el);
     this.$el.html(html);
-
-    console.log(html);
 
     return this;
   }

@@ -21,7 +21,6 @@ export default class ModalView<
   }
 
   closeModal() {
-    console.log("we close modal");
     this.remove();
     this.unbind();
   }

@@ -32,7 +32,6 @@ export default class Profile extends Backbone.Model<IProfile> {
   sync(method: string, model: Profile, options: JQueryAjaxSettings): any {
     // Post data as FormData object on create to allow file upload
     if (method == "update") {
-      console.log("sync update");
       var formData = new FormData();
 
       // Loop over model attributes and append to formData
