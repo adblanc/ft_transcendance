@@ -32,4 +32,4 @@ COPY . ./
 
 EXPOSE 3000
 
-CMD ["bin/rails", "s", "-b", "0.0.0.0"]
+CMD ["sh", "docker-entrypoint.sh"]
