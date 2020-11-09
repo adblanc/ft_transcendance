@@ -21,3 +21,18 @@
 .svg-btn {
   @apply w-6 h-6 cursor-pointer;
 }
+
+.message {
+  @apply rounded-lg px-6 py-2;
+  &--sent {
+    @extend .message;
+
+    @apply bg-teal-500 rounded-br-sm;
+  }
+
+  &--received {
+    @extend .message;
+
+    @apply bg-gray-500 rounded-bl-sm;
+  }
+}
