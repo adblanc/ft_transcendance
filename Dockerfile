@@ -9,7 +9,7 @@ RUN apk --update --upgrade add $RAILS_PACKAGES $DEV_PACKAGES
 #create working directories and copy in our Gemfile so we can install our project's dependencies
 
 #this will hold rails project
-RUN mkdir -p /app 
+RUN mkdir -p /app
 
 #sets up the working directory for any instructions that follow
 WORKDIR /app
@@ -23,8 +23,7 @@ RUN gem install bundler && bundle install --jobs 20 --retry 5
 #RUN rails webpacker:install
 
 #needed by yarn to create lockfile with dependencies
-COPY package.json ./ 
-COPY yarn.lock ./
+COPY package.json ./
 RUN yarn install --check-files
 RUN yarn check
 
