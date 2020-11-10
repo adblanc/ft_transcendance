@@ -22,6 +22,8 @@ gem 'jbuilder', '~> 2.7'
 gem 'oauth2'
 gem 'jwt'
 
+gem "rack-cors"
+
 # Active storage validation
 
 gem 'activestorage-validator'

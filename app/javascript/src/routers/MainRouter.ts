@@ -1,7 +1,7 @@
 import Backbone from "backbone";
 import axios from "axios";
 import { viewsHandler } from "../lib/ViewsHandler";
-import { RouterOptions } from "../../../types/router";
+import { RouterOptions } from "../../types/router";
 import IndexView from "../views/IndexView";
 import NotFoundView from "../views/NotFoundView";
 import { addAuthHeaders } from "../utils";
