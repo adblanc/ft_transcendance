@@ -1,28 +1,34 @@
 import Mustache from "mustache";
-import Message from "../models/Message";
 import BaseView from "./BaseView";
+import Message from "src/models/Message";
 import MessageView from "./MessageView";
 
-export default class MessagesView extends BaseView {
+export default class ChatView extends BaseView {
   constructor(options?: Backbone.ViewOptions) {
     super(options);
 
-    this.collection.on("add", this.onAddMessage, this);
-    this.collection.on("remove", this.onRemoveMessage, this);
+    this.listenTo(this.collection, "add", this.onAddMessage);
+    this.listenTo(this.collection, "remove", this.onRemoveMessage);
+  }
+
+  onClose() {}
+
+  events() {
+    return {
+      "keypress #input-message": "onKeyPressInput",
+    };
+  }
+
+  onKeyPressInput() {
+    console.log("key pressed");
   }
 
   onAddMessage(message: Message) {
-    console.log("add message", message.toJSON());
-
+    console.log("add message");
     const view = new MessageView({
       model: message,
     });
-
-    console.log(this.$("#messages-container"));
-
     const el = view.render().$el;
-
-    console.log(el);
 
     this.$("#messages-container").append(el);
   }
@@ -32,7 +38,7 @@ export default class MessagesView extends BaseView {
   }
 
   render() {
-    const template = $("#messagesTemplate").html();
+    const template = $("#chatTemplate").html();
     const html = Mustache.render(template, {});
     this.$el.html(html);
 

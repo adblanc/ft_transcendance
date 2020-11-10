@@ -23,7 +23,7 @@
 }
 
 .message {
-  @apply rounded-lg px-6 py-2;
+  @apply rounded-lg break-words max-w-full px-4 py-2;
   &--sent {
     @extend .message;
 

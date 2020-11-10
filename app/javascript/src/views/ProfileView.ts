@@ -7,7 +7,7 @@ export default class ProfileView extends Backbone.View<Profile> {
   constructor(options?: Backbone.ViewOptions<Profile>) {
     super(options);
 
-    this.model.on("change", this.render, this);
+    this.listenTo(this.model, "change", this.render);
   }
 
   events() {

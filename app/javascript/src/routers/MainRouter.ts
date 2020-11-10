@@ -32,7 +32,9 @@ export default class MainRouter extends Backbone.Router {
   }
 
   index() {
-    const indexView = new IndexView({});
+    const indexView = new IndexView({
+      className: "flex flex-col h-screen",
+    });
 
     viewsHandler.showView(indexView);
   }

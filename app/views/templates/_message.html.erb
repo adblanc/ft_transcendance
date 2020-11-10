@@ -1,17 +1,17 @@
 <script type="text/html" id="messageTemplate">
 {{#sent}}
-  <div class="flex flex-row-reverse ml-auto">
-	  <%= render "templates/profileIcon" %>
-      <div class="ml-3 message--sent">
+  <div class="ml-auto">
+	   <%= render "templates/profileIcon" %>
+      <div class="message--sent">
 	  {{content}}
 	  </div>
     </div>
 {{/sent}}
 
 {{^sent}}
-  <div class="flex flex-row mr-auto">
+  <div class="mr-auto">
 	  <%= render "templates/profileIcon" %>
-      <div class="ml-3 message--received">
+      <div class="message--received">
 	  {{content}}
 	  </div>
     </div>

@@ -4,6 +4,7 @@ import Profile from "../models/Profile";
 import ProfileView from "./ProfileView";
 import { clearAuthHeaders } from "../utils/auth";
 import BaseView from "./BaseView";
+import { eventBus } from "src/events/EventBus";
 
 export default class NavbarView extends BaseView {
   profileView: Backbone.View;
@@ -21,12 +22,17 @@ export default class NavbarView extends BaseView {
   events() {
     return {
       "click #btn-logout": "onLogout",
+      "click #btn-messages": "onClickMessage",
     };
   }
 
   onLogout() {
     clearAuthHeaders();
     Backbone.history.navigate("/auth", { trigger: true });
+  }
+
+  onClickMessage() {
+    eventBus.trigger("chat:open");
   }
 
   render() {
