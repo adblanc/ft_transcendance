@@ -24,8 +24,7 @@ RUN gem install bundler && bundle install --jobs 20 --retry 5
 
 #needed by yarn to create lockfile with dependencies
 COPY package.json ./
-RUN yarn install --check-files
-RUN yarn check
+RUN yarn
 
 #copy over our entire current directory and place the files in the docker image's work dictory
 COPY . ./
