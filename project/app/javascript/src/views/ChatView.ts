@@ -2,16 +2,27 @@ import Mustache from "mustache";
 import BaseView from "./BaseView";
 import Message from "src/models/Message";
 import MessageView from "./MessageView";
+import Tabs from "src/collections/Tabs";
+import TabsView from "./TabsView";
 
 export default class ChatView extends BaseView {
+  tabs: Backbone.Collection;
+  tabsView: BaseView;
   constructor(options?: Backbone.ViewOptions) {
     super(options);
+
+    this.tabs = new Tabs();
+    this.tabsView = new TabsView({
+      collection: this.tabs,
+    });
 
     this.listenTo(this.collection, "add", this.onAddMessage);
     this.listenTo(this.collection, "remove", this.onRemoveMessage);
   }
 
-  onClose() {}
+  onClose = () => {
+    this.tabsView.close();
+  };
 
   events() {
     return {
@@ -41,6 +52,8 @@ export default class ChatView extends BaseView {
     const template = $("#chatTemplate").html();
     const html = Mustache.render(template, {});
     this.$el.html(html);
+
+    this.preprendNested(this.tabsView, "#chat-container");
 
     return this;
   }
