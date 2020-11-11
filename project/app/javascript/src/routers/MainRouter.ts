@@ -44,4 +44,5 @@ export default class MainRouter extends Backbone.Router {
 
     viewsHandler.showView(notFoundView);
   }
+
 }
