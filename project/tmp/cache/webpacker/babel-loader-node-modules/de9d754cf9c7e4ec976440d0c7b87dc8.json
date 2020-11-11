@@ -1,0 +1,1 @@
+{"ast":null,"code":"// Returns a function that will only be executed up to (but not including) the\n// Nth call.\nexport default function before(times, func) {\n  var memo;\n  return function () {\n    if (--times > 0) {\n      memo = func.apply(this, arguments);\n    }\n\n    if (times <= 1) func = null;\n    return memo;\n  };\n}","map":null,"metadata":{},"sourceType":"module"}

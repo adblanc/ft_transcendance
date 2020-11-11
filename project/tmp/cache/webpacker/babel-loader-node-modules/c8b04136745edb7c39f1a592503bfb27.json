@@ -1,0 +1,1 @@
+{"ast":null,"code":"import find from './find.js';\nimport matcher from './matcher.js'; // Convenience version of a common use case of `_.find`: getting the first\n// object containing specific `key:value` pairs.\n\nexport default function findWhere(obj, attrs) {\n  return find(obj, matcher(attrs));\n}","map":null,"metadata":{},"sourceType":"module"}

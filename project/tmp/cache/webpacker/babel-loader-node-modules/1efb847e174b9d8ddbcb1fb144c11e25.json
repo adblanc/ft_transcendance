@@ -1,0 +1,1 @@
+{"ast":null,"code":"// Keep the identity function around for default iteratees.\nexport default function identity(value) {\n  return value;\n}","map":null,"metadata":{},"sourceType":"module"}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"// Is a given variable undefined?\nexport default function isUndefined(obj) {\n  return obj === void 0;\n}","map":null,"metadata":{},"sourceType":"module"}

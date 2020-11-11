@@ -1,0 +1,1 @@
+{"ast":null,"code":"import _flatten from './_flatten.js'; // Flatten out an array, either recursively (by default), or up to `depth`.\n// Passing `true` or `false` as `depth` means `1` or `Infinity`, respectively.\n\nexport default function flatten(array, depth) {\n  return _flatten(array, depth, false);\n}","map":null,"metadata":{},"sourceType":"module"}

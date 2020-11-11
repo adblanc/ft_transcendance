@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { nativeIsArray } from './_setup.js';\nimport tagTester from './_tagTester.js'; // Is a given value an array?\n// Delegates to ECMA5's native `Array.isArray`.\n\nexport default nativeIsArray || tagTester('Array');","map":null,"metadata":{},"sourceType":"module"}

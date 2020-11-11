@@ -1,0 +1,1 @@
+{"ast":null,"code":"import restArguments from './restArguments.js';\nimport unzip from './unzip.js'; // Zip together multiple lists into a single array -- elements that share\n// an index go together.\n\nexport default restArguments(unzip);","map":null,"metadata":{},"sourceType":"module"}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"import restArguments from './restArguments.js'; // Delays a function for the given number of milliseconds, and then calls\n// it with the arguments supplied.\n\nexport default restArguments(function (func, wait, args) {\n  return setTimeout(function () {\n    return func.apply(null, args);\n  }, wait);\n});","map":null,"metadata":{},"sourceType":"module"}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"// Internal list of HTML entities for escaping.\nexport default {\n  '&': '&amp;',\n  '<': '&lt;',\n  '>': '&gt;',\n  '\"': '&quot;',\n  \"'\": '&#x27;',\n  '`': '&#x60;'\n};","map":null,"metadata":{},"sourceType":"module"}

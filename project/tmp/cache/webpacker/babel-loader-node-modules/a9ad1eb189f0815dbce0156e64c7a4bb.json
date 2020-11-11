@@ -1,0 +1,1 @@
+{"ast":null,"code":"import partial from './partial.js';\nimport before from './before.js'; // Returns a function that will be executed at most one time, no matter how\n// often you call it. Useful for lazy initialization.\n\nexport default partial(before, 2);","map":null,"metadata":{},"sourceType":"module"}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"import keys from './keys.js'; // Retrieve the values of an object's properties.\n\nexport default function values(obj) {\n  var _keys = keys(obj);\n\n  var length = _keys.length;\n  var values = Array(length);\n\n  for (var i = 0; i < length; i++) {\n    values[i] = obj[_keys[i]];\n  }\n\n  return values;\n}","map":null,"metadata":{},"sourceType":"module"}

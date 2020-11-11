@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { toString } from './_setup.js'; // Internal function for creating a `toString`-based type tester.\n\nexport default function tagTester(name) {\n  return function (obj) {\n    return toString.call(obj) === '[object ' + name + ']';\n  };\n}","map":null,"metadata":{},"sourceType":"module"}

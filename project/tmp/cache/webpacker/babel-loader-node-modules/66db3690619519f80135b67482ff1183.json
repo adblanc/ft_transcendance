@@ -1,0 +1,1 @@
+{"ast":null,"code":"import _ from './underscore.js'; // Helper function to continue chaining intermediate results.\n\nexport default function chainResult(instance, obj) {\n  return instance._chain ? _(obj).chain() : obj;\n}","map":null,"metadata":{},"sourceType":"module"}

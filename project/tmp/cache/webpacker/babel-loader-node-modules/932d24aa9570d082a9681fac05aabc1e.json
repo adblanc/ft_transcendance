@@ -1,0 +1,1 @@
+{"ast":null,"code":"import filter from './filter.js'; // Trim out all falsy values from an array.\n\nexport default function compact(array) {\n  return filter(array, Boolean);\n}","map":null,"metadata":{},"sourceType":"module"}

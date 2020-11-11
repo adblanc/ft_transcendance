@@ -1,0 +1,1 @@
+{"ast":null,"code":"// Is a given value equal to null?\nexport default function isNull(obj) {\n  return obj === null;\n}","map":null,"metadata":{},"sourceType":"module"}

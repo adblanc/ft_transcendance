@@ -1,0 +1,1 @@
+{"ast":null,"code":"import tagTester from './_tagTester.js';\nexport default tagTester('Date');","map":null,"metadata":{},"sourceType":"module"}

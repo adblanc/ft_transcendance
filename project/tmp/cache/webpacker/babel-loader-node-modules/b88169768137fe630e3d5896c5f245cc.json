@@ -1,0 +1,1 @@
+{"ast":null,"code":"import filter from './filter.js';\nimport matcher from './matcher.js'; // Convenience version of a common use case of `_.filter`: selecting only\n// objects containing specific `key:value` pairs.\n\nexport default function where(obj, attrs) {\n  return filter(obj, matcher(attrs));\n}","map":null,"metadata":{},"sourceType":"module"}

@@ -15,19 +15,17 @@ RUN mkdir -p /app
 WORKDIR /app
 
 #copy our Gemfiles from our host's current directory to the working directory of the container
-COPY Gemfile Gemfile.lock ./
+COPY ./project/Gemfile ./project/Gemfile.lock ./
 
 #install bundler and all our gems
 RUN gem install bundler && bundle install --jobs 20 --retry 5
-#compiler for Rails 6 - needs yarn to work.
-#RUN rails webpacker:install
 
 #needed by yarn to create lockfile with dependencies
-COPY package.json ./
-RUN yarn
+COPY ./project/package.json ./
+RUN yarn install --check-files
 
 #copy over our entire current directory and place the files in the docker image's work dictory
-COPY . ./
+COPY ./project ./
 
 EXPOSE 3000
 

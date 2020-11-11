@@ -1,0 +1,1 @@
+{"ast":null,"code":"import isFunction from './isFunction.js'; // Return a sorted list of the function names available on the object.\n\nexport default function functions(obj) {\n  var names = [];\n\n  for (var key in obj) {\n    if (isFunction(obj[key])) names.push(key);\n  }\n\n  return names.sort();\n}","map":null,"metadata":{},"sourceType":"module"}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"import createEscaper from './_createEscaper.js';\nimport unescapeMap from './_unescapeMap.js'; // Function for unescaping strings from HTML interpolation.\n\nexport default createEscaper(unescapeMap);","map":null,"metadata":{},"sourceType":"module"}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"import createReduce from './_createReduce.js'; // **Reduce** builds up a single result from a list of values, aka `inject`,\n// or `foldl`.\n\nexport default createReduce(1);","map":null,"metadata":{},"sourceType":"module"}

@@ -1,0 +1,296 @@
+  [1m[35m (3.5ms)[0m  [1m[35mDROP DATABASE IF EXISTS "transcendance_development"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP DATABASE IF EXISTS "transcendance_test"[0m
+  [1m[35m (5407.9ms)[0m  [1m[35mCREATE DATABASE "transcendance_development" ENCODING = 'unicode'[0m
+  [1m[35m (3.0ms)[0m  [1m[35mDROP DATABASE IF EXISTS "transcendance_development"[0m
+  [1m[35m (0.6ms)[0m  [1m[35mDROP DATABASE IF EXISTS "transcendance_test"[0m
+  [1m[35m (4025.0ms)[0m  [1m[35mCREATE DATABASE "transcendance_development" ENCODING = 'unicode'[0m
+  [1m[35m (4110.5ms)[0m  [1m[35mCREATE DATABASE "transcendance_test" ENCODING = 'unicode'[0m
+  [1m[35m (163.7ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (49.3ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (1.8ms)[0m  [1m[34mSELECT pg_try_advisory_lock(3747949535521679565)[0m
+  [1m[35m (4.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateUsers (20201108111147)
+  [1m[35m (0.9ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (76.1ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "login" character varying, "name" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mprimary::SchemaMigration Create (10.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20201108111147"]]
+  [1m[35m (2.9ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateActiveStorageTables (20201108135935)
+  [1m[35m (2.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (68.1ms)[0m  [1m[35mCREATE TABLE "active_storage_blobs" ("id" bigserial primary key, "key" character varying NOT NULL, "filename" character varying NOT NULL, "content_type" character varying, "metadata" text, "byte_size" bigint NOT NULL, "checksum" character varying NOT NULL, "created_at" timestamp NOT NULL)[0m
+  [1m[35m (16.1ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_active_storage_blobs_on_key" ON "active_storage_blobs"  ("key")[0m
+  [1m[35m (91.4ms)[0m  [1m[35mCREATE TABLE "active_storage_attachments" ("id" bigserial primary key, "name" character varying NOT NULL, "record_type" character varying NOT NULL, "record_id" bigint NOT NULL, "blob_id" bigint NOT NULL, "created_at" timestamp NOT NULL, CONSTRAINT "fk_rails_c3b3935057"
+FOREIGN KEY ("blob_id")
+  REFERENCES "active_storage_blobs" ("id")
+)[0m
+  [1m[35m (26.6ms)[0m  [1m[35mCREATE  INDEX  "index_active_storage_attachments_on_blob_id" ON "active_storage_attachments"  ("blob_id")[0m
+  [1m[35m (12.9ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_active_storage_attachments_uniqueness" ON "active_storage_attachments"  ("record_type", "record_id", "name", "blob_id")[0m
+  [1m[36mprimary::SchemaMigration Create (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20201108135935"]]
+  [1m[35m (2.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (4.0ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (4.7ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", "2020-11-11 14:10:36.401202"], ["updated_at", "2020-11-11 14:10:36.401202"]]
+  [1m[35m (1.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT pg_advisory_unlock(3747949535521679565)[0m
+  [1m[35m (7.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (5.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mUser Load (4.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."login" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["login", "bob"], ["LIMIT", 1]]
+  [1m[35m (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists? (0.8ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."login" = $1 LIMIT $2[0m  [["login", "bob"], ["LIMIT", 1]]
+  [1m[36mUser Create (12.6ms)[0m  [1m[32mINSERT INTO "users" ("login", "name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["login", "bob"], ["name", "bob"], ["created_at", "2020-11-11 14:10:37.087115"], ["updated_at", "2020-11-11 14:10:37.087115"]]
+  [1m[35m (2.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveStorage::Blob Load (16.5ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" INNER JOIN "active_storage_attachments" ON "active_storage_blobs"."id" = "active_storage_attachments"."blob_id" WHERE "active_storage_attachments"."record_id" = $1 AND "active_storage_attachments"."record_type" = $2 AND "active_storage_attachments"."name" = $3 LIMIT $4[0m  [["record_id", 1], ["record_type", "User"], ["name", "avatar"], ["LIMIT", 1]]
+  [1m[36mUser Exists? (4.4ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."login" = $1 AND "users"."id" != $2 LIMIT $3[0m  [["login", "bob"], ["id", 1], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Blob Create (11.5ms)[0m  [1m[32mINSERT INTO "active_storage_blobs" ("key", "filename", "content_type", "metadata", "byte_size", "checksum", "created_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["key", "tfp4ruaj6gufnuxkrhygdi7q9k4o"], ["filename", "bob.png"], ["content_type", "image/png"], ["metadata", "{\"identified\":true}"], ["byte_size", 118245], ["checksum", "MFlrH9sj67GLvrMmd5dSKA=="], ["created_at", "2020-11-11 14:10:38.219242"]]
+  [1m[36mActiveStorage::Attachment Create (25.8ms)[0m  [1m[32mINSERT INTO "active_storage_attachments" ("name", "record_type", "record_id", "blob_id", "created_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "avatar"], ["record_type", "User"], ["record_id", 1], ["blob_id", 1], ["created_at", "2020-11-11 14:10:38.249096"]]
+  [1m[36mUser Update (0.9ms)[0m  [1m[33mUPDATE "users" SET "updated_at" = $1 WHERE "users"."id" = $2[0m  [["updated_at", "2020-11-11 14:10:38.285018"], ["id", 1]]
+  [1m[35m (3.3ms)[0m  [1m[35mCOMMIT[0m
+[36m  Disk Storage (45.6ms) [0m[32mUploaded file to key: tfp4ruaj6gufnuxkrhygdi7q9k4o (checksum: MFlrH9sj67GLvrMmd5dSKA==)[0m
+[ActiveJob]   [1m[36mActiveStorage::Blob Load (0.4ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [bfc5f2be-1193-45f1-9b63-d457ee6c9258] Performing ActiveStorage::AnalyzeJob (Job ID: bfc5f2be-1193-45f1-9b63-d457ee6c9258) from Inline(active_storage_analysis) enqueued at 2020-11-11T14:10:38Z with arguments: #<GlobalID:0x000055f1a41557e8 @uri=#<URI::GID gid://active-storage/ActiveStorage::Blob/1>>
+[ActiveJob] [ActiveStorage::AnalyzeJob] [bfc5f2be-1193-45f1-9b63-d457ee6c9258] [36m  Disk Storage (1.8ms) [0m[34mDownloaded file from key: tfp4ruaj6gufnuxkrhygdi7q9k4o[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [bfc5f2be-1193-45f1-9b63-d457ee6c9258] Skipping image analysis because the mini_magick gem isn't installed
+[ActiveJob] [ActiveStorage::AnalyzeJob] [bfc5f2be-1193-45f1-9b63-d457ee6c9258]   [1m[35m (0.6ms)[0m  [1m[35mBEGIN[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [bfc5f2be-1193-45f1-9b63-d457ee6c9258]   [1m[36mActiveStorage::Blob Update (0.8ms)[0m  [1m[33mUPDATE "active_storage_blobs" SET "metadata" = $1 WHERE "active_storage_blobs"."id" = $2[0m  [["metadata", "{\"identified\":true,\"analyzed\":true}"], ["id", 1]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [bfc5f2be-1193-45f1-9b63-d457ee6c9258]   [1m[35m (1.4ms)[0m  [1m[35mCOMMIT[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [bfc5f2be-1193-45f1-9b63-d457ee6c9258] Performed ActiveStorage::AnalyzeJob (Job ID: bfc5f2be-1193-45f1-9b63-d457ee6c9258) from Inline(active_storage_analysis) in 194.91ms
+[ActiveJob] Enqueued ActiveStorage::AnalyzeJob (Job ID: bfc5f2be-1193-45f1-9b63-d457ee6c9258) to Inline(active_storage_analysis) with arguments: #<GlobalID:0x000055f1a3f8fb48 @uri=#<URI::GID gid://active-storage/ActiveStorage::Blob/1>>
+Started GET "/" for 172.21.0.1 at 2020-11-11 14:10:49 +0000
+Cannot render console from 172.21.0.1! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+  [1m[35m (5.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by ApplicationController#index as HTML
+  Rendering application/index.html.erb within layouts/application
+  Rendered templates/pages/_index.html.erb (Duration: 7.5ms | Allocations: 82)
+  Rendered templates/_login.html.erb (Duration: 17.5ms | Allocations: 128)
+  Rendered templates/_navbar.html.erb (Duration: 5.5ms | Allocations: 164)
+  Rendered templates/_profileIcon.html.erb (Duration: 25.9ms | Allocations: 78)
+  Rendered templates/_modal.html.erb (Duration: 4.7ms | Allocations: 103)
+  Rendered templates/forms/_profile.html.erb (Duration: 4.9ms | Allocations: 107)
+  Rendered templates/_notFound.html.erb (Duration: 5.2ms | Allocations: 80)
+  Rendered templates/_profileIcon.html.erb (Duration: 0.2ms | Allocations: 5)
+  Rendered templates/_profileIcon.html.erb (Duration: 0.1ms | Allocations: 5)
+  Rendered templates/_message.html.erb (Duration: 15.1ms | Allocations: 263)
+  Rendered templates/_chat.html.erb (Duration: 9.0ms | Allocations: 95)
+  Rendered application/index.html.erb within layouts/application (Duration: 192.2ms | Allocations: 3376)
+[Webpacker] Compiling...
+[Webpacker] Compiled all packs in /app/public/packs
+[Webpacker] Hash: bb9ceebcc06e6122e7c5
+Version: webpack 4.44.2
+Time: 56414ms
+Built at: 11/11/2020 2:11:51 PM
+                                     Asset       Size       Chunks                         Chunk Names
+    js/application-74eba02901f144fec761.js   4.49 MiB  application  [emitted] [immutable]  application
+js/application-74eba02901f144fec761.js.map    4.4 MiB  application  [emitted] [dev]        application
+                             manifest.json  364 bytes               [emitted]              
+Entrypoint application = js/application-74eba02901f144fec761.js js/application-74eba02901f144fec761.js.map
+[./app/javascript/channels sync recursive _channel\.js$] ./app/javascript/channels sync _channel\.js$ 160 bytes {application} [built]
+[./app/javascript/channels/index.js] 211 bytes {application} [built]
+[./app/javascript/packs/application.ts] 852 bytes {application} [built]
+[./app/javascript/src/index.ts] 954 bytes {application} [built]
+[./app/javascript/src/lib/ViewsHandler.ts] 423 bytes {application} [built]
+[./app/javascript/src/routers/MainRouter.ts] 5 KiB {application} [built]
+[./app/javascript/src/utils/api.ts] 287 bytes {application} [built]
+[./app/javascript/src/utils/auth.ts] 962 bytes {application} [built]
+[./app/javascript/src/utils/index.ts] 102 bytes {application} [built]
+[./app/javascript/src/utils/navigation.ts] 550 bytes {application} [built]
+[./app/javascript/src/utils/toast.ts] 1.56 KiB {application} [built]
+[./app/javascript/src/views/AuthView.ts] 5.39 KiB {application} [built]
+[./app/javascript/stylesheets/application.scss] 664 bytes {application} [built]
+[./node_modules/css-loader/dist/cjs.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./app/javascript/stylesheets/application.scss] ./node_modules/css-loader/dist/cjs.js??ref--8-1!./node_modules/postcss-loader/src??ref--8-2!./node_modules/sass-loader/dist/cjs.js??ref--8-3!./app/javascript/stylesheets/application.scss 2.97 MiB {application} [built]
+[./node_modules/webpack/buildin/module.js] (webpack)/buildin/module.js 552 bytes {application} [built]
+    + 586 hidden modules
+
+Completed 200 OK in 61942ms (Views: 61777.4ms | ActiveRecord: 0.0ms | Allocations: 20637)
+
+
+Started GET "/user" for 172.21.0.1 at 2020-11-11 14:11:54 +0000
+Cannot render console from 172.21.0.1! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by UsersController#show as JSON
+  [1m[36mUser Load (4.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."login" = $1 LIMIT $2[0m  [["login", "bob"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:11:in `current_user'
+  Rendering users/show.json.jbuilder
+  [1m[36mActiveStorage::Attachment Load (21.6ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = $1 AND "active_storage_attachments"."record_type" = $2 AND "active_storage_attachments"."name" = $3 LIMIT $4[0m  [["record_id", 1], ["record_type", "User"], ["name", "avatar"], ["LIMIT", 1]]
+  ↳ app/views/users/_user.json.jbuilder:2
+  [1m[36mActiveStorage::Blob Load (11.6ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/users/_user.json.jbuilder:2
+  Rendered users/_user.json.jbuilder (Duration: 434.5ms | Allocations: 18785)
+  Rendered users/show.json.jbuilder (Duration: 447.4ms | Allocations: 19194)
+Completed 200 OK in 846ms (Views: 410.4ms | ActiveRecord: 87.7ms | Allocations: 26344)
+
+
+Started GET "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--901b8ca3b7e3e5aa5ca00086281b01c7c83a2398/bob.png" for 172.21.0.1 at 2020-11-11 14:11:56 +0000
+Cannot render console from 172.21.0.1! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::BlobsController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--901b8ca3b7e3e5aa5ca00086281b01c7c83a2398", "filename"=>"bob"}
+  [1m[36mActiveStorage::Blob Load (1.2ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[36m  Disk Storage (56.6ms) [0m[34mGenerated URL for file at key: tfp4ruaj6gufnuxkrhygdi7q9k4o (http://localhost:3000/rails/active_storage/disk/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDRG9JYTJWNVNTSWhkR1p3TkhKMVlXbzJaM1ZtYm5WNGEzSm9lV2RrYVRkeE9XczBid1k2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpT1dsdWJHbHVaVHNnWm1sc1pXNWhiV1U5SW1KdllpNXdibWNpT3lCbWFXeGxibUZ0WlNvOVZWUkdMVGduSjJKdllpNXdibWNHT3daVU9oRmpiMjUwWlc1MFgzUjVjR1ZKSWc1cGJXRm5aUzl3Ym1jR093WlUiLCJleHAiOiIyMDIwLTExLTExVDE0OjE2OjU2LjM3N1oiLCJwdXIiOiJibG9iX2tleSJ9fQ==--2a96f703f82016bed6a344ad8acc7ca0a4ed2337/bob.png?content_type=image%2Fpng&disposition=inline%3B+filename%3D%22bob.png%22%3B+filename%2A%3DUTF-8%27%27bob.png)[0m
+Redirected to http://localhost:3000/rails/active_storage/disk/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDRG9JYTJWNVNTSWhkR1p3TkhKMVlXbzJaM1ZtYm5WNGEzSm9lV2RrYVRkeE9XczBid1k2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpT1dsdWJHbHVaVHNnWm1sc1pXNWhiV1U5SW1KdllpNXdibWNpT3lCbWFXeGxibUZ0WlNvOVZWUkdMVGduSjJKdllpNXdibWNHT3daVU9oRmpiMjUwWlc1MFgzUjVjR1ZKSWc1cGJXRm5aUzl3Ym1jR093WlUiLCJleHAiOiIyMDIwLTExLTExVDE0OjE2OjU2LjM3N1oiLCJwdXIiOiJibG9iX2tleSJ9fQ==--2a96f703f82016bed6a344ad8acc7ca0a4ed2337/bob.png?content_type=image%2Fpng&disposition=inline%3B+filename%3D%22bob.png%22%3B+filename%2A%3DUTF-8%27%27bob.png
+Completed 302 Found in 106ms (ActiveRecord: 1.2ms | Allocations: 3390)
+
+
+Started GET "/rails/active_storage/disk/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDRG9JYTJWNVNTSWhkR1p3TkhKMVlXbzJaM1ZtYm5WNGEzSm9lV2RrYVRkeE9XczBid1k2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpT1dsdWJHbHVaVHNnWm1sc1pXNWhiV1U5SW1KdllpNXdibWNpT3lCbWFXeGxibUZ0WlNvOVZWUkdMVGduSjJKdllpNXdibWNHT3daVU9oRmpiMjUwWlc1MFgzUjVjR1ZKSWc1cGJXRm5aUzl3Ym1jR093WlUiLCJleHAiOiIyMDIwLTExLTExVDE0OjE2OjU2LjM3N1oiLCJwdXIiOiJibG9iX2tleSJ9fQ==--2a96f703f82016bed6a344ad8acc7ca0a4ed2337/bob.png?content_type=image%2Fpng&disposition=inline%3B+filename%3D%22bob.png%22%3B+filename%2A%3DUTF-8%27%27bob.png" for 172.21.0.1 at 2020-11-11 14:11:56 +0000
+Cannot render console from 172.21.0.1! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::DiskController#show as PNG
+  Parameters: {"content_type"=>"image/png", "disposition"=>"inline; filename=\"bob.png\"; filename*=UTF-8''bob.png", "encoded_key"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDRG9JYTJWNVNTSWhkR1p3TkhKMVlXbzJaM1ZtYm5WNGEzSm9lV2RrYVRkeE9XczBid1k2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpT1dsdWJHbHVaVHNnWm1sc1pXNWhiV1U5SW1KdllpNXdibWNpT3lCbWFXeGxibUZ0WlNvOVZWUkdMVGduSjJKdllpNXdibWNHT3daVU9oRmpiMjUwWlc1MFgzUjVjR1ZKSWc1cGJXRm5aUzl3Ym1jR093WlUiLCJleHAiOiIyMDIwLTExLTExVDE0OjE2OjU2LjM3N1oiLCJwdXIiOiJibG9iX2tleSJ9fQ==--2a96f703f82016bed6a344ad8acc7ca0a4ed2337", "filename"=>"bob"}
+Completed 200 OK in 4ms (ActiveRecord: 0.0ms | Allocations: 414)
+
+
+Started GET "/" for 172.21.0.1 at 2020-11-11 14:16:13 +0000
+Cannot render console from 172.21.0.1! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+  
+ActiveRecord::NoDatabaseError (FATAL:  database "transcendance_development" does not exist
+):
+  
+activerecord (6.0.3.4) lib/active_record/connection_adapters/postgresql_adapter.rb:50:in `rescue in postgresql_connection'
+activerecord (6.0.3.4) lib/active_record/connection_adapters/postgresql_adapter.rb:33:in `postgresql_connection'
+activerecord (6.0.3.4) lib/active_record/connection_adapters/abstract/connection_pool.rb:887:in `new_connection'
+activerecord (6.0.3.4) lib/active_record/connection_adapters/abstract/connection_pool.rb:931:in `checkout_new_connection'
+activerecord (6.0.3.4) lib/active_record/connection_adapters/abstract/connection_pool.rb:910:in `try_to_checkout_new_connection'
+activerecord (6.0.3.4) lib/active_record/connection_adapters/abstract/connection_pool.rb:871:in `acquire_connection'
+activerecord (6.0.3.4) lib/active_record/connection_adapters/abstract/connection_pool.rb:593:in `checkout'
+activerecord (6.0.3.4) lib/active_record/connection_adapters/abstract/connection_pool.rb:437:in `connection'
+activerecord (6.0.3.4) lib/active_record/connection_adapters/abstract/connection_pool.rb:1119:in `retrieve_connection'
+activerecord (6.0.3.4) lib/active_record/connection_handling.rb:221:in `retrieve_connection'
+activerecord (6.0.3.4) lib/active_record/connection_handling.rb:189:in `connection'
+activerecord (6.0.3.4) lib/active_record/migration.rb:562:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/callbacks.rb:27:in `block in call'
+activesupport (6.0.3.4) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/callbacks.rb:26:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/debug_exceptions.rb:32:in `call'
+web-console (4.1.0) lib/web_console/middleware.rb:132:in `call_app'
+web-console (4.1.0) lib/web_console/middleware.rb:19:in `block in call'
+web-console (4.1.0) lib/web_console/middleware.rb:17:in `catch'
+web-console (4.1.0) lib/web_console/middleware.rb:17:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.4) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `call'
+sprockets-rails (3.2.2) lib/sprockets/rails/quiet_assets.rb:13:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/method_override.rb:24:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.4) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+webpacker (4.3.0) lib/webpacker/dev_server_proxy.rb:23:in `perform_request'
+rack-proxy (0.6.5) lib/rack/proxy.rb:57:in `call'
+railties (6.0.3.4) lib/rails/engine.rb:527:in `call'
+puma (4.3.6) lib/puma/configuration.rb:228:in `call'
+puma (4.3.6) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.6) lib/puma/server.rb:472:in `process_client'
+puma (4.3.6) lib/puma/server.rb:328:in `block in run'
+puma (4.3.6) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+  [1m[35m (3.9ms)[0m  [1m[35mDROP DATABASE IF EXISTS "transcendance_development"[0m
+  [1m[35m (0.6ms)[0m  [1m[35mDROP DATABASE IF EXISTS "transcendance_test"[0m
+  [1m[35m (5317.6ms)[0m  [1m[35mCREATE DATABASE "transcendance_development" ENCODING = 'unicode'[0m
+  [1m[35m (4934.8ms)[0m  [1m[35mCREATE DATABASE "transcendance_test" ENCODING = 'unicode'[0m
+  [1m[35m (189.5ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (42.9ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (1.9ms)[0m  [1m[34mSELECT pg_try_advisory_lock(3747949535521679565)[0m
+  [1m[35m (4.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateUsers (20201108111147)
+  [1m[35m (0.7ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (230.4ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "login" character varying, "name" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mprimary::SchemaMigration Create (8.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20201108111147"]]
+  [1m[35m (3.6ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateActiveStorageTables (20201108135935)
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (163.7ms)[0m  [1m[35mCREATE TABLE "active_storage_blobs" ("id" bigserial primary key, "key" character varying NOT NULL, "filename" character varying NOT NULL, "content_type" character varying, "metadata" text, "byte_size" bigint NOT NULL, "checksum" character varying NOT NULL, "created_at" timestamp NOT NULL)[0m
+  [1m[35m (40.8ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_active_storage_blobs_on_key" ON "active_storage_blobs"  ("key")[0m
+  [1m[35m (107.2ms)[0m  [1m[35mCREATE TABLE "active_storage_attachments" ("id" bigserial primary key, "name" character varying NOT NULL, "record_type" character varying NOT NULL, "record_id" bigint NOT NULL, "blob_id" bigint NOT NULL, "created_at" timestamp NOT NULL, CONSTRAINT "fk_rails_c3b3935057"
+FOREIGN KEY ("blob_id")
+  REFERENCES "active_storage_blobs" ("id")
+)[0m
+  [1m[35m (14.4ms)[0m  [1m[35mCREATE  INDEX  "index_active_storage_attachments_on_blob_id" ON "active_storage_attachments"  ("blob_id")[0m
+  [1m[35m (23.7ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_active_storage_attachments_uniqueness" ON "active_storage_attachments"  ("record_type", "record_id", "name", "blob_id")[0m
+  [1m[36mprimary::SchemaMigration Create (7.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20201108135935"]]
+  [1m[35m (3.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (5.5ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (5.9ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", "2020-11-11 14:17:10.701138"], ["updated_at", "2020-11-11 14:17:10.701138"]]
+  [1m[35m (2.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (3.7ms)[0m  [1m[34mSELECT pg_advisory_unlock(3747949535521679565)[0m
+  [1m[35m (9.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (10.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mUser Load (9.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."login" = $1 ORDER BY "users"."id" ASC LIMIT $2[0m  [["login", "bob"], ["LIMIT", 1]]
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists? (0.9ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."login" = $1 LIMIT $2[0m  [["login", "bob"], ["LIMIT", 1]]
+  [1m[36mUser Create (11.3ms)[0m  [1m[32mINSERT INTO "users" ("login", "name", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["login", "bob"], ["name", "bob"], ["created_at", "2020-11-11 14:17:11.659766"], ["updated_at", "2020-11-11 14:17:11.659766"]]
+  [1m[35m (3.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveStorage::Blob Load (18.3ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" INNER JOIN "active_storage_attachments" ON "active_storage_blobs"."id" = "active_storage_attachments"."blob_id" WHERE "active_storage_attachments"."record_id" = $1 AND "active_storage_attachments"."record_type" = $2 AND "active_storage_attachments"."name" = $3 LIMIT $4[0m  [["record_id", 1], ["record_type", "User"], ["name", "avatar"], ["LIMIT", 1]]
+  [1m[36mUser Exists? (3.5ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."login" = $1 AND "users"."id" != $2 LIMIT $3[0m  [["login", "bob"], ["id", 1], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Blob Create (8.1ms)[0m  [1m[32mINSERT INTO "active_storage_blobs" ("key", "filename", "content_type", "metadata", "byte_size", "checksum", "created_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["key", "ny7j9owx6qfvxqd9cu0xpzfjwx9x"], ["filename", "bob.png"], ["content_type", "image/png"], ["metadata", "{\"identified\":true}"], ["byte_size", 118245], ["checksum", "MFlrH9sj67GLvrMmd5dSKA=="], ["created_at", "2020-11-11 14:17:12.359763"]]
+  [1m[36mActiveStorage::Attachment Create (13.8ms)[0m  [1m[32mINSERT INTO "active_storage_attachments" ("name", "record_type", "record_id", "blob_id", "created_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "avatar"], ["record_type", "User"], ["record_id", 1], ["blob_id", 1], ["created_at", "2020-11-11 14:17:12.374585"]]
+  [1m[36mUser Update (0.7ms)[0m  [1m[33mUPDATE "users" SET "updated_at" = $1 WHERE "users"."id" = $2[0m  [["updated_at", "2020-11-11 14:17:12.393203"], ["id", 1]]
+  [1m[35m (1.9ms)[0m  [1m[35mCOMMIT[0m
+[36m  Disk Storage (22.9ms) [0m[32mUploaded file to key: ny7j9owx6qfvxqd9cu0xpzfjwx9x (checksum: MFlrH9sj67GLvrMmd5dSKA==)[0m
+[ActiveJob]   [1m[36mActiveStorage::Blob Load (0.4ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [9feae6c3-5baf-4fb9-8d7b-84167b79f431] Performing ActiveStorage::AnalyzeJob (Job ID: 9feae6c3-5baf-4fb9-8d7b-84167b79f431) from Inline(active_storage_analysis) enqueued at 2020-11-11T14:17:12Z with arguments: #<GlobalID:0x000055bb28339148 @uri=#<URI::GID gid://active-storage/ActiveStorage::Blob/1>>
+[ActiveJob] [ActiveStorage::AnalyzeJob] [9feae6c3-5baf-4fb9-8d7b-84167b79f431] [36m  Disk Storage (3.0ms) [0m[34mDownloaded file from key: ny7j9owx6qfvxqd9cu0xpzfjwx9x[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [9feae6c3-5baf-4fb9-8d7b-84167b79f431] Skipping image analysis because the mini_magick gem isn't installed
+[ActiveJob] [ActiveStorage::AnalyzeJob] [9feae6c3-5baf-4fb9-8d7b-84167b79f431]   [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [9feae6c3-5baf-4fb9-8d7b-84167b79f431]   [1m[36mActiveStorage::Blob Update (1.1ms)[0m  [1m[33mUPDATE "active_storage_blobs" SET "metadata" = $1 WHERE "active_storage_blobs"."id" = $2[0m  [["metadata", "{\"identified\":true,\"analyzed\":true}"], ["id", 1]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [9feae6c3-5baf-4fb9-8d7b-84167b79f431]   [1m[35m (11.8ms)[0m  [1m[35mCOMMIT[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [9feae6c3-5baf-4fb9-8d7b-84167b79f431] Performed ActiveStorage::AnalyzeJob (Job ID: 9feae6c3-5baf-4fb9-8d7b-84167b79f431) from Inline(active_storage_analysis) in 375.58ms
+[ActiveJob] Enqueued ActiveStorage::AnalyzeJob (Job ID: 9feae6c3-5baf-4fb9-8d7b-84167b79f431) to Inline(active_storage_analysis) with arguments: #<GlobalID:0x000055bb2a85d168 @uri=#<URI::GID gid://active-storage/ActiveStorage::Blob/1>>
+Started GET "/" for 172.21.0.1 at 2020-11-11 14:19:32 +0000
+Cannot render console from 172.21.0.1! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+  [1m[35m (5.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by ApplicationController#index as HTML
+  Rendering application/index.html.erb within layouts/application
+  Rendered templates/pages/_index.html.erb (Duration: 4.6ms | Allocations: 82)
+  Rendered templates/_login.html.erb (Duration: 6.5ms | Allocations: 128)
+  Rendered templates/_navbar.html.erb (Duration: 4.6ms | Allocations: 164)
+  Rendered templates/_profileIcon.html.erb (Duration: 4.5ms | Allocations: 78)
+  Rendered templates/_modal.html.erb (Duration: 16.1ms | Allocations: 103)
+  Rendered templates/forms/_profile.html.erb (Duration: 5.8ms | Allocations: 107)
+  Rendered templates/_notFound.html.erb (Duration: 4.4ms | Allocations: 80)
+  Rendered templates/_profileIcon.html.erb (Duration: 0.1ms | Allocations: 5)
+  Rendered templates/_profileIcon.html.erb (Duration: 0.1ms | Allocations: 5)
+  Rendered templates/_message.html.erb (Duration: 14.1ms | Allocations: 263)
+  Rendered templates/_chat.html.erb (Duration: 5.9ms | Allocations: 95)
+  Rendered application/index.html.erb within layouts/application (Duration: 121.8ms | Allocations: 3263)
+Completed 200 OK in 346ms (Views: 318.8ms | ActiveRecord: 0.0ms | Allocations: 8150)
+
+
+Started GET "/user" for 172.21.0.1 at 2020-11-11 14:19:34 +0000
+Cannot render console from 172.21.0.1! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by UsersController#show as JSON
+  [1m[36mUser Load (9.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."login" = $1 LIMIT $2[0m  [["login", "bob"], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:11:in `current_user'
+  Rendering users/show.json.jbuilder
+  [1m[36mActiveStorage::Attachment Load (16.3ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = $1 AND "active_storage_attachments"."record_type" = $2 AND "active_storage_attachments"."name" = $3 LIMIT $4[0m  [["record_id", 1], ["record_type", "User"], ["name", "avatar"], ["LIMIT", 1]]
+  ↳ app/views/users/_user.json.jbuilder:2
+  [1m[36mActiveStorage::Blob Load (13.0ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/users/_user.json.jbuilder:2
+  Rendered users/_user.json.jbuilder (Duration: 737.6ms | Allocations: 18800)
+  Rendered users/show.json.jbuilder (Duration: 776.6ms | Allocations: 19212)
+Completed 200 OK in 1238ms (Views: 767.6ms | ActiveRecord: 120.6ms | Allocations: 26312)
+
+
+Started GET "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--901b8ca3b7e3e5aa5ca00086281b01c7c83a2398/bob.png" for 172.21.0.1 at 2020-11-11 14:19:36 +0000
+Cannot render console from 172.21.0.1! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::BlobsController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--901b8ca3b7e3e5aa5ca00086281b01c7c83a2398", "filename"=>"bob"}
+  [1m[36mActiveStorage::Blob Load (1.3ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+[36m  Disk Storage (39.2ms) [0m[34mGenerated URL for file at key: ny7j9owx6qfvxqd9cu0xpzfjwx9x (http://localhost:3000/rails/active_storage/disk/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDRG9JYTJWNVNTSWhibmszYWpsdmQzZzJjV1oyZUhGa09XTjFNSGh3ZW1acWQzZzVlQVk2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpT1dsdWJHbHVaVHNnWm1sc1pXNWhiV1U5SW1KdllpNXdibWNpT3lCbWFXeGxibUZ0WlNvOVZWUkdMVGduSjJKdllpNXdibWNHT3daVU9oRmpiMjUwWlc1MFgzUjVjR1ZKSWc1cGJXRm5aUzl3Ym1jR093WlUiLCJleHAiOiIyMDIwLTExLTExVDE0OjI0OjM2LjMzNloiLCJwdXIiOiJibG9iX2tleSJ9fQ==--2ce434299526de94a7a77e2075718f3b6f2bce84/bob.png?content_type=image%2Fpng&disposition=inline%3B+filename%3D%22bob.png%22%3B+filename%2A%3DUTF-8%27%27bob.png)[0m
+Redirected to http://localhost:3000/rails/active_storage/disk/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDRG9JYTJWNVNTSWhibmszYWpsdmQzZzJjV1oyZUhGa09XTjFNSGh3ZW1acWQzZzVlQVk2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpT1dsdWJHbHVaVHNnWm1sc1pXNWhiV1U5SW1KdllpNXdibWNpT3lCbWFXeGxibUZ0WlNvOVZWUkdMVGduSjJKdllpNXdibWNHT3daVU9oRmpiMjUwWlc1MFgzUjVjR1ZKSWc1cGJXRm5aUzl3Ym1jR093WlUiLCJleHAiOiIyMDIwLTExLTExVDE0OjI0OjM2LjMzNloiLCJwdXIiOiJibG9iX2tleSJ9fQ==--2ce434299526de94a7a77e2075718f3b6f2bce84/bob.png?content_type=image%2Fpng&disposition=inline%3B+filename%3D%22bob.png%22%3B+filename%2A%3DUTF-8%27%27bob.png
+Completed 302 Found in 73ms (ActiveRecord: 1.3ms | Allocations: 3369)
+
+
+Started GET "/rails/active_storage/disk/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDRG9JYTJWNVNTSWhibmszYWpsdmQzZzJjV1oyZUhGa09XTjFNSGh3ZW1acWQzZzVlQVk2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpT1dsdWJHbHVaVHNnWm1sc1pXNWhiV1U5SW1KdllpNXdibWNpT3lCbWFXeGxibUZ0WlNvOVZWUkdMVGduSjJKdllpNXdibWNHT3daVU9oRmpiMjUwWlc1MFgzUjVjR1ZKSWc1cGJXRm5aUzl3Ym1jR093WlUiLCJleHAiOiIyMDIwLTExLTExVDE0OjI0OjM2LjMzNloiLCJwdXIiOiJibG9iX2tleSJ9fQ==--2ce434299526de94a7a77e2075718f3b6f2bce84/bob.png?content_type=image%2Fpng&disposition=inline%3B+filename%3D%22bob.png%22%3B+filename%2A%3DUTF-8%27%27bob.png" for 172.21.0.1 at 2020-11-11 14:19:36 +0000
+Cannot render console from 172.21.0.1! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::DiskController#show as PNG
+  Parameters: {"content_type"=>"image/png", "disposition"=>"inline; filename=\"bob.png\"; filename*=UTF-8''bob.png", "encoded_key"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDRG9JYTJWNVNTSWhibmszYWpsdmQzZzJjV1oyZUhGa09XTjFNSGh3ZW1acWQzZzVlQVk2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpT1dsdWJHbHVaVHNnWm1sc1pXNWhiV1U5SW1KdllpNXdibWNpT3lCbWFXeGxibUZ0WlNvOVZWUkdMVGduSjJKdllpNXdibWNHT3daVU9oRmpiMjUwWlc1MFgzUjVjR1ZKSWc1cGJXRm5aUzl3Ym1jR093WlUiLCJleHAiOiIyMDIwLTExLTExVDE0OjI0OjM2LjMzNloiLCJwdXIiOiJibG9iX2tleSJ9fQ==--2ce434299526de94a7a77e2075718f3b6f2bce84", "filename"=>"bob"}
+Completed 200 OK in 21ms (ActiveRecord: 0.0ms | Allocations: 2776)
+
+

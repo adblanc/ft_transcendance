@@ -1,0 +1,1 @@
+{"ast":null,"code":"// Predicate-generating function. Often useful outside of Underscore.\nexport default function noop() {}","map":null,"metadata":{},"sourceType":"module"}

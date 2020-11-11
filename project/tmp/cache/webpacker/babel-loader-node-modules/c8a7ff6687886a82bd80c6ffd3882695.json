@@ -1,0 +1,1 @@
+{"ast":null,"code":"import findLastIndex from './findLastIndex.js';\nimport createIndexFinder from './_createIndexFinder.js'; // Return the position of the last occurrence of an item in an array,\n// or -1 if the item is not included in the array.\n\nexport default createIndexFinder(-1, findLastIndex);","map":null,"metadata":{},"sourceType":"module"}

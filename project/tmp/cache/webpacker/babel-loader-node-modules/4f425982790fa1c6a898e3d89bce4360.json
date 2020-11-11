@@ -1,0 +1,1 @@
+{"ast":null,"code":"import createAssigner from './_createAssigner.js';\nimport keys from './keys.js'; // Assigns a given object with all the own properties in the passed-in\n// object(s).\n// (https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)\n\nexport default createAssigner(keys);","map":null,"metadata":{},"sourceType":"module"}

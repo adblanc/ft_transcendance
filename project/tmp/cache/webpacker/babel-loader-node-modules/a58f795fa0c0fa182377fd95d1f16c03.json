@@ -1,0 +1,1 @@
+{"ast":null,"code":"import group from './_group.js'; // Indexes the object's values by a criterion, similar to `_.groupBy`, but for\n// when you know that your index values will be unique.\n\nexport default group(function (result, value, key) {\n  result[key] = value;\n});","map":null,"metadata":{},"sourceType":"module"}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"import createPredicateIndexFinder from './_createPredicateIndexFinder.js'; // Returns the first index on an array-like that passes a truth test.\n\nexport default createPredicateIndexFinder(1);","map":null,"metadata":{},"sourceType":"module"}

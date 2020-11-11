@@ -1,0 +1,1 @@
+{"ast":null,"code":"// Internal function to obtain a nested property in `obj` along `path`.\nexport default function deepGet(obj, path) {\n  var length = path.length;\n\n  for (var i = 0; i < length; i++) {\n    if (obj == null) return void 0;\n    obj = obj[path[i]];\n  }\n\n  return length ? obj : void 0;\n}","map":null,"metadata":{},"sourceType":"module"}
