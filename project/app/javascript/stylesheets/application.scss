@@ -36,3 +36,7 @@
     @apply bg-gray-500 rounded-bl-sm;
   }
 }
+
+.link-primary {
+  @apply underline text-teal-500 text-base cursor-pointer;
+}

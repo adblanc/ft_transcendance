@@ -2,7 +2,7 @@ import Mustache from "mustache";
 import { eventBus } from "src/events/EventBus";
 import Tab from "src/models/Tab";
 import AddTabView from "./AddTabView";
-import BaseView from "./BaseView";
+import BaseView from "../BaseView";
 import TabView from "./TabView";
 
 export default class TabsView extends BaseView {
@@ -41,7 +41,7 @@ export default class TabsView extends BaseView {
   }
 
   getTabsLength() {
-    return this.$("#chat-tabs-container").children().length;
+    return this.getChildrenLength("#chat-tabs-container");
   }
 
   onRemoveTab(tab: Tab) {
@@ -59,6 +59,7 @@ export default class TabsView extends BaseView {
       this.addTabView = new AddTabView({
         isOdd: false,
       });
+      eventBus.trigger("chat:tabs:empty");
       this.renderAddTab();
     }
   }

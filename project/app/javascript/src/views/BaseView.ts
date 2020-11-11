@@ -25,6 +25,10 @@ export default class BaseView<
     }
   }
 
+  getChildrenLength(selector: string) {
+    return this.$(selector).children().length;
+  }
+
   renderNested(view: Backbone.View, selector: string) {
     const $element = this.$(selector);
 

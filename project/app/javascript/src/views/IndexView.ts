@@ -4,7 +4,7 @@ import Messages from "src/collections/Messages";
 import { eventBus } from "src/events/EventBus";
 import Message from "src/models/Message";
 import BaseView from "./BaseView";
-import ChatView from "./ChatView";
+import ChatView from "./Chat/ChatView";
 import NavbarView from "./NavbarView";
 
 export default class IndexView extends BaseView {

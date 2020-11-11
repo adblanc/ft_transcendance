@@ -1,6 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import ModalView from "./MovalView";
+import ModalView from "./ModalView";
 import Profile from "../models/Profile";
 import { displayToast } from "../utils/toast";
 

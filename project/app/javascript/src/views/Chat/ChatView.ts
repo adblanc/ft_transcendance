@@ -1,13 +1,18 @@
 import Mustache from "mustache";
-import BaseView from "./BaseView";
+import BaseView from "../BaseView";
 import Message from "src/models/Message";
 import MessageView from "./MessageView";
 import Tabs from "src/collections/Tabs";
 import TabsView from "./TabsView";
+import { eventBus } from "src/events/EventBus";
+import CreateChannelView from "./CreateChannelView";
+import InputView from "./InputView";
 
 export default class ChatView extends BaseView {
   tabs: Backbone.Collection;
   tabsView: BaseView;
+  createChannelView: BaseView;
+  inputView: BaseView;
   constructor(options?: Backbone.ViewOptions) {
     super(options);
 
@@ -16,8 +21,12 @@ export default class ChatView extends BaseView {
       collection: this.tabs,
     });
 
-    this.listenTo(this.collection, "add", this.onAddMessage);
-    this.listenTo(this.collection, "remove", this.onRemoveMessage);
+    this.inputView = new InputView({
+      className: "p-3",
+    });
+
+    this.listenTo(eventBus, "chat:tabs:add", this.onAddTab);
+    this.listenTo(eventBus, "chat:tabs:empty", this.onEmptyTabs);
   }
 
   onClose = () => {
@@ -34,18 +43,15 @@ export default class ChatView extends BaseView {
     console.log("key pressed");
   }
 
-  onAddMessage(message: Message) {
-    console.log("add message");
-    const view = new MessageView({
-      model: message,
-    });
-    const el = view.render().$el;
-
-    this.$("#messages-container").append(el);
+  onAddTab() {
+    this.createChannelView = new CreateChannelView({});
+    this.appendNested(this.createChannelView, "#chat-container");
+    this.inputView.close();
   }
 
-  onRemoveMessage() {
-    console.log("remove message");
+  onEmptyTabs() {
+    this.inputView.close();
+    this.createChannelView.close();
   }
 
   render() {
