@@ -11,9 +11,10 @@ export function start() {
   const mainRouter = new MainRouter({
     routes: {
       "": "index",
-      auth: "auth",
-      "auth/callback?code=:code": "authCallBack",
-      "*path": "notFound",
+	  auth: "auth",
+	  "auth/callback?code=:code": "authCallBack",
+	  "guild": "guildPage",
+	  "*path": "notFound",
     },
   });
 

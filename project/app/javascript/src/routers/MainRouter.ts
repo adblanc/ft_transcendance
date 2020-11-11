@@ -3,6 +3,7 @@ import axios from "axios";
 import { viewsHandler } from "../lib/ViewsHandler";
 import { RouterOptions } from "../../types/router";
 import IndexView from "../views/IndexView";
+import GuildView from "../views/GuildView";
 import NotFoundView from "../views/NotFoundView";
 import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
@@ -43,6 +44,12 @@ export default class MainRouter extends Backbone.Router {
     const notFoundView = new NotFoundView({});
 
     viewsHandler.showView(notFoundView);
+  }
+
+  guildPage() {
+    const guildView = new GuildView({});
+
+    viewsHandler.showView(guildView);
   }
 
 }
