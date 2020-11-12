@@ -3,7 +3,7 @@ import axios from "axios";
 import { viewsHandler } from "../lib/ViewsHandler";
 import { RouterOptions } from "../../types/router";
 import IndexView from "../views/IndexView";
-import GuildView from "../views/GuildView";
+import GuildView from "../views/guild/GuildView";
 import NotFoundView from "../views/NotFoundView";
 import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
