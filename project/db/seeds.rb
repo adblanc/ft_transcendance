@@ -16,3 +16,5 @@ bob.avatar.attach(
 	"content_type": "image/png",
 )
 
+Guild.create(name: 'The Best Guild', ang: "TBG", points: 0)
+Guild.create(name: 'The Doom', ang: "TDM", points: 2)

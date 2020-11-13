@@ -5,17 +5,25 @@ import BaseView from "../BaseView";
 import NavbarView from "../NavbarView";
 import InfoView from "./InfoView";
 import MembersView from "./MembersView";
+import Guild from "src/models/Guild";
+
+type Options = Backbone.ViewOptions & {guild: Backbone.Model};
 
 export default class GuildView extends BaseView {
   navbarView: Backbone.View;
   infoView: Backbone.View;
   membersView: Backbone.View;
+  guild: Backbone.Model;
 
-  constructor(options?: Backbone.ViewOptions) {
+  constructor(options?: Options) {
     super(options);
 
+	this.guild = options.guild;
 	this.navbarView = new NavbarView();
-	this.infoView = new InfoView();
+	this.infoView = new InfoView({
+		model: this.guild,
+	});
+	this.guild.fetch();
 	this.membersView = new MembersView();
   }
 
@@ -27,8 +35,6 @@ export default class GuildView extends BaseView {
 	this.renderNested(this.navbarView, "#index-navbar");
 	this.renderNested(this.infoView, "#info");
 	this.renderNested(this.membersView, "#members");
-
-	//render member collection through another template than the guild page template?
 
     return this;
   }

@@ -13,7 +13,7 @@ export function start() {
       "": "index",
 	  auth: "auth",
 	  "auth/callback?code=:code": "authCallBack",
-	  "guild": "guildPage",
+	  "guild/:id": "guildPage",
 	  "*path": "notFound",
     },
   });

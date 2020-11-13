@@ -7,6 +7,7 @@ import GuildView from "../views/guild/GuildView";
 import NotFoundView from "../views/NotFoundView";
 import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
+import Guild from "src/models/Guild";
 
 export default class MainRouter extends Backbone.Router {
   constructor(options: RouterOptions<MainRouter>) {
@@ -46,8 +47,9 @@ export default class MainRouter extends Backbone.Router {
     viewsHandler.showView(notFoundView);
   }
 
-  guildPage() {
-    const guildView = new GuildView({});
+  guildPage(id:string) {
+	//console.log(id);
+    const guildView = new GuildView({guild: new Guild({id})});
 
     viewsHandler.showView(guildView);
   }
