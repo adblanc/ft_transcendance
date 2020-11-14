@@ -16,23 +16,8 @@ class GuildsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should get editPoints" do
-    get guilds_editPoints_url
-    assert_response :success
-  end
-
-  test "should get editMembers" do
-    get guilds_editMembers_url
-    assert_response :success
-  end
-
-  test "should get editatWar" do
-    get guilds_editatWar_url
-    assert_response :success
-  end
-
-  test "should get editWarLog" do
-    get guilds_editWarLog_url
+  test "should get edit" do
+    get guilds_edit_url
     assert_response :success
   end
 
