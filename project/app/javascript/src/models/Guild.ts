@@ -16,6 +16,13 @@ interface IGuild {
 export default class Guild extends Backbone.Model {
   urlRoot = () => "http://localhost:3000/guilds";
 
+  /*fetch(options?: ModelFetchOptions): JQueryXHR {
+    return super.fetch({
+      url: this.urlRoot(),
+      ...options,
+    });
+  }*/
+
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
     return Backbone.sync.call(this, method, model, options);
   }

@@ -24,7 +24,10 @@ export default class GuildView extends BaseView {
 		model: this.guild,
 	});
 	this.guild.fetch();
-	this.membersView = new MembersView();
+	this.membersView = new MembersView({
+		model: this.guild,
+	});
+	this.guild.fetch();
   }
 
   render() {
