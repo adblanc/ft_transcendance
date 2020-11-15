@@ -33,7 +33,7 @@ export default class CreateGuildView extends ModalView {
 
     //if (!attrs.avatar) delete attrs.avatar;
 
-    /*this.model.createGuild(
+    this.guild.createGuild(
       attrs,
       (errors) => {
         errors.forEach((error) => {
@@ -41,7 +41,7 @@ export default class CreateGuildView extends ModalView {
         });
       },
       () => this.guildSaved()
-    );*/
+    );
   }
 
   guildSaved() {
