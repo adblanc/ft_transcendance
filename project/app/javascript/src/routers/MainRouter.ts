@@ -4,6 +4,7 @@ import { viewsHandler } from "../lib/ViewsHandler";
 import { RouterOptions } from "../../types/router";
 import IndexView from "../views/IndexView";
 import GuildView from "../views/guild/GuildView";
+import GuildIndexView from "../views/guild/GuildIndexView";
 import NotFoundView from "../views/NotFoundView";
 import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
@@ -47,8 +48,13 @@ export default class MainRouter extends Backbone.Router {
     viewsHandler.showView(notFoundView);
   }
 
-  guildPage(id:string) {
-	//console.log(id);
+  guildIndex() {
+    const guildIndexView = new GuildIndexView();
+
+    viewsHandler.showView(guildIndexView);
+  }
+
+  guildShow(id:string) {
     const guildView = new GuildView({guild: new Guild({id})});
 
     viewsHandler.showView(guildView);

@@ -4,7 +4,7 @@ import Mustache from "mustache";
 import { eventBus } from "src/events/EventBus";
 import BaseView from "../BaseView";
 import Guild from "src/models/Guild";
-//import Guilds from "src/collections/Guilds";
+import Guilds from "src/collections/Guilds";
 import ItemView from "./ItemView";
 
 export default class BoardView extends BaseView {
@@ -14,28 +14,11 @@ export default class BoardView extends BaseView {
   constructor(options?: Backbone.ViewOptions) {
     super(options);
 
-	var Collection = Backbone.Collection.extend({
-		url: "/guilds",
-	
-		initialize: function(models, options) {
-			options = options || {};
-			models = new Guild();
-
-			this.fetch({
-				reset: true,
-				success: console.log('SUCCESS'),
-				error: console.log('ERROR'),
-			});
-
-			this.comparator = function(model) {
-				return -model.get('points');
-			}
-		},
-	});
-	this.collection = new Collection;
+	this.collection = new Guilds({});
 	this.listenTo(this.collection, 'reset', this.render);
 	this.listenTo(this.collection, "change", this.render);
 	this.listenTo(this.collection, "sort", this.render);
+	this.collection.fetch();
 	this.collection.sort();
 
   }
