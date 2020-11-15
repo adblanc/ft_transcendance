@@ -15,7 +15,7 @@ interface IGuild {
 
 type ModifiableGuildArgs = Partial<Pick<IGuild, "name" | "ang">>; //+avatar
 
-export default class Guild extends Backbone.Model<IGuild> {
+export default class Guild extends Backbone.Model {
   urlRoot = () => "http://localhost:3000/guilds";
 
   fetch(options?: ModelFetchOptions): JQueryXHR {
@@ -25,8 +25,8 @@ export default class Guild extends Backbone.Model<IGuild> {
     });
   }
 
-  //implement message if uniqueness or ang not valid
-  validate(name: string, ang: string) {
+   //implement message if uniqueness or ang not valid
+   validate(name: string, ang: string) {
     if (name && name.length < 3) {
       return "name is too short (minimum length is 3)";
 	}
@@ -40,7 +40,7 @@ export default class Guild extends Backbone.Model<IGuild> {
   }
 
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
-    if (method == "new") {
+	if (method == "new") {
 		var formData = new FormData();
   
 		_.each(model.attributes, function (value, key) {
@@ -53,7 +53,7 @@ export default class Guild extends Backbone.Model<IGuild> {
 		  contentType: false,
 		});
 	  }
-	  return Backbone.sync.call(this, method, model, options);
+    return Backbone.sync.call(this, method, model, options);
   }
 
   createGuild(
@@ -79,7 +79,6 @@ export default class Guild extends Backbone.Model<IGuild> {
       error([this.validationError]);
     }
   }
-
 
   mapServerErrors(errors: Record<string, string[]>) {
     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);

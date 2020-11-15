@@ -26,7 +26,7 @@ export default class GuildView extends BaseView {
 
   onCreateClicked() {
     const createGuildView = new CreateGuildView({
-      model: this.model,
+      guild: this.model,
 	});
 	this.model.fetch();
 

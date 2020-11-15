@@ -7,6 +7,7 @@ import InfoView from "./InfoView";
 import MembersView from "./MembersView";
 import Guild from "src/models/Guild";
 
+//type Options = Backbone.ViewOptions & {idd: string};
 type Options = Backbone.ViewOptions & {guild: Backbone.Model};
 
 export default class GuildView extends BaseView {
@@ -14,18 +15,21 @@ export default class GuildView extends BaseView {
   infoView: Backbone.View;
   membersView: Backbone.View;
   guild: Backbone.Model;
+  //id: string;
 
   constructor(options?: Options) {
     super(options);
 
+	//this.id = options.idd;
+	//this.guild = new Guild({id: this.id});
 	this.guild = options.guild;
 	this.navbarView = new NavbarView();
 	this.infoView = new InfoView({
-		model: this.guild,
+		guild: this.guild,
 	});
 	this.guild.fetch();
 	this.membersView = new MembersView({
-		model: this.guild,
+		guild: this.guild,
 	});
 	this.guild.fetch();
   }

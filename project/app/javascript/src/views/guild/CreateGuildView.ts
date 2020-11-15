@@ -4,12 +4,17 @@ import ModalView from "../ModalView";
 import Guild from "src/models/Guild";
 import { displayToast } from "src/utils/toast";
 
-export default class CreateGuildView extends ModalView<Guild> {
-  constructor(options?: Backbone.ViewOptions<Guild>) {
+type Options = Backbone.ViewOptions & {guild: Backbone.Model};
+
+export default class CreateGuildView extends ModalView {
+  guild: Backbone.Model;
+
+  constructor(options?: Options) {
     super(options);
 
-    if (!this.model)
-      throw Error("Please provide a profile model to CreateGuildView");
+    this.guild = options.guild;
+
+	this.listenTo(this.guild, "change", this.render);
   }
 
   events() {
@@ -28,7 +33,7 @@ export default class CreateGuildView extends ModalView<Guild> {
 
     //if (!attrs.avatar) delete attrs.avatar;
 
-    this.model.createGuild(
+    /*this.model.createGuild(
       attrs,
       (errors) => {
         errors.forEach((error) => {
@@ -36,13 +41,13 @@ export default class CreateGuildView extends ModalView<Guild> {
         });
       },
       () => this.guildSaved()
-    );
+    );*/
   }
 
   guildSaved() {
     displayToast({ text: "Guild successfully created." }, "success");
     this.closeModal();
-    this.model.fetch();
+    this.guild.fetch();
   }
 
   displayError(error: string) {
@@ -52,7 +57,7 @@ export default class CreateGuildView extends ModalView<Guild> {
   render() {
     super.render(); // we render the modal
     const template = $("#guildFormTemplate").html();
-    const html = Mustache.render(template, this.model.toJSON());
+    const html = Mustache.render(template, this.guild.toJSON());
     this.$content.html(html);
     return this;
   }
