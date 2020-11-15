@@ -11,6 +11,7 @@ require("turbolinks").start();
 require("channels");
 
 import "../stylesheets/application.scss";
+import "../stylesheets/guilds.scss";
 import { start } from "../src";
 
 // Uncomment to copy all static images under ../images to the output folder and reference

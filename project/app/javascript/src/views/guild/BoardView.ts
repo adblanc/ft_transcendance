@@ -6,7 +6,6 @@ import BaseView from "../BaseView";
 import Guild from "src/models/Guild";
 //import Guilds from "src/collections/Guilds";
 import ItemView from "./ItemView";
-import Guilds from "src/collections/Guilds";
 
 export default class BoardView extends BaseView {
   collection: Backbone.Collection<Guild>;
@@ -16,7 +15,6 @@ export default class BoardView extends BaseView {
     super(options);
 
 	var Collection = Backbone.Collection.extend({
-		//comparator: "points",
 		url: "/guilds",
 	
 		initialize: function(models, options) {
