@@ -9,8 +9,21 @@ class GuildsController < ApplicationController
   end
 
   def new
+	@guild = Guild.new
+  end
+
+  def create
+	guild = Guild.create(guild_params)
+
+	redirect_to_guilds_path
   end
 
   def edit
+  end
+
+  private
+
+  def guild_params
+	params.require(:guild).permit(:name, :ang)
   end
 end
