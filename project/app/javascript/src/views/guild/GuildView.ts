@@ -27,7 +27,6 @@ export default class GuildView extends BaseView {
 	this.infoView = new InfoView({
 		guild: this.guild,
 	});
-	this.guild.fetch();
 	this.membersView = new MembersView({
 		guild: this.guild,
 	});

@@ -18,13 +18,6 @@ type ModifiableGuildArgs = Partial<Pick<IGuild, "name" | "ang">>; //+avatar
 export default class Guild extends Backbone.Model {
   urlRoot = () => "http://localhost:3000/guilds";
 
-  fetch(options?: ModelFetchOptions): JQueryXHR {
-    return super.fetch({
-      url: this.urlRoot(),
-      ...options,
-    });
-  }
-
    //implement message if uniqueness or ang not valid
    validate(name: string, ang: string) {
     if (name && name.length < 3) {

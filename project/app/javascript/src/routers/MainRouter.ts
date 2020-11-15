@@ -56,7 +56,7 @@ export default class MainRouter extends Backbone.Router {
 
   guildShow(id:string) {
 
-    const guildView = new GuildView({guild: new Guild({id: id})});
+    const guildView = new GuildView({guild: new Guild({id})});
 
     viewsHandler.showView(guildView);
   }
