@@ -1,5 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
+import Guild from "src/models/Guild";
 
 export default class ModalView<
   TModel extends Backbone.Model = Backbone.Model

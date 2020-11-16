@@ -8,14 +8,12 @@ import CreateGuildView from "./CreateGuildView";
 
 export default class GuildView extends BaseView {
   navbarView: Backbone.View;
-  model: Backbone.Model;
+  //model: Backbone.Model;
 
   constructor(options?: Backbone.ViewOptions) {
     super(options);
 
 	this.navbarView = new NavbarView();
-	this.model = new Guild();
-	//this.model.fetch();
   }
 
   events() {
@@ -25,17 +23,17 @@ export default class GuildView extends BaseView {
   }
 
   onCreateClicked() {
+	const guild = new Guild();
     const createGuildView = new CreateGuildView({
-      guild: this.model,
+      model: guild,
 	});
-	this.model.fetch();
 
-    createGuildView .render();
+    createGuildView.render();
   }
 
   render() {
     const template = $("#guildIndexTemplate").html();
-    const html = Mustache.render(template, this.model.toJSON());
+    const html = Mustache.render(template, {});
     this.$el.html(html);
 
 	this.renderNested(this.navbarView, "#index-navbar");

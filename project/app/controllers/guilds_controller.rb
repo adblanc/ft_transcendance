@@ -15,7 +15,6 @@ class GuildsController < ApplicationController
   def create
 	guild = Guild.create(guild_params)
 
-	redirect_to_guilds_path
   end
 
   def edit
