@@ -13,7 +13,7 @@ interface IGuild {
   updated_at: string;
 }
 
-type ModifiableGuildArgs = Partial<Pick<IGuild, "name" | "ang">>; //+avatar
+type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang">>; //+avatar
 
 export default class Guild extends Backbone.Model {
   urlRoot = () => "http://localhost:3000/guilds";
@@ -33,28 +33,15 @@ export default class Guild extends Backbone.Model {
   }
 
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
-	if (method == "new") {
-		var formData = new FormData();
-  
-		_.each(model.attributes, function (value, key) {
-		  formData.append(key, value);
-		});
-  
-		_.defaults(options || (options = {}), {
-		  data: formData,
-		  processData: false,
-		  contentType: false,
-		});
-	  }
     return Backbone.sync.call(this, method, model, options);
   }
 
   createGuild(
-    attrs: ModifiableGuildArgs,
+	attrs: CreatableGuildArgs,
     error: (errors: string[]) => void,
     success: () => void
   ) {
-    this.set(attrs);
+	this.set(attrs);
 
     const valid = this.save(
       {},

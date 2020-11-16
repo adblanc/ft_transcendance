@@ -1,1 +1,1 @@
-json.extract! guild, :id, :name, :ang, :points, :members, :atWar, :WarLog, :created_at, :updated_at
+json.extract! guild, :id, :name, :ang, :points, :members, :atWar, :warLog, :created_at, :updated_at

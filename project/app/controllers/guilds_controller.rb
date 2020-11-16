@@ -9,12 +9,13 @@ class GuildsController < ApplicationController
   end
 
   def new
-	@guild = Guild.new
+	guild = Guild.new
   end
 
   def create
-	guild = Guild.create(guild_params)
+	@guild = Guild.create(guild_params)
 
+	/redirect_to guild_path(@guild)/
   end
 
   def edit

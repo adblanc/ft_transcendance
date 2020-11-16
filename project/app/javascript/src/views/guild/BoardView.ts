@@ -30,10 +30,10 @@ export default class BoardView extends BaseView {
 
 	const $element = this.$("#listing");
 
-	console.log(this.collection.length);
+	//console.log(this.collection.length);
 
     this.collection.slice(0, 5).forEach(function(item) {
-		console.log(item);
+		//console.log(item);
 		var itemView = new ItemView({
 		  model: item
 		});
