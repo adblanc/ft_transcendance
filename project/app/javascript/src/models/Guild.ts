@@ -18,20 +18,6 @@ type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang">>; //+avatar
 export default class Guild extends Backbone.Model {
   urlRoot = () => "http://localhost:3000/guilds";
 
-   //implement message if uniqueness or ang not valid
-   validate(name: string, ang: string) {
-    if (name && name.length < 3) {
-      return "name is too short (minimum length is 3)";
-	}
-	if (ang && ang.length < 3) {
-		return "name is too short (minimum length is 3)";
-	  }
-	if (ang && ang.length > 5) {
-		return "anagram is too long (maximum length is 5)";
-	}
-    return null;
-  }
-
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
     return Backbone.sync.call(this, method, model, options);
   }

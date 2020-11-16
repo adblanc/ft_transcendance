@@ -14,9 +14,13 @@ class GuildsController < ApplicationController
 
   def create
 	@guild = Guild.create(guild_params)
-
-	/redirect_to guild_path(@guild)/
+	if @guild.save
+		@guild
+	else
+		render json: @guild.errors, status: :unprocessable_entity
   end
+
+end
 
   def edit
   end
