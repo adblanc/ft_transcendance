@@ -3,8 +3,8 @@ import Mustache from "mustache";
 import ModalView from "../ModalView";
 import Guild from "src/models/Guild";
 import GuildView from "./GuildView";
-import Guilds from "src/collections/Guilds";
 import { displayToast } from "src/utils/toast";
+import MainRouter from "src/routers/MainRouter";
 
 
 export default class CreateGuildView extends ModalView<Guild> {
@@ -52,11 +52,12 @@ export default class CreateGuildView extends ModalView<Guild> {
 
 	this.idd = this.model.id; 
 	console.log(this.idd);
-	const guild = new Guild({id: this.idd});
-	const guildView = new GuildView({
-		guild: guild,
+	const router = new MainRouter({
+		routes: {
+		  "guild/:id": "guildShow",
+		},
 	});
-	guildView.render();
+	router.navigate(`guild/${this.idd}`, { trigger: true });
   }
 
   displayError(error: string) {
