@@ -29,6 +29,8 @@ class ViewsHandler {
 
     if (withNavbar && !this.isNavbarDislayed()) {
       this.addNavbar();
+    } else if (!withNavbar) {
+      this.removeNavbar();
     }
 
     this.currentView = view;

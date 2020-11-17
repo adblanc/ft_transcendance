@@ -29,7 +29,6 @@ export default class MainRouter extends Backbone.Router {
   }
 
   auth() {
-    viewsHandler.removeNavbar();
     const authView = new AuthView({});
 
     viewsHandler.showView(authView, false);
