@@ -16,10 +16,12 @@ class PagesHandler {
   removeNavbar() {
     if (this.navbarView) {
       this.navbarView.close();
+      this.navbarView = undefined;
     }
   }
 
   isNavbarDislayed() {
+    console.log("navbar is displayed ? ", !!this.navbarView);
     return !!this.navbarView;
   }
 
