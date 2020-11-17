@@ -3,12 +3,20 @@ import Mustache from "mustache";
 import Guild from "src/models/Guild";
 import CreateGuildView from "./CreateGuildView";
 import PageView from "src/lib/PageView";
+import Guilds from "src/collections/Guilds";
 
 export default class GuildView extends PageView {
-  //model: Backbone.Model;
+  collection: Backbone.Collection<Guild>;
 
   constructor(options?: Backbone.ViewOptions) {
-    super(options);
+	super(options);
+	
+	this.collection = new Guilds({});
+	this.listenTo(this.collection, 'reset', this.render);
+	this.listenTo(this.collection, "change", this.render);
+	this.listenTo(this.collection, "sort", this.render);
+	this.collection.fetch();
+	this.collection.sort();
   }
 
   events() {
@@ -20,7 +28,8 @@ export default class GuildView extends PageView {
   onCreateClicked() {
     const guild = new Guild();
     const createGuildView = new CreateGuildView({
-      model: guild,
+	  model: guild,
+	  collection: this.collection,
     });
 
     createGuildView.render();
