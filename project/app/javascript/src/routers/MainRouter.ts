@@ -9,10 +9,15 @@ import NotFoundView from "../views/NotFoundView";
 import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
 import Guild from "src/models/Guild";
+import Guilds from "../collections/Guilds";
 
 export default class MainRouter extends Backbone.Router {
+	collection: Backbone.Collection<Guild>;
   constructor(options: RouterOptions<MainRouter>) {
-    super(options);
+	super(options);
+	
+	this.collection = new Guilds({});
+	this.collection.fetch();
   }
 
   async authCallBack(code: string) {
@@ -55,8 +60,18 @@ export default class MainRouter extends Backbone.Router {
   }
 
   guildShow(id: string) {
-    const guildView = new GuildView({ guild: new Guild({ id }) });
-
-    pagesHandler.showPage(guildView);
+	let bool: boolean = false;
+	this.collection.forEach(function(item) {
+		if (item.get('id') == id) {
+			bool = true;
+		}
+	});
+	if (bool) {
+		const guildView = new GuildView({ guild: new Guild({ id }) });
+		pagesHandler.showPage(guildView);
+	}
+	else {
+		this.notFound();
+	}
   }
 }
