@@ -32,13 +32,10 @@ export default class MainRouter extends Backbone.Router {
     viewsHandler.removeNavbar();
     const authView = new AuthView({});
 
-    viewsHandler.showView(authView);
+    viewsHandler.showView(authView, false);
   }
 
   index() {
-    if (!viewsHandler.isNavbarDislayed()) {
-      viewsHandler.addNavbar();
-    }
     const indexView = new IndexView({
       className: "flex flex-col h-screen",
     });

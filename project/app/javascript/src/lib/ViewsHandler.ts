@@ -22,9 +22,13 @@ class ViewsHandler {
     return !!this.navbarView;
   }
 
-  showView(view: BaseView) {
+  showView(view: BaseView, withNavbar = true) {
     if (this.currentView) {
       this.currentView.close();
+    }
+
+    if (withNavbar && !this.isNavbarDislayed()) {
+      this.addNavbar();
     }
 
     this.currentView = view;
