@@ -18,6 +18,10 @@ class ViewsHandler {
     }
   }
 
+  isNavbarDislayed() {
+    return !!this.navbarView;
+  }
+
   showView(view: BaseView) {
     if (this.currentView) {
       this.currentView.close();

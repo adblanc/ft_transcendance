@@ -36,7 +36,9 @@ export default class MainRouter extends Backbone.Router {
   }
 
   index() {
-    viewsHandler.addNavbar();
+    if (!viewsHandler.isNavbarDislayed()) {
+      viewsHandler.addNavbar();
+    }
     const indexView = new IndexView({
       className: "flex flex-col h-screen",
     });
