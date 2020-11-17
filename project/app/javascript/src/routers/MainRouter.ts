@@ -12,12 +12,12 @@ import Guild from "src/models/Guild";
 import Guilds from "../collections/Guilds";
 
 export default class MainRouter extends Backbone.Router {
-	collection: Backbone.Collection<Guild>;
+	//collection: Backbone.Collection<Guild>;
   constructor(options: RouterOptions<MainRouter>) {
 	super(options);
 	
-	this.collection = new Guilds({});
-	this.collection.fetch();
+	//this.collection = new Guilds({});
+	//this.collection.fetch();
   }
 
   async authCallBack(code: string) {
@@ -60,6 +60,7 @@ export default class MainRouter extends Backbone.Router {
   }
 
   guildShow(id: string) {
+	/*this.collection.fetch();
 	let bool: boolean = false;
 	this.collection.forEach(function(item) {
 		if (item.get('id') == id) {
@@ -72,6 +73,10 @@ export default class MainRouter extends Backbone.Router {
 	}
 	else {
 		this.notFound();
-	}
+	}*/
+
+	const guildView = new GuildView({ guild: new Guild({ id }) });
+	pagesHandler.showPage(guildView);
+
   }
 }
