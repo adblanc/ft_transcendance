@@ -1,7 +1,22 @@
+import NavbarView from "src/views/NavbarView";
 import BaseView from "../views/BaseView";
 
 class ViewsHandler {
   private currentView?: BaseView;
+  private navbarView?: BaseView;
+
+  addNavbar() {
+    this.removeNavbar();
+    this.navbarView = new NavbarView();
+
+    $("body").prepend(this.navbarView.render().el);
+  }
+
+  removeNavbar() {
+    if (this.navbarView) {
+      this.navbarView.close();
+    }
+  }
 
   showView(view: BaseView) {
     if (this.currentView) {

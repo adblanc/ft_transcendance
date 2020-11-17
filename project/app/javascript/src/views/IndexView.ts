@@ -9,7 +9,6 @@ import NavbarView from "./NavbarView";
 import BoardView from "./guild/BoardView";
 
 export default class IndexView extends BaseView {
-  navbarView: Backbone.View;
   boardView: Backbone.View;
   chatView: BaseView;
   chatOpen: boolean;
@@ -20,8 +19,7 @@ export default class IndexView extends BaseView {
 
     this.chatOpen = false;
 
-	this.navbarView = new NavbarView();
-	this.boardView = new BoardView();
+    this.boardView = new BoardView();
 
     this.messages = new Messages();
 
@@ -41,8 +39,7 @@ export default class IndexView extends BaseView {
     const html = Mustache.render(template, {});
     this.$el.html(html);
 
-	this.renderNested(this.navbarView, "#index-navbar");
-	this.renderNested(this.boardView, "#board");
+    this.renderNested(this.boardView, "#board");
 
     return this;
   }

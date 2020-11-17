@@ -1,6 +1,8 @@
 import Backbone from "backbone";
+import { name } from "mustache";
 import MainRouter from "./routers/MainRouter";
 import { addAuthHeaders, catchNavigation } from "./utils";
+import NavbarView from "./views/NavbarView";
 
 export function start() {
   if (process.env.NODE_ENV === "development") {
@@ -11,11 +13,11 @@ export function start() {
   const mainRouter = new MainRouter({
     routes: {
       "": "index",
-	  auth: "auth",
-	  "auth/callback?code=:code": "authCallBack",
-	  "guildindex": "guildIndex",
-	  "guild/:id": "guildShow",
-	  "*path": "notFound",
+      auth: "auth",
+      "auth/callback?code=:code": "authCallBack",
+      guildindex: "guildIndex",
+      "guild/:id": "guildShow",
+      "*path": "notFound",
     },
   });
 

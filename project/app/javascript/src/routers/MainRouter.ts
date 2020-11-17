@@ -29,12 +29,14 @@ export default class MainRouter extends Backbone.Router {
   }
 
   auth() {
+    viewsHandler.removeNavbar();
     const authView = new AuthView({});
 
     viewsHandler.showView(authView);
   }
 
   index() {
+    viewsHandler.addNavbar();
     const indexView = new IndexView({
       className: "flex flex-col h-screen",
     });
@@ -54,12 +56,9 @@ export default class MainRouter extends Backbone.Router {
     viewsHandler.showView(guildIndexView);
   }
 
-  guildShow(id:string) {
-
-    const guildView = new GuildView({guild: new Guild({id})});
+  guildShow(id: string) {
+    const guildView = new GuildView({ guild: new Guild({ id }) });
 
     viewsHandler.showView(guildView);
   }
-
 }
- 
