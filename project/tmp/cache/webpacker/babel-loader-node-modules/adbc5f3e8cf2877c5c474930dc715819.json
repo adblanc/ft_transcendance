@@ -1,1 +1,0 @@
-{"ast":null,"code":"import shallowProperty from './_shallowProperty.js'; // Internal helper to obtain the `byteLength` property of an object.\n\nexport default shallowProperty('byteLength');","map":null,"metadata":{},"sourceType":"module"}

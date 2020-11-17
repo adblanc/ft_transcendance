@@ -1,1 +1,0 @@
-{"ast":null,"code":"// Generate a unique integer id (unique within the entire client session).\n// Useful for temporary DOM ids.\nvar idCounter = 0;\nexport default function uniqueId(prefix) {\n  var id = ++idCounter + '';\n  return prefix ? prefix + id : id;\n}","map":null,"metadata":{},"sourceType":"module"}

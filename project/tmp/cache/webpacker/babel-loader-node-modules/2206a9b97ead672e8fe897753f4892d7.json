@@ -1,1 +1,0 @@
-{"ast":null,"code":"// Returns a negated version of the passed-in predicate.\nexport default function negate(predicate) {\n  return function () {\n    return !predicate.apply(this, arguments);\n  };\n}","map":null,"metadata":{},"sourceType":"module"}

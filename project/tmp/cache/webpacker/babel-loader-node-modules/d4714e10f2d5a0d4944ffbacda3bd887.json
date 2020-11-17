@@ -1,1 +1,0 @@
-{"ast":null,"code":"// Internal helper to generate a function to obtain property `key` from `obj`.\nexport default function shallowProperty(key) {\n  return function (obj) {\n    return obj == null ? void 0 : obj[key];\n  };\n}","map":null,"metadata":{},"sourceType":"module"}

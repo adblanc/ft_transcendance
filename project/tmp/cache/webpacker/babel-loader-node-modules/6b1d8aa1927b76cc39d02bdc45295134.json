@@ -1,1 +1,0 @@
-{"ast":null,"code":"import restArguments from './restArguments.js';\nimport difference from './difference.js'; // Return a version of the array that does not contain the specified value(s).\n\nexport default restArguments(function (array, otherArrays) {\n  return difference(array, otherArrays);\n});","map":null,"metadata":{},"sourceType":"module"}

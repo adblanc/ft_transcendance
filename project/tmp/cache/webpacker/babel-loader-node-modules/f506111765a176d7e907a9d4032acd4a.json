@@ -1,1 +1,0 @@
-{"ast":null,"code":"import createEscaper from './_createEscaper.js';\nimport escapeMap from './_escapeMap.js'; // Function for escaping strings to HTML interpolation.\n\nexport default createEscaper(escapeMap);","map":null,"metadata":{},"sourceType":"module"}

@@ -1,1 +1,0 @@
-{"ast":null,"code":"// Is a given value a DOM element?\nexport default function isElement(obj) {\n  return !!(obj && obj.nodeType === 1);\n}","map":null,"metadata":{},"sourceType":"module"}

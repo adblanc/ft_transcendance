@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { _isFinite } from './_setup.js';\nimport isSymbol from './isSymbol.js'; // Is a given object a finite number?\n\nexport default function isFinite(obj) {\n  return !isSymbol(obj) && _isFinite(obj) && !isNaN(parseFloat(obj));\n}","map":null,"metadata":{},"sourceType":"module"}

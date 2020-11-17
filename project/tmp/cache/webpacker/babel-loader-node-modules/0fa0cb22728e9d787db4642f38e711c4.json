@@ -1,1 +1,0 @@
-{"ast":null,"code":"import map from './map.js';\nimport property from './property.js'; // Convenience version of a common use case of `_.map`: fetching a property.\n\nexport default function pluck(obj, key) {\n  return map(obj, property(key));\n}","map":null,"metadata":{},"sourceType":"module"}

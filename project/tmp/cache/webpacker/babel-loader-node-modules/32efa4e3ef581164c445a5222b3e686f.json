@@ -1,1 +1,0 @@
-{"ast":null,"code":"import shallowProperty from './_shallowProperty.js'; // Internal helper to obtain the `length` property of an object.\n\nexport default shallowProperty('length');","map":null,"metadata":{},"sourceType":"module"}

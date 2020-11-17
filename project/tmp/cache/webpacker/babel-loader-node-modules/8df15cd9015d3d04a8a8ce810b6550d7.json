@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { toString } from './_setup.js'; // Is a given value a boolean?\n\nexport default function isBoolean(obj) {\n  return obj === true || obj === false || toString.call(obj) === '[object Boolean]';\n}","map":null,"metadata":{},"sourceType":"module"}

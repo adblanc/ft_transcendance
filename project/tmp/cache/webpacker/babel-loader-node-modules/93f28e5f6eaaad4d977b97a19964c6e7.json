@@ -1,1 +1,0 @@
-{"ast":null,"code":"import createReduce from './_createReduce.js'; // The right-associative version of reduce, also known as `foldr`.\n\nexport default createReduce(-1);","map":null,"metadata":{},"sourceType":"module"}

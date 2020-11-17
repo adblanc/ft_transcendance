@@ -1,1 +1,0 @@
-{"ast":null,"code":"// Returns a function that will only be executed on and after the Nth call.\nexport default function after(times, func) {\n  return function () {\n    if (--times < 1) {\n      return func.apply(this, arguments);\n    }\n  };\n}","map":null,"metadata":{},"sourceType":"module"}

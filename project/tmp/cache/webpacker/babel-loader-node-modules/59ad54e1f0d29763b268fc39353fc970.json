@@ -1,1 +1,0 @@
-{"ast":null,"code":"import optimizeCb from './_optimizeCb.js'; // Run a function **n** times.\n\nexport default function times(n, iteratee, context) {\n  var accum = Array(Math.max(0, n));\n  iteratee = optimizeCb(iteratee, context, 1);\n\n  for (var i = 0; i < n; i++) {\n    accum[i] = iteratee(i);\n  }\n\n  return accum;\n}","map":null,"metadata":{},"sourceType":"module"}

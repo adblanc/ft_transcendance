@@ -1,1 +1,0 @@
-{"ast":null,"code":"// Return a random integer between `min` and `max` (inclusive).\nexport default function random(min, max) {\n  if (max == null) {\n    max = min;\n    min = 0;\n  }\n\n  return min + Math.floor(Math.random() * (max - min + 1));\n}","map":null,"metadata":{},"sourceType":"module"}

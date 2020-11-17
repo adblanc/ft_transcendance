@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { _isNaN } from './_setup.js';\nimport isNumber from './isNumber.js'; // Is the given value `NaN`?\n\nexport default function isNaN(obj) {\n  return isNumber(obj) && _isNaN(obj);\n}","map":null,"metadata":{},"sourceType":"module"}

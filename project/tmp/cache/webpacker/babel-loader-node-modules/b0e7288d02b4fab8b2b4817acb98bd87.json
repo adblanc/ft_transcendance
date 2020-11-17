@@ -1,1 +1,0 @@
-{"ast":null,"code":"import createAssigner from './_createAssigner.js';\nimport allKeys from './allKeys.js'; // Fill in a given object with default properties.\n\nexport default createAssigner(allKeys, true);","map":null,"metadata":{},"sourceType":"module"}

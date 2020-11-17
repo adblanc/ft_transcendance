@@ -1,1 +1,0 @@
-{"ast":null,"code":"import filter from './filter.js';\nimport negate from './negate.js';\nimport cb from './_cb.js'; // Return all the elements for which a truth test fails.\n\nexport default function reject(obj, predicate, context) {\n  return filter(obj, negate(cb(predicate)), context);\n}","map":null,"metadata":{},"sourceType":"module"}

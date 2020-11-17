@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { hasOwnProperty } from './_setup.js'; // Internal function to check whether `key` is an own property name of `obj`.\n\nexport default function has(obj, key) {\n  return obj != null && hasOwnProperty.call(obj, key);\n}","map":null,"metadata":{},"sourceType":"module"}
