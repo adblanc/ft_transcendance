@@ -1,10 +1,10 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import BaseView from "../BaseView";
 import Guild from "src/models/Guild";
 import CreateGuildView from "./CreateGuildView";
+import PageView from "src/lib/PageView";
 
-export default class GuildView extends BaseView {
+export default class GuildView extends PageView {
   //model: Backbone.Model;
 
   constructor(options?: Backbone.ViewOptions) {

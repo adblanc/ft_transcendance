@@ -2,7 +2,7 @@ import Mustache from "mustache";
 import { eventBus } from "src/events/EventBus";
 import Tab from "src/models/Tab";
 import AddTabView from "./AddTabView";
-import BaseView from "../BaseView";
+import BaseView from "../../lib/BaseView";
 import TabView from "./TabView";
 
 export default class TabsView extends BaseView {

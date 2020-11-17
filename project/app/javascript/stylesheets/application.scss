@@ -40,3 +40,8 @@
 .link-primary {
   @apply underline text-teal-500 text-base cursor-pointer;
 }
+
+.chat-container {
+  height: 400px;
+  @apply bg-white w-1/3 h-full max-w-xl absolute top-0 right-0 flex flex-col items-stretch;
+}

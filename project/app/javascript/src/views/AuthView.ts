@@ -3,10 +3,10 @@ import Mustache from "mustache";
 import axios from "axios";
 import { get42LoginUrl } from "../utils/api";
 import { addAuthHeaders } from "../utils/auth";
-import BaseView from "./BaseView";
 import { displayToast } from "../utils/toast";
+import PageView from "src/lib/PageView";
 
-export default class AuthView extends BaseView {
+export default class AuthView extends PageView {
   events() {
     return {
       "keypress #input-guest": "loginGuest",

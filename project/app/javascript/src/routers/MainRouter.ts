@@ -1,6 +1,6 @@
 import Backbone from "backbone";
 import axios from "axios";
-import { viewsHandler } from "../lib/ViewsHandler";
+import { pagesHandler } from "../lib/ViewsHandler";
 import { RouterOptions } from "../../types/router";
 import IndexView from "../views/IndexView";
 import GuildView from "../views/guild/GuildView";
@@ -31,7 +31,7 @@ export default class MainRouter extends Backbone.Router {
   auth() {
     const authView = new AuthView({});
 
-    viewsHandler.showView(authView, false);
+    pagesHandler.showPage(authView, false);
   }
 
   index() {
@@ -39,24 +39,24 @@ export default class MainRouter extends Backbone.Router {
       className: "flex flex-col h-screen",
     });
 
-    viewsHandler.showView(indexView);
+    pagesHandler.showPage(indexView);
   }
 
   notFound() {
     const notFoundView = new NotFoundView({});
 
-    viewsHandler.showView(notFoundView);
+    pagesHandler.showPage(notFoundView);
   }
 
   guildIndex() {
     const guildIndexView = new GuildIndexView();
 
-    viewsHandler.showView(guildIndexView);
+    pagesHandler.showPage(guildIndexView);
   }
 
   guildShow(id: string) {
     const guildView = new GuildView({ guild: new Guild({ id }) });
 
-    viewsHandler.showView(guildView);
+    pagesHandler.showPage(guildView);
   }
 }

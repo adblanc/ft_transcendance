@@ -1,5 +1,5 @@
 import Mustache from "mustache";
-import BaseView from "../BaseView";
+import BaseView from "../../lib/BaseView";
 
 export default class InputView extends BaseView {
   render() {

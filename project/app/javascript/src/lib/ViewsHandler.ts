@@ -1,8 +1,9 @@
 import NavbarView from "src/views/NavbarView";
-import BaseView from "../views/BaseView";
+import BaseView from "./BaseView";
+import PageView from "./PageView";
 
-class ViewsHandler {
-  private currentView?: BaseView;
+class PagesHandler {
+  private currentPage?: PageView;
   private navbarView?: BaseView;
 
   addNavbar() {
@@ -22,9 +23,9 @@ class ViewsHandler {
     return !!this.navbarView;
   }
 
-  showView(view: BaseView, withNavbar = true) {
-    if (this.currentView) {
-      this.currentView.close();
+  showPage(page: PageView, withNavbar = true) {
+    if (this.currentPage) {
+      this.currentPage.close();
     }
 
     if (withNavbar && !this.isNavbarDislayed()) {
@@ -33,11 +34,11 @@ class ViewsHandler {
       this.removeNavbar();
     }
 
-    this.currentView = view;
-    this.currentView.render();
+    this.currentPage = page;
+    this.currentPage.render();
 
-    $("#container").html(this.currentView.el);
+    $("#container").html(this.currentPage.el);
   }
 }
 
-export const viewsHandler = new ViewsHandler();
+export const pagesHandler = new PagesHandler();

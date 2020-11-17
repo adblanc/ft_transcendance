@@ -1,5 +1,5 @@
 import Mustache from "mustache";
-import BaseView from "../BaseView";
+import BaseView from "../../lib/BaseView";
 
 export default class MessageView extends BaseView {
   render() {

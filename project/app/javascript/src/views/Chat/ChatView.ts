@@ -1,5 +1,5 @@
 import Mustache from "mustache";
-import BaseView from "../BaseView";
+import BaseView from "../../lib/BaseView";
 import Message from "src/models/Message";
 import MessageView from "./MessageView";
 import Tabs from "src/collections/Tabs";

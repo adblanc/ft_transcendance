@@ -3,7 +3,7 @@ import Mustache from "mustache";
 import Profile from "../models/Profile";
 import ProfileView from "./ProfileView";
 import { clearAuthHeaders } from "../utils/auth";
-import BaseView from "./BaseView";
+import BaseView from "../lib/BaseView";
 import { eventBus } from "src/events/EventBus";
 
 export default class NavbarView extends BaseView {

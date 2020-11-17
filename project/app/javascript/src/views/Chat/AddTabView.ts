@@ -1,6 +1,6 @@
 import Mustache from "mustache";
 import { eventBus } from "src/events/EventBus";
-import BaseView from "../BaseView";
+import BaseView from "../../lib/BaseView";
 
 type Props = Backbone.ViewOptions & {
   isOdd: boolean;

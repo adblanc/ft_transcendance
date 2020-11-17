@@ -1,7 +1,7 @@
 import Mustache from "mustache";
 import { eventBus } from "src/events/EventBus";
 import Tab from "src/models/Tab";
-import BaseView from "../BaseView";
+import BaseView from "../../lib/BaseView";
 
 export default class TabView extends BaseView<Tab> {
   constructor(options?: Backbone.ViewOptions<Tab>) {
