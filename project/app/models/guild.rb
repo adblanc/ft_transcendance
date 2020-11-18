@@ -1,4 +1,7 @@
 class Guild < ApplicationRecord
-	validates :name, presence: true, uniqueness: true, length: {minimum: 3, maximum: 20}
+	has_one_attached :img
+
+	validates :img, blob: { content_type: :image }
+	validates :name, presence: true, uniqueness: true, length: {minimum: 5, maximum: 20}
 	validates :ang, presence: true, length: {minimum: 2, maximum: 5}
 end

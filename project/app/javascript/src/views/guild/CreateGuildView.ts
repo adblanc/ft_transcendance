@@ -40,12 +40,12 @@ export default class CreateGuildView extends ModalView<Guild> {
 		const attrs = {
 		name: this.$("#input-guild-name").val() as string,
 		ang: acn,
-		//avatar: (this.$(
-			//"#input-profile-avatar"
-		//)[0] as HTMLInputElement).files?.item(0),
+		img: (this.$(
+			"#input-guild-img"
+		)[0] as HTMLInputElement).files?.item(0),
 		};
 
-		//if (!attrs.avatar) delete attrs.avatar;
+		if (!attrs.img) delete attrs.img;
 
 		this.model.createGuild(
 		attrs,

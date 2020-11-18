@@ -9,16 +9,30 @@ interface IGuild {
   members: number[];
   atWar: boolean;
   warLog: number[];
+  img?: any;
   created_at: string;
   updated_at: string;
 }
 
-type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang">>; //+avatar
+type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img">>; //+avatar
 
 export default class Guild extends Backbone.Model {
   urlRoot = () => "http://localhost:3000/guilds";
 
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
+	if (method == "create") {
+		var formData = new FormData();
+  
+		_.each(model.attributes, function (value, key) {
+		  formData.append(key, value);
+		});
+  
+		_.defaults(options || (options = {}), {
+		  data: formData,
+		  processData: false,
+		  contentType: false,
+		});
+	  }
     return Backbone.sync.call(this, method, model, options);
   }
 
@@ -27,9 +41,10 @@ export default class Guild extends Backbone.Model {
     error: (errors: string[]) => void,
     success: () => void
   ) {
+	//console.log(attrs.avatar);
 	this.set(attrs);
 
-    const valid = this.save(
+	this.save(
       {},
       {
         url: this.urlRoot(),
@@ -41,9 +56,6 @@ export default class Guild extends Backbone.Model {
       }
     );
 
-    if (!valid) {
-      error([this.validationError]);
-    }
   }
 
   mapServerErrors(errors: Record<string, string[]>) {

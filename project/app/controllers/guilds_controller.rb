@@ -18,9 +18,8 @@ class GuildsController < ApplicationController
 		@guild
 	else
 		render json: @guild.errors, status: :unprocessable_entity
+  	end
   end
-
-end
 
   def edit
   end
@@ -28,6 +27,6 @@ end
   private
 
   def guild_params
-	params.require(:guild).permit(:name, :ang)
+	params.permit(:name, :ang, :img)
   end
 end

@@ -3,7 +3,7 @@ import Guild from "src/models/Guild";
 
 export default class Guilds extends Backbone.Collection<Guild> {
   constructor(options) {
-    super(options);
+	super(options);
 	this.model = Guild;
 	this.url = "/guilds";
 

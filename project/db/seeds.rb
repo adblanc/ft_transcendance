@@ -16,5 +16,17 @@ bob.avatar.attach(
 	"content_type": "image/png",
 )
 
-Guild.create(name: 'The Best Guild', ang: "TBG", points: 0)
-Guild.create(name: 'The Doom', ang: "TDM", points: 2)
+guild1 = Guild.create(name: 'The Best Guild', ang: "TBG", points: 0)
+guild2 = Guild.create(name: 'The Doom', ang: "TDM", points: 2)
+
+guild1.img.attach(
+	io: URI.open("https://i.pinimg.com/originals/1a/27/ff/1a27ff81c19e1c10583ea970b0f3827f.jpg"),
+	filename: "guild1.jpg",
+	"content_type": "image/jpg",
+)
+
+guild2.img.attach(
+	io: URI.open("https://www.picclickimg.com/d/l400/pict/263841790404_/Harry-Potter-Hogwarts-RAVENCLAW-QUIDDITCH-TEAM-CAPTAIN-Pin.jpg"),
+	filename: "guild2.jpg",
+	"content_type": "image/jpg",
+)

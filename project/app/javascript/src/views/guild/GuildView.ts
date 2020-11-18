@@ -1,14 +1,10 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import { eventBus } from "src/events/EventBus";
-import BaseView from "../../lib/BaseView";
 import NavbarView from "../NavbarView";
 import InfoView from "./InfoView";
 import MembersView from "./MembersView";
-import Guild from "src/models/Guild";
 import PageView from "src/lib/PageView";
 
-//type Options = Backbone.ViewOptions & {idd: string};
 type Options = Backbone.ViewOptions & { guild: Backbone.Model };
 
 export default class GuildView extends PageView {
@@ -16,13 +12,10 @@ export default class GuildView extends PageView {
   infoView: Backbone.View;
   membersView: Backbone.View;
   guild: Backbone.Model;
-  //id: string;
 
   constructor(options?: Options) {
     super(options);
 
-    //this.id = options.idd;
-    //this.guild = new Guild({id: this.id});
     this.guild = options.guild;
     this.navbarView = new NavbarView();
     this.infoView = new InfoView({
