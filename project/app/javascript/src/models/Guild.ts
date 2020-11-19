@@ -1,8 +1,10 @@
-import Backbone, { ModelFetchOptions } from "backbone";
+import Backbone from "backbone";
 import _ from "underscore";
+import Profile from "src/models/Profile";
 
 interface IGuild {
   id: string;
+  users: Backbone.Collection<Profile>;
   name: string;
   ang: string;
   points: number;
@@ -36,11 +38,15 @@ export default class Guild extends Backbone.Model {
 
   createGuild(
 	attrs: CreatableGuildArgs,
+	profile: Backbone.Model,
     error: (errors: string[]) => void,
     success: () => void
   ) {
-	//console.log(attrs.avatar);
 	this.set(attrs);
+	//var _users = [];
+	//_users.push(profile);
+	//console.log(_users);
+	this.set({ 'users' : profile });  
 
 	this.save(
       {},
