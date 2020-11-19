@@ -1,6 +1,6 @@
 class GuildsController < ApplicationController
   def index
-	render json: @guilds = Guild.all
+	@guilds = Guild.all
   end
 
   def show
