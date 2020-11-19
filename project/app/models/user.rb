@@ -1,5 +1,6 @@
 class User < ApplicationRecord
 	has_one_attached :avatar
+	belongs_to :guild, optional: true
 
 	validates :avatar, blob: { content_type: :image, size_range: 1..5.megabytes }
 	validates :name, presence: true

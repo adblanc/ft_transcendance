@@ -40,18 +40,19 @@ ActiveRecord::Schema.define(version: 2020_11_12_161843) do
     t.string "name"
     t.string "ang"
     t.integer "points", default: 0
-    t.uuid "members", default: [], array: true
     t.boolean "atWar", default: false
-    t.uuid "warLog", default: [], array: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", force: :cascade do |t|
+    t.bigint "guild_id"
     t.string "login"
     t.string "name"
+    t.string "guild_role", default: "none"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["guild_id"], name: "index_users_on_guild_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

@@ -6,9 +6,7 @@ interface IGuild {
   name: string;
   ang: string;
   points: number;
-  members: number[];
   atWar: boolean;
-  warLog: number[];
   img?: any;
   created_at: string;
   updated_at: string;

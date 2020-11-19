@@ -4,6 +4,7 @@ import _ from "underscore";
 interface IProfile {
   login: string;
   name: string;
+  guild_role: string;
   avatar?: any;
   created_at: string;
   updated_at: string;
