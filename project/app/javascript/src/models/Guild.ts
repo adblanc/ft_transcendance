@@ -14,7 +14,7 @@ interface IGuild {
   updated_at: string;
 }
 
-type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img">>; //+avatar
+type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img">>;
 
 export default class Guild extends Backbone.Model {
   urlRoot = () => "http://localhost:3000/guilds";

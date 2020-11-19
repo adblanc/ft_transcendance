@@ -10,7 +10,7 @@ export default class ItemView extends BaseView {
   constructor(options?: Options) {
     super(options);
 
-    this.model = options.model;
+	this.model = options.model;
   }
 
   render() {
