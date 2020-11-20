@@ -1,10 +1,16 @@
 import Backbone from "backbone";
+/*import Backbone from "backbone-relational" {
+	export class RelationalModel{
+        constructor(options?:any);
+        static setup():any;
+    }   
+}*/
 import _ from "underscore";
 import Profile from "src/models/Profile";
 
+
 interface IGuild {
   id: string;
-  users: Backbone.Collection<Profile>;
   name: string;
   ang: string;
   points: number;
@@ -16,7 +22,18 @@ interface IGuild {
 
 type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img">>;
 
-export default class Guild extends Backbone.Model {
+/*export default class Guild extends Backbone.RelationalModel {
+	relations: [{
+        type: Backbone.HasMany,
+        key: 'users',
+        relatedModel: Profile,
+        //collectionType: ProfileList,
+        reverseRelation: {
+            key: 'guild' 
+        }
+	}]*/
+
+export default class Guild extends Backbone.RelationalModel {
   urlRoot = () => "http://localhost:3000/guilds";
 
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
@@ -45,7 +62,6 @@ export default class Guild extends Backbone.Model {
 	this.set(attrs);
 	//var _users = [];
 	//_users.push(profile);
-	//console.log(_users);
 	this.set({ 'users' : profile });  
 
 	this.save(
@@ -66,3 +82,6 @@ export default class Guild extends Backbone.Model {
     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
   }
 }
+
+
+Guild.setup();

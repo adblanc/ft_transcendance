@@ -1475,7 +1475,15 @@ babel-plugin-macros@^2.6.1:
     cosmiconfig "^6.0.0"
     resolve "^1.12.0"
 
-backbone@^1.4.0:
+backbone-relational@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/backbone-relational/-/backbone-relational-0.10.0.tgz#308eb2c8eae0980da55c9f6c592553c4e0e0041c"
+  integrity sha1-MI6yyOrgmA2lXJ9sWSVTxODgBBw=
+  dependencies:
+    backbone ">=1.2.1"
+    underscore ">=1.7.0"
+
+backbone@>=1.2.1, backbone@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/backbone/-/backbone-1.4.0.tgz#54db4de9df7c3811c3f032f34749a4cd27f3bd12"
   integrity sha512-RLmDrRXkVdouTg38jcgHhyQ/2zjg7a8E6sz2zxfz21Hh17xDJYUHBZimVIt5fUyS8vbfpeSmTL3gUjTEvUV3qQ==
@@ -7486,7 +7494,7 @@ typescript@^4.0.5:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.5.tgz#ae9dddfd1069f1cb5beb3ef3b2170dd7c1332389"
   integrity sha512-ywmr/VrTVCmNTJ6iV2LwIrfG1P+lv6luD8sUJs+2eI9NLGigaN+nUQc13iHqisq7bra9lnmUSYqbJvegraBOPQ==
 
-underscore@>=1.8.3, underscore@^1.11.0:
+underscore@>=1.7.0, underscore@>=1.8.3, underscore@^1.11.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.11.0.tgz#dd7c23a195db34267186044649870ff1bab5929e"
   integrity sha512-xY96SsN3NA461qIRKZ/+qox37YXPtSBswMGfiNptr+wrt6ds4HaMw23TP612fEyGekRE6LNRiLYr/aqbHXNedw==
