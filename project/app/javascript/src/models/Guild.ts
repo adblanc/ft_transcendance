@@ -33,7 +33,7 @@ type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img">>;
         }
 	}]*/
 
-export default class Guild extends Backbone.RelationalModel {
+export default class Guild extends Backbone.Model {
   urlRoot = () => "http://localhost:3000/guilds";
 
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
@@ -84,4 +84,4 @@ export default class Guild extends Backbone.RelationalModel {
 }
 
 
-Guild.setup();
+//Guild.setup();
