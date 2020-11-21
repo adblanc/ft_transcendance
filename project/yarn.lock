@@ -931,7 +931,15 @@
   dependencies:
     axios "*"
 
-"@types/backbone@^1.4.5":
+"@types/backbone-relational@^0.10.3":
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/@types/backbone-relational/-/backbone-relational-0.10.3.tgz#3345d9b2c7f4222345a18e0daa15f755cabbf3a5"
+  integrity sha512-oE3eIYHDUmfC2MuW1t9MNIMIBU141Lb06h9B7WBa+k4sgXZTLPGXQMue8QGerZu6ivBNYdt6aqfto062gOu51Q==
+  dependencies:
+    "@types/backbone" "*"
+    "@types/jquery" "*"
+
+"@types/backbone@*", "@types/backbone@^1.4.5":
   version "1.4.5"
   resolved "https://registry.yarnpkg.com/@types/backbone/-/backbone-1.4.5.tgz#057d89987fb672a20b896b1df5cc802f7b87c624"
   integrity sha512-pSqM0eryp6V3G0srBtndUd9IJmiG2BAwYLQGPDcEPMjbfbgitlrN40+Lc1rrMjNMbV5QWywe6WPmNjdqyNTyIw==

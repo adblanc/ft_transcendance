@@ -23,6 +23,7 @@
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/backbone": "^1.4.5",
+    "@types/backbone-relational": "^0.10.3",
     "@types/jquery": "^3.5.4",
     "@types/mustache": "^4.0.1",
     "@types/underscore": "^1.10.24",
