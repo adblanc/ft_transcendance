@@ -1,5 +1,5 @@
 import Backbone from "backbone";
-import BackboneRelational from "backbone-relational";
+import "backbone-relational";
 
 import _ from "underscore";
 import Profile from "src/models/Profile";
@@ -17,11 +17,11 @@ interface IGuild {
 
 type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img">>;
 
-export default class Guild extends BackboneRelational.Model {
+export default class Guild extends Backbone.RelationalModel {
   relations = () => {
     return [
       {
-        type: BackboneRelational.HasMany,
+        type: Backbone.HasMany,
         key: "users",
         relatedModel: Profile,
         //collectionType: ProfileList,
