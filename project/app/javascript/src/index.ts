@@ -15,6 +15,7 @@ export function start() {
       "": "index",
       auth: "auth",
       "auth/callback?code=:code": "authCallBack",
+      game: "game",
       guildindex: "guildIndex",
       "guild/:id": "guildShow",
       "*path": "notFound",

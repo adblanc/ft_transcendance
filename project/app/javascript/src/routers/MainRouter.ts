@@ -6,6 +6,7 @@ import IndexView from "../views/IndexView";
 import GuildView from "../views/guild/GuildView";
 import GuildIndexView from "../views/guild/GuildIndexView";
 import NotFoundView from "../views/NotFoundView";
+import GameView from "../views/GameView";
 import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
 import Guild from "src/models/Guild";
@@ -45,6 +46,12 @@ export default class MainRouter extends Backbone.Router {
     });
 
     pagesHandler.showPage(indexView);
+  }
+  game()
+  {
+    const gameView = new GameView({});
+
+    pagesHandler.showPage(gameView);
   }
 
   notFound() {
