@@ -18,7 +18,7 @@ type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img">>;
 
 export default class Guild extends Backbone.AssociatedModel {
   constructor(options?: any) {
-    super(options);
+	super(options);
 
     this.relations = [
       {
@@ -26,7 +26,11 @@ export default class Guild extends Backbone.AssociatedModel {
         key: "users",
         relatedModel: Profile,
       },
-    ];
+	];
+
+	/*this.defaults = {
+        users: []
+    };*/
   }
 
   urlRoot = () => "http://localhost:3000/guilds";
@@ -50,13 +54,18 @@ export default class Guild extends Backbone.AssociatedModel {
 
   createGuild(
     attrs: CreatableGuildArgs,
-    profile: Backbone.Model,
+    profile: Backbone.AssociatedModel,
     error: (errors: string[]) => void,
     success: () => void
   ) {
     this.set(attrs);
-    //console.log(this.get('users'));
-    this.set({ users: profile });
+	//profile.set({guild: this});
+	//profile.set({guild_role: 'owner'});
+	//this.set({users: profile});
+	//this.set({ users: [0] });
+	this.get('users').at(0).set(profile);
+	//this.set('users[0]', profile );
+	//this.set({ 'users[0]': profile });
     console.log(this.get("users"));
 
     this.save(

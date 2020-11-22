@@ -1,7 +1,7 @@
 import Backbone, { ModelFetchOptions } from "backbone";
 import "backbone-associations";
 import _ from "underscore";
-//import Guild from "src/models/Guild";
+import Guild from "src/models/Guild";
 
 interface IProfile {
   login: string;
@@ -15,6 +15,18 @@ interface IProfile {
 type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar">>;
 
 export default class Profile extends Backbone.AssociatedModel {
+  constructor(options?: any) {
+	super(options);
+
+	this.relations = [
+    {
+      type: Backbone.One,
+      key: "guild",
+      relatedModel: Guild,
+	},
+   ];
+  }
+
   urlRoot = () => "http://localhost:3000/user";
 
   fetch(options?: ModelFetchOptions): JQueryXHR {
