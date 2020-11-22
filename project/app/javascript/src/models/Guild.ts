@@ -24,7 +24,7 @@ export default class Guild extends Backbone.AssociatedModel {
       {
         type: Backbone.Many,
         key: "users",
-        relatedModel: "Profile",
+        relatedModel: Profile,
       },
     ];
   }

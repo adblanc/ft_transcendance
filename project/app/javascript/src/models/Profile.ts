@@ -14,7 +14,7 @@ interface IProfile {
 
 type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar">>;
 
-export default class Profile extends Backbone.Model {
+export default class Profile extends Backbone.AssociatedModel {
   urlRoot = () => "http://localhost:3000/user";
 
   fetch(options?: ModelFetchOptions): JQueryXHR {
