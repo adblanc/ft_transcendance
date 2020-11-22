@@ -59,6 +59,7 @@ export default class Guild extends Backbone.AssociatedModel {
     success: () => void
   ) {
 	this.set(attrs);
+	//console.log(this.get('users'));
 	this.set({users: profile});
 	console.log(this.get('users'));
 
@@ -79,5 +80,3 @@ export default class Guild extends Backbone.AssociatedModel {
     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
   }
 }
-
-//Guild.setup();
