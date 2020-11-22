@@ -1,4 +1,5 @@
 import Backbone, { ModelFetchOptions } from "backbone";
+import "backbone-relational";
 import _ from "underscore";
 
 interface IProfile {

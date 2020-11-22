@@ -17,8 +17,8 @@ interface IGuild {
 
 type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img">>;
 
-export default class Guild extends Backbone.RelationalModel {
-  relations = () => {
+export default class Guild extends Backbone.Model {
+  /*relations = () => {
     return [
       {
         type: Backbone.HasMany,
@@ -30,7 +30,7 @@ export default class Guild extends Backbone.RelationalModel {
         },
       },
     ];
-  };
+  };*/
 
   urlRoot = () => "http://localhost:3000/guilds";
 
@@ -60,7 +60,7 @@ export default class Guild extends Backbone.RelationalModel {
     this.set(attrs);
     //var _users = [];
     //_users.push(profile);
-    this.set({ users: profile });
+    //this.set({ users: profile });
 
     this.save(
       {},
