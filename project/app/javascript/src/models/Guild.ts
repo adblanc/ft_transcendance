@@ -1,5 +1,5 @@
 import Backbone from "backbone";
-import "backbone-relational";
+import "backbone-associations";
 
 import _ from "underscore";
 import Profile from "src/models/Profile";
@@ -17,20 +17,21 @@ interface IGuild {
 
 type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img">>;
 
-export default class Guild extends Backbone.Model {
+export default class Guild extends Backbone.AssociatedModel {
   /*relations = () => {
     return [
       {
-        type: Backbone.HasMany,
-        key: "users",
-        relatedModel: Profile,
-        //collectionType: ProfileList,
-        reverseRelation: {
-          key: "guild",
-        },
+        type: Backbone.Many,
+        key: 'users',
+        relatedModel: 'Profile',
       },
     ];
   };*/
+  relations: [{
+	type: 'Backbone.Many',
+	key: 'users',
+	relatedModel: 'Profile'
+	}]
 
   urlRoot = () => "http://localhost:3000/guilds";
 
@@ -57,10 +58,9 @@ export default class Guild extends Backbone.Model {
     error: (errors: string[]) => void,
     success: () => void
   ) {
-    this.set(attrs);
-    //var _users = [];
-    //_users.push(profile);
-    //this.set({ users: profile });
+	this.set(attrs);
+	this.set({users: profile});
+	console.log(this.get('users'));
 
     this.save(
       {},
