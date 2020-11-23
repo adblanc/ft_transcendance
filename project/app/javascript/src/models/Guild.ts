@@ -1,7 +1,7 @@
 import Backbone from "backbone";
-
 import _ from "underscore";
 import Profile from "src/models/Profile";
+import Profiles from "src/collections/Profiles";
 
 interface IGuild {
   id: string;
@@ -16,22 +16,55 @@ interface IGuild {
 
 type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img">>;
 
+/*const Guild = Backbone.AssociatedModel.extend({
+	urlRoot
+	relations: [
+		{
+			type: Backbone.Many,
+			key: "users",
+			collectionType: Profiles,
+			relatedModel: Profile,
+		}
+	],
+	defaults: {
+		name: '',
+		ang: '',
+		points: 0,
+		atWar : false,
+		users: []
+	}
+
+});
+
+export default Guild;*/
+
+
+
 export default class Guild extends Backbone.AssociatedModel {
+	preinitialize() {
+		this.relations = [
+			{
+				type: Backbone.Many,
+				key: "users",
+				collectionType: Profiles,
+				relatedModel: Profile,
+			}
+		];
+	}
+
   constructor(options?: any) {
 	super(options);
-
-    this.relations = [
-      {
-        type: Backbone.Many,
-        key: "users",
-        relatedModel: Profile,
-      },
-	];
-
-	/*this.defaults = {
-        users: []
-    };*/
   }
+
+  defaults() {
+	return {
+		name: '',
+		ang: '',
+		points: 0,
+		atWar : false,
+		users: []
+	};
+   }
 
   urlRoot = () => "http://localhost:3000/guilds";
 
@@ -46,7 +79,7 @@ export default class Guild extends Backbone.AssociatedModel {
       _.defaults(options || (options = {}), {
         data: formData,
         processData: false,
-        contentType: false,
+		contentType: false,
       });
     }
     return Backbone.sync.call(this, method, model, options);
@@ -62,8 +95,9 @@ export default class Guild extends Backbone.AssociatedModel {
 	//profile.set({guild: this});
 	//profile.set({guild_role: 'owner'});
 	//this.set({users: profile});
-	//this.set({ users: [0] });
-	this.get('users').at(0).set(profile);
+	this.get("users").add(profile);
+	//this.set({ users: [] });
+	//this.get('users').at(0).set(profile);
 	//this.set('users[0]', profile );
 	//this.set({ 'users[0]': profile });
     console.log(this.get("users"));

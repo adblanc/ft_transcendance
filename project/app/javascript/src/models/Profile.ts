@@ -15,17 +15,29 @@ interface IProfile {
 type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar">>;
 
 export default class Profile extends Backbone.AssociatedModel {
+	preinitialize() {
+		this.relations = [
+			{
+				type: Backbone.One,
+      			key: "guild",
+      			relatedModel: Guild,
+			}
+		];
+	}
+
   constructor(options?: any) {
 	super(options);
-
-	this.relations = [
-    {
-      type: Backbone.One,
-      key: "guild",
-      relatedModel: Guild,
-	},
-   ];
   }
+
+  defaults() {
+	return {
+		login: '',
+		name: '',
+		number: 0,
+		guild: null,
+		guild_role: 'none',
+	};
+}
 
   urlRoot = () => "http://localhost:3000/user";
 

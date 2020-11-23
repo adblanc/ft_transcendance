@@ -2,10 +2,10 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../../lib/BaseView";
 
-type Options = Backbone.ViewOptions & { model: Backbone.Model };
+type Options = Backbone.ViewOptions & { model: Backbone.AssociatedModel };
 
 export default class ItemImgView extends BaseView {
-  model: Backbone.Model;
+  model: Backbone.AssociatedModel;
 
   constructor(options?: Options) {
     super(options);

@@ -29,6 +29,7 @@ export default class CreateGuildView extends ModalView<Guild> {
 	this.profile.fetch();
 	//console.log(this.profile);
 
+
   }
 
   events() {
@@ -68,7 +69,7 @@ export default class CreateGuildView extends ModalView<Guild> {
 
   guildSaved() {
     displayToast({ text: "Guild successfully created." }, "success");
-    this.closeModal();
+	this.closeModal();
 	this.model.fetch();
 
 	this.idd = this.model.id; 

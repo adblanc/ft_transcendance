@@ -3,10 +3,10 @@ import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import ItemImgView from "./imgsViews/ItemImgView";
 
-type Options = Backbone.ViewOptions & { model: Backbone.Model };
+type Options = Backbone.ViewOptions & { model: Backbone.AssociatedModel };
 
 export default class ItemView extends BaseView {
-  model: Backbone.Model;
+  model: Backbone.AssociatedModel;
   imgView: Backbone.View;
 
   constructor(options?: Options) {

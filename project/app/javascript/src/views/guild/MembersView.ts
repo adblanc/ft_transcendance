@@ -4,10 +4,10 @@ import { eventBus } from "src/events/EventBus";
 import BaseView from "../../lib/BaseView";
 import Guild from "src/models/Guild";
 
-type Options = Backbone.ViewOptions & { guild: Backbone.Model };
+type Options = Backbone.ViewOptions & { guild: Backbone.AssociatedModel };
 
 export default class MembersView extends Backbone.View {
-  guild: Backbone.Model;
+  guild: Backbone.AssociatedModel;
 
   constructor(options?: Options) {
     super(options);
