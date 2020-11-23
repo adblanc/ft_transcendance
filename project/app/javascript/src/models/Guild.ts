@@ -16,11 +16,31 @@ interface IGuild {
 
 type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img">>;
 
-export default class Guild extends Backbone.Model {
+export default class Guild extends Backbone.AssociatedModel {
+	preinitialize() {
+		this.relations = [
+			{
+				type: Backbone.Many,
+				key: "users",
+				collectionType: Profiles,
+				relatedModel: Profile,
+			}
+		];
+	}
 
   constructor(options?: any) {
 	super(options);
   }
+
+  defaults() {
+	return {
+		name: '',
+		ang: '',
+		points: 0,
+		atWar : false,
+		users: []
+	};
+   }
 
   urlRoot = () => "http://localhost:3000/guilds";
 

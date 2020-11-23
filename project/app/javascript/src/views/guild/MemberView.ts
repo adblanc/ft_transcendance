@@ -2,10 +2,10 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 
-type Options = Backbone.ViewOptions & { model: Backbone.Model };
+type Options = Backbone.ViewOptions & { model: Backbone.AssociatedModel };
 
-export default class ItemView extends BaseView {
-  model: Backbone.Model;
+export default class MemberView extends BaseView {
+  model: Backbone.AssociatedModel;
 
   constructor(options?: Options) {
     super(options);

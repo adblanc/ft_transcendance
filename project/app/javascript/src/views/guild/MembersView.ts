@@ -4,20 +4,17 @@ import Profile from "src/models/Profile";
 import Profiles from "src/collections/Profiles";
 import MemberView from "./MemberView";
 
-type Options = Backbone.ViewOptions & { guild: Backbone.Model };
+type Options = Backbone.ViewOptions & { guild: Backbone.AssociatedModel };
 
 export default class MembersView extends Backbone.View {
-  //profiles: Backbone.Collection<Profile>;
-  guild: Backbone.Model;
+  profiles: Backbone.Collection<Profile>;
+  guild: Backbone.AssociatedModel;
 
   constructor(options?: Options) {
     super(options);
 
 	this.guild = options.guild;
-	/*this.profiles = new Profiles();
-	this.guild.get("users").forEach(function (user){
-		//this.profiles.add(user);
-	});*/
+	this.profiles = this.guild.get("users");
 
 	this.listenTo(this.guild, "change", this.render);
 	
@@ -28,7 +25,7 @@ export default class MembersView extends Backbone.View {
     const html = Mustache.render(template, this.guild.toJSON());
 	this.$el.html(html);
 	
-	/*const $element = this.$("#listing");
+	const $element = this.$("#listing");
 
     this.profiles.forEach(function (item) {
       //console.log(item);
@@ -36,9 +33,7 @@ export default class MembersView extends Backbone.View {
         model: item,
       });
       $element.append(memberView.render().el);
-    });*/
-
-
+    });
     return this;
   }
 }

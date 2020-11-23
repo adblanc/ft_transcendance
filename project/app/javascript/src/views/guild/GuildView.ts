@@ -5,13 +5,13 @@ import InfoView from "./InfoView";
 import MembersView from "./MembersView";
 import PageView from "src/lib/PageView";
 
-type Options = Backbone.ViewOptions & { guild: Backbone.Model };
+type Options = Backbone.ViewOptions & { guild: Backbone.AssociatedModel };
 
 export default class GuildView extends PageView {
   navbarView: Backbone.View;
   infoView: Backbone.View;
   membersView: Backbone.View;
-  guild: Backbone.Model;
+  guild: Backbone.AssociatedModel;
 
   constructor(options?: Options) {
     super(options);
