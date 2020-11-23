@@ -15,8 +15,8 @@ export default class NavbarView extends BaseView {
     const profile = new Profile();
     this.profileView = new ProfileView({
       model: profile,
-    });
-    profile.fetch();
+	});
+	profile.fetch();
   }
 
   events() {

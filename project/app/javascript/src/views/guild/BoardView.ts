@@ -19,7 +19,7 @@ export default class BoardView extends BaseView {
     this.listenTo(this.collection, "change", this.render);
     this.listenTo(this.collection, "sort", this.render);
     this.collection.fetch();
-    this.collection.sort();
+	this.collection.sort();
   }
 
   render() {

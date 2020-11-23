@@ -22,7 +22,6 @@ export default class CreateGuildView extends ModalView<Guild> {
 		tmp.push(item.get('ang'));
 	});
 	this.list = tmp;
-
   }
 
   events() {
@@ -61,11 +60,10 @@ export default class CreateGuildView extends ModalView<Guild> {
 
   guildSaved() {
     displayToast({ text: "Guild successfully created." }, "success");
-    this.closeModal();
+	this.closeModal();
 	this.model.fetch();
 
 	this.idd = this.model.id; 
-	//console.log(this.idd);
 	const router = new MainRouter({
 		routes: {
 		  "guild/:id": "guildShow",

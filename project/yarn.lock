@@ -931,7 +931,22 @@
   dependencies:
     axios "*"
 
-"@types/backbone@^1.4.5":
+"@types/backbone-associations@^0.6.33":
+  version "0.6.33"
+  resolved "https://registry.yarnpkg.com/@types/backbone-associations/-/backbone-associations-0.6.33.tgz#f9682e2e2286cc1082173025539e9b58b927fa4e"
+  integrity sha512-DN0MeNTk+ulZRrRux32ngdD3wDZscujCB8xPQnkY/Wy/fMZMYKzP4KGxNpUzp6wKcdVLD8cPWhYYYJpcJz+4iA==
+  dependencies:
+    "@types/backbone" "*"
+
+"@types/backbone-relational@^0.10.3":
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/@types/backbone-relational/-/backbone-relational-0.10.3.tgz#3345d9b2c7f4222345a18e0daa15f755cabbf3a5"
+  integrity sha512-oE3eIYHDUmfC2MuW1t9MNIMIBU141Lb06h9B7WBa+k4sgXZTLPGXQMue8QGerZu6ivBNYdt6aqfto062gOu51Q==
+  dependencies:
+    "@types/backbone" "*"
+    "@types/jquery" "*"
+
+"@types/backbone@*", "@types/backbone@^1.4.5":
   version "1.4.5"
   resolved "https://registry.yarnpkg.com/@types/backbone/-/backbone-1.4.5.tgz#057d89987fb672a20b896b1df5cc802f7b87c624"
   integrity sha512-pSqM0eryp6V3G0srBtndUd9IJmiG2BAwYLQGPDcEPMjbfbgitlrN40+Lc1rrMjNMbV5QWywe6WPmNjdqyNTyIw==
@@ -1475,7 +1490,23 @@ babel-plugin-macros@^2.6.1:
     cosmiconfig "^6.0.0"
     resolve "^1.12.0"
 
-backbone@^1.4.0:
+backbone-associations@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/backbone-associations/-/backbone-associations-0.6.2.tgz#691341756356241baeba2b801d8be30d0a235748"
+  integrity sha1-aRNBdWNWJBuuuiuAHYvjDQojV0g=
+  dependencies:
+    backbone ">=1.0.0"
+    underscore ">=1.4.4"
+
+backbone-relational@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/backbone-relational/-/backbone-relational-0.10.0.tgz#308eb2c8eae0980da55c9f6c592553c4e0e0041c"
+  integrity sha1-MI6yyOrgmA2lXJ9sWSVTxODgBBw=
+  dependencies:
+    backbone ">=1.2.1"
+    underscore ">=1.7.0"
+
+backbone@>=1.0.0, backbone@>=1.2.1, backbone@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/backbone/-/backbone-1.4.0.tgz#54db4de9df7c3811c3f032f34749a4cd27f3bd12"
   integrity sha512-RLmDrRXkVdouTg38jcgHhyQ/2zjg7a8E6sz2zxfz21Hh17xDJYUHBZimVIt5fUyS8vbfpeSmTL3gUjTEvUV3qQ==
@@ -7486,7 +7517,7 @@ typescript@^4.0.5:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.5.tgz#ae9dddfd1069f1cb5beb3ef3b2170dd7c1332389"
   integrity sha512-ywmr/VrTVCmNTJ6iV2LwIrfG1P+lv6luD8sUJs+2eI9NLGigaN+nUQc13iHqisq7bra9lnmUSYqbJvegraBOPQ==
 
-underscore@>=1.8.3, underscore@^1.11.0:
+underscore@>=1.4.4, underscore@>=1.7.0, underscore@>=1.8.3, underscore@^1.11.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.11.0.tgz#dd7c23a195db34267186044649870ff1bab5929e"
   integrity sha512-xY96SsN3NA461qIRKZ/+qox37YXPtSBswMGfiNptr+wrt6ds4HaMw23TP612fEyGekRE6LNRiLYr/aqbHXNedw==

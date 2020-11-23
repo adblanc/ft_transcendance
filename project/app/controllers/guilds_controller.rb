@@ -13,6 +13,7 @@ class GuildsController < ApplicationController
 
   def create
 	@guild = Guild.create(guild_params)
+	@guild.users.push(current_user)
 	if @guild.save
 		@guild
 	else
