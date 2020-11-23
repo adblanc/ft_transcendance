@@ -30,7 +30,6 @@ export default class Guild extends Backbone.Model {
 
       _.each(model.attributes, function (value, key) {
 		formData.append(key, value);
-		//console.log(key, value);
       });
       _.defaults(options || (options = {}), {
         data: formData,
@@ -43,17 +42,10 @@ export default class Guild extends Backbone.Model {
 
   createGuild(
     attrs: CreatableGuildArgs,
-    profile: Backbone.Model,
     error: (errors: string[]) => void,
     success: () => void
   ) {
     this.set(attrs);
-	//profile.set({guild: this});
-	//profile.set({guild_role: 'owner'});
-	this.set('users', new Profiles());
-	this.get("users").add(profile);
-	console.log(this.get("users").length);
-    console.log(this.get("users").at(0));
 
     this.save(
       {},

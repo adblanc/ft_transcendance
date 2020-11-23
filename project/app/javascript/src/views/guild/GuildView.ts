@@ -27,7 +27,6 @@ export default class GuildView extends PageView {
 	this.guild.fetch({
 		success: () => {
 		  console.log("users", this.guild.get("users"));
-		  //console.log(this.guild.get("users").at(0));
 		},
 	  });
   }

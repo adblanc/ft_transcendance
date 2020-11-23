@@ -5,11 +5,9 @@ import Guild from "src/models/Guild";
 import { displayToast } from "src/utils/toast";
 import MainRouter from "src/routers/MainRouter";
 import { generateAcn } from "src/utils/acronym";
-import Profile from "src/models/Profile";
 
 
 export default class CreateGuildView extends ModalView<Guild> {
-	profile: Backbone.Model;
 	idd: string;
 	list: string[];
 
@@ -24,12 +22,6 @@ export default class CreateGuildView extends ModalView<Guild> {
 		tmp.push(item.get('ang'));
 	});
 	this.list = tmp;
-
-	this.profile = new Profile();
-	this.profile.fetch();
-	//console.log(this.profile);
-
-
   }
 
   events() {
@@ -56,7 +48,6 @@ export default class CreateGuildView extends ModalView<Guild> {
 
 		this.model.createGuild(
 		attrs,
-		this.profile,
 		(errors) => {
 			errors.forEach((error) => {
 			this.displayError(error);
@@ -73,7 +64,6 @@ export default class CreateGuildView extends ModalView<Guild> {
 	this.model.fetch();
 
 	this.idd = this.model.id; 
-	//console.log(this.idd);
 	const router = new MainRouter({
 		routes: {
 		  "guild/:id": "guildShow",
