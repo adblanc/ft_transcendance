@@ -9,7 +9,7 @@ import Profile from "src/models/Profile";
 
 
 export default class CreateGuildView extends ModalView<Guild> {
-	profile: Backbone.AssociatedModel;
+	profile: Backbone.Model;
 	idd: string;
 	list: string[];
 

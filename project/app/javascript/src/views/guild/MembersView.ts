@@ -4,17 +4,18 @@ import { eventBus } from "src/events/EventBus";
 import BaseView from "../../lib/BaseView";
 import Guild from "src/models/Guild";
 
-type Options = Backbone.ViewOptions & { guild: Backbone.AssociatedModel };
+type Options = Backbone.ViewOptions & { guild: Backbone.Model };
 
 export default class MembersView extends Backbone.View {
-  guild: Backbone.AssociatedModel;
+  guild: Backbone.Model;
 
   constructor(options?: Options) {
     super(options);
 
     this.guild = options.guild;
 
-    this.listenTo(this.guild, "change", this.render);
+	this.listenTo(this.guild, "change", this.render);
+	
   }
 
   render() {

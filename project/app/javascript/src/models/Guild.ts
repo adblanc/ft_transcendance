@@ -16,55 +16,11 @@ interface IGuild {
 
 type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img">>;
 
-/*const Guild = Backbone.AssociatedModel.extend({
-	urlRoot
-	relations: [
-		{
-			type: Backbone.Many,
-			key: "users",
-			collectionType: Profiles,
-			relatedModel: Profile,
-		}
-	],
-	defaults: {
-		name: '',
-		ang: '',
-		points: 0,
-		atWar : false,
-		users: []
-	}
-
-});
-
-export default Guild;*/
-
-
-
-export default class Guild extends Backbone.AssociatedModel {
-	preinitialize() {
-		this.relations = [
-			{
-				type: Backbone.Many,
-				key: "users",
-				collectionType: Profiles,
-				relatedModel: Profile,
-			}
-		];
-	}
+export default class Guild extends Backbone.Model {
 
   constructor(options?: any) {
 	super(options);
   }
-
-  defaults() {
-	return {
-		name: '',
-		ang: '',
-		points: 0,
-		atWar : false,
-		users: []
-	};
-   }
 
   urlRoot = () => "http://localhost:3000/guilds";
 
@@ -73,9 +29,9 @@ export default class Guild extends Backbone.AssociatedModel {
       var formData = new FormData();
 
       _.each(model.attributes, function (value, key) {
-        formData.append(key, value);
+		formData.append(key, value);
+		//console.log(key, value);
       });
-
       _.defaults(options || (options = {}), {
         data: formData,
         processData: false,
@@ -87,25 +43,22 @@ export default class Guild extends Backbone.AssociatedModel {
 
   createGuild(
     attrs: CreatableGuildArgs,
-    profile: Backbone.AssociatedModel,
+    profile: Backbone.Model,
     error: (errors: string[]) => void,
     success: () => void
   ) {
     this.set(attrs);
 	//profile.set({guild: this});
 	//profile.set({guild_role: 'owner'});
-	//this.set({users: profile});
+	this.set('users', new Profiles());
 	this.get("users").add(profile);
-	//this.set({ users: [] });
-	//this.get('users').at(0).set(profile);
-	//this.set('users[0]', profile );
-	//this.set({ 'users[0]': profile });
-    console.log(this.get("users"));
+	console.log(this.get("users").length);
+    console.log(this.get("users").at(0));
 
     this.save(
       {},
       {
-        url: this.urlRoot(),
+		url: this.urlRoot(),
 
         success: () => success(),
         error: (_, jqxhr) => {
@@ -119,3 +72,4 @@ export default class Guild extends Backbone.AssociatedModel {
     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
   }
 }
+

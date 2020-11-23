@@ -5,13 +5,13 @@ import InfoView from "./InfoView";
 import MembersView from "./MembersView";
 import PageView from "src/lib/PageView";
 
-type Options = Backbone.ViewOptions & { guild: Backbone.AssociatedModel };
+type Options = Backbone.ViewOptions & { guild: Backbone.Model };
 
 export default class GuildView extends PageView {
   navbarView: Backbone.View;
   infoView: Backbone.View;
   membersView: Backbone.View;
-  guild: Backbone.AssociatedModel;
+  guild: Backbone.Model;
 
   constructor(options?: Options) {
     super(options);
@@ -26,7 +26,8 @@ export default class GuildView extends PageView {
     });
 	this.guild.fetch({
 		success: () => {
-		  console.log("users", this.guild.get("users[0]"));
+		  console.log("users", this.guild.get("users"));
+		  //console.log(this.guild.get("users").at(0));
 		},
 	  });
   }
