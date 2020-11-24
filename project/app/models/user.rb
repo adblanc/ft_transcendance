@@ -12,7 +12,6 @@ class User < ApplicationRecord
 	def assign_default_role
 		/global role - could be switched to admin/
 		self.add_role(:regular)
-		/role within guild need to be set here?/
 	end
 
 	def guild_owner?(guild)
