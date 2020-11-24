@@ -23,6 +23,18 @@ class GuildsController < ApplicationController
   end
 
   def edit
+    @guild = Guild.find(params[:id])
+  end
+
+  def update
+    @guild = Guild.find(params[:id])
+	@guild.update(guild_params)
+	if @guild.save
+		@guild
+	else
+		render json: @guild.errors, status: :unprocessable_entity
+  	end
+
   end
 
   private

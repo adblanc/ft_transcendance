@@ -44,6 +44,7 @@ export default class MainRouter extends Backbone.Router {
 
     pagesHandler.showPage(indexView);
   }
+  
   game()
   {
     const gameView = new GameView({});

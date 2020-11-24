@@ -45,7 +45,7 @@ export default class Guild extends Backbone.AssociatedModel {
   urlRoot = () => "http://localhost:3000/guilds";
 
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
-    if (method == "create") {
+    if (method == "create" || method == "update") {
       var formData = new FormData();
 
       _.each(model.attributes, function (value, key) {
@@ -71,6 +71,27 @@ export default class Guild extends Backbone.AssociatedModel {
       {},
       {
 		url: this.urlRoot(),
+
+        success: () => success(),
+        error: (_, jqxhr) => {
+          error(this.mapServerErrors(jqxhr?.responseJSON));
+        },
+      }
+    );
+  }
+
+  modifyGuild(
+	attrs: CreatableGuildArgs,
+	id: number,
+    error: (errors: string[]) => void,
+    success: () => void
+  ) {
+    this.set(attrs);
+
+    this.save(
+      {},
+      {
+		url: `http://localhost:3000/guilds/"${id}`,
 
         success: () => success(),
         error: (_, jqxhr) => {

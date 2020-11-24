@@ -3,6 +3,8 @@ import Mustache from "mustache";
 import BaseView from "src/lib/BaseView";
 import PageImgView from "./imgsViews/PageImgView";
 import Profile from "src/models/Profile"
+import Guild from "src/models/Guild"
+import ModifyGuildView from "./ModifyGuildView";
 
 type Options = Backbone.ViewOptions & { guild: Backbone.AssociatedModel };
 
@@ -32,8 +34,10 @@ export default class InfoView extends BaseView {
   }
 
   onEditClicked() {
+	var id = this.guild.get('id');
+	const guild = new Guild({ id });
     const modifyGuildView = new ModifyGuildView({
-	  model: this.guild,
+	  model: guild,
     });
 
     modifyGuildView.render();
