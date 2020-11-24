@@ -11,7 +11,7 @@ class User < ApplicationRecord
 	  
 	def assign_default_role
 		/global role - could be switched to admin/
-		self.add_role(:regular) if self.roles.blank?
+		self.add_role(:regular)
 		/role within guild need to be set here?/
 	end
 
@@ -26,11 +26,11 @@ class User < ApplicationRecord
 	def guild_role?
 		case true
 		when self.guild_owner?(guild)
-			return "owner"
+			return "Owner"
 		when self.guild_officer?(guild)
-			return "officer"
+			return "Officer"
 		when self.guild.present?
-			return "member"
+			return "Member"
 		else
 			return nil
 		end

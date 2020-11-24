@@ -6,5 +6,6 @@ json.users do
 	 json.avatar_url url_for(user.avatar) if user.avatar.attached?
 	 json.guild_role user.guild_role?
 	 json.admin user.admin?
+	 json.contribution user.contribution
   end
 end

@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 2020_11_24_154627) do
     t.bigint "guild_id"
     t.string "login"
     t.string "name"
+    t.integer "contribution", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["guild_id"], name: "index_users_on_guild_id"
