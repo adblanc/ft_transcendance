@@ -1,4 +1,5 @@
 class Guild < ApplicationRecord
+  resourcify
 	has_one_attached :img
 	has_many :users
 	accepts_nested_attributes_for :users

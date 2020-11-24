@@ -4,7 +4,6 @@ class CreateUsers < ActiveRecord::Migration[6.0]
 	  t.belongs_to :guild
       t.string :login
 	  t.string :name
-	  t.string :guild_role, default: 'none'
 
       t.timestamps
     end

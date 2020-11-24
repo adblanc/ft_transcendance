@@ -14,6 +14,7 @@ class GuildsController < ApplicationController
   def create
 	@guild = Guild.create(guild_params)
 	@guild.users.push(current_user)
+	current_user.add_role :owner, @guild
 	if @guild.save
 		@guild
 	else
