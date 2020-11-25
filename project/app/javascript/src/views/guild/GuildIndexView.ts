@@ -4,6 +4,7 @@ import Guild from "src/models/Guild";
 import CreateGuildView from "./CreateGuildView";
 import PageView from "src/lib/PageView";
 import Guilds from "src/collections/Guilds";
+import ItemView from "./ItemView";
 
 export default class GuildView extends PageView {
   collection: Backbone.Collection<Guild>;
@@ -38,7 +39,19 @@ export default class GuildView extends PageView {
   render() {
     const template = $("#guildIndexTemplate").html();
     const html = Mustache.render(template, {});
-    this.$el.html(html);
+	this.$el.html(html);
+	
+	const $element = this.$("#listing");
+
+    //console.log(this.collection.length);
+
+    this.collection.forEach(function (item) {
+      //console.log(item);
+      var itemView = new ItemView({
+        model: item,
+      });
+      $element.append(itemView.render().el);
+    });
 
     return this;
   }
