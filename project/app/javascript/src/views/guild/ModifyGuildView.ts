@@ -47,6 +47,8 @@ export default class ModifyGuildView extends ModalView<Guild> {
     displayToast({ text: "Guild successfully updated." }, "success");
 	this.closeModal();
 	this.model.fetch();
+
+	Backbone.history.loadUrl();
   }
 
   displayError(error: string) {
