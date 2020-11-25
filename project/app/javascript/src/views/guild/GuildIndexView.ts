@@ -6,6 +6,7 @@ import PageView from "src/lib/PageView";
 import Guilds from "src/collections/Guilds";
 import ItemView from "./ItemView";
 import MyGuildView from "./MyGuildView";
+import Profile from "src/models/Profile";
 
 export default class GuildIndexView extends PageView {
 //	profile: Backbone.AssociatedModel;
@@ -22,7 +23,11 @@ export default class GuildIndexView extends PageView {
 	this.collection.fetch();
 	this.collection.sort();
 
-	this.myGuildView = new MyGuildView();
+	const profile = new Profile();
+	this.myGuildView = new MyGuildView({
+		model: profile,
+	});
+	profile.fetch();
   }
 
   events() {
@@ -54,8 +59,6 @@ export default class GuildIndexView extends PageView {
       });
       $element.append(itemView.render().el);
 	});
-	
-	console.log(this.myGuildView);
 
 	if (this.myGuildView) {
 		this.renderNested(this.myGuildView, "#myguild");
