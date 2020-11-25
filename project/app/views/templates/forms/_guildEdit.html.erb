@@ -25,7 +25,8 @@
                     <span class="text-gray-700">Upload a picture </span>
                     <input
                         class="form-input mt-1 block w-full"
-                        type="file"
+						type="file"
+						value="{{img_url}}"
                         name="guild-img"
                         id="input-guild-img"
                     />
@@ -37,7 +38,16 @@
                         type="submit"
                     >
                         Update Guild
-                    </button>
+					</button>
+				</div>
+				<div class="flex justify-center items-center">
+                    <button
+                        class="btn-primary bg-red-400 mt-8"
+                        id="destroy-guild"
+                        type="submit"
+                    >
+                        Destroy Guild
+					</button>
                 </div>
             </form>
 </script>
