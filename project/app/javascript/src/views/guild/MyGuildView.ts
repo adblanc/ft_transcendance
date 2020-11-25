@@ -12,6 +12,7 @@ export default class MyGuildView extends BaseView {
     super(options);
 
 	this.model = options.model;
+	this.model.fetch();
 
   }
 

@@ -9,7 +9,6 @@ import MyGuildView from "./MyGuildView";
 import Profile from "src/models/Profile";
 
 export default class GuildIndexView extends PageView {
-//	profile: Backbone.AssociatedModel;
   collection: Backbone.Collection<Guild>;
   myGuildView: Backbone.View;
 
@@ -17,17 +16,18 @@ export default class GuildIndexView extends PageView {
 	super(options);
 	
 	this.collection = new Guilds({});
+	this.collection.fetch();
+	this.collection.sort();
 	this.listenTo(this.collection, 'reset', this.render);
 	this.listenTo(this.collection, "change", this.render);
 	this.listenTo(this.collection, "sort", this.render);
-	this.collection.fetch();
-	this.collection.sort();
 
 	const profile = new Profile();
 	this.myGuildView = new MyGuildView({
 		model: profile,
 	});
 	profile.fetch();
+	this.listenTo(profile, "change", this.render);
   }
 
   events() {
@@ -51,6 +51,7 @@ export default class GuildIndexView extends PageView {
     const html = Mustache.render(template, {});
 	this.$el.html(html);
 	
+	this.collection.fetch();
 	const $element = this.$("#listing");
 
     this.collection.forEach(function (item) {
