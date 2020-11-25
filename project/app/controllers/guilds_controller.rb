@@ -34,7 +34,11 @@ class GuildsController < ApplicationController
 	else
 		render json: @guild.errors, status: :unprocessable_entity
   	end
+  end
 
+  def destroy
+	@guild = Guild.find(params[:id])
+	@guild.destroy
   end
 
   private

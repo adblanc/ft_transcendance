@@ -3,12 +3,13 @@ import Mustache from "mustache";
 import ModalView from "../ModalView";
 import Guild from "src/models/Guild";
 import { displayToast } from "src/utils/toast";
+import MainRouter from "src/routers/MainRouter";
 
 
 export default class ModifyGuildView extends ModalView<Guild> {
 
   constructor(options?: Backbone.ViewOptions<Guild>) {
-    super(options);
+	super(options);
 
 	/*maybe i don't need this*/
 	this.listenTo(this.model, "change", this.render);
@@ -16,7 +17,25 @@ export default class ModifyGuildView extends ModalView<Guild> {
   }
 
   events() {
-    return { ...super.events(), "click #input-guild-submit": "onSubmit" };
+	return {
+		...super.events(), "click #input-guild-submit": "onSubmit",
+		...super.events(), "click #destroy-guild": "onDestroy",
+	  };
+  }
+
+  onDestroy(e: JQuery.Event) {
+	//e.preventDefault();
+
+	this.model.destroy();
+    displayToast({ text: "Guild successfully destroyed." }, "success");
+	this.closeModal();
+	
+	const router = new MainRouter({
+		routes: {
+		  guildindex: "guildIndex",
+		},
+	});
+	router.navigate("guildindex", { trigger: true });
   }
 
   onSubmit(e: JQuery.Event) {
