@@ -82,16 +82,16 @@ export default class Guild extends Backbone.AssociatedModel {
 
   modifyGuild(
 	attrs: CreatableGuildArgs,
-	id: number,
+	id: string,
     error: (errors: string[]) => void,
     success: () => void
   ) {
-    this.set(attrs);
-
+	this.set(attrs);
+	
     this.save(
       {},
       {
-		url: `http://localhost:3000/guilds/"${id}`,
+		url: `http://localhost:3000/guilds/${id}`,
 
         success: () => success(),
         error: (_, jqxhr) => {
