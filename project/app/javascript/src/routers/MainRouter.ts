@@ -10,7 +10,6 @@ import GameView from "../views/GameView";
 import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
 import Guild from "src/models/Guild";
-import Guilds from "../collections/Guilds";
 
 export default class MainRouter extends Backbone.Router {
   constructor(options: RouterOptions<MainRouter>) {
