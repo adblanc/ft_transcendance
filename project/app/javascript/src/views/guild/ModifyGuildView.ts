@@ -30,13 +30,7 @@ export default class ModifyGuildView extends ModalView<Guild> {
     displayToast({ text: "Guild successfully destroyed." }, "success");
 	this.closeModal();
 	
-	const router = new MainRouter({
-		routes: {
-		  //go to not found since refetch issue
-		  //guildindex: "guildIndex", 
-		  "*path": "notFound",
-		},
-	});
+	const router = new MainRouter();
 	router.navigate("notFound", { trigger: true });
   }
 
