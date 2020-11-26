@@ -32,10 +32,12 @@ export default class ModifyGuildView extends ModalView<Guild> {
 	
 	const router = new MainRouter({
 		routes: {
-		  guildindex: "guildIndex",
+		  //go to not found since refetch issue
+		  //guildindex: "guildIndex", 
+		  "*path": "notFound",
 		},
 	});
-	router.navigate("guildindex", { trigger: true });
+	router.navigate("notFound", { trigger: true });
   }
 
   onSubmit(e: JQuery.Event) {

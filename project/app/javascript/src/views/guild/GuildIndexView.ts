@@ -28,7 +28,7 @@ export default class GuildIndexView extends PageView {
 	this.listenTo(this.collection, 'reset', this.render);
 	this.listenTo(this.collection, "change", this.render);
 	this.listenTo(this.collection, "sort", this.render);
-	this.listenTo(this.collection, "delete", this.render);
+	this.listenTo(this.collection, "update", this.render);
 	this.collection.fetch();
 	this.collection.sort();
   }
