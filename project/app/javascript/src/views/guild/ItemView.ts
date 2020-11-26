@@ -2,11 +2,12 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import ItemImgView from "./imgsViews/ItemImgView";
+import Guild from "src/models/Guild";
 
-type Options = Backbone.ViewOptions & { model: Backbone.AssociatedModel };
+type Options = Backbone.ViewOptions & { model: Guild };
 
 export default class ItemView extends BaseView {
-  model: Backbone.AssociatedModel;
+  model: Guild;
   imgView: Backbone.View;
 
   constructor(options?: Options) {

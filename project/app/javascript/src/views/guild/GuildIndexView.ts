@@ -38,7 +38,6 @@ export default class GuildIndexView extends PageView {
     const html = Mustache.render(template, {});
 	this.$el.html(html);
 	
-	//this.collection.fetch();
 	const $element = this.$("#listing");
 
     this.collection.forEach(function (item) {

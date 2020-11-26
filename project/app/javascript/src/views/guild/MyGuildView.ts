@@ -6,7 +6,7 @@ import Guild from "src/models/Guild";
 import Guilds from "src/collections/Guilds";
 import Profile from "src/models/Profile";
 
-type Options = Backbone.ViewOptions & { profile: Profile, collection: Backbone.Collection<Guild> };
+type Options = Backbone.ViewOptions & { profile: Profile, collection: Guilds };
 
 export default class MyGuildView extends BaseView {
   profile: Profile;
@@ -19,7 +19,7 @@ export default class MyGuildView extends BaseView {
 	this.collection = options.collection;
 
 	this.listenTo(this.profile, "change", this.render);
-	//this.model.fetch();
+	this.profile.fetch();
 
   }
 
