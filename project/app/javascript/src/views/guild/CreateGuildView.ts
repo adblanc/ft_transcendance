@@ -64,7 +64,17 @@ export default class CreateGuildView extends ModalView<Guild> {
 	this.model.fetch();
 
 	this.idd = this.model.id; 
-	const router = new MainRouter();
+	const router = new MainRouter({
+		routes: {
+		  "": "index",
+		  auth: "auth",
+		  "auth/callback?code=:code": "authCallBack",
+		  game: "game",
+		  guildindex: "guildIndex",
+		  "guild/:id": "guildShow",
+		  "*path": "notFound",
+		},
+	  });
 	router.navigate(`guild/${this.idd}`, { trigger: true });
   }
 

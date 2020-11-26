@@ -10,7 +10,17 @@ export function start() {
     addAuthHeaders(token);
   }
 
-  const mainRouter = new MainRouter();
+  const mainRouter = new MainRouter({
+    routes: {
+      "": "index",
+      auth: "auth",
+      "auth/callback?code=:code": "authCallBack",
+      game: "game",
+      guildindex: "guildIndex",
+      "guild/:id": "guildShow",
+      "*path": "notFound",
+    },
+  });
 
   $.ajaxSetup({
     statusCode: {

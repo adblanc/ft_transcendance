@@ -10,20 +10,12 @@ import GameView from "../views/GameView";
 import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
 import Guild from "src/models/Guild";
+import Guilds from "../collections/Guilds";
 
 export default class MainRouter extends Backbone.Router {
-  constructor(options?: Backbone.RouterOptions) {
+  constructor(options: RouterOptions<MainRouter>) {
 	super(options);
-
-	this.routes = {
-		"": "index",
-		auth: "auth",
-		"auth/callback?code=:code": "authCallBack",
-		game: "game",
-		guildindex: "guildIndex",
-		"guild/:id": "guildShow",
-		"*path": "notFound",
-	}
+	
   }
 
   async authCallBack(code: string) {
