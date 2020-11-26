@@ -26,7 +26,7 @@ export default class Profile extends Backbone.AssociatedModel {
 	}
 
   constructor(options?: any) {
-	super(options);
+	  super(options);
   }
 
   defaults() {
@@ -46,7 +46,14 @@ export default class Profile extends Backbone.AssociatedModel {
       ...options,
     });
   }
-
+  get gName(): string
+  {
+      return this.get('name');
+  }
+  set sname(nom:string)
+  {
+      this.set('name', nom);
+  }
   validate(attrs?: IProfile) {
     if (attrs?.name && attrs.name.length < 3) {
       return "name is too short (minimum length is 3)";
