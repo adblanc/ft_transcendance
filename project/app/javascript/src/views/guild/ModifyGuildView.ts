@@ -30,17 +30,7 @@ export default class ModifyGuildView extends ModalView<Guild> {
     displayToast({ text: "Guild successfully destroyed." }, "success");
 	this.closeModal();
 	
-	const router = new MainRouter({
-		routes: {
-		  "": "index",
-		  auth: "auth",
-		  "auth/callback?code=:code": "authCallBack",
-		  game: "game",
-		  guildindex: "guildIndex",
-		  "guild/:id": "guildShow",
-		  "*path": "notFound",
-		},
-	  });
+	const router = new MainRouter();
 	router.navigate("notFound", { trigger: true });
   }
 

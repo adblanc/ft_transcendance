@@ -13,8 +13,18 @@ import Guild from "src/models/Guild";
 import Guilds from "../collections/Guilds";
 
 export default class MainRouter extends Backbone.Router {
-  constructor(options: RouterOptions<MainRouter>) {
-	super(options);
+  constructor() {
+	super({
+		routes: {
+			"": "index",
+			auth: "auth",
+			"auth/callback?code=:code": "authCallBack",
+			game: "game",
+			guildindex: "guildIndex",
+			"guild/:id": "guildShow",
+			"*path": "notFound",
+		}
+	});
 	
   }
 
@@ -44,7 +54,7 @@ export default class MainRouter extends Backbone.Router {
 
     pagesHandler.showPage(indexView);
   }
-  
+
   game()
   {
     const gameView = new GameView({});
