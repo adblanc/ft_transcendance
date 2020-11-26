@@ -1,8 +1,6 @@
 import Backbone from "backbone";
-import { name } from "mustache";
 import MainRouter from "./routers/MainRouter";
 import { addAuthHeaders, catchNavigation } from "./utils";
-import NavbarView from "./views/NavbarView";
 
 export function start() {
   if (process.env.NODE_ENV === "development") {
@@ -18,6 +16,7 @@ export function start() {
       game: "game",
       guildindex: "guildIndex",
       "guild/:id": "guildShow",
+      chat: "chat",
       "*path": "notFound",
     },
   });

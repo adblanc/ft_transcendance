@@ -10,12 +10,11 @@ import GameView from "../views/GameView";
 import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
 import Guild from "src/models/Guild";
-import Guilds from "../collections/Guilds";
+import ChatView from "../views/Chat/ChatView";
 
 export default class MainRouter extends Backbone.Router {
   constructor(options: RouterOptions<MainRouter>) {
-	super(options);
-	
+    super(options);
   }
 
   async authCallBack(code: string) {
@@ -44,9 +43,8 @@ export default class MainRouter extends Backbone.Router {
 
     pagesHandler.showPage(indexView);
   }
-  
-  game()
-  {
+
+  game() {
     const gameView = new GameView({});
 
     pagesHandler.showPage(gameView);
@@ -65,9 +63,13 @@ export default class MainRouter extends Backbone.Router {
   }
 
   guildShow(id: string) {
-	
-	const guildView = new GuildView({ guild: new Guild({ id }) });
-	pagesHandler.showPage(guildView);
+    const guildView = new GuildView({ guild: new Guild({ id }) });
+    pagesHandler.showPage(guildView);
+  }
 
+  chat() {
+    const chatView = new ChatView();
+
+    pagesHandler.showPage(chatView);
   }
 }
