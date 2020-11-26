@@ -2,4 +2,6 @@ json.extract! user, :guild, :id, :login, :name, :contribution, :created_at, :upd
 json.avatar_url url_for(user.avatar) if user.avatar.attached?
 json.guild_role user.guild_role?
 json.admin user.admin?
-json.img_url url_for(user.guild.img) if user.guild.img.attached?
+if user.guild_role?
+  json.img_url url_for(user.guild.img) if user.guild.img.attached?
+end
