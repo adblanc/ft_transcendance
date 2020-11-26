@@ -4,10 +4,12 @@ Rails.application.routes.draw do
   get '/auth/guest', to: 'authentication#loginGuest', format: false
 
   resource :user, only: [:show, :update]
+  resources :room_messages
+  resources :room
   resources :guilds
 
   root to: "application#index"
   match '*path', via: [:get, :post], to: "application#index", constraints: lambda { |req|
-    req.path.exclude? 'rails/active_storage' 
+    req.path.exclude? 'rails/active_storage'
   }
 end

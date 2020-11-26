@@ -1,9 +1,13 @@
 import Backbone from "backbone";
 
-interface IMessage {
+export interface IMessage {
   content: string;
-  type: "received" | "sent";
-  avatar_url: string;
+  room_id: number;
+  username?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
-export default class Message extends Backbone.Model<IMessage> {}
+export default class Message extends Backbone.Model<IMessage> {
+  url = () => "http://localhost:3000/room_messages";
+}
