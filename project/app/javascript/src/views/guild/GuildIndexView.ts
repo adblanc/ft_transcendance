@@ -1,7 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import Guild from "src/models/Guild";
-import CreateGuildView from "./CreateGuildView";
 import PageView from "src/lib/PageView";
 import Guilds from "src/collections/Guilds";
 import ItemView from "./ItemView";
@@ -9,41 +8,29 @@ import MyGuildView from "./MyGuildView";
 import Profile from "src/models/Profile";
 
 export default class GuildIndexView extends PageView {
-  collection: Backbone.Collection<Guild>;
+  collection: Guilds;
+  profile: Profile;
   myGuildView: Backbone.View;
 
   constructor(options?: Backbone.ViewOptions) {
 	super(options);
 	
 	this.collection = new Guilds({});
-	this.collection.fetch();
-	this.collection.sort();
+
+	this.profile = new Profile();
+	this.myGuildView = new MyGuildView({
+		profile: this.profile,
+		collection: this.collection,
+	});
+	this.listenTo(this.profile, "change", this.render);
+	this.profile.fetch();
+
 	this.listenTo(this.collection, 'reset', this.render);
 	this.listenTo(this.collection, "change", this.render);
 	this.listenTo(this.collection, "sort", this.render);
-
-	const profile = new Profile();
-	this.myGuildView = new MyGuildView({
-		model: profile,
-	});
-	profile.fetch();
-	this.listenTo(profile, "change", this.render);
-  }
-
-  events() {
-    return {
-      "click #create-btn": "onCreateClicked",
-    };
-  }
-
-  onCreateClicked() {
-    const guild = new Guild();
-    const createGuildView = new CreateGuildView({
-	  model: guild,
-	  collection: this.collection,
-    });
-
-    createGuildView.render();
+	this.listenTo(this.collection, "delete", this.render);
+	this.collection.fetch();
+	this.collection.sort();
   }
 
   render() {
@@ -51,7 +38,7 @@ export default class GuildIndexView extends PageView {
     const html = Mustache.render(template, {});
 	this.$el.html(html);
 	
-	this.collection.fetch();
+	//this.collection.fetch();
 	const $element = this.$("#listing");
 
     this.collection.forEach(function (item) {

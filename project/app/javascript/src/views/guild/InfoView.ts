@@ -6,11 +6,11 @@ import Profile from "src/models/Profile"
 import Guild from "src/models/Guild"
 import ModifyGuildView from "./ModifyGuildView";
 
-type Options = Backbone.ViewOptions & { guild: Backbone.AssociatedModel };
+type Options = Backbone.ViewOptions & { guild: Guild };
 
 export default class InfoView extends BaseView {
-  profile: Backbone.AssociatedModel;
-  guild: Backbone.AssociatedModel;
+  profile: Profile;
+  guild: Guild;
   imgView: Backbone.View;
 
   constructor(options?: Options) {
@@ -34,10 +34,8 @@ export default class InfoView extends BaseView {
   }
 
   onEditClicked() {
-	var id = this.guild.get('id');
-	const guild = new Guild({ id });
     const modifyGuildView = new ModifyGuildView({
-	  model: guild,
+	  model: this.guild,
     });
 
     modifyGuildView.render();
