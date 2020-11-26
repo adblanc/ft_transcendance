@@ -30,7 +30,7 @@ export default class BaseView<
   }
 
   renderNested(view: Backbone.View, selector: string) {
-    const $element = this.$(selector);
+	const $element = this.$(selector);
 
     view.setElement($element).render();
   }

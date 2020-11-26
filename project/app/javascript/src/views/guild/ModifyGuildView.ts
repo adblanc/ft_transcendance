@@ -32,10 +32,16 @@ export default class ModifyGuildView extends ModalView<Guild> {
 	
 	const router = new MainRouter({
 		routes: {
+		  "": "index",
+		  auth: "auth",
+		  "auth/callback?code=:code": "authCallBack",
+		  game: "game",
 		  guildindex: "guildIndex",
+		  "guild/:id": "guildShow",
+		  "*path": "notFound",
 		},
-	});
-	router.navigate("guildindex", { trigger: true });
+	  });
+	router.navigate("notFound", { trigger: true });
   }
 
   onSubmit(e: JQuery.Event) {

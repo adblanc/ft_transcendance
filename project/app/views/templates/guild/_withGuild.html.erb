@@ -1,0 +1,10 @@
+<script type="text/html" id="withGuildTemplate">
+	<h1 style="margin-top:10px;" class="justify-center flex flex-row  text-white"> You belong to: </h1>
+	<div>
+		<img style="margin-left: auto; margin-right: auto; margin-top:10px" width="150" height="150" class="flex flex-row rounded-full p-2" src="{{img_url}}" />
+	</div>
+	<a style=" text-decoration: underline;" class="justify-center flex flex-row text-3xl text-white" href="/guild/{{guild.id}}"> {{guild.name}} </a>
+	<h1 style="margin-top:10px" class="justify-center flex flex-row text-white"> {{guild.points}} points </h1>
+	<h1 style="margin-top:10px; margin-down:10px" class="justify-center flex flex-row text-white"> Your status within this guid is {{guild_role}} </h1>
+	
+</script>

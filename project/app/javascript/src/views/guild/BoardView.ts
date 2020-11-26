@@ -1,14 +1,12 @@
 import Backbone from "backbone";
-//import Backbone, { CollectionFetchOptions } from "backbone";
 import Mustache from "mustache";
-import { eventBus } from "src/events/EventBus";
 import BaseView from "../../lib/BaseView";
 import Guild from "src/models/Guild";
 import Guilds from "src/collections/Guilds";
 import ItemView from "./ItemView";
 
 export default class BoardView extends BaseView {
-  collection: Backbone.Collection<Guild>;
+  collection: Guilds;
   itemView: Backbone.View;
 
   constructor(options?: Backbone.ViewOptions) {
@@ -29,10 +27,7 @@ export default class BoardView extends BaseView {
 
     const $element = this.$("#listing");
 
-    //console.log(this.collection.length);
-
     this.collection.slice(0, 5).forEach(function (item) {
-      //console.log(item);
       var itemView = new ItemView({
         model: item,
       });
