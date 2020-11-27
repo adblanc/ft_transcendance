@@ -5,6 +5,7 @@ import Message, { IMessage } from "./Message";
 
 export interface IRoom {
   name: string;
+  password?: string;
   id?: number;
   selected?: boolean;
 }
@@ -18,7 +19,7 @@ export default class Room extends Backbone.Model<IRoom> {
     this.channel = undefined;
   }
 
-  url = () => "http://localhost:3000/room";
+  url = () => "http://localhost:3000/rooms";
 
   createConsumer() {
     const room_id = this.get("id");
@@ -33,6 +34,32 @@ export default class Room extends Backbone.Model<IRoom> {
         },
       }
     );
+  }
+
+  asyncFetch(options?: Backbone.ModelFetchOptions): Promise<Room> {
+    return new Promise((res, rej) => {
+      super.fetch({
+        ...options,
+        success: () => res(this),
+        error: (_, jqxhr) => {
+          rej(this.mapServerErrors(jqxhr.responseJSON));
+        },
+      });
+    });
+  }
+
+  asyncSave(attrs?: any, options?: Backbone.ModelSaveOptions): Promise<Room> {
+    return new Promise((res, rej) => {
+      super.save(attrs, {
+        ...options,
+        success: () => res(this),
+        error: (_, jqxhr) => rej(this.mapServerErrors(jqxhr.responseJSON)),
+      });
+    });
+  }
+
+  mapServerErrors(errors: Record<string, string[]>) {
+    return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
   }
 
   cleanChannel() {

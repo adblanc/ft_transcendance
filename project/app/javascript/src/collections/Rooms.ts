@@ -30,5 +30,5 @@ export default class Rooms extends Backbone.Collection<Room> {
     this.selectedRoom.toggle();
   }
 
-  url = () => "http://localhost:3000/room";
+  url = () => "http://localhost:3000/rooms";
 }

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   resource :user, only: [:show, :update]
   resources :room_messages
-  resources :room
+  resources :rooms
   resources :guilds
 
   root to: "application#index"
