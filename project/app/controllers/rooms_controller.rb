@@ -1,6 +1,6 @@
 class RoomsController < ApplicationController
 	def index
-		@rooms = Room.all
+		@rooms = current_user.rooms
 	end
 
 	def new
@@ -29,22 +29,23 @@ class RoomsController < ApplicationController
 		logger.info(params)
 		@room = Room.find_by(name: room_params[:name])
 
-		begin
-			if (room_params[:password] && @room)
-				@room = @room.authenticate(room_params[:password])
+		if (current_user.rooms.exists?(@room.id))
+			render json: {"you" => ["already joined this room."]}, status: :unprocessable_entity
+		else
+			begin
+				if (room_params[:password] && @room)
+					@room = @room.authenticate(room_params[:password])
+				end
+			rescue BCrypt::Errors::InvalidHash
+				@room = false;
 			end
-		rescue BCrypt::Errors::InvalidHash
-			@room = false;
+				if @room
+					@room.users.push(current_user)
+					@room
+				else
+					render json: {"name or password" => ["is incorrect."]}, status: :unprocessable_entity
+				end
 		end
-			if @room
-				@room.users.push(current_user) if !current_user.rooms.exists?(@room.id)
-				logger = Logger.new(STDOUT)
-
-				logger.debug(@room.users)
-				@room
-			else
-				render json: {"name or password" => ["is incorrect."]}, status: :unprocessable_entity
-			end
 	end
 
 
