@@ -17,6 +17,26 @@ class RoomsController < ApplicationController
 	  end
 
 
+	  def join
+		@room = Room.find_by(name: params[:name])
+
+		begin
+			if (params[:password] && @room)
+				@room = @room.authenticate(params[:password])
+			end
+		rescue BCrypt::Errors::InvalidHash
+			@room = false;
+		end
+			if @room
+				@room
+			else
+				render json: {"name or password" => ["is incorrect."]}, status: :unprocessable_entity
+			end
+	end
+
+
+
+
 	private
 
 	def room_params

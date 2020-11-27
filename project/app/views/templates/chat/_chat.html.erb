@@ -1,28 +1,12 @@
 <script type="text/html" id="chat-container-template">
        <div class="bg-gray-200 flex flex-row h-full">
-         <div class="flex flex-col p-4">
-           <label class="block my-2">
-             <span class="text-gray-700 mb-1">Channel name</span>
-             <input id="channel-name" class="form-input block" />
-           </label>
-           <label class="block my-2">
-             <span class="text-gray-700 mb-1">Channel password</span>
-             <input
-               id="channel-password"
-               type="password"
-               class="form-input block mt-2"
-             />
-           </label>
-
-           <button type="submit" id="create-channel" class="btn-primary my-4">Create a channel</button>
-
-           <span class="link-primary text-center">I want to join a channel</span>
-
+          <div id="left-container-chat" class="p-4">
            <div class="mt-6">
-             <span>My channels list</span>
-             <ul id="room-list"></ul>
-           </div>
+       <span>My channels list</span>
+       <ul id="room-list"></ul>
       </div>
+      </div>
+
       <div class="relative w-full" >
 
     <!-- header -->

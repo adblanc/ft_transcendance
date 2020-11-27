@@ -1,0 +1,25 @@
+<script type="text/html" id="create-join-channel-template">
+  <div class="flex flex-col">
+    <label class="block my-2">
+      <span class="text-gray-700 mb-1">Channel name</span>
+      <input id="channel-name" class="form-input block" />
+    </label>
+    <label class="block my-2">
+      <span class="text-gray-700 mb-1">Channel password</span>
+      <input
+        id="channel-password"
+        type="password"
+        class="form-input block mt-2"
+      />
+    </label>
+
+    <button type="submit" id="create-channel" class="btn-primary my-4">
+      {{#isJoin}}Join{{/isJoin}}{{^isJoin}}Create{{/isJoin}} a channel
+    </button>
+
+    <span id="switch-create-join" class="link-primary text-center"
+      >I want to {{#isJoin}}create{{/isJoin}}{{^isJoin}}join{{/isJoin}} a
+      channel</span
+    >
+  </div>
+</script>

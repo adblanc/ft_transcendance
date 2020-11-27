@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resource :user, only: [:show, :update]
   resources :room_messages
   resources :rooms
+  get '/join-room', to: 'rooms#join'
   resources :guilds
 
   root to: "application#index"
