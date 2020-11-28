@@ -29,7 +29,8 @@ export default class InfoView extends BaseView {
 
   events() {
     return {
-      "click #edit-btn": "onEditClicked",
+	  "click #edit-btn": "onEditClicked",
+	  //"click #quit-btn": "onQuitClicked",
     };
   }
 
@@ -41,19 +42,31 @@ export default class InfoView extends BaseView {
     modifyGuildView.render();
   }
 
+  /*onQuitClicked() {
+   this.guild.quit();
+  }*/
+
 
   render() {
     const template = $("#infoTemplate").html();
     const html = Mustache.render(template, this.guild.toJSON());
 	this.$el.html(html);
 
-	const $element = this.$("#edit-btn");
+	const $elementedit = this.$("#edit-btn");
+	const $elementquit = this.$("#quit-btn");
+	const $elementwar = this.$("#war-btn");
 
 	this.profile.fetch({
 		success: () => {
 			if (this.profile.get("guild").get('id') === this.guild.get('id') &&
 					this.profile.get("guild_role") === "Owner") {
-				$element.show();
+				$elementedit.show();
+			}
+			if (this.profile.get("guild").get('id') === this.guild.get('id')) {
+				$elementquit.show();
+			}
+			else {
+				$elementwar.show();
 			}
 		},
 	});
