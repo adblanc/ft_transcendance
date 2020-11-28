@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import Profile from "src/models/Profile"
+import ManageMemberView from "./ManageMemberView";
 
 type Options = Backbone.ViewOptions & { model: Profile };
 
@@ -12,6 +13,20 @@ export default class MemberView extends BaseView {
     super(options);
 
 	this.model = options.model;
+  }
+
+  events() {
+    return {
+	  "click #manage-btn": "onManageClicked",
+    };
+  }
+
+  onManageClicked() {
+    const manageMemberView = new ManageMemberView({
+	  model: this.model,
+    });
+
+    manageMemberView.render();
   }
 
   render() {
