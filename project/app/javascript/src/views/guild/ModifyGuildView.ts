@@ -36,9 +36,10 @@ export default class ModifyGuildView extends ModalView<Guild> {
 
   onSubmit(e: JQuery.Event) {
 	e.preventDefault();
+	let acr = this.$("#input-guild-ang").val() as string;
 	const attrs = {
 	name: this.$("#input-guild-name").val() as string,
-	ang: this.$("#input-guild-ang").val() as string,
+	ang: acr.toUpperCase(),
 	img: (this.$(
 		"#input-guild-img"
 	)[0] as HTMLInputElement).files?.item(0),
