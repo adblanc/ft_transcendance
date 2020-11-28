@@ -41,6 +41,11 @@ class GuildsController < ApplicationController
 	@guild.destroy
   end
 
+  def quit
+	@guild = Guild.find(params[:id])
+	@guild.remove_user(current_user)
+  end
+
   private
 
   def guild_params

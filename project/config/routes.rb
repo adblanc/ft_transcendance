@@ -4,7 +4,11 @@ Rails.application.routes.draw do
   get '/auth/guest', to: 'authentication#loginGuest', format: false
 
   resource :user, only: [:show, :update]
-  resources :guilds
+  resources :guilds do
+	member do
+		put :quit
+	  end
+  end
 
   root to: "application#index"
   match '*path', via: [:get, :post], to: "application#index", constraints: lambda { |req|

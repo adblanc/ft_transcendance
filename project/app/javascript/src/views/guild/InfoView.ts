@@ -5,6 +5,7 @@ import PageImgView from "./imgsViews/PageImgView";
 import Profile from "src/models/Profile"
 import Guild from "src/models/Guild"
 import ModifyGuildView from "./ModifyGuildView";
+import { displayToast } from "src/utils/toast";
 
 type Options = Backbone.ViewOptions & { guild: Guild };
 
@@ -30,7 +31,7 @@ export default class InfoView extends BaseView {
   events() {
     return {
 	  "click #edit-btn": "onEditClicked",
-	  //"click #quit-btn": "onQuitClicked",
+	  "click #quit-btn": "onQuitClicked",
     };
   }
 
@@ -42,9 +43,27 @@ export default class InfoView extends BaseView {
     modifyGuildView.render();
   }
 
-  /*onQuitClicked() {
-   this.guild.quit();
-  }*/
+  onQuitClicked() {
+	this.guild.quit(
+		(errors) => {
+			errors.forEach((error) => {
+			this.displayError(error);
+			});
+		},
+		() => this.guildQuit()
+		);
+  }
+
+  guildQuit() {
+    displayToast({ text: `You have successfully quit ${this.guild.get('name')} ` }, "success");
+	this.guild.fetch();
+
+	Backbone.history.loadUrl();
+  }
+
+  displayError(error: string) {
+    displayToast({ text: error }, "error");
+  }
 
 
   render() {
