@@ -16,6 +16,23 @@ bob.avatar.attach(
 	"content_type": "image/png",
 )
 
+
+bill = User.create(name: "bill", login: "bill");
+ben = User.create(name: "ben", login: "ben");
+
+bill.avatar.attach(
+	io: URI.open("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Hotdog_-_Evan_Swigart.jpg/1024px-Hotdog_-_Evan_Swigart.jpg"),
+	filename: "bill.png",
+	"content_type": "image/png",
+)
+
+ben.avatar.attach(
+	io: URI.open("https://images.theconversation.com/files/273610/original/file-20190509-183106-1fqctm9.jpg?ixlib=rb-1.1.0&rect=9%2C53%2C3254%2C2384&q=45&auto=format&w=926&fit=clip"),
+	filename: "ben.png",
+	"content_type": "image/png",
+)
+
+
 guild1 = Guild.create(name: 'The Best Guild', ang: "TBG", points: 0)
 guild2 = Guild.create(name: 'The Doom', ang: "TDM", points: 2)
 
@@ -30,3 +47,7 @@ guild2.img.attach(
 	filename: "guild2.jpg",
 	"content_type": "image/jpg",
 )
+
+guild1.users << bill
+bill.add_role(:owner, guild1)
+guild1.users << ben
