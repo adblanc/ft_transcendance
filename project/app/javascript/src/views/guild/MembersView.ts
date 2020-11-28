@@ -30,19 +30,18 @@ export default class MembersView extends Backbone.View {
 	this.$el.html(html);
 	
 	const $element = this.$("#listing");
-
+	
     this.profiles.forEach(function (item) {
+	  console.log(this.profile);
       var memberView = new MemberView({
-        model: item,
+		model: item,
+		loggedIn: this.profile,
+		guild: this.guild,
       });
       $element.append(memberView.render().el);
-	});
+	}, this);
 	
-	/*const $elementmanage = this.$("#manage-btn");
 
-	if (this.model.get("guild_role") === "Owner"){
-		$elementmanage.hide();
-	}*/
     return this;
   }
 }

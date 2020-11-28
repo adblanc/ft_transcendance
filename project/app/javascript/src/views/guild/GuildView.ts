@@ -28,8 +28,8 @@ export default class GuildView extends PageView {
 	  profile: this.profile,
     });
     this.membersView = new MembersView({
+	  guild: this.guild,
 	  profile: this.profile,
-      guild: this.guild,
     });
 	this.guild.fetch();
 	this.profile.fetch();
