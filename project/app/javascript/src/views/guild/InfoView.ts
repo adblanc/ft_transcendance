@@ -87,12 +87,17 @@ export default class InfoView extends BaseView {
 
 	this.profile.fetch({
 		success: () => {
-			if (this.profile.get("guild").get('id') === this.guild.get('id') &&
-					this.profile.get("guild_role") === "Owner") {
-				$elementedit.show();
-			}
-			if (this.profile.get("guild").get('id') === this.guild.get('id')) {
-				$elementquit.show();
+			if (this.profile.get("guild")) {
+				if (this.profile.get("guild").get('id') === this.guild.get('id') &&
+						this.profile.get("guild_role") === "Owner") {
+					$elementedit.show();
+				}
+				if (this.profile.get("guild").get('id') === this.guild.get('id')) {
+					$elementquit.show();
+				}
+				else {
+					$elementwar.show();
+				}
 			}
 			else {
 				$elementwar.show();
