@@ -1,11 +1,12 @@
 <script type="text/html" id="manageMemberTemplate">
-  <div class="flex justify-center items-center">
-    <button class="btn-primary mt-8" id="promote" type="button">Promote</button>
-  </div>
-  <div class="flex justify-center items-center">
-	<button class="btn-primary mt-8" id="demote" type="button">Demote</button>
-  </div>
-  <div class="flex justify-center items-center">
-	<button class="btn-primary bg-red-400 mt-8" id="fire" type="button">Fire</button>
-  </div>
+
+	<img style="float:left" width="80" height="80" class="mr-4 rounded-full p-2" src="{{avatar_url}}" />
+	<h1 style="font-weight:bold" class="m-auto">{{name}}</h1>
+	<h1 class="m-auto">{{guild_role}}</h1>
+	<h1 class="m-auto">{{contribution}} points</h1>
+	<button class="floated mt-6 bg-teal-500 text-white rounded-lg shadow-lg py-1 px-2" id="promote" type="button">Promote</button>
+	<button class="floated mt-6 bg-teal-500 text-white rounded-lg shadow-lg py-1 px-2" id="demote" type="button">Demote</button>
+	<div class="justify-center items-center" style="margin-left:55px">
+		<button class="mt-3 bg-red-400 text-white rounded-lg shadow-lg py-1 px-2" id="fire" type="button">Fire</button>
+	</div>
 </script>

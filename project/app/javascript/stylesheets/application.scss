@@ -45,3 +45,8 @@
   height: 400px;
   @apply bg-white w-1/3 h-full max-w-xl absolute top-0 right-0 flex flex-col items-stretch;
 }
+
+.floated {
+	float:left;
+	margin-right:5px;
+  }
