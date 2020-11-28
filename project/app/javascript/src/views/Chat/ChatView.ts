@@ -27,17 +27,22 @@ export default class ChatView extends PageView {
 
   events() {
     return {
-      "keypress #send-message": this.sendMessage,
+      "keypress #send-message-input": this.onKeyPress,
+      "click #send-message-btn": this.sendMessage,
     };
   }
 
-  sendMessage(e: JQuery.Event) {
+  onKeyPress(e: JQuery.Event) {
     if (e.key !== "Enter") {
       return;
     }
-
     e.preventDefault();
-    const content = this.$("#send-message").val() as string;
+    this.sendMessage();
+  }
+
+  sendMessage() {
+    console.log("click");
+    const content = this.$("#send-message-input").val() as string;
 
     if (!content) {
       return;
@@ -53,7 +58,7 @@ export default class ChatView extends PageView {
   }
 
   clearInput() {
-    this.$("#send-message").val("");
+    this.$("#send-message-input").val("");
   }
 
   renderRoom(room: Room) {

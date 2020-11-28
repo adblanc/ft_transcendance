@@ -15,9 +15,9 @@ export default class Room extends Backbone.Model<IRoom> {
   messages: Messages;
   currentUserId?: number;
 
-  preinitialize() {
+  initialize() {
     this.messages = new Messages();
-    this.channel = undefined;
+    this.channel = this.createConsumer();
     this.currentUserId = undefined;
   }
 
@@ -78,21 +78,9 @@ export default class Room extends Backbone.Model<IRoom> {
   select() {
     //@ts-ignore
     this.collection.setSelected(this);
-    this.messages.reset();
-
-    this.cleanChannel();
-    this.channel = this.createConsumer();
-  }
-
-  cleanChannel() {
-    if (this.channel) {
-      this.channel.unsubscribe();
-      this.channel = undefined;
-    }
   }
 
   toggle() {
     this.set("selected", !this.get("selected"));
-    this.cleanChannel();
   }
 }

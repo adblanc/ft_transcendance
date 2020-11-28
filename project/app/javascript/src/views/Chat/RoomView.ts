@@ -3,9 +3,11 @@ import Mustache from "mustache";
 import Message from "src/models/Message";
 import Room from "src/models/Room";
 import MessageView from "./MessageView";
+import RoomMessagesView from "./RoomMessagesView";
 
 export default class RoomView extends Backbone.View<Room> {
-  channel: ActionCable.Channel;
+  roomMessagesView: Backbone.View;
+
   constructor(options?: Backbone.ViewOptions<Room>) {
     super(options);
 
@@ -14,8 +16,7 @@ export default class RoomView extends Backbone.View<Room> {
     }
 
     this.listenTo(this.model, "change", this.render);
-    this.listenTo(this.model.messages, "add", this.renderMsg);
-    this.listenTo(this.model.messages, "reset", this.resetMsg);
+    this.roomMessagesView = new RoomMessagesView({ model: this.model });
   }
 
   events() {
@@ -37,11 +38,11 @@ export default class RoomView extends Backbone.View<Room> {
     );
   }
 
-  resetMsg() {
-    $("#messages-container").html("");
-  }
-
   render() {
+    if (this.model.get("selected")) {
+      this.roomMessagesView.render();
+    }
+
     const template = $("#roomTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
     this.$el.html(html);
