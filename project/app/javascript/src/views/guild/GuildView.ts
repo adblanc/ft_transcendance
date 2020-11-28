@@ -5,6 +5,7 @@ import InfoView from "./InfoView";
 import MembersView from "./MembersView";
 import PageView from "src/lib/PageView";
 import Guild from "src/models/Guild"
+import Profile from "src/models/Profile";
 
 type Options = Backbone.ViewOptions & { guild: Guild};
 
@@ -13,19 +14,25 @@ export default class GuildView extends PageView {
   infoView: Backbone.View;
   membersView: Backbone.View;
   guild: Guild;
+  profile: Profile;
 
   constructor(options?: Options) {
     super(options);
 
-    this.guild = options.guild;
+	this.guild = options.guild;
+	this.profile = new Profile();
+
     this.navbarView = new NavbarView();
     this.infoView = new InfoView({
-      guild: this.guild,
+	  guild: this.guild,
+	  profile: this.profile,
     });
     this.membersView = new MembersView({
+	  profile: this.profile,
       guild: this.guild,
     });
 	this.guild.fetch();
+	this.profile.fetch();
   }
 
   render() {

@@ -8,7 +8,7 @@ import ModifyGuildView from "./ModifyGuildView";
 import { displayToast } from "src/utils/toast";
 import MainRouter from "src/routers/MainRouter";
 
-type Options = Backbone.ViewOptions & { guild: Guild };
+type Options = Backbone.ViewOptions & { guild: Guild, profile: Profile };
 
 export default class InfoView extends BaseView {
   profile: Profile;
@@ -19,11 +19,10 @@ export default class InfoView extends BaseView {
     super(options);
 
 	this.guild = options.guild;
+	this.profile = options.profile;
 	this.imgView = new PageImgView({
 		model: this.guild,
 	});
-
-	this.profile = new Profile();
 
 	this.listenTo(this.guild, "change", this.render);
 	this.listenTo(this.profile, "change", this.render);
@@ -85,25 +84,21 @@ export default class InfoView extends BaseView {
 	const $elementquit = this.$("#quit-btn");
 	const $elementwar = this.$("#war-btn");
 
-	this.profile.fetch({
-		success: () => {
-			if (this.profile.get("guild")) {
-				if (this.profile.get("guild").get('id') === this.guild.get('id') &&
-						this.profile.get("guild_role") === "Owner") {
-					$elementedit.show();
-				}
-				if (this.profile.get("guild").get('id') === this.guild.get('id')) {
-					$elementquit.show();
-				}
-				else {
-					$elementwar.show();
-				}
+	if (this.profile.get("guild")) {
+		if (this.profile.get("guild").get('id') === this.guild.get('id') &&
+			this.profile.get("guild_role") === "Owner") {
+				$elementedit.show();
 			}
-			else {
-				$elementwar.show();
-			}
-		},
-	});
+		if (this.profile.get("guild").get('id') === this.guild.get('id')) {
+			$elementquit.show();
+		}
+		else {
+			$elementwar.show();
+		}
+	}
+	else {
+		$elementwar.show();
+	}
 	
 	this.renderNested(this.imgView, "#pageImg");
 

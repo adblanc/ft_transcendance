@@ -3,10 +3,12 @@ import Mustache from "mustache";
 import Profiles from "src/collections/Profiles";
 import MemberView from "./MemberView";
 import Guild from "src/models/Guild";
+import Profile from "src/models/Profile";
 
-type Options = Backbone.ViewOptions & { guild: Guild };
+type Options = Backbone.ViewOptions & { guild: Guild, profile: Profile };
 
 export default class MembersView extends Backbone.View {
+  profile: Profile;
   profiles: Profiles;
   guild: Guild;
 
@@ -14,9 +16,11 @@ export default class MembersView extends Backbone.View {
     super(options);
 
 	this.guild = options.guild;
+	this.profile = options.profile;
 	this.profiles = this.guild.get("users");
 
 	this.listenTo(this.guild, "change", this.render);
+	this.listenTo(this.profile, "change", this.render);
 	
   }
 
@@ -32,7 +36,13 @@ export default class MembersView extends Backbone.View {
         model: item,
       });
       $element.append(memberView.render().el);
-    });
+	});
+	
+	/*const $elementmanage = this.$("#manage-btn");
+
+	if (this.model.get("guild_role") === "Owner"){
+		$elementmanage.hide();
+	}*/
     return this;
   }
 }

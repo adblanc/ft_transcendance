@@ -32,7 +32,8 @@ export default class ManageMemberView extends ModalView<Profile> {
     super.render();
     const template = $("#manageMemberTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
-    this.$content.html(html);
+	this.$content.html(html);
+	
     return this;
   }
 }
