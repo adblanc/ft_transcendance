@@ -21,6 +21,7 @@ export default class ManageMemberView extends ModalView<Profile> {
 		...super.events(), "click #promote": "onPromote",
 		...super.events(), "click #demote": "onDemote",
 		...super.events(), "click #fire": "onFire",
+		...super.events(), "click #transfer": "onTransfer",
 	  };
   }
 
