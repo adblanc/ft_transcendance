@@ -15,6 +15,7 @@ export default class RoomView extends Backbone.View<Room> {
 
     this.listenTo(this.model, "change", this.render);
     this.listenTo(this.model.messages, "add", this.renderMsg);
+    this.listenTo(this.model.messages, "reset", this.resetMsg);
   }
 
   events() {
@@ -30,7 +31,14 @@ export default class RoomView extends Backbone.View<Room> {
   }
 
   renderMsg(message: Message) {
-    $("#messages").append(new MessageView({ model: message }).render().el);
+    console.log("on render ", message.get("content"));
+    $("#messages-container").append(
+      new MessageView({ model: message }).render().el
+    );
+  }
+
+  resetMsg() {
+    $("#messages-container").html("");
   }
 
   render() {

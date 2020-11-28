@@ -8,9 +8,6 @@ class RoomsController < ApplicationController
 	end
 
 	def create
-		logger = Logger.new(STDOUT)
-
-		logger.info(params)
 		@room = Room.create(room_params)
 
 		@room.users.push(current_user)
@@ -24,9 +21,6 @@ class RoomsController < ApplicationController
 
 
 	  def join
-		logger = Logger.new(STDOUT)
-
-		logger.info(params)
 		@room = Room.find_by(name: room_params[:name])
 
 		if (current_user.rooms.exists?(@room.id))

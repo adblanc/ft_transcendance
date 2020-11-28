@@ -1,6 +1,7 @@
 import Mustache from "mustache";
 import Rooms from "src/collections/Rooms";
 import PageView from "src/lib/PageView";
+import Message from "src/models/Message";
 import Room from "src/models/Room";
 import CreateJoinChannelView from "./CreateJoinChannelView";
 import RoomView from "./RoomView";
@@ -22,6 +23,37 @@ export default class ChatView extends PageView {
 
     this.listenTo(this.rooms, "add", this.renderRoom);
     this.listenTo(this.rooms, "remove", this.removeRoom);
+  }
+
+  events() {
+    return {
+      "keypress #send-message": this.sendMessage,
+    };
+  }
+
+  sendMessage(e: JQuery.Event) {
+    if (e.key !== "Enter") {
+      return;
+    }
+
+    e.preventDefault();
+    const content = this.$("#send-message").val() as string;
+
+    if (!content) {
+      return;
+    }
+
+    const message = new Message({
+      content,
+      room_id: this.rooms.selectedRoom.get("id"),
+    });
+    message.save();
+
+    this.clearInput();
+  }
+
+  clearInput() {
+    this.$("#send-message").val("");
   }
 
   renderRoom(room: Room) {

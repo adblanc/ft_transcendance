@@ -1,4 +1,5 @@
 import Backbone from "backbone";
+import Mustache from "mustache";
 import Message from "src/models/Message";
 import _ from "underscore";
 
@@ -12,8 +13,9 @@ export default class MessageView extends Backbone.View<Message> {
   }
 
   render() {
-    const template = _.template($("#message-template").html());
-    this.$el.html(template(this.model.toJSON()));
+    const template = $("#message-template").html();
+    const html = Mustache.render(template, this.model.toJSON());
+    this.$el.html(html);
 
     return this;
   }

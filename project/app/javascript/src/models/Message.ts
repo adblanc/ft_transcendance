@@ -3,7 +3,9 @@ import Backbone from "backbone";
 export interface IMessage {
   content: string;
   room_id: number;
-  username?: string;
+  sent?: boolean;
+  id?: number;
+  user_id?: number;
   created_at?: string;
   updated_at?: string;
 }

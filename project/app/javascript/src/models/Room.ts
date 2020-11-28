@@ -13,10 +13,12 @@ export interface IRoom {
 export default class Room extends Backbone.Model<IRoom> {
   channel: ActionCable.Channel;
   messages: Messages;
+  currentUserId?: number;
 
   preinitialize() {
     this.messages = new Messages();
     this.channel = undefined;
+    this.currentUserId = undefined;
   }
 
   url = () => "http://localhost:3000/rooms";
@@ -30,7 +32,18 @@ export default class Room extends Backbone.Model<IRoom> {
           console.log("connected to", room_id);
         },
         received: (message: IMessage) => {
-          this.messages.add(new Message(message));
+          console.log("we received", message);
+          if (!this.currentUserId) {
+            this.currentUserId = parseInt(
+              $("#current-user-profile").data("id")
+            );
+          }
+          this.messages.add(
+            new Message({
+              ...message,
+              sent: this.currentUserId === message.user_id,
+            })
+          );
         },
       }
     );
@@ -62,19 +75,20 @@ export default class Room extends Backbone.Model<IRoom> {
     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
   }
 
+  select() {
+    //@ts-ignore
+    this.collection.setSelected(this);
+    this.messages.reset();
+
+    this.cleanChannel();
+    this.channel = this.createConsumer();
+  }
+
   cleanChannel() {
     if (this.channel) {
       this.channel.unsubscribe();
       this.channel = undefined;
     }
-  }
-
-  select() {
-    //@ts-ignore
-    this.collection.setSelected(this);
-
-    this.cleanChannel();
-    this.channel = this.createConsumer();
   }
 
   toggle() {
