@@ -59,7 +59,7 @@ export default class InfoView extends BaseView {
 	displayToast({ text: `You have successfully quit ${this.guild.get('name')}. ` }, "success");
 	this.guild.fetch();
 	if (this.guild.get('users').length == 1) {
-		displayToast({ text: `You were the last member of ${this.guild.get('name')}, so the guild was destroyed.` }, "success");
+		displayToast({ text: `You were the only member of ${this.guild.get('name')}, so the guild was destroyed.` }, "success");
 		const router = new MainRouter();
 		router.navigate("notFound", { trigger: true });
 		return;
