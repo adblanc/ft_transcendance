@@ -52,6 +52,12 @@ class GuildsController < ApplicationController
     user.add_role(:officer, @guild)
   end
 
+  def demote
+    @guild = Guild.find_by(id: params[:id])
+    user = User.find(params[:user_id])
+	user.remove_role(:officer, @guild)
+  end
+
   private
 
   def guild_params

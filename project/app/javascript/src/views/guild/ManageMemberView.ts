@@ -42,9 +42,25 @@ export default class ManageMemberView extends ModalView<Profile> {
 		);
   }
 
+  onDemoteClicked() {
+	this.guild.manageMembers(
+		"demote",
+		this.model.get('id'),
+		(errors) => {
+			errors.forEach((error) => {
+			this.displayError(error);
+			});
+		},
+		() => this.saved("demote")
+		);
+  }
+
   saved(method: string) {
 	  if (method === "promote") {
 		displayToast({ text: `You have successfully promoted ${this.model.get('name')}. ` }, "success");
+	  }
+	  if (method === "demote") {
+		displayToast({ text: `You have successfully demoted ${this.model.get('name')}. ` }, "success");
 	  }
 	this.closeModal();
 	this.model.fetch();

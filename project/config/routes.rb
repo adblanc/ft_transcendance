@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 	member do
 		put :quit
 		put :promote
+		put :demote
 	  end
   end
 
