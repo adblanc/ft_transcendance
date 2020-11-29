@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :guilds do
 	member do
 		put :quit
+		put :promote
 	  end
   end
 

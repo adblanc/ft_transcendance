@@ -118,6 +118,27 @@ export default class Guild extends Backbone.AssociatedModel {
 	  );
   }
 
+  manageMembers(
+	method: string,
+	user_id: string,
+	error: (errors: string[]) => void,
+    success: () => void
+  ) {
+	this.save(
+		{
+			'user_id': user_id,
+		},
+		{
+		  url: `http://localhost:3000/guilds/${this.id}/${method}`,
+		  success: () => success(),
+		  error: (_, jqxhr) => {
+			error(this.mapServerErrors(jqxhr?.responseJSON));
+		  },
+		}
+	  );
+  }
+
+
   mapServerErrors(errors: Record<string, string[]>) {
     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
   }

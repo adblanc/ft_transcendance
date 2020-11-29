@@ -4,13 +4,17 @@ import ModalView from "../ModalView";
 import Profile from "src/models/Profile";
 import { displayToast } from "src/utils/toast";
 import MainRouter from "src/routers/MainRouter";
+import Guild from "src/models/Guild";
 
+type Options = Backbone.ViewOptions<Profile> & { guild: Guild };
 
 export default class ManageMemberView extends ModalView<Profile> {
+	guild: Guild;
 
-  constructor(options?: Backbone.ViewOptions<Profile>) {
+  constructor(options?: Options) {
 	super(options);
 
+	this.guild = options.guild;
 	/*maybe i don't need this*/
 	this.listenTo(this.model, "change", this.render);
 	this.listenTo(this.model, "add", this.render);
@@ -25,77 +29,27 @@ export default class ManageMemberView extends ModalView<Profile> {
 	  };
   }
 
-  /*onPromoteClicked() {
-	this.model.promote(
+  onPromoteClicked() {
+	this.guild.manageMembers(
+		"promote",
+		this.model.get('id'),
 		(errors) => {
 			errors.forEach((error) => {
 			this.displayError(error);
 			});
 		},
-		() => this.promote()
+		() => this.saved("promote")
 		);
   }
 
-  promote() {
-	displayToast({ text: `You have successfully promoted ${this.model.get('name')}. ` }, "success");
-	this.model.fetch();
+  saved(method: string) {
+	  if (method === "promote") {
+		displayToast({ text: `You have successfully promoted ${this.model.get('name')}. ` }, "success");
+	  }
 
+	this.model.fetch();
 	Backbone.history.loadUrl();
   }
-
-  onDemoteClicked() {
-	this.model.demote(
-		(errors) => {
-			errors.forEach((error) => {
-			this.displayError(error);
-			});
-		},
-		() => this.demote()
-		);
-  }
-
-  demote() {
-	displayToast({ text: `You have successfully demoted ${this.model.get('name')}. ` }, "success");
-	this.model.fetch();
-
-	Backbone.history.loadUrl();
-  }
-
-  onFireClicked() {
-	this.model.fire(
-		(errors) => {
-			errors.forEach((error) => {
-			this.displayError(error);
-			});
-		},
-		() => this.fire()
-		);
-  }
-
-  fire() {
-	displayToast({ text: `You have successfully fired ${this.model.get('name')}. ` }, "success");
-	this.model.fetch();
-
-	Backbone.history.loadUrl();
-  }
-
-  onTransferClicked() {
-	this.model.transfer(
-		(errors) => {
-			errors.forEach((error) => {
-			this.displayError(error);
-			});
-		},
-		() => this.transfer()
-		);
-  }
-
-  transfer() {
-	displayToast({ text: `You have successfully transfered your ownership rights to ${this.model.get('name')}. ` }, "success");
-	this.model.fetch();
-
-	Backbone.history.loadUrl();
-  }*/
 
   displayError(error: string) {
     displayToast({ text: error }, "error");

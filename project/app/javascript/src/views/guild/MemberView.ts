@@ -29,6 +29,7 @@ export default class MemberView extends BaseView {
   onManageClicked() {
     const manageMemberView = new ManageMemberView({
 	  model: this.model,
+	  guild: this.guild,
     });
 
     manageMemberView.render();

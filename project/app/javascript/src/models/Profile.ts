@@ -99,6 +99,7 @@ export default class Profile extends Backbone.AssociatedModel {
     }
   }
 
+
   mapServerErrors(errors: Record<string, string[]>) {
     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
   }

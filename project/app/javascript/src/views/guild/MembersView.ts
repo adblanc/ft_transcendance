@@ -32,7 +32,6 @@ export default class MembersView extends Backbone.View {
 	const $element = this.$("#listing");
 	
     this.profiles.forEach(function (item) {
-	  console.log(this.profile);
       var memberView = new MemberView({
 		model: item,
 		loggedIn: this.profile,
