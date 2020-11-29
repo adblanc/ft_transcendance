@@ -38,6 +38,9 @@ class GuildsController < ApplicationController
 
   def destroy
 	@guild = Guild.find(params[:id])
+	@guild.users.each do |user|
+		user.update(contribution: 0)
+	end
 	@guild.destroy
   end
 
