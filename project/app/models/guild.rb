@@ -10,6 +10,7 @@ class Guild < ApplicationRecord
 
 	def remove_user(user)
 		users.delete(user)
+		user.update(contribution: 0)
 		if user.guild_owner?(self)
 			remove_owner(user)
 			return

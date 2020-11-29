@@ -62,6 +62,7 @@ class GuildsController < ApplicationController
     @guild = Guild.find_by(id: params[:id])
     user = User.find(params[:user_id])
 	@guild.remove_user(user)
+	user.update(contribution: 0)
   end
 
   def transfer
