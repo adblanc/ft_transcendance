@@ -64,6 +64,14 @@ class GuildsController < ApplicationController
 	@guild.remove_user(user)
   end
 
+  def transfer
+    @guild = Guild.find_by(id: params[:id])
+	user = User.find(params[:user_id])
+	owner = User.with_role(:owner, @guild).first
+	user.add_role(:owner, @guild)
+	owner.remove_role(:owner, @guild)
+	owner.add_role(:officer, @guild)
+  end
 
   private
 
