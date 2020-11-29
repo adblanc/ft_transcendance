@@ -17,8 +17,8 @@ bob.avatar.attach(
 )
 
 
-bill = User.create(name: "bill", login: "bill");
-ben = User.create(name: "ben", login: "ben");
+bill = User.create(name: "bill", login: "bill", contribution: 10);
+ben = User.create(name: "ben", login: "ben", contribution: 15);
 
 bill.avatar.attach(
 	io: URI.open("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Hotdog_-_Evan_Swigart.jpg/1024px-Hotdog_-_Evan_Swigart.jpg"),
