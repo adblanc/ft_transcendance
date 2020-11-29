@@ -9,6 +9,8 @@ Rails.application.routes.draw do
 		put :quit
 		put :promote
 		put :demote
+		put :fire
+		put :transfer
 	  end
   end
 

@@ -18,6 +18,8 @@ export default class ManageMemberView extends ModalView<Profile> {
 	/*maybe i don't need this*/
 	this.listenTo(this.model, "change", this.render);
 	this.listenTo(this.model, "add", this.render);
+
+	this.listenTo(this.guild, "change", this.render);
   }
 
   events() {
@@ -55,12 +57,28 @@ export default class ManageMemberView extends ModalView<Profile> {
 		);
   }
 
+  onFireClicked() {
+	this.guild.manageMembers(
+		"fire",
+		this.model.get('id'),
+		(errors) => {
+			errors.forEach((error) => {
+			this.displayError(error);
+			});
+		},
+		() => this.saved("fire")
+		);
+  }
+
   saved(method: string) {
 	  if (method === "promote") {
 		displayToast({ text: `You have successfully promoted ${this.model.get('name')}. ` }, "success");
 	  }
 	  if (method === "demote") {
 		displayToast({ text: `You have successfully demoted ${this.model.get('name')}. ` }, "success");
+	  }
+	  if (method === "fire") {
+		displayToast({ text: `You have successfully fired ${this.model.get('name')}. ` }, "success");
 	  }
 	this.closeModal();
 	this.model.fetch();

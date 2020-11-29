@@ -58,6 +58,13 @@ class GuildsController < ApplicationController
 	user.remove_role(:officer, @guild)
   end
 
+  def fire
+    @guild = Guild.find_by(id: params[:id])
+    user = User.find(params[:user_id])
+	@guild.remove_user(user)
+  end
+
+
   private
 
   def guild_params
