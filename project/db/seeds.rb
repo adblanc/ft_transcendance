@@ -33,7 +33,7 @@ ben.avatar.attach(
 )
 
 
-guild1 = Guild.create(name: 'The Best Guild', ang: "TBG", points: 0)
+guild1 = Guild.create(name: 'The Best Guild', ang: "TBG", points: 0, atWar: true)
 guild2 = Guild.create(name: 'The Doom', ang: "TDM", points: 2)
 
 guild1.img.attach(

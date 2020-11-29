@@ -82,7 +82,7 @@ export default class InfoView extends BaseView {
 
 	const $elementedit = this.$("#edit-btn");
 	const $elementquit = this.$("#quit-btn");
-	const $elementwar = this.$("#war-btn");
+	const $elementwar = this.$("#war");
 
 	if (this.profile.get("guild")) {
 		if (this.profile.get("guild").get('id') === this.guild.get('id') &&
@@ -98,6 +98,11 @@ export default class InfoView extends BaseView {
 	}
 	else {
 		$elementwar.show();
+	}
+
+	if (this.guild.get('atWar')) {
+		$('#war-btn').addClass('btn-war-disabled');
+		$('#war-btn').html('This Guild is at war');
 	}
 	
 	this.renderNested(this.imgView, "#pageImg");
