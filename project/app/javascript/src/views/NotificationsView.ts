@@ -5,11 +5,17 @@ import Notifications from "src/collections/Notifications";
 import Notification from "src/models/Notification";
 import { eventBus } from "src/events/EventBus";
 
-export default class NotificationsView extends BaseView {
-  notifications: Backbone.Collection;
+type Options = Backbone.ViewOptions & { notifications: Notifications };
 
-  constructor(options?: Backbone.ViewOptions) {
-    super(options);
+export default class NotificationsView extends BaseView {
+  notifications: Notifications;
+
+  constructor(options?: Options) {
+	super(options);
+	
+	this.notifications = options.notifications;
+	
+	console.log(this.notifications);
   
   }
   

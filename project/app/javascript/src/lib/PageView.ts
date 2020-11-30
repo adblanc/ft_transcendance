@@ -17,6 +17,9 @@ export default class PageView extends BaseView {
 
 	this.messages = new Messages();
 	this.notifications = new Notifications();
+	this.listenTo(this.notifications, "reset", this.render);
+    this.listenTo(this.notifications, "change", this.render);
+	this.notifications.fetch();
 
     this.listenTo(eventBus, "chat:open", () => {
       if (!this.chatView) {
@@ -82,7 +85,7 @@ export default class PageView extends BaseView {
 
   renderNotifications() {
     this.notificationsView = new NotificationsView({
-      collection: this.notifications,
+      notifications: this.notifications,
     });
 
     $("#container").append(this.notificationsView.render().el);
