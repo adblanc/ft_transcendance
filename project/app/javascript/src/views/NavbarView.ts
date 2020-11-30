@@ -21,7 +21,8 @@ export default class NavbarView extends BaseView {
 
   events() {
     return {
-      "click #btn-logout": "onLogout",
+	  "click #btn-logout": "onLogout",
+	  "click #btn-notifications": "onClickNotification",
       "click #btn-messages": "onClickMessage",
       "click #navbar-brand": "onBrandClick",
     };
@@ -38,6 +39,10 @@ export default class NavbarView extends BaseView {
 
   onClickMessage() {
     eventBus.trigger("chat:open");
+  }
+
+  onClickNotification() {
+    eventBus.trigger("notifications:open");
   }
 
   render() {

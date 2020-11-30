@@ -4,6 +4,7 @@ class User < ApplicationRecord
 	has_one_attached :avatar
 	belongs_to :guild, optional: true
 	has_many :notifications, foreign_key: :recipient_id
+	/means that user is referenced as foreign key in the notifications table/
 
 	validates :avatar, blob: { content_type: :image, size_range: 1..5.megabytes }
 	validates :name, presence: true

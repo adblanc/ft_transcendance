@@ -2,6 +2,8 @@ import Backbone, { ModelFetchOptions } from "backbone";
 import "backbone-associations";
 import _ from "underscore";
 import Guild from "src/models/Guild";
+import Notifications from "src/collections/Notifications";
+import Notification from "src/models/Notification";
 
 interface IProfile {
   login: string;
@@ -21,6 +23,12 @@ export default class Profile extends Backbone.AssociatedModel {
 				type: Backbone.One,
       			key: "guild",
       			relatedModel: Guild,
+			},
+			{
+				type: Backbone.Many,
+				key: "notifications",
+				relatedModel: Notification,
+				collectionType: Notifications
 			}
 		];
 	}

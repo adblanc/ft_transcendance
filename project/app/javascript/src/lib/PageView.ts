@@ -2,16 +2,21 @@ import Messages from "src/collections/Messages";
 import { eventBus } from "src/events/EventBus";
 import Message from "src/models/Message";
 import ChatView from "src/views/Chat/ChatView";
+import NotificationsView from "src/views/NotificationsView";
+import Notifications from "src/collections/Notifications";
 import BaseView from "./BaseView";
 
 export default class PageView extends BaseView {
   chatView?: BaseView;
+  notificationsView?: BaseView;
   messages?: Messages;
+  notifications?: Notifications;
 
   constructor(options?: Backbone.ViewOptions) {
     super(options);
 
-    this.messages = new Messages();
+	this.messages = new Messages();
+	this.notifications = new Notifications();
 
     this.listenTo(eventBus, "chat:open", () => {
       if (!this.chatView) {
@@ -20,7 +25,16 @@ export default class PageView extends BaseView {
         this.chatView.close();
         this.chatView = undefined;
       }
-    });
+	});
+	
+	this.listenTo(eventBus, "notifications:open", () => {
+		if (!this.notificationsView) {
+		  this.renderNotifications();
+		} else {
+		  this.notificationsView.close();
+		  this.notificationsView = undefined;
+		}
+	  });
   }
 
   renderChat() {
@@ -64,5 +78,16 @@ export default class PageView extends BaseView {
         type: "sent",
       })
     );
+  }
+
+  renderNotifications() {
+    this.notificationsView = new NotificationsView({
+      collection: this.notifications,
+    });
+
+    $("#container").append(this.notificationsView.render().el);
+
+    //this.chatView.collection.reset();
+
   }
 }
