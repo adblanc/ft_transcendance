@@ -21,7 +21,6 @@ export default class NavbarView extends BaseView {
 	profile.fetch();
 
 	this.notifications = new Notifications();
-	//this.notifications.fetch();
 	this.listenTo(this.notifications, "reset", this.render);
     this.listenTo(this.notifications, "change", this.render);
   }

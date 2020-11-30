@@ -40,5 +40,18 @@ export default class Notification extends Backbone.AssociatedModel {
     return Backbone.sync.call(this, method, model, options);
   }
 
+  markAsRead() {
+	this.save(
+		{},
+		{
+		  url: "http://localhost:3000/notifications/mark_as_read"
+		}
+	  );
+  }
+
+  mapServerErrors(errors: Record<string, string[]>) {
+    return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
+  }
+
 }
 
