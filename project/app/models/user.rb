@@ -3,6 +3,7 @@ class User < ApplicationRecord
   after_create :assign_default_role
 	has_one_attached :avatar
 	belongs_to :guild, optional: true
+	has_many :notifications, foreign_key: :recipient_id
 
 	validates :avatar, blob: { content_type: :image, size_range: 1..5.megabytes }
 	validates :name, presence: true

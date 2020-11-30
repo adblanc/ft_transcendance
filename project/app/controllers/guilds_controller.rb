@@ -52,13 +52,15 @@ class GuildsController < ApplicationController
   def promote
     @guild = Guild.find_by(id: params[:id])
     user = User.find(params[:user_id])
-    user.add_role(:officer, @guild)
+	user.add_role(:officer, @guild)
+	Notification.create(recipient: user, actor:current_user, action: "promoted", notifiable: @guild)
   end
 
   def demote
     @guild = Guild.find_by(id: params[:id])
     user = User.find(params[:user_id])
 	user.remove_role(:officer, @guild)
+	Notification.create(recipient: user, actor:current_user, action: "demoted", notifiable: @guild)
   end
 
   def fire
@@ -66,6 +68,7 @@ class GuildsController < ApplicationController
     user = User.find(params[:user_id])
 	@guild.remove_user(user)
 	user.update(contribution: 0)
+	Notification.create(recipient: user, actor:current_user, action: "fire", notifiable: @guild)
   end
 
   def transfer
@@ -75,6 +78,7 @@ class GuildsController < ApplicationController
 	user.add_role(:owner, @guild)
 	owner.remove_role(:owner, @guild)
 	owner.add_role(:officer, @guild)
+	Notification.create(recipient: user, actor:current_user, action: "transfer", notifiable: @guild)
   end
 
   private
