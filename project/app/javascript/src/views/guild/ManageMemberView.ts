@@ -96,7 +96,7 @@ export default class ManageMemberView extends ModalView<Profile> {
 	  else if (method === "transfer") {
 		displayToast({ text: `You have successfully transferred ownership to ${this.model.get('name')}. You are now an officer.` }, "success");
 	  }
-	  console.log(this.model);
+	  //console.log(this.model);
 	this.closeModal();
 	this.model.fetch();
 	Backbone.history.loadUrl();
