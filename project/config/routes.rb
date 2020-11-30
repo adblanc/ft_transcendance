@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 		put :transfer
 	  end
   end
+  resources :notifications
 
   root to: "application#index"
   match '*path', via: [:get, :post], to: "application#index", constraints: lambda { |req|
