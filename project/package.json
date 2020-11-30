@@ -10,6 +10,7 @@
     "axios": "^0.21.0",
     "backbone": "^1.4.0",
     "backbone-associations": "^0.6.2",
+    "backbone-dropdown": "^2.0.1",
     "backbone-relational": "^0.10.0",
     "jquery": "^3.5.1",
     "mustache": "^4.0.1",
