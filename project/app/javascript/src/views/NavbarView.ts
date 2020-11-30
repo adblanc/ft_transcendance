@@ -5,9 +5,11 @@ import ProfileView from "./ProfileView";
 import { clearAuthHeaders } from "../utils/auth";
 import BaseView from "../lib/BaseView";
 import { eventBus } from "src/events/EventBus";
+import Notifications from "src/collections/Notifications";
 
 export default class NavbarView extends BaseView {
   profileView: Backbone.View;
+  notifications?: Notifications;
 
   constructor() {
     super();
@@ -17,6 +19,11 @@ export default class NavbarView extends BaseView {
       model: profile,
 	});
 	profile.fetch();
+
+	this.notifications = new Notifications();
+	//this.notifications.fetch();
+	this.listenTo(this.notifications, "reset", this.render);
+    this.listenTo(this.notifications, "change", this.render);
   }
 
   events() {
@@ -47,8 +54,16 @@ export default class NavbarView extends BaseView {
 
   render() {
     const template = $("#navbarTemplate").html();
-    const html = Mustache.render(template, {});
-    this.$el.html(html);
+    const html = Mustache.render(template, this.notifications.toJSON());
+	this.$el.html(html);
+	
+	const $element = this.$("#unread");
+
+	this.notifications.fetch({
+		success: () => {
+			  $element.replaceWith(`${this.notifications.length}`);
+		},
+	});
 
     this.renderNested(this.profileView, "#nav-profile");
 

@@ -15,7 +15,7 @@ export default class ItemView extends BaseView {
   }
 
   render() {
-    const template = $("#notifTemplate").html();
+    const template = $("#notifManageTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
 	this.$el.html(html);
 

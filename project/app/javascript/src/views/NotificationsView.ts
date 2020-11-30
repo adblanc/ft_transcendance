@@ -18,7 +18,8 @@ export default class NotificationsView extends BaseView {
 	this.listenTo(this.notifications, "reset", this.render);
     this.listenTo(this.notifications, "change", this.render);
 	
-	//console.log(this.notifications);
+	console.log(this.notifications);
+	console.log(this.notifications.length);
   
   }
   

@@ -84,7 +84,7 @@ export default class PageView extends BaseView {
   renderNotifications() {
     this.notificationsView = new NotificationsView({
       notifications: this.notifications,
-    });
+	});
 
     $("#container").append(this.notificationsView.render().el);
 
