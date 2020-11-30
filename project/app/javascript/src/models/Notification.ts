@@ -34,17 +34,6 @@ export default class Notification extends Backbone.AssociatedModel {
 	super(options);
   }
 
-  defaults() {
-	return {
-		recipient_id: 0,
-		actor_id: 0,
-		read_at: '',
-		action: '',
-		notifiable_id: 0,
-		notifiable_type: ''
-	};
-   }
-
   urlRoot = () => "http://localhost:3000/notifications";
 
   sync(method: string, model: Notification, options: JQueryAjaxSettings): any {

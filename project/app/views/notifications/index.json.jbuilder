@@ -1,10 +1,8 @@
 json.array! @notifications do |notification|
   json.id notification.id
   #json.recipient notification.recipient
-  json.actor notification.actor.name
+  json.actor notification.actor
   json.action notification.action
-  json.notifiable do
-	json.type "{notification.notifiable.name}"
-  end
+  json.notifiable notification.notifiable
   json.url guild_path(notification.notifiable)
 end
