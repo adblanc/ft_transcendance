@@ -2,8 +2,8 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../lib/BaseView";
 import Notifications from "src/collections/Notifications";
-import Notification from "src/models/Notification";
-import { eventBus } from "src/events/EventBus";
+import NotificationView from "./NotificationView";
+
 
 type Options = Backbone.ViewOptions & { notifications: Notifications };
 
@@ -26,7 +26,16 @@ export default class NotificationsView extends BaseView {
   render() {
     const template = $("#notificationsTemplate").html();
     const html = Mustache.render(template, {});
-    this.$el.html(html);
+	this.$el.html(html);
+
+    const $element = this.$("#notifications-container");
+
+    this.notifications.forEach(function (item) {
+      var notificationView = new NotificationView({
+        model: item,
+      });
+      $element.append(notificationView.render().el);
+    });
 
     return this;
   }
