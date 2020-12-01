@@ -22,7 +22,8 @@ export default class NavbarView extends BaseView {
 
 	this.notifications = new Notifications();
 	this.listenTo(this.notifications, "reset", this.render);
-    this.listenTo(this.notifications, "change", this.render);
+	this.listenTo(this.notifications, "change", this.render);
+	
   }
 
   events() {
@@ -48,7 +49,8 @@ export default class NavbarView extends BaseView {
   }
 
   onClickNotification() {
-    eventBus.trigger("notifications:open");
+	eventBus.trigger("notifications:open");
+	this.render();
   }
 
   render() {
