@@ -1,9 +1,9 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import PageView from "src/lib/PageView";
+import BaseView from "src/lib/BaseView";
 import BoardView from "./guild/BoardView";
 
-export default class IndexView extends PageView {
+export default class IndexView extends BaseView {
   boardView: Backbone.View;
   messages: Backbone.Collection;
 

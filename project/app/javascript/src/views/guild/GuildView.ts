@@ -3,11 +3,11 @@ import Mustache from "mustache";
 import NavbarView from "../NavbarView";
 import InfoView from "./InfoView";
 import MembersView from "./MembersView";
-import PageView from "src/lib/PageView";
+import BaseView from "src/lib/BaseView";
 
 type Options = Backbone.ViewOptions & { guild: Backbone.AssociatedModel };
 
-export default class GuildView extends PageView {
+export default class GuildView extends BaseView {
   navbarView: Backbone.View;
   infoView: Backbone.View;
   membersView: Backbone.View;
@@ -24,7 +24,7 @@ export default class GuildView extends PageView {
     this.membersView = new MembersView({
       guild: this.guild,
     });
-	this.guild.fetch();
+    this.guild.fetch();
   }
 
   render() {

@@ -1,12 +1,12 @@
 import Mustache from "mustache";
-import PageView from "src/lib/PageView";
+import BaseView from "src/lib/BaseView";
 
-export default class GameView extends PageView {
-    render() {
-      const template = $("#game").html();
-      const html = Mustache.render(template, {});
-      this.$el.html(html);
-  
-      return this;
-    }
+export default class GameView extends BaseView {
+  render() {
+    const template = $("#game").html();
+    const html = Mustache.render(template, {});
+    this.$el.html(html);
+
+    return this;
   }
+}

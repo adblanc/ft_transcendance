@@ -16,7 +16,6 @@ export function start() {
       game: "game",
       guildindex: "guildIndex",
       "guild/:id": "guildShow",
-      chat: "chat",
       "*path": "notFound",
     },
   });

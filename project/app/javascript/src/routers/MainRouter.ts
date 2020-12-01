@@ -38,7 +38,7 @@ export default class MainRouter extends Backbone.Router {
 
   index() {
     const indexView = new IndexView({
-      className: "flex flex-col h-screen",
+      className: "flex flex-col",
     });
 
     pagesHandler.showPage(indexView);
@@ -65,11 +65,5 @@ export default class MainRouter extends Backbone.Router {
   guildShow(id: string) {
     const guildView = new GuildView({ guild: new Guild({ id }) });
     pagesHandler.showPage(guildView);
-  }
-
-  chat() {
-    const chatView = new ChatView();
-
-    pagesHandler.showPage(chatView);
   }
 }

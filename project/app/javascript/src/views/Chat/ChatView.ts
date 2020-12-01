@@ -1,16 +1,16 @@
 import Mustache from "mustache";
 import Rooms from "src/collections/Rooms";
-import PageView from "src/lib/PageView";
+import BaseView from "src/lib/BaseView";
 import Message from "src/models/Message";
 import Room from "src/models/Room";
 import CreateJoinChannelView from "./CreateJoinChannelView";
 import RoomView from "./RoomView";
 
-export default class ChatView extends PageView {
+export default class ChatView extends BaseView {
   rooms: Rooms;
   createJoinChannelView: CreateJoinChannelView;
 
-  constructor(options?: any) {
+  constructor(options?: Backbone.ViewOptions) {
     super(options);
 
     this.rooms = new Rooms();
@@ -41,7 +41,6 @@ export default class ChatView extends PageView {
   }
 
   sendMessage() {
-    console.log("click");
     const content = this.$("#send-message-input").val() as string;
 
     if (!content) {

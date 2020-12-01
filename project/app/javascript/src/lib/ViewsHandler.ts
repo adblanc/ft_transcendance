@@ -1,10 +1,18 @@
+import { eventBus } from "src/events/EventBus";
+import ChatView from "src/views/Chat/ChatView";
 import NavbarView from "src/views/NavbarView";
 import BaseView from "./BaseView";
-import PageView from "./PageView";
 
 class PagesHandler {
-  private currentPage?: PageView;
+  private currentPage?: BaseView;
   private navbarView?: BaseView;
+  private chatView?: BaseView;
+
+  constructor() {
+    this.currentPage = undefined;
+    this.navbarView = undefined;
+    this.chatView = undefined;
+  }
 
   addNavbar() {
     this.removeNavbar();
@@ -21,11 +29,24 @@ class PagesHandler {
   }
 
   isNavbarDislayed() {
-    console.log("navbar is displayed ? ", !!this.navbarView);
     return !!this.navbarView;
   }
 
-  showPage(page: PageView, withNavbar = true) {
+  setupChat() {
+    if (!this.chatView) {
+      this.chatView = new ChatView({
+        className: "invisible",
+      });
+
+      this.chatView.render();
+
+      eventBus.listenTo(eventBus, "chat:open", () => {
+        this.chatView.$el.toggleClass("invisible");
+      });
+    }
+  }
+
+  showPage(page: BaseView, withNavbar = true, withChat = true) {
     if (this.currentPage) {
       this.currentPage.close();
     }
@@ -40,6 +61,11 @@ class PagesHandler {
     this.currentPage.render();
 
     $("#container").html(this.currentPage.el);
+
+    if (withChat) {
+      this.setupChat();
+      $("#container").append(this.chatView.el);
+    }
   }
 }
 
