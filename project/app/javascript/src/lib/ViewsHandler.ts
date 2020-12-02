@@ -9,7 +9,7 @@ class PagesHandler {
   private currentPage?: BaseView;
   private navbarView?: BaseView;
   private chatView?: BaseView;
-  private notificationsView?: BaseView;
+  notificationsView?: BaseView;
   notifications: Notifications;
 
   constructor() {
@@ -19,7 +19,7 @@ class PagesHandler {
 	this.notificationsView = undefined;
 
 	this.notifications = new Notifications();
-	this.notifications.fetch();
+	//this.notifications.fetch();
   }
 
   addNavbar() {
@@ -72,6 +72,7 @@ class PagesHandler {
   }
 
   showPage(page: BaseView, withNavbar = true, withChat = true, withNotif = true) {
+	this.notifications.fetch();
     if (this.currentPage) {
       this.currentPage.close();
     }

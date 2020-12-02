@@ -62,12 +62,13 @@ export default class NavbarView extends BaseView {
 	this.$el.html(html);
 	
 	const $element = this.$("#unread");
+	$element.replaceWith(`${this.notifications.length}`);
 
-	this.notifications.fetch({
+	/*this.notifications.fetch({
 		success: () => {
 			  $element.replaceWith(`${this.notifications.length}`);
 		},
-	});
+	});*/
 
     this.renderNested(this.profileView, "#nav-profile");
 
