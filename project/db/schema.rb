@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(version: 2020_11_27_140840) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["guild_id"], name: "index_users_on_guild_id"
+    t.index ["name"], name: "index_users_on_name", unique: true
   end
 
   create_table "users_roles", id: false, force: :cascade do |t|
