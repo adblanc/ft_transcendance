@@ -41,4 +41,9 @@ class User < ApplicationRecord
 	def admin?
 		self.has_role?(:admin)
 	end
+
+	def send_notification(actor, action, notifiable)
+		self.notifications.push(Notification.create!(actor: actor, action: action, notifiable: notifiable))
+		SendNotificationJob.perform_later(self, actor, actor, notifiable)
+	end
 end

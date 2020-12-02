@@ -4,13 +4,14 @@ import NavbarView from "src/views/NavbarView";
 import NotificationsView from "src/views/NotificationsView";
 import Notifications from "src/collections/Notifications";
 import BaseView from "./BaseView";
+import Profile from "src/models/Profile";
 
 class PagesHandler {
   private currentPage?: BaseView;
   private navbarView?: BaseView;
   private chatView?: BaseView;
   notificationsView?: BaseView;
-  notifications: Notifications;
+  profile: Profile;
 
   constructor() {
     this.currentPage = undefined;
@@ -18,14 +19,14 @@ class PagesHandler {
 	this.chatView = undefined;
 	this.notificationsView = undefined;
 
-	this.notifications = new Notifications();
+	this.profile = new Profile();
 	//this.notifications.fetch();
   }
 
   addNavbar() {
     this.removeNavbar();
     this.navbarView = new NavbarView({
-		notifications: this.notifications,
+		profile: this.profile,
 	});
 
     $("body").prepend(this.navbarView.render().el);
@@ -60,7 +61,7 @@ class PagesHandler {
     if (!this.notificationsView) {
       this.notificationsView = new NotificationsView({
 		className: "invisible",
-		notifications: this.notifications,
+		profile: this.profile,
       });
 
       this.notificationsView.render();
@@ -72,7 +73,7 @@ class PagesHandler {
   }
 
   showPage(page: BaseView, withNavbar = true, withChat = true, withNotif = true) {
-	this.notifications.fetch();
+	this.profile.fetch();
     if (this.currentPage) {
       this.currentPage.close();
     }

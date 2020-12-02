@@ -4,6 +4,7 @@ import _ from "underscore";
 import Guild from "src/models/Guild";
 import Notifications from "src/collections/Notifications";
 import Notification from "src/models/Notification";
+import consumer from "channels/consumer";
 
 interface IProfile {
   login: string;
@@ -18,25 +19,23 @@ interface IProfile {
 type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar">>;
 
 export default class Profile extends Backbone.AssociatedModel {
+	channel: ActionCable.Channel;
+  	notifications: Notifications;
+	
 	preinitialize() {
 		this.relations = [
 			{
 				type: Backbone.One,
       			key: "guild",
       			relatedModel: Guild,
-			},
-			{
-				type: Backbone.Many,
-				key: "notifications",
-				relatedModel: Notification,
-				collectionType: Notifications
 			}
 		];
 	}
 
-  constructor(options?: any) {
-    super(options);
-  }
+	initialize() {
+		this.notifications = new Notifications();
+		this.channel = this.createConsumer();
+	  }
 
   defaults() {
     return {
@@ -48,6 +47,26 @@ export default class Profile extends Backbone.AssociatedModel {
   }
 
   urlRoot = () => "http://localhost:3000/user";
+
+  createConsumer() {
+    const user_id = this.get("id");
+    return consumer.subscriptions.create(
+      { channel: "NotificationsChannel", user_id },
+      {
+        connected: () => {
+          console.log("connected to", user_id);
+        },
+        received: (notification: Notification) => {
+          console.log("we received", notification);
+          this.notifications.add(
+            new Notification({
+              ...notification,
+            })
+          );
+        },
+      }
+    );
+  }
 
   fetch(options?: ModelFetchOptions): JQueryXHR {
     return super.fetch({
@@ -106,6 +125,28 @@ export default class Profile extends Backbone.AssociatedModel {
     if (!valid) {
       error([this.validationError]);
     }
+  }
+
+  asyncFetch(options?: Backbone.ModelFetchOptions): Promise<Profile> {
+    return new Promise((res, rej) => {
+      super.fetch({
+        ...options,
+        success: () => res(this),
+        error: (_, jqxhr) => {
+          rej(this.mapServerErrors(jqxhr.responseJSON));
+        },
+      });
+    });
+  }
+
+  asyncSave(attrs?: any, options?: Backbone.ModelSaveOptions): Promise<Profile> {
+    return new Promise((res, rej) => {
+      super.save(attrs, {
+        ...options,
+        success: () => res(this),
+        error: (_, jqxhr) => rej(this.mapServerErrors(jqxhr.responseJSON)),
+      });
+    });
   }
 
   mapServerErrors(errors: Record<string, string[]>) {

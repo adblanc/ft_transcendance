@@ -1,40 +1,33 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../lib/BaseView";
-import Notifications from "src/collections/Notifications";
+import Profile from "src/models/Profile";
+import Notification from "src/models/Notification";
 import NotificationView from "./NotificationView";
 
-type Options = Backbone.ViewOptions & { notifications: Notifications };
+
+type Options = Backbone.ViewOptions & { profile: Profile };
 
 export default class NotificationsView extends BaseView {
-  notifications: Notifications;
+  profile: Profile;
 
   constructor(options?: Options) {
 	super(options);
 	
-	this.notifications = options.notifications;
+	this.profile = options.profile;
 
-	this.listenTo(this.notifications, "add", this.render);
-	this.listenTo(this.notifications, "remove", this.render);
-	this.listenTo(this.notifications, "change", this.render);
-	this.listenTo(this.notifications, "reset", this.render);
-  
+	this.listenTo(this.profile.notifications, "add", this.renderNotif);
+  }
+
+  renderNotif(notification: Notification) {
+    this.$el.append(new NotificationView({ notification: notification }).render().el);
+
+      this.render();
   }
   
 
   render() {
-    const template = $("#notificationsTemplate").html();
-    const html = Mustache.render(template, {});
-	this.$el.html(html);
-
-    const $element = this.$("#notifications-container");
-
-    this.notifications.forEach(function (item) {
-      var notificationView = new NotificationView({
-        model: item,
-      });
-	  $element.append(notificationView.render().el);
-	});
+	$("#notificationsTemplate").html(this.$el.html());
 
     return this;
   }

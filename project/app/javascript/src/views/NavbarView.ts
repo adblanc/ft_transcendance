@@ -5,29 +5,23 @@ import ProfileView from "./ProfileView";
 import { clearAuthHeaders } from "../utils/auth";
 import BaseView from "../lib/BaseView";
 import { eventBus } from "src/events/EventBus";
-import Notifications from "src/collections/Notifications";
 
-type Options = Backbone.ViewOptions & { notifications: Notifications };
+type Options = Backbone.ViewOptions & { profile: Profile };
 
 export default class NavbarView extends BaseView {
+  profile: Profile;
   profileView: Backbone.View;
-  notifications: Notifications;
 
-  constructor(options?: Options) {
-    super(options);
+	constructor(options?: Options) {
+		super(options);
+		
+	this.profile = options.profile;
 
-	this.notifications = options.notifications;
+	this.profileView = new ProfileView({
+		model: this.profile,
+	  });
 
-    const profile = new Profile();
-    this.profileView = new ProfileView({
-      model: profile,
-	});
-	profile.fetch();
-
-	this.listenTo(this.notifications, "add", this.render);
-	this.listenTo(this.notifications, "remove", this.render);
-	this.listenTo(this.notifications, "change", this.render);
-	this.listenTo(this.notifications, "reset", this.render);
+	this.listenTo(this.profile.notifications, "add", this.render);
 	
   }
 
@@ -55,19 +49,17 @@ export default class NavbarView extends BaseView {
 
   onClickNotification() {
 	eventBus.trigger("notifications:open");
-	this.notifications.forEach(function (item) {
-		item.markAsRead();
-	});
+
 	//this.render();
   }
 
   render() {
     const template = $("#navbarTemplate").html();
-    const html = Mustache.render(template, this.notifications.toJSON());
+    const html = Mustache.render(template, this.profile.toJSON());
 	this.$el.html(html);
 	
 	const $element = this.$("#unread");
-	$element.replaceWith(`${this.notifications.length}`);
+	$element.replaceWith(`${this.profile.notifications.length}`);
 
 	/*this.notifications.fetch({
 		success: () => {

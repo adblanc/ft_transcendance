@@ -18,6 +18,11 @@ class UsersController < ApplicationController
 	@user.add_role(:officer, @guild)
   end
 
+  def notifications
+    notifications = current_user.notifications
+    render json: { notifications: notifications.order(created_at: :desc).select(:id, :actor, :action, :notifiable).to_ary }
+  end
+
 
   private
 

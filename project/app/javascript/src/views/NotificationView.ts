@@ -3,22 +3,22 @@ import Mustache from "mustache";
 import BaseView from "../lib/BaseView";
 import Notification from "src/models/Notification";
 
-type Options = Backbone.ViewOptions & { model: Notification };
+type Options = Backbone.ViewOptions & { notification: Notification };
 
 export default class ItemView extends BaseView {
-  model: Notification;
+  notification: Notification;
 
   constructor(options?: Options) {
     super(options);
 
-	this.model = options.model;
+	this.notification = options.notification;
 
-	this.listenTo(this.model, "change", this.render);
+	this.listenTo(this.notification, "change", this.render);
   }
 
   render() {
     const template = $("#notifTemplate").html();
-    const html = Mustache.render(template, this.model.toJSON());
+    const html = Mustache.render(template, this.notification.toJSON());
 	this.$el.html(html);
 
     return this;

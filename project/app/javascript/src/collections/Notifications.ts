@@ -6,7 +6,6 @@ export default class Notifications extends Backbone.Collection<Notification> {
 	  super();
   
 	  this.model = Notification;
-	  this.url = "/notifications";
 	}
   }
   
