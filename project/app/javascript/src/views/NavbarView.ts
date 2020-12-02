@@ -53,6 +53,9 @@ export default class NavbarView extends BaseView {
 
   onClickNotification() {
 	eventBus.trigger("notifications:open");
+	this.notifications.forEach(function (item) {
+		item.markAsRead();
+	  });
 	//this.render();
   }
 

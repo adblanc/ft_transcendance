@@ -20,7 +20,6 @@ class PagesHandler {
 
 	this.notifications = new Notifications();
 	//this.notifications.fetch();
-	
   }
 
   addNavbar() {
@@ -58,23 +57,18 @@ class PagesHandler {
   }
 
   setupNotif() {
-	eventBus.listenTo(eventBus, "notifications:open", () => {
-        if (!this.notificationsView) {
-			this.renderNotifications();
-		  } else {
-			this.notificationsView.close();
-			this.notificationsView = undefined;
-		  }
-	});
-  }
+    if (!this.notificationsView) {
+      this.notificationsView = new NotificationsView({
+		className: "invisible",
+		notifications: this.notifications,
+      });
 
-  renderNotifications() {
-    this.notificationsView = new NotificationsView({
-      notifications: this.notifications,
-	});
+      this.notificationsView.render();
 
-    $("#container").append(this.notificationsView.render().el);
-
+      eventBus.listenTo(eventBus, "notifications:open", () => {
+        this.notificationsView.$el.toggleClass("invisible");
+      });
+    }
   }
 
   showPage(page: BaseView, withNavbar = true, withChat = true, withNotif = true) {
@@ -101,7 +95,7 @@ class PagesHandler {
 	
 	if (withNotif) {
 		this.setupNotif();
-		//$("#container").append(this.notificationsView.el);
+		$("#container").append(this.notificationsView.el);
 	  }
 
   }
