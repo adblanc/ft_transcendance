@@ -24,8 +24,10 @@ export default class NavbarView extends BaseView {
 	});
 	profile.fetch();
 
+	this.listenTo(this.notifications, "add", this.render);
+	this.listenTo(this.notifications, "remove", this.render);
+	this.listenTo(this.notifications, "change", this.render);
 	this.listenTo(this.notifications, "reset", this.render);
-	this.listenTo(this.notifications, "update", this.render);
 	
   }
 
@@ -55,7 +57,7 @@ export default class NavbarView extends BaseView {
 	eventBus.trigger("notifications:open");
 	this.notifications.forEach(function (item) {
 		item.markAsRead();
-	  });
+	});
 	//this.render();
   }
 

@@ -12,14 +12,14 @@ export default class ItemView extends BaseView {
     super(options);
 
 	this.model = options.model;
+
+	this.listenTo(this.model, "change", this.render);
   }
 
   render() {
     const template = $("#notifTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
 	this.$el.html(html);
-
-	//this.model.markAsRead();
 
     return this;
   }
