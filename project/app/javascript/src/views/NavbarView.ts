@@ -7,12 +7,16 @@ import BaseView from "../lib/BaseView";
 import { eventBus } from "src/events/EventBus";
 import Notifications from "src/collections/Notifications";
 
+type Options = Backbone.ViewOptions & { notifications: Notifications };
+
 export default class NavbarView extends BaseView {
   profileView: Backbone.View;
-  notifications?: Notifications;
+  notifications: Notifications;
 
-  constructor() {
-    super();
+  constructor(options?: Options) {
+    super(options);
+
+	this.notifications = options.notifications;
 
     const profile = new Profile();
     this.profileView = new ProfileView({
@@ -20,9 +24,8 @@ export default class NavbarView extends BaseView {
 	});
 	profile.fetch();
 
-	this.notifications = new Notifications();
 	this.listenTo(this.notifications, "reset", this.render);
-	this.listenTo(this.notifications, "change", this.render);
+	this.listenTo(this.notifications, "update", this.render);
 	
   }
 
@@ -50,7 +53,7 @@ export default class NavbarView extends BaseView {
 
   onClickNotification() {
 	eventBus.trigger("notifications:open");
-	this.render();
+	//this.render();
   }
 
   render() {

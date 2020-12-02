@@ -11,7 +11,7 @@ bob = User.where(login: "bob").first_or_create!(
 );
 
 bob.avatar.attach(
-	io: URI.open("https://cdn.shopify.com/s/files/1/0240/3441/0601/products/135.png?v=1598373418"),
+	io: URI.open("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1pEVYSLDyjch3zZYccCMgguA2zDSLyVP8EPrOb_2DSPNuV60si_Qju-Ll9fnDvfzEXcDEGDTD&usqp=CAc"),
 	filename: "bob.png",
 	"content_type": "image/png",
 )

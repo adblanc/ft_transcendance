@@ -4,9 +4,9 @@ import axios from "axios";
 import { get42LoginUrl } from "../utils/api";
 import { addAuthHeaders } from "../utils/auth";
 import { displayToast } from "../utils/toast";
-import PageView from "src/lib/PageView";
+import BaseView from "src/lib/BaseView";
 
-export default class AuthView extends PageView {
+export default class AuthView extends BaseView {
   events() {
     return {
       "keypress #input-guest": "loginGuest",

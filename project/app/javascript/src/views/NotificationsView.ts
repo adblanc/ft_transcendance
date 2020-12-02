@@ -4,7 +4,6 @@ import BaseView from "../lib/BaseView";
 import Notifications from "src/collections/Notifications";
 import NotificationView from "./NotificationView";
 
-
 type Options = Backbone.ViewOptions & { notifications: Notifications };
 
 export default class NotificationsView extends BaseView {
@@ -16,7 +15,7 @@ export default class NotificationsView extends BaseView {
 	this.notifications = options.notifications;
 
 	this.listenTo(this.notifications, "reset", this.render);
-    this.listenTo(this.notifications, "change", this.render);
+    this.listenTo(this.notifications, "update", this.render);
 
 	//console.log(this.notifications);
 	//console.log(this.notifications.length);

@@ -5,12 +5,13 @@ class User < ApplicationRecord
 	belongs_to :guild, optional: true
 	has_many :notifications, foreign_key: :recipient_id
 	/means that user is referenced as foreign key in the notifications table/
+	has_and_belongs_to_many :rooms
 
 	validates :avatar, blob: { content_type: :image, size_range: 1..5.megabytes }
 	validates :name, presence: true
 	validates :name, length: {minimum: 3, maximum: 32}
 	  validates :login, presence: true, uniqueness: true
-	  
+
 	def assign_default_role
 		/global role - could be switched to admin/
 		self.add_role(:regular)
