@@ -4,9 +4,10 @@ class CreateUsers < ActiveRecord::Migration[6.0]
 	  t.belongs_to :guild
       t.string :login
 	  t.string :name
-	  t.integer :contribution, default: 0 
+	  t.integer :contribution, default: 0
 
       t.timestamps
     end
+    add_index :users, :username, unique: true
   end
 end

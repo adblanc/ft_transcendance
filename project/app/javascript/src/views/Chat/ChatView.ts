@@ -1,65 +1,87 @@
 import Mustache from "mustache";
-import BaseView from "../../lib/BaseView";
+import Rooms from "src/collections/Rooms";
+import BaseView from "src/lib/BaseView";
 import Message from "src/models/Message";
-import MessageView from "./MessageView";
-import Tabs from "src/collections/Tabs";
-import TabsView from "./TabsView";
-import { eventBus } from "src/events/EventBus";
-import CreateChannelView from "./CreateChannelView";
-import InputView from "./InputView";
+import Room from "src/models/Room";
+import ChatHeaderView from "./ChatHeaderView";
+import CreateJoinChannelView from "./CreateJoinChannelView";
+import RoomView from "./RoomView";
 
 export default class ChatView extends BaseView {
-  tabs: Backbone.Collection;
-  tabsView: BaseView;
-  createChannelView: BaseView;
-  inputView: BaseView;
+  rooms: Rooms;
+  createJoinChannelView: CreateJoinChannelView;
+  chatHeaderView: ChatHeaderView;
+
   constructor(options?: Backbone.ViewOptions) {
     super(options);
 
-    this.tabs = new Tabs();
-    this.tabsView = new TabsView({
-      collection: this.tabs,
+    this.rooms = new Rooms();
+
+    this.rooms.fetch();
+
+    this.createJoinChannelView = new CreateJoinChannelView({
+      rooms: this.rooms,
     });
 
-    this.inputView = new InputView({
-      className: "p-3",
+    this.chatHeaderView = new ChatHeaderView({
+      rooms: this.rooms,
     });
 
-    this.listenTo(eventBus, "chat:tabs:add", this.onAddTab);
-    this.listenTo(eventBus, "chat:tabs:empty", this.onEmptyTabs);
+    this.listenTo(this.rooms, "add", this.renderRoom);
+    this.listenTo(this.rooms, "remove", this.removeRoom);
   }
-
-  onClose = () => {
-    this.tabsView.close();
-  };
 
   events() {
     return {
-      "keypress #input-message": "onKeyPressInput",
+      "keypress #send-message-input": this.onKeyPress,
+      "click #send-message-btn": this.sendMessage,
     };
   }
 
-  onKeyPressInput() {
-    console.log("key pressed");
+  onKeyPress(e: JQuery.Event) {
+    if (e.key !== "Enter") {
+      return;
+    }
+    e.preventDefault();
+    this.sendMessage();
   }
 
-  onAddTab() {
-    this.createChannelView = new CreateChannelView({});
-    this.appendNested(this.createChannelView, "#chat-container");
-    this.inputView.close();
+  sendMessage() {
+    const content = this.$("#send-message-input").val() as string;
+
+    if (!content) {
+      return;
+    }
+
+    const message = new Message({
+      content,
+      room_id: this.rooms.selectedRoom.get("id"),
+    });
+    message.save();
+
+    this.clearInput();
   }
 
-  onEmptyTabs() {
-    this.inputView.close();
-    this.createChannelView.close();
+  clearInput() {
+    this.$("#send-message-input").val("");
+  }
+
+  renderRoom(room: Room) {
+    this.$("#room-list").append(new RoomView({ model: room }).render().el);
+  }
+
+  removeRoom(room: Room) {
+    this.$(`#room-${room.get("id")}`).remove();
   }
 
   render() {
-    const template = $("#chatTemplate").html();
+    const template = $("#chat-container-template").html();
     const html = Mustache.render(template, {});
     this.$el.html(html);
 
-    this.preprendNested(this.tabsView, "#chat-container");
+    this.preprendNested(this.chatHeaderView, "#right-container-chat");
+
+    this.preprendNested(this.createJoinChannelView, "#left-container-chat");
 
     return this;
   }

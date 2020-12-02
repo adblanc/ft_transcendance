@@ -1,7 +1,6 @@
 import Backbone from "backbone";
 import axios from "axios";
 import { pagesHandler } from "../lib/ViewsHandler";
-import { RouterOptions } from "../../types/router";
 import IndexView from "../views/IndexView";
 import GuildView from "../views/guild/GuildView";
 import GuildIndexView from "../views/guild/GuildIndexView";
@@ -10,22 +9,20 @@ import GameView from "../views/GameView";
 import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
 import Guild from "src/models/Guild";
-import Guilds from "../collections/Guilds";
 
 export default class MainRouter extends Backbone.Router {
   constructor() {
-	super({
-		routes: {
-			"": "index",
-			auth: "auth",
-			"auth/callback?code=:code": "authCallBack",
-			game: "game",
-			guildindex: "guildIndex",
-			"guild/:id": "guildShow",
-			"*path": "notFound",
-		}
-	});
-	
+    super({
+      routes: {
+        "": "index",
+        auth: "auth",
+        "auth/callback?code=:code": "authCallBack",
+        game: "game",
+        guildindex: "guildIndex",
+        "guild/:id": "guildShow",
+        "*path": "notFound",
+      },
+    });
   }
 
   async authCallBack(code: string) {
@@ -49,14 +46,13 @@ export default class MainRouter extends Backbone.Router {
 
   index() {
     const indexView = new IndexView({
-      className: "flex flex-col h-screen",
+      className: "flex flex-col",
     });
 
     pagesHandler.showPage(indexView);
   }
 
-  game()
-  {
+  game() {
     const gameView = new GameView({});
 
     pagesHandler.showPage(gameView);
@@ -75,9 +71,7 @@ export default class MainRouter extends Backbone.Router {
   }
 
   guildShow(id: string) {
-	
-	const guildView = new GuildView({ guild: new Guild({ id }) });
-	pagesHandler.showPage(guildView);
-
+    const guildView = new GuildView({ guild: new Guild({ id }) });
+    pagesHandler.showPage(guildView);
   }
 }

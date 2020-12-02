@@ -22,6 +22,7 @@
   },
   "version": "0.1.0",
   "devDependencies": {
+    "@types/actioncable": "^5.2.3",
     "@types/axios": "^0.14.0",
     "@types/backbone": "^1.4.5",
     "@types/backbone-associations": "^0.6.33",
@@ -29,6 +30,7 @@
     "@types/jquery": "^3.5.4",
     "@types/mustache": "^4.0.1",
     "@types/underscore": "^1.10.24",
+    "@types/webpack-env": "^1.16.0",
     "webpack-dev-server": "^3.11.0"
   }
 }

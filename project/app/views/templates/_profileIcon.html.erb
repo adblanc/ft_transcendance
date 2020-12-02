@@ -1,3 +1,10 @@
-  <button id="btn-profile" class="flex items-center justify-center">
-    <img class="w-16 h-16 rounded-full p-2" src="{{avatar_url}}" />
-  </button>
+<button id="btn-profile" class="flex items-center justify-center">
+  <img
+    id="current-user-profile"
+    data-id="{{ id }}"
+    data-login="{{ login }}"
+    data-avatar_url="{{ avatar_url }}"
+    class="w-16 h-16 rounded-full p-2"
+    src="{{ avatar_url }}"
+  />
+</button>

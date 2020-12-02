@@ -13,9 +13,12 @@ Rails.application.routes.draw do
 		put :transfer
 	  end
   end
+  resources :room_messages
+  resources :rooms
+  get '/join-room', to: 'rooms#join'
 
   root to: "application#index"
   match '*path', via: [:get, :post], to: "application#index", constraints: lambda { |req|
-    req.path.exclude? 'rails/active_storage' 
+    req.path.exclude? 'rails/active_storage'
   }
 end

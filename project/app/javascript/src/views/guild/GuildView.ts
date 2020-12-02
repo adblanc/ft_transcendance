@@ -3,13 +3,13 @@ import Mustache from "mustache";
 import NavbarView from "../NavbarView";
 import InfoView from "./InfoView";
 import MembersView from "./MembersView";
-import PageView from "src/lib/PageView";
-import Guild from "src/models/Guild"
+import Guild from "src/models/Guild";
 import Profile from "src/models/Profile";
+import BaseView from "src/lib/BaseView";
 
-type Options = Backbone.ViewOptions & { guild: Guild};
+type Options = Backbone.ViewOptions & { guild: Guild };
 
-export default class GuildView extends PageView {
+export default class GuildView extends BaseView {
   navbarView: Backbone.View;
   infoView: Backbone.View;
   membersView: Backbone.View;
@@ -19,20 +19,20 @@ export default class GuildView extends PageView {
   constructor(options?: Options) {
     super(options);
 
-	this.guild = options.guild;
-	this.profile = new Profile();
+    this.guild = options.guild;
+    this.profile = new Profile();
 
     this.navbarView = new NavbarView();
     this.infoView = new InfoView({
-	  guild: this.guild,
-	  profile: this.profile,
+      guild: this.guild,
+      profile: this.profile,
     });
     this.membersView = new MembersView({
-	  guild: this.guild,
-	  profile: this.profile,
+      guild: this.guild,
+      profile: this.profile,
     });
-	this.guild.fetch();
-	this.profile.fetch();
+    this.guild.fetch();
+    this.profile.fetch();
   }
 
   render() {

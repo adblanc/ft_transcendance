@@ -7,6 +7,7 @@ interface IProfile {
   login: string;
   name: string;
   guild_role: string;
+  id?: number;
   avatar?: any;
   created_at: string;
   updated_at: string;
@@ -15,28 +16,28 @@ interface IProfile {
 type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar">>;
 
 export default class Profile extends Backbone.AssociatedModel {
-	preinitialize() {
-		this.relations = [
-			{
-				type: Backbone.One,
-      			key: "guild",
-      			relatedModel: Guild,
-			}
-		];
-	}
+  preinitialize() {
+    this.relations = [
+      {
+        type: Backbone.One,
+        key: "guild",
+        relatedModel: Guild,
+      },
+    ];
+  }
 
   constructor(options?: any) {
-	  super(options);
+    super(options);
   }
 
   defaults() {
-	return {
-		login: '',
-		name: '',
-		number: 0,
-		guild_role: 'none',
-	};
-	}
+    return {
+      login: "",
+      name: "",
+      number: 0,
+      guild_role: "none",
+    };
+  }
 
   urlRoot = () => "http://localhost:3000/user";
 
@@ -98,7 +99,6 @@ export default class Profile extends Backbone.AssociatedModel {
       error([this.validationError]);
     }
   }
-
 
   mapServerErrors(errors: Record<string, string[]>) {
     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);

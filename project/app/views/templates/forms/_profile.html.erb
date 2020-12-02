@@ -1,32 +1,28 @@
 <script type="text/html" id="profileFormTemplate">
-            <form action="">
-                <label class="block" for="profile-name">
-                    <span class="text-gray-700">Pseudo</span>
-                    <input
-                        class="form-input mt-1 block w-full"
-                        type="text"
-                        name="profile-name"
-                        value="{{name}}"
-                        id="input-profile-name"
-                    />
-                </label>
-                <label class="block mt-8" for="input-profile-avatar">
-                    <span class="text-gray-700">Mettre en ligne un avatar</span>
-                    <input
-                        class="form-input mt-1 block w-full"
-                        type="file"
-                        name="profile-avatar"
-                        id="input-profile-avatar"
-                    />
-                </label>
-                <div class="flex justify-center items-center">
-                    <button
-                        class="btn-primary mt-8"
-                        id="input-profile-submit"
-                        type="submit"
-                    >
-                        Enregistrer les modifications
-                    </button>
-                </div>
-            </form>
+  <form action="">
+    <label class="block" for="profile-name">
+      <span class="text-gray-700">Pseudo</span>
+      <input
+        class="form-input mt-1 block w-full"
+        type="text"
+        name="profile-name"
+        value="{{name}}"
+        id="input-profile-name"
+      />
+    </label>
+    <label class="block mt-8" for="input-profile-avatar">
+      <span class="text-gray-700">Mettre en ligne un avatar</span>
+      <input
+        class="form-input mt-1 block w-full"
+        type="file"
+        name="profile-avatar"
+        id="input-profile-avatar"
+      />
+    </label>
+    <div class="flex justify-center items-center">
+      <button class="btn-primary mt-8" id="input-profile-submit" type="submit">
+        Enregistrer les modifications
+      </button>
+    </div>
+  </form>
 </script>

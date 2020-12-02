@@ -3,12 +3,13 @@ class User < ApplicationRecord
   after_create :assign_default_role
 	has_one_attached :avatar
 	belongs_to :guild, optional: true
+	has_and_belongs_to_many :rooms
 
 	validates :avatar, blob: { content_type: :image, size_range: 1..5.megabytes }
 	validates :name, presence: true
 	validates :name, length: {minimum: 3, maximum: 32}
 	  validates :login, presence: true, uniqueness: true
-	  
+
 	def assign_default_role
 		/global role - could be switched to admin/
 		self.add_role(:regular)
