@@ -4,11 +4,58 @@
 <script type="text/html" id="game">
   <div class="flex h-screen">
     <h1 class="m-auto text-5xl text-teal-500">Page of Thrones</h1>
+    <form action="" method="get">
+      <label for="pet-select">Choose a level:</label>
+    <select name="level" id="level">
+      <option value="">--Please choose an option--</option>
+      <option value="easy">Easy</option>
+      <option value="normal">Normal</option>
+    <option value="hard">Hard</option>
+  </select>
+  <p>Choose a number of points:</p>
+  <div>
+    <input type="radio" id="one" name="points" value="1">
+    <label for="one">1</label>
+  </div>
+
+<div>
+  <input type="radio" id="two" name="points" value="two">
+  <label for="two">2</label>
+</div>
+
+<div>
+  <input type="radio" id="three" name="points" value="three">
+  <label for="three">3</label>
+</div>
+
+        <label class="block" for="input-game">
+          <span class="text-white font-semibold">Choose the game</span>
+          <input class="form-input block mt-1"
+            type="text"
+            name="input-type"
+            id="input-type"/>
+            <input class="form-input block mt-1"
+            type="text"
+            name="input-points"
+            id="input-points"/>
+            <span class="text-white font-semibold">Enter</span>
+            <input class="form-input block mt-1"
+            type="button"
+            name="enter"
+            id="game-enter"/>
+        </label>
+      </form>
   </div>
 </script>
 
-<script type="text/html" id="gameTemplate">
+<script type="text/html" id="play">
   <div class="flex h-screen">
-    <h1 class="m-auto text-5xl text-teal-500">Page of Game</h1>
+    <h1 class="m-auto text-5xl text-teal-500">You are playing</h1>
+  </div>
+</script>
+
+<script type="text/html" id="oups">
+  <div class="flex h-screen">
+    <h1 class="m-auto text-5xl text-teal-500">oups</h1>
   </div>
 </script>

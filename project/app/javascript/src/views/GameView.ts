@@ -34,4 +34,51 @@ export default class GameView extends BaseView {
     // console.log(jeu.Type)
     return this;
   }
+  events() {
+    return {
+      "click #game-enter": "loginGame",
+    };
+  }
+  async loginGame(e: JQuery.Event)
+  {
+    //if (e.key === "click") {
+    const input = this.$("#input-type").val();
+      e.preventDefault();
+      if (!input) {
+        return;
+      }
+      else {
+        return this.Gameview();
+      }
+  //}
+}
+  Gameview()
+  {
+    jeu: Backbone.Model;
+
+    const type = this.$("#input-type").val();
+    const points = this.$("#input-points").val();
+    const level = this.$("#level").val();
+    const one = this.$("#one") as unknown as HTMLInputElement;
+    if (!one.checked) //ne fonctionne pas
+       return this.oups();
+    else {
+    const template = $("#play").html();
+    var jeu = new Game({
+      Type: level,
+      Points: +points,
+      Profile: new Profile({ name: "Moby", login: "Marshell" }),
+    });
+    const html = Mustache.render(template, {});
+    this.$el.html(html + jeu.get('Points') + jeu.get('Type'));
+    return this;
+  }
+  }
+  oups()
+  {
+    const oups = $("#oups").html();
+    const html = Mustache.render(oups, {});
+    this.$el.html(html);
+    return this;
+  }
 }
