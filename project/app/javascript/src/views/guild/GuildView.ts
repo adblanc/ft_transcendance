@@ -1,6 +1,5 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import NavbarView from "../NavbarView";
 import InfoView from "./InfoView";
 import MembersView from "./MembersView";
 import Guild from "src/models/Guild";
@@ -10,7 +9,6 @@ import BaseView from "src/lib/BaseView";
 type Options = Backbone.ViewOptions & { guild: Guild };
 
 export default class GuildView extends BaseView {
-  navbarView: Backbone.View;
   infoView: Backbone.View;
   membersView: Backbone.View;
   guild: Guild;
@@ -22,7 +20,6 @@ export default class GuildView extends BaseView {
     this.guild = options.guild;
     this.profile = new Profile();
 
-    this.navbarView = new NavbarView();
     this.infoView = new InfoView({
       guild: this.guild,
       profile: this.profile,
@@ -40,7 +37,6 @@ export default class GuildView extends BaseView {
     const html = Mustache.render(template, {});
     this.$el.html(html);
 
-    this.renderNested(this.navbarView, "#index-navbar");
     this.renderNested(this.infoView, "#info");
     this.renderNested(this.membersView, "#members");
 
