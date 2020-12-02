@@ -3,12 +3,14 @@ import Rooms from "src/collections/Rooms";
 import BaseView from "src/lib/BaseView";
 import Message from "src/models/Message";
 import Room from "src/models/Room";
+import ChatHeaderView from "./ChatHeaderView";
 import CreateJoinChannelView from "./CreateJoinChannelView";
 import RoomView from "./RoomView";
 
 export default class ChatView extends BaseView {
   rooms: Rooms;
   createJoinChannelView: CreateJoinChannelView;
+  chatHeaderView: ChatHeaderView;
 
   constructor(options?: Backbone.ViewOptions) {
     super(options);
@@ -18,6 +20,10 @@ export default class ChatView extends BaseView {
     this.rooms.fetch();
 
     this.createJoinChannelView = new CreateJoinChannelView({
+      rooms: this.rooms,
+    });
+
+    this.chatHeaderView = new ChatHeaderView({
       rooms: this.rooms,
     });
 
@@ -72,6 +78,8 @@ export default class ChatView extends BaseView {
     const template = $("#chat-container-template").html();
     const html = Mustache.render(template, {});
     this.$el.html(html);
+
+    this.preprendNested(this.chatHeaderView, "#right-container-chat");
 
     this.preprendNested(this.createJoinChannelView, "#left-container-chat");
 
