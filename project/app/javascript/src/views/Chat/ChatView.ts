@@ -1,5 +1,6 @@
 import Mustache from "mustache";
 import Rooms from "src/collections/Rooms";
+import { eventBus } from "src/events/EventBus";
 import BaseView from "src/lib/BaseView";
 import Message from "src/models/Message";
 import Room from "src/models/Room";
@@ -27,8 +28,31 @@ export default class ChatView extends BaseView {
       rooms: this.rooms,
     });
 
+    this.listenTo(eventBus, "chat:open", this.toggleChat);
     this.listenTo(this.rooms, "add", this.renderRoom);
     this.listenTo(this.rooms, "remove", this.removeRoom);
+  }
+
+  hideChat() {
+    if (!this.isVisible()) {
+      return;
+    }
+    this.toggleChat();
+  }
+
+  showChat() {
+    if (this.isVisible()) {
+      return;
+    }
+    this.toggleChat();
+  }
+
+  private isVisible() {
+    return !this.$el.hasClass("invisible");
+  }
+
+  toggleChat() {
+    this.$el.toggleClass("invisible");
   }
 
   events() {
@@ -52,10 +76,6 @@ export default class ChatView extends BaseView {
     if (!content) {
       return;
     }
-
-    console.log("room", this.rooms.selectedRoom);
-
-    console.log("id", this.rooms.selectedRoom.get("id"));
 
     const message = new Message({
       content,

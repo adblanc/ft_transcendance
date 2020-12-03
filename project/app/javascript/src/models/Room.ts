@@ -39,7 +39,6 @@ export default class Room extends Backbone.Model<IRoom> {
           console.log("connected to", room_id);
         },
         received: (message: IMessage) => {
-          console.log("we received", message);
           if (!this.currentUserId) {
             this.currentUserId = parseInt(
               $("#current-user-profile").data("id")

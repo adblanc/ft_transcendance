@@ -6,7 +6,7 @@ import BaseView from "./BaseView";
 class PagesHandler {
   private currentPage?: BaseView;
   private navbarView?: BaseView;
-  private chatView?: BaseView;
+  private chatView?: ChatView;
 
   constructor() {
     this.currentPage = undefined;
@@ -34,15 +34,12 @@ class PagesHandler {
 
   setupChat() {
     if (!this.chatView) {
+      console.log("we create chat view");
       this.chatView = new ChatView({
         className: "invisible",
       });
 
-      this.chatView.render();
-
-      eventBus.listenTo(eventBus, "chat:open", () => {
-        this.chatView.$el.toggleClass("invisible");
-      });
+      $("body").append(this.chatView.render().el);
     }
   }
 
@@ -64,7 +61,8 @@ class PagesHandler {
 
     if (withChat) {
       this.setupChat();
-      $("#container").append(this.chatView.el);
+    } else {
+      this.chatView.hideChat();
     }
   }
 }

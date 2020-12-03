@@ -26,14 +26,13 @@ export default class RoomView extends Backbone.View<Room> {
   }
 
   onClick() {
+    console.log("on click room name");
     if (!this.model.get("selected")) {
-      console.log("on select", this.model);
       this.model.select();
     }
   }
 
   renderMsg(message: Message) {
-    console.log("on render ", message.get("content"));
     $("#messages-container").append(
       new MessageView({ model: message }).render().el
     );
