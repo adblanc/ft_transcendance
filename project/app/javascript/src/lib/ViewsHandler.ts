@@ -32,17 +32,6 @@ class PagesHandler {
     return !!this.navbarView;
   }
 
-  setupChat() {
-    if (!this.chatView) {
-      console.log("we create chat view");
-      this.chatView = new ChatView({
-        className: "invisible",
-      });
-
-      $("body").append(this.chatView.render().el);
-    }
-  }
-
   showPage(page: BaseView, withNavbar = true, withChat = true) {
     if (this.currentPage) {
       this.currentPage.close();
@@ -59,11 +48,34 @@ class PagesHandler {
 
     $("#container").html(this.currentPage.el);
 
-    if (withChat) {
-      this.setupChat();
+    this.handleChat(withChat);
+  }
+
+  handleChat(withChat: boolean) {
+    if (!withChat) {
+      if (this.chatView) {
+        return this.closeChat();
+      }
+      return;
+    }
+
+    if (!this.chatView) {
+      this.chatView = new ChatView({
+        className: "invisible",
+      });
+
+      console.log("we create chat view and render it");
+
+      $("body").append(this.chatView.render().el);
     } else {
       this.chatView.hideChat();
     }
+  }
+
+  closeChat() {
+    console.log("we close chat");
+    this.chatView.close();
+    this.chatView = undefined;
   }
 }
 

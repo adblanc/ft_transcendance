@@ -44,7 +44,7 @@ export default class MainRouter extends Backbone.Router {
   auth() {
     const authView = new AuthView({});
 
-    pagesHandler.showPage(authView, false);
+    pagesHandler.showPage(authView, false, false);
   }
 
   index() {
@@ -77,7 +77,7 @@ export default class MainRouter extends Backbone.Router {
     const guildView = new GuildView({ guild: new Guild({ id }) });
     pagesHandler.showPage(guildView);
   }
-  gameShow(id: number){
+  gameShow(id: number) {
     const gameView = new GameView({ game: new Game({ id }) });
     pagesHandler.showPage(gameView);
   }
