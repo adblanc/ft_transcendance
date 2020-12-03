@@ -19,11 +19,11 @@ class RoomsController < ApplicationController
 	  def join
 		@room = Room.find_by(name: room_params[:name])
 
-		if (current_user.rooms.exists?(@room.id))
+		if (@room && current_user.rooms.exists?(@room.id))
 			render json: {"you" => ["already joined this room."]}, status: :unprocessable_entity
 		else
 			begin
-				if (room_params[:password] && @room)
+				if (!(room_params[:password].nil? || room_params[:password].empty?) && @room)
 					@room = @room.authenticate(room_params[:password])
 				end
 			rescue BCrypt::Errors::InvalidHash
