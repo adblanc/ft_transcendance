@@ -3,7 +3,7 @@ class NotificationsChannel < ApplicationCable::Channel
 	  user_id = params[:user_id];
 	  stream_from "user_#{user_id}"
   
-	  notifications = Notification.where(user_id: user_id).order(created_at: :asc).each do |notification|
+	  notifications = Notification.where(recipient_id: user_id).order(created_at: :asc).each do |notification|
 		transmit(notification)
 	  end
 	end
