@@ -5,10 +5,12 @@ import IndexView from "../views/IndexView";
 import GuildView from "../views/guild/GuildView";
 import GuildIndexView from "../views/guild/GuildIndexView";
 import NotFoundView from "../views/NotFoundView";
-import GameView from "../views/GameView";
+import GameView from "../views/game/GameView";
+import GameIndexView from "../views/game/GameIndexView";
 import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
 import Guild from "src/models/Guild";
+import Game from "src/models/Game";
 
 export default class MainRouter extends Backbone.Router {
   constructor() {
@@ -18,6 +20,7 @@ export default class MainRouter extends Backbone.Router {
         auth: "auth",
         "auth/callback?code=:code": "authCallBack",
         game: "game",
+        "game/:id": "gameShow",
         guildindex: "guildIndex",
         "guild/:id": "guildShow",
         "*path": "notFound",
@@ -53,9 +56,9 @@ export default class MainRouter extends Backbone.Router {
   }
 
   game() {
-    const gameView = new GameView({});
+    const gameIndexView = new GameIndexView({});
 
-    pagesHandler.showPage(gameView);
+    pagesHandler.showPage(gameIndexView);
   }
 
   notFound() {
@@ -73,5 +76,9 @@ export default class MainRouter extends Backbone.Router {
   guildShow(id: string) {
     const guildView = new GuildView({ guild: new Guild({ id }) });
     pagesHandler.showPage(guildView);
+  }
+  gameShow(id: number){
+    const gameView = new GameView({ game: new Game({ id }) });
+    pagesHandler.showPage(gameView);
   }
 }
