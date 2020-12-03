@@ -19,12 +19,19 @@ export default class Room extends Backbone.Model<IRoom> {
     this.messages = new Messages();
     this.channel = this.createConsumer();
     this.currentUserId = undefined;
+
+    this.listenTo(this, "change:id", this.updateChannel);
   }
 
   url = () => "http://localhost:3000/rooms";
 
   createConsumer() {
     const room_id = this.get("id");
+
+    if (room_id === undefined) {
+      return undefined;
+    }
+
     return consumer.subscriptions.create(
       { channel: "RoomChannel", room_id },
       {
@@ -47,6 +54,15 @@ export default class Room extends Backbone.Model<IRoom> {
         },
       }
     );
+  }
+
+  updateChannel() {
+    console.log("we change channel");
+    if (this.channel) {
+      this.channel.unsubscribe();
+    }
+
+    this.channel = this.createConsumer();
   }
 
   asyncFetch(options?: Backbone.ModelFetchOptions): Promise<Room> {

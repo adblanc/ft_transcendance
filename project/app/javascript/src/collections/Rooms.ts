@@ -23,6 +23,7 @@ export default class Rooms extends Backbone.Collection<Room> {
       this.selectedRoom.toggle();
     }
     this.selectedRoom = room;
+    console.log("on set selected a ", room);
     this.selectedRoom.toggle();
   }
 

@@ -27,6 +27,7 @@ export default class RoomView extends Backbone.View<Room> {
 
   onClick() {
     if (!this.model.get("selected")) {
+      console.log("on select", this.model);
       this.model.select();
     }
   }

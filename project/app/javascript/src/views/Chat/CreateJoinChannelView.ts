@@ -34,13 +34,13 @@ export default class CreateJoinChannelView extends Backbone.View {
     const name = this.nameInput().val() as string;
     const password = this.passwordInput().val() as string;
 
-    const room = new Room({ name, password });
+    let room: Room = undefined;
 
     try {
       if (!this.isJoin) {
-        await this.createChannel(name, password);
+        room = await this.createChannel(name, password);
       } else {
-        await this.joinChannel(name, password);
+        room = await this.joinChannel(name, password);
       }
 
       this.rooms.add(room);
@@ -66,6 +66,10 @@ export default class CreateJoinChannelView extends Backbone.View {
   async createChannel(name: string, password: string) {
     const room = new Room();
     await room.asyncSave({ name: name, password: password });
+
+    console.log("we created", room);
+
+    console.log("its attributes", room.attributes);
 
     return room;
   }

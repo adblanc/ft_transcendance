@@ -3,10 +3,6 @@ class RoomsController < ApplicationController
 		@rooms = current_user.rooms if current_user
 	end
 
-	def new
-		@room = Room.new
-	end
-
 	def create
 		@room = Room.create(room_params)
 

@@ -53,6 +53,10 @@ export default class ChatView extends BaseView {
       return;
     }
 
+    console.log("room", this.rooms.selectedRoom);
+
+    console.log("id", this.rooms.selectedRoom.get("id"));
+
     const message = new Message({
       content,
       room_id: this.rooms.selectedRoom.get("id"),
