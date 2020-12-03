@@ -2,7 +2,7 @@ class SendNotificationJob < ApplicationJob
 	queue_as :default
   
 	def perform(user, actor, action, notifiable)
-	  NotificationChannel.broadcast_to(
+	  NotificationsChannel.broadcast_to(
 		user,
 		actor: actor,
 		action: action,

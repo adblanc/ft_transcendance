@@ -43,7 +43,7 @@ class User < ApplicationRecord
 	end
 
 	def send_notification(actor, action, notifiable)
-		self.notifications.push(Notification.create!(actor: actor, action: action, notifiable: notifiable))
+		self.notifications.push(Notification.create!(recipient: self, actor: actor, action: action, notifiable: notifiable))
 		SendNotificationJob.perform_later(self, actor, actor, notifiable)
 	end
 end
