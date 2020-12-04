@@ -29,6 +29,7 @@ export default class ItemView extends BaseView {
 	this.$el.html(html);
 
 	$('#time').html(this.momentString);
+	console.log(this.momentString);
 
     return this;
   }
