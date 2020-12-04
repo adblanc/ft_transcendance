@@ -11,6 +11,8 @@ interface IGame
     url: string;
 }
 
+type CreatableGameArgs = Partial<Pick<IGame, "Id" | "user" | "url">>;
+
 export default class Game extends Backbone.Model<IGame>
 {
    urlRoot = () => "http://localhost:3000/game";
@@ -36,7 +38,21 @@ export default class Game extends Backbone.Model<IGame>
  		Points: 0,
  	};  }
    
-    createGame() {}
+    createGame(game: Game, success: () => void) {
+        this.Points = game.Points;
+        this.Type = game.Type;
+        this.url = game.url;
+        this.save(
+            {},
+            {
+              url: this.urlRoot(),
+              success: () => success(),
+              //error: (_, jqxhr) => {
+              //  error(this.mapServerErrors(jqxhr?.responseJSON));
+              }
+          );
+        success();
+    }
     // set sName(nom: string)
     // {
     //     this.set('name', nom);

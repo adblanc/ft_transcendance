@@ -1,11 +1,12 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
+import BaseView from "src/lib/BaseView";
 import Message from "src/models/Message";
 import Room from "src/models/Room";
 import MessageView from "./MessageView";
 import RoomMessagesView from "./RoomMessagesView";
 
-export default class RoomView extends Backbone.View<Room> {
+export default class RoomView extends BaseView<Room> {
   roomMessagesView: Backbone.View;
 
   constructor(options?: Backbone.ViewOptions<Room>) {
@@ -26,13 +27,13 @@ export default class RoomView extends Backbone.View<Room> {
   }
 
   onClick() {
+    console.log("on click room name");
     if (!this.model.get("selected")) {
       this.model.select();
     }
   }
 
   renderMsg(message: Message) {
-    console.log("on render ", message.get("content"));
     $("#messages-container").append(
       new MessageView({ model: message }).render().el
     );
@@ -41,6 +42,7 @@ export default class RoomView extends Backbone.View<Room> {
   render() {
     if (this.model.get("selected")) {
       this.roomMessagesView.render();
+    } else {
     }
 
     const template = $("#roomTemplate").html();

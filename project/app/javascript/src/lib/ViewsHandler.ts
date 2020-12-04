@@ -2,14 +2,13 @@ import { eventBus } from "src/events/EventBus";
 import ChatView from "src/views/Chat/ChatView";
 import NavbarView from "src/views/NavbarView";
 import NotificationsView from "src/views/NotificationsView";
-import Notifications from "src/collections/Notifications";
 import BaseView from "./BaseView";
 import Profile from "src/models/Profile";
 
 class PagesHandler {
   private currentPage?: BaseView;
   private navbarView?: BaseView;
-  private chatView?: BaseView;
+  private chatView?: ChatView;
   notificationsView?: BaseView;
   profile: Profile;
 
@@ -19,8 +18,6 @@ class PagesHandler {
 	this.chatView = undefined;
 	this.notificationsView = undefined;
 	this.profile = undefined;
-
-	//this.notifications.fetch();
   }
 
   addNavbar() {
@@ -43,20 +40,6 @@ class PagesHandler {
     return !!this.navbarView;
   }
 
-  setupChat() {
-    if (!this.chatView) {
-      this.chatView = new ChatView({
-        className: "invisible",
-      });
-
-      this.chatView.render();
-
-      eventBus.listenTo(eventBus, "chat:open", () => {
-        this.chatView.$el.toggleClass("invisible");
-      });
-    }
-  }
-
   setupNotif() {
     if (!this.notificationsView) {
       this.notificationsView = new NotificationsView({
@@ -73,7 +56,6 @@ class PagesHandler {
   }
 
   showPage(page: BaseView, withNavbar = true, withChat = true, withNotif = true) {
-	
 	const token = localStorage.getItem("tokenAuth");
 	if (token)
 	{
@@ -101,16 +83,39 @@ class PagesHandler {
 
     $("#container").html(this.currentPage.el);
 
-    if (withChat) {
-      this.setupChat();
-      $("#container").append(this.chatView.el);
-	}
-	
 	if (withNotif) {
 		this.setupNotif();
 		$("#container").append(this.notificationsView.el);
 	  }
 
+    this.handleChat(withChat);
+  }
+
+  handleChat(withChat: boolean) {
+    if (!withChat) {
+      if (this.chatView) {
+        return this.closeChat();
+      }
+      return;
+    }
+
+    if (!this.chatView) {
+      this.chatView = new ChatView({
+        className: "invisible",
+      });
+
+      console.log("we create chat view and render it");
+
+      $("body").append(this.chatView.render().el);
+    } else {
+      this.chatView.hideChat();
+    }
+  }
+
+  closeChat() {
+    console.log("we close chat");
+    this.chatView.close();
+    this.chatView = undefined;
   }
 }
 

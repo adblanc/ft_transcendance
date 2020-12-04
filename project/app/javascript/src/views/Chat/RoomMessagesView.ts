@@ -1,5 +1,4 @@
 import Backbone from "backbone";
-import Mustache from "mustache";
 import Message from "src/models/Message";
 import Room from "src/models/Room";
 import MessageView from "./MessageView";

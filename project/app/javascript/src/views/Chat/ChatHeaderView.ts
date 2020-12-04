@@ -1,13 +1,15 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import Rooms from "src/collections/Rooms";
+import BaseView from "src/lib/BaseView";
+import { displayToast } from "src/utils";
 import _ from "underscore";
 
 type Options = Backbone.ViewOptions & {
   rooms: Rooms;
 };
 
-export default class ChatHeaderView extends Backbone.View {
+export default class ChatHeaderView extends BaseView {
   rooms: Rooms;
 
   constructor(options?: Options) {
@@ -20,6 +22,28 @@ export default class ChatHeaderView extends Backbone.View {
     this.rooms = options.rooms;
 
     this.listenTo(this.rooms, "change", this.render);
+  }
+
+  events() {
+    return {
+      "click #quit-room": this.quitRoom,
+    };
+  }
+
+  async quitRoom() {
+    const selectedRoom = this.rooms.selectedRoom;
+
+    try {
+      await selectedRoom.quit();
+      displayToast(
+        {
+          text: `Room ${selectedRoom.get("name")} successfully left`,
+        },
+        "success"
+      );
+    } catch (err) {
+      displayToast({ text: err }, "error");
+    }
   }
 
   render() {

@@ -3,10 +3,6 @@ class RoomsController < ApplicationController
 		@rooms = current_user.rooms if current_user
 	end
 
-	def new
-		@room = Room.new
-	end
-
 	def create
 		@room = Room.create(room_params)
 
@@ -23,11 +19,11 @@ class RoomsController < ApplicationController
 	  def join
 		@room = Room.find_by(name: room_params[:name])
 
-		if (current_user.rooms.exists?(@room.id))
+		if (@room && current_user.rooms.exists?(@room.id))
 			render json: {"you" => ["already joined this room."]}, status: :unprocessable_entity
 		else
 			begin
-				if (room_params[:password] && @room)
+				if (!(room_params[:password].nil? || room_params[:password].empty?) && @room)
 					@room = @room.authenticate(room_params[:password])
 				end
 			rescue BCrypt::Errors::InvalidHash
@@ -42,8 +38,17 @@ class RoomsController < ApplicationController
 		end
 	end
 
+	def quit
+		@room = Room.find_by(name: room_params[:name])
 
-
+		if (@room && !current_user.rooms.exists?(@room.id))
+			render json: {"you" => ["are not in this room."]}, status: :unprocessable_entity
+		elsif (!@room)
+			render json: {"name" => ["is incorrect"]}, status: :unprocessable_entity
+		else
+			@room.users.delete(current_user)
+		end
+	end
 
 	private
 
