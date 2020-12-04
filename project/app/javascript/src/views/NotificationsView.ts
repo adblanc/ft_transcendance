@@ -34,26 +34,9 @@ export default class NotificationsView extends BaseView {
       var notificationView = new NotificationView({
         notification: item,
       });
-	  $element.append(notificationView.render().el);
+	  $element.prepend(notificationView.render().el);
 	});
 
     return this;
   }
 }
-
-/*render() {
-    const template = $("#notificationsTemplate").html();
-    const html = Mustache.render(template, {});
-	this.$el.html(html);
-
-    const $element = this.$("#notifications-container");
-
-    this.notifications.forEach(function (item) {
-      var notificationView = new NotificationView({
-        model: item,
-      });
-	  $element.append(notificationView.render().el);
-	});
-
-    return this;
-  }*/
