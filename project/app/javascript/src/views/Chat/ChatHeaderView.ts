@@ -1,6 +1,7 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import Rooms from "src/collections/Rooms";
+import BaseView from "src/lib/BaseView";
 import { displayToast } from "src/utils";
 import _ from "underscore";
 
@@ -8,7 +9,7 @@ type Options = Backbone.ViewOptions & {
   rooms: Rooms;
 };
 
-export default class ChatHeaderView extends Backbone.View {
+export default class ChatHeaderView extends BaseView {
   rooms: Rooms;
 
   constructor(options?: Options) {
