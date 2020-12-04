@@ -51,7 +51,7 @@ export default class Profile extends Backbone.AssociatedModel {
   createConsumer() {
 	//const user_id = this.get("user_id");
     return consumer.subscriptions.create(
-      { channel: "NotificationsChannel", user: this },
+      { channel: "NotificationsChannel"},
       {
         connected: () => {
 			//console.log(this.get("user_id"));
@@ -127,28 +127,6 @@ export default class Profile extends Backbone.AssociatedModel {
     if (!valid) {
       error([this.validationError]);
     }
-  }
-
-  asyncFetch(options?: Backbone.ModelFetchOptions): Promise<Profile> {
-    return new Promise((res, rej) => {
-      super.fetch({
-        ...options,
-        success: () => res(this),
-        error: (_, jqxhr) => {
-          rej(this.mapServerErrors(jqxhr.responseJSON));
-        },
-      });
-    });
-  }
-
-  asyncSave(attrs?: any, options?: Backbone.ModelSaveOptions): Promise<Profile> {
-    return new Promise((res, rej) => {
-      super.save(attrs, {
-        ...options,
-        success: () => res(this),
-        error: (_, jqxhr) => rej(this.mapServerErrors(jqxhr.responseJSON)),
-      });
-    });
   }
 
   mapServerErrors(errors: Record<string, string[]>) {
