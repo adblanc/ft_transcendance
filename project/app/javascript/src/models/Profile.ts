@@ -49,11 +49,12 @@ export default class Profile extends Backbone.AssociatedModel {
   urlRoot = () => "http://localhost:3000/user";
 
   createConsumer() {
+	const user_id = this.get("id");
     return consumer.subscriptions.create(
-      { channel: "NotificationsChannel", user: this},
+      { channel: "NotificationsChannel", user_id: user_id},
       {
         connected: () => {
-          console.log("connected to", this);
+          console.log("connected to", user_id);
         },
         received: (notification: Notification) => {
           console.log("we received", notification);
