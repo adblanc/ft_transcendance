@@ -53,14 +53,14 @@ class GuildsController < ApplicationController
     @guild = Guild.find_by(id: params[:id])
     user = User.find(params[:user_id])
 	user.add_role(:officer, @guild)
-	user.send_notification(current_user, "promoted", @guild)
+	user.send_notification(current_user, "promoted you to Officer for", @guild)
   end
 
   def demote
     @guild = Guild.find_by(id: params[:id])
     user = User.find(params[:user_id])
 	user.remove_role(:officer, @guild)
-	user.send_notification(current_user, "demoted", @guild)
+	user.send_notification(current_user, "demoted you to Member for", @guild)
 	
   end
 
@@ -69,6 +69,7 @@ class GuildsController < ApplicationController
     user = User.find(params[:user_id])
 	@guild.remove_user(user)
 	user.update(contribution: 0)
+	user.send_notification(current_user, "fired you from", @guild)
 	
   end
 
@@ -79,6 +80,7 @@ class GuildsController < ApplicationController
 	user.add_role(:owner, @guild)
 	owner.remove_role(:owner, @guild)
 	owner.add_role(:officer, @guild)
+	user.send_notification(current_user, "transferred you ownership for", @guild)
   end
 
   private
