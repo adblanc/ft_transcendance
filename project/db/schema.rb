@@ -50,11 +50,10 @@ ActiveRecord::Schema.define(version: 2020_11_30_143921) do
     t.integer "actor_id"
     t.datetime "read_at"
     t.string "action"
+    t.integer "notifiable_id"
     t.string "notifiable_type"
-    t.bigint "notifiable_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable_type_and_notifiable_id"
   end
 
   create_table "roles", force: :cascade do |t|
