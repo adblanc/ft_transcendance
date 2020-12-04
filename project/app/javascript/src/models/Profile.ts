@@ -28,7 +28,7 @@ export default class Profile extends Backbone.AssociatedModel {
 				type: Backbone.One,
       			key: "guild",
       			relatedModel: Guild,
-			}
+			},
 		];
 	}
 
