@@ -38,8 +38,17 @@ class RoomsController < ApplicationController
 		end
 	end
 
+	def quit
+		@room = Room.find_by(name: room_params[:name])
 
-
+		if (@room && !current_user.rooms.exists?(@room.id))
+			render json: {"you" => ["are not in this room."]}, status: :unprocessable_entity
+		elsif (!@room)
+			render json: {"name" => ["is incorrect"]}, status: :unprocessable_entity
+		else
+			@room.users.delete(current_user)
+		end
+	end
 
 	private
 

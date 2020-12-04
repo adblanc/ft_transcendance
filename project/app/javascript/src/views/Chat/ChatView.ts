@@ -91,12 +91,22 @@ export default class ChatView extends BaseView {
   }
 
   renderRoom(room: Room) {
+    console.log("we render", room.get("id"));
     this.$("#room-list").append(new RoomView({ model: room }).render().el);
   }
 
   removeRoom(room: Room) {
-    this.$(`#room-${room.get("id")}`).remove();
+    console.log("we remove", room.get("id"));
+    this.$(`#room-${room.get("id")}`)
+      .parent()
+      .remove();
+
+    if (!this.roomsLength()) {
+      console.log("on devrait remove");
+    }
   }
+
+  roomsLength = () => this.$("#room-list").children().length;
 
   render() {
     const template = $("#chat-container-template").html();

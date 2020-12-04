@@ -67,10 +67,6 @@ export default class CreateJoinChannelView extends Backbone.View {
     const room = new Room();
     await room.asyncSave({ name: name, password: password });
 
-    console.log("we created", room);
-
-    console.log("its attributes", room.attributes);
-
     return room;
   }
 

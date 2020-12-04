@@ -64,9 +64,27 @@ export default class Room extends Backbone.Model<IRoom> {
     this.channel = this.createConsumer();
   }
 
+  async quit() {
+    await this.asyncDestroy({
+      url: `http://localhost:3000/quit-room?name=${this.get("name")}`,
+    });
+  }
+
   asyncFetch(options?: Backbone.ModelFetchOptions): Promise<Room> {
     return new Promise((res, rej) => {
       super.fetch({
+        ...options,
+        success: () => res(this),
+        error: (_, jqxhr) => {
+          rej(this.mapServerErrors(jqxhr.responseJSON));
+        },
+      });
+    });
+  }
+
+  asyncDestroy(options?: Backbone.ModelDestroyOptions): Promise<Room> {
+    return new Promise((res, rej) => {
+      super.destroy({
         ...options,
         success: () => res(this),
         error: (_, jqxhr) => {
