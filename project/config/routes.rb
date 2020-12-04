@@ -14,7 +14,7 @@ Rails.application.routes.draw do
 	  end
   end
   resources :notifications do
-	collection do
+	member do
 		put :mark_as_read
 	end
   end
