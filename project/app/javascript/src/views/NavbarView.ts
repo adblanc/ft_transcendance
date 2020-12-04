@@ -22,6 +22,7 @@ export default class NavbarView extends BaseView {
 	  });
 
 	this.listenTo(this.profile.notifications, "add", this.render);
+	this.listenTo(this.profile.notifications, "change", this.render);
 	
   }
 
@@ -49,8 +50,9 @@ export default class NavbarView extends BaseView {
 
   onClickNotification() {
 	eventBus.trigger("notifications:open");
-
-	//this.render();
+	this.profile.notifications.forEach(function (item) {
+		item.markAsRead();
+	});
   }
 
   render() {
@@ -59,13 +61,7 @@ export default class NavbarView extends BaseView {
 	this.$el.html(html);
 	
 	const $element = this.$("#unread");
-	$element.replaceWith(`${this.profile.notifications.length}`);
-
-	/*this.notifications.fetch({
-		success: () => {
-			  $element.replaceWith(`${this.notifications.length}`);
-		},
-	});*/
+	$element.replaceWith(`${this.profile.notifications.getUnreadNb()}`);
 
     this.renderNested(this.profileView, "#nav-profile");
 
