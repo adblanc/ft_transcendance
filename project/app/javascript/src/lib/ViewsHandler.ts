@@ -18,8 +18,8 @@ class PagesHandler {
     this.navbarView = undefined;
 	this.chatView = undefined;
 	this.notificationsView = undefined;
+	this.profile = undefined;
 
-	this.profile = new Profile();
 	//this.notifications.fetch();
   }
 
@@ -73,7 +73,19 @@ class PagesHandler {
   }
 
   showPage(page: BaseView, withNavbar = true, withChat = true, withNotif = true) {
-	this.profile.fetch();
+	
+	const token = localStorage.getItem("tokenAuth");
+	if (token)
+	{
+		this.profile = new Profile();
+		this.profile.fetch({
+		success: () => {
+			this.profile.channel = this.profile.createConsumer();
+		},
+		});
+
+	}
+
     if (this.currentPage) {
       this.currentPage.close();
     }

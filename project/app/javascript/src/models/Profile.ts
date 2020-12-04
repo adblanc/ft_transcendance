@@ -34,7 +34,7 @@ export default class Profile extends Backbone.AssociatedModel {
 
 	initialize() {
 		this.notifications = new Notifications();
-		this.channel = this.createConsumer();
+		//this.channel = this.createConsumer();
 	  }
 
   defaults() {
@@ -49,14 +49,11 @@ export default class Profile extends Backbone.AssociatedModel {
   urlRoot = () => "http://localhost:3000/user";
 
   createConsumer() {
-	//const user_id = this.get("user_id");
     return consumer.subscriptions.create(
-      { channel: "NotificationsChannel"},
+      { channel: "NotificationsChannel", user: this},
       {
         connected: () => {
-			//console.log(this.get("user_id"));
-			//console.log(user_id);	
-          //console.log("connected to", user_id);
+          console.log("connected to", this);
         },
         received: (notification: Notification) => {
           console.log("we received", notification);
