@@ -16,9 +16,6 @@ export default class NotificationsView extends BaseView {
 	
 	this.profile = options.profile;
 
-
-	console.log(this.profile.notifications);
-
 	this.listenTo(this.profile.notifications, "add", this.render);
   }
   
