@@ -7,6 +7,7 @@ type Options = Backbone.ViewOptions & { notification: Notification };
 
 export default class ItemView extends BaseView {
   notification: Notification;
+  momentString: string;
 
   constructor(options?: Options) {
     super(options);
@@ -14,12 +15,24 @@ export default class ItemView extends BaseView {
 	this.notification = options.notification;
 
 	this.listenTo(this.notification, "change", this.render);
+
+	const moment = require("moment");
+
+	let dateString = this.notification.get("created_at");
+	this.momentString = moment(dateString).format("MMM Do YY, h:mm a");
+   	/*let dateObj = new Date(dateString);
+   	let momentObj = moment(dateObj);
+	this.momentString = momentObj.format("MMM Do YY, h:mm a");
+	console.log(this.momentString);*/
+
   }
 
   render() {
     const template = $("#notifTemplate").html();
     const html = Mustache.render(template, this.notification.toJSON());
 	this.$el.html(html);
+
+	$('#time').html(this.momentString);
 
     return this;
   }

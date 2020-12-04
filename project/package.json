@@ -12,6 +12,7 @@
     "backbone-associations": "^0.6.2",
     "backbone-relational": "^0.10.0",
     "jquery": "^3.5.1",
+    "moment": "^2.29.1",
     "mustache": "^4.0.1",
     "tailwindcss": "^1.9.6",
     "toastify-js": "^1.9.3",
