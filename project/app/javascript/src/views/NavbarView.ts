@@ -55,7 +55,6 @@ export default class NavbarView extends BaseView {
 			item.markAsRead();
 		}
 	});
-	//console.log(this.profile.notifications);
   }
 
   render() {

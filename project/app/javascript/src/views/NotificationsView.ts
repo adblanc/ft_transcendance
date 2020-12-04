@@ -21,12 +21,6 @@ export default class NotificationsView extends BaseView {
 
 	this.listenTo(this.profile.notifications, "add", this.render);
   }
-
-  /*renderNotif(notification: Notification) {
-    this.$el.append(new NotificationView({ notification: notification }).render().el);
-
-      this.render();
-  }*/
   
 
   render() {
@@ -36,7 +30,7 @@ export default class NotificationsView extends BaseView {
 
 	const $element = this.$("#notifications-container");
 
-    this.profile.notifications.forEach(function (item) {
+    this.profile.notifications.slice(0, 5).forEach(function (item) {
       var notificationView = new NotificationView({
         notification: item,
       });
