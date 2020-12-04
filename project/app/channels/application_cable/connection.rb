@@ -8,8 +8,8 @@ module ApplicationCable
   
 	  private
 		def find_verified_user
-		  if verified_user = @current_user
-			verified_user
+		  if @current_user != nil
+			@current_user
 		  else
 			reject_unauthorized_connection
 		  end
