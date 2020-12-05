@@ -41,10 +41,5 @@ class Guild < ApplicationRecord
 		User.with_role(:officer, self)
 	end
 
-	def notify_officers(user, action, notifiable)
-		(self.officers.to_ary << self.owner).each do |officer|
-			officer.send_notification(user, action, notifiable)
-		end
-	end
 
 end

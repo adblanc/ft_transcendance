@@ -82,7 +82,7 @@ class GuildsController < ApplicationController
   def transfer
     @guild = Guild.find_by(id: params[:id])
 	user = User.find(params[:user_id])
-	/owner = User.with_role(:owner, @guild).first/
+	owner = User.with_role(:owner, @guild).first
 	user.add_role(:owner, @guild)
 	owner.remove_role(:owner, @guild)
 	if owner.add_role(:officer, @guild)
@@ -92,11 +92,21 @@ class GuildsController < ApplicationController
   end
 
   def join
-    guild = Guild.find_by(id: params[:id])
+    @guild = Guild.find_by(id: params[:id])
 
-    guild.pending_members.push(current_user)
-	/owner.send_notification(current_user, "wants to join", @guild)/
-	notify_officers(current_user, "wants to join", @guild)
+	@guild.pending_members.push(current_user)
+	
+	(@guild.officers.to_ary << @guild.owner).each do |officers|
+		officers.send_notification(current_user, "wants to join", @guild)
+	end
+
+	/owner = User.with_role(:owner, @guild).first
+	officers = User.with_role(:officer, @guild)
+	
+	owner.send_notification(current_user, "wants to join", @guild)
+	(officers.to_ary << owner).each do |officer|
+		officer.send_notification(current_user, "wants to join", @guild)
+	end/
   end
 
   def accept
@@ -105,13 +115,13 @@ class GuildsController < ApplicationController
 
     guild.pending_members.delete(pending_user)
 	guild.members.push(pending_user)
-	pending_user.send_notification(current_user, "accepted your request to join", @guild)
+	pending_member.send_notification(current_user, "accepted your request to join", @guild)
     
   end
 
   def reject
     guild = Guild.find_by(id: params[:id])
-    pending_user = User.find_by(id: params[:user_id])
+    pending_member = User.find_by(id: params[:user_id])
 
     guild.pending_members.delete(pending_user)
 	pending_user.send_notification(current_user, "rejected your request to join", @guild)

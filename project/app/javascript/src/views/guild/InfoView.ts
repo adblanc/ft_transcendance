@@ -33,6 +33,7 @@ export default class InfoView extends BaseView {
     return {
 	  "click #edit-btn": "onEditClicked",
 	  "click #quit-btn": "onQuitClicked",
+	  "click #join-btn": "onJoinClicked",
     };
   }
 
@@ -69,6 +70,25 @@ export default class InfoView extends BaseView {
 		displayToast({ text: `Your owner privileges were transferred to ${this.guild.get('name')}'s oldest member.` }, "success");
 	}
   }
+
+  onJoinClicked() {
+	this.guild.join(
+		(errors) => {
+			errors.forEach((error) => {
+			this.displayError(error);
+			});
+		},
+		() => this.guildJoin()
+		);
+  }
+
+  guildJoin() {
+	displayToast({ text: `You have sent a join request to ${this.guild.get('name')}. ` }, "success");
+	this.guild.fetch();
+	this.profile.fetch();
+  }
+
+
 
   displayError(error: string) {
     displayToast({ text: error }, "error");
