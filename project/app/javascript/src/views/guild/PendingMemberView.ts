@@ -63,7 +63,6 @@ export default class PendingMemberView extends BaseView {
 		displayToast({ text: `You have refused ` }, "success");
 	  }
 	this.guild.fetch();
-	//this.closeModal();
   }
 
   displayError(error: string) {

@@ -35,7 +35,7 @@ export default class PendingView extends ModalView<Guild> {
 	this.profiles.forEach(function (item) {
 		var memberView = new PendingMemberView({
 		  model: item,
-		  guild: this.guild,
+		  guild: this.model,
 		});
 		$element.append(memberView.render().el);
 	  }, this);
