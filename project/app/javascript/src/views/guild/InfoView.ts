@@ -57,7 +57,8 @@ export default class InfoView extends BaseView {
   guildQuit() {
 	displayToast({ text: `You have successfully quit ${this.guild.get('name')}. ` }, "success");
 	this.guild.fetch();
-	if (this.guild.get('users').length == 1) {
+	this.profile.fetch();
+	if (this.guild.get('users').length == 0) {
 		displayToast({ text: `You were the only member of ${this.guild.get('name')}, so the guild was destroyed.` }, "success");
 		const router = new MainRouter();
 		router.navigate("notFound", { trigger: true });
@@ -66,8 +67,6 @@ export default class InfoView extends BaseView {
 	else if (this.profile.get('guild_role') == "Owner") {
 		displayToast({ text: `Your owner privileges were transferred to ${this.guild.get('name')}'s oldest member.` }, "success");
 	}
-
-	Backbone.history.loadUrl();
   }
 
   displayError(error: string) {

@@ -46,7 +46,9 @@ class GuildsController < ApplicationController
 
   def quit
 	@guild = Guild.find(params[:id])
-	@guild.remove_user(current_user)
+	if @guild.remove_user(current_user)
+		@guild
+	end
   end
 
   def promote
