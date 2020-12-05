@@ -40,8 +40,9 @@ export default class NavbarView extends BaseView {
   }
 
   onLogout() {
-    clearAuthHeaders();
-    Backbone.history.navigate("/auth", { trigger: true });
+	clearAuthHeaders();
+	this.profile.channel.unsubscribe();
+	Backbone.history.navigate("/auth", { trigger: true });
   }
 
   onClickMessage() {
