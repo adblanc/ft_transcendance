@@ -32,7 +32,7 @@ export default class MembersView extends Backbone.View {
     };
   }
 
-  onManageClicked() {
+  onPendingClicked() {
     const pendingView = new PendingView({
 	  model: this.guild,
     });

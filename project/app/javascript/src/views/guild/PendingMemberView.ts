@@ -25,8 +25,8 @@ export default class PendingMemberView extends BaseView {
 
   events() {
 	return {
-		...super.events(), "click #accept-btn": "onAcceptClicked",
-		...super.events(), "click #refuse-btn": "onRefuseClicked",
+		"click #accept-btn": "onAcceptClicked",
+		"click #refuse-btn": "onRefuseClicked",
 	  };
   }
 
