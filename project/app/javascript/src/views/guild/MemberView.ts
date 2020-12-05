@@ -18,6 +18,8 @@ export default class MemberView extends BaseView {
 	this.model = options.model;
 	this.loggedIn = options.loggedIn;
 	this.guild = options.guild;
+
+	//console.log(this.model);
   }
 
   events() {
