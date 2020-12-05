@@ -103,8 +103,8 @@ class GuildsController < ApplicationController
     guild = Guild.find_by(id: params[:id])
     pending_user = User.find_by(id: params[:user_id])
 
-    guild.pending.delete(pending_user)
-	guild.members.push(pending_user)
+    guild.pending_users.delete(pending_user)
+	guild.users.push(pending_user)
 	pending_user.send_notification(current_user, "accepted your request to join", @guild)
     
   end
@@ -113,7 +113,7 @@ class GuildsController < ApplicationController
     guild = Guild.find_by(id: params[:id])
     pending_user = User.find_by(id: params[:user_id])
 
-    guild.pending.delete(pending_user)
+    guild.pending_users.delete(pending_user)
 	pending_user.send_notification(current_user, "rejected your request to join", @guild)
   end
 

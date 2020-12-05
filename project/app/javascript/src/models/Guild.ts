@@ -24,8 +24,15 @@ export default class Guild extends Backbone.AssociatedModel {
 				key: "users",
 				collectionType: Profiles,
 				relatedModel: Profile,
+			},
+			{
+				type: Backbone.Many,
+				key: "pending_users",
+				collectionType: Profiles,
+				relatedModel: Profile,
 			}
 		];
+		
 	}
 
   constructor(options?: any) {
