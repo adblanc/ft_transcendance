@@ -29,6 +29,13 @@ export default class MembersView extends Backbone.View {
     const template = $("#membersTemplate").html();
     const html = Mustache.render(template, this.guild.toJSON());
 	this.$el.html(html);
+
+	if (this.profile.get("guild")) {
+		if (this.profile.get("guild").get('id') === this.guild.get('id') &&
+			(this.profile.get("guild_role") === "Owner" || this.profile.get("guild_role") === "Officer")) {
+				this.$("#pending").show();
+		}
+	}
 	
 	const $element = this.$("#listing");
 	

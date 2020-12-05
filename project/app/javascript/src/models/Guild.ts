@@ -145,6 +145,60 @@ export default class Guild extends Backbone.AssociatedModel {
 	  );
   }
 
+  join(
+	error: (errors: string[]) => void,
+    success: () => void
+  ) {
+	this.save(
+		{},
+		{
+		  url: `http://localhost:3000/guilds/${this.id}/join`,
+		  success: () => success(),
+		  error: (_, jqxhr) => {
+			error(this.mapServerErrors(jqxhr?.responseJSON));
+		  },
+		}
+	  );
+  }
+
+  accept(
+	user_id: string,
+	error: (errors: string[]) => void,
+    success: () => void
+  ) {
+	this.save(
+		{
+			'user_id': user_id,
+		},
+		{
+		  url: `http://localhost:3000/guilds/${this.id}/accept`,
+		  success: () => success(),
+		  error: (_, jqxhr) => {
+			error(this.mapServerErrors(jqxhr?.responseJSON));
+		  },
+		}
+	  );
+  }
+
+  reject(
+	user_id: string,
+	error: (errors: string[]) => void,
+    success: () => void
+  ) {
+	this.save(
+		{
+			'user_id': user_id,
+		},
+		{
+		  url: `http://localhost:3000/guilds/${this.id}/reject`,
+		  success: () => success(),
+		  error: (_, jqxhr) => {
+			error(this.mapServerErrors(jqxhr?.responseJSON));
+		  },
+		}
+	  );
+  }
+
 
   mapServerErrors(errors: Record<string, string[]>) {
     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
