@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import Profiles from "src/collections/Profiles";
 import MemberView from "./MemberView";
+import PendingView from "./PendingView";
 import Guild from "src/models/Guild";
 import Profile from "src/models/Profile";
 
@@ -23,6 +24,20 @@ export default class MembersView extends Backbone.View {
 	this.listenTo(this.profile, "change", this.render);
 	this.listenTo(this.profiles, "update", this.render);
 	
+  }
+
+  events() {
+    return {
+	  "click #pending-btn": "onPendingClicked",
+    };
+  }
+
+  onManageClicked() {
+    const pendingView = new PendingView({
+	  model: this.guild,
+    });
+
+    pendingView.render();
   }
 
   render() {

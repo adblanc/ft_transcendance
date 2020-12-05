@@ -33,6 +33,7 @@ export default class GuildView extends BaseView {
 	
 	this.listenTo(this.guild, "change", this.render);
 	this.listenTo(this.profile, "change", this.render);
+
   }
 
   render() {
