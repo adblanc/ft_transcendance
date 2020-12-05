@@ -4,6 +4,7 @@ class User < ApplicationRecord
 	has_one_attached :avatar
 	belongs_to :guild, optional: true
 	has_many :notifications, foreign_key: :recipient_id
+	belongs_to :pending_guild, class_name: "Guild", optional: true
 
 	has_and_belongs_to_many :rooms
 

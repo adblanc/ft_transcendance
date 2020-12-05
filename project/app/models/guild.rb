@@ -3,6 +3,7 @@ class Guild < ApplicationRecord
 	has_one_attached :img
 	has_many :users
 	accepts_nested_attributes_for :users
+	has_many :pending_users, class_name: "User"
 
 	validates :img, blob: { content_type: :image }
 	validates :name, presence: true, uniqueness: true, length: {minimum: 5, maximum: 20}
@@ -30,5 +31,18 @@ class Guild < ApplicationRecord
 		end
 	end
 
+	def owner
+		User.with_role(:owner, self).first
+	end
+
+	def officers
+		User.with_role(:officer, self)
+	end
+
+	def notify_officers(user, action, notifiable)
+		(self.officers.to_ary << self.owner).each do |officer|
+			officer.send_notification(user, action, notifiable)
+		end
+	end
 
 end

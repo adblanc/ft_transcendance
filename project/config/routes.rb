@@ -11,6 +11,9 @@ Rails.application.routes.draw do
 		put :demote
 		put :fire
 		put :transfer
+		put :join
+		put :accept
+		put :reject
 	  end
   end
   resources :notifications do
