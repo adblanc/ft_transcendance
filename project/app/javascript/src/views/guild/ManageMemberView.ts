@@ -18,8 +18,8 @@ export default class ManageMemberView extends ModalView<Profile> {
 	this.listenTo(this.model, "change", this.render);
 	this.listenTo(this.model, "add", this.render);
 	this.listenTo(this.guild, "change", this.render);
+	this.listenTo(this.guild.get("users"), "update", this.render);
 
-	console.log(this.model);
   }
 
   events() {
@@ -96,10 +96,8 @@ export default class ManageMemberView extends ModalView<Profile> {
 	  else if (method === "transfer") {
 		displayToast({ text: `You have successfully transferred ownership to ${this.model.get('name')}. You are now an officer.` }, "success");
 	  }
-
-	  console.log(this.model);
+	this.guild.fetch();
 	this.closeModal();
-	//Backbone.history.loadUrl();
   }
 
   displayError(error: string) {

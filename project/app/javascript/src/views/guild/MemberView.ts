@@ -19,6 +19,10 @@ export default class MemberView extends BaseView {
 	this.loggedIn = options.loggedIn;
 	this.guild = options.guild;
 
+	this.listenTo(this.model, "change", this.render);
+	this.listenTo(this.model, "add", this.render);
+	this.listenTo(this.guild, "change", this.render);
+	this.listenTo(this.guild.get("users"), "update", this.render);
 	//console.log(this.model);
   }
 
