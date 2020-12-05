@@ -8,6 +8,7 @@ json.users do
 	 json.admin user.admin?
 	 json.contribution user.contribution
   end
+end
 json.pending_users do
   json.array! @guild.users do |user|
      json.id user.id
