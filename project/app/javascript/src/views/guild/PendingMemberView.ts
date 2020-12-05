@@ -57,10 +57,10 @@ export default class PendingMemberView extends BaseView {
 
   saved(method: string) {
 	  if (method === "accept") {
-		displayToast({ text: `You have accepted ` }, "success");
+		displayToast({ text: `You have accepted ${this.model.get('name')} into your guild` }, "success");
 	  }
 	  else if (method === "refuse") {
-		displayToast({ text: `You have refused ` }, "success");
+		displayToast({ text: `You have refused ${this.model.get('name')}'s request to join your guild` }, "success");
 	  }
 	this.guild.fetch();
   }
