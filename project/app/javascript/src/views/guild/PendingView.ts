@@ -14,7 +14,7 @@ export default class PendingView extends ModalView<Guild> {
   constructor(options?: Backbone.ViewOptions<Guild>) {
 	super(options);
 
-	this.profiles = this.model.get("pending_users");
+	this.profiles = this.model.get("pending_members");
 
 	this.listenTo(this.model, "change", this.render);
 	this.listenTo(this.model, "add", this.render);

@@ -48,6 +48,6 @@ guild2.img.attach(
 	"content_type": "image/jpg",
 )
 
-guild1.users << bill
+guild1.members << bill
 bill.add_role(:owner, guild1)
-guild1.users << ben
+guild1.members << ben

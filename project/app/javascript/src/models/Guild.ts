@@ -21,13 +21,13 @@ export default class Guild extends Backbone.AssociatedModel {
 		this.relations = [
 			{
 				type: Backbone.Many,
-				key: "users",
+				key: "members",
 				collectionType: Profiles,
 				relatedModel: Profile,
 			},
 			{
 				type: Backbone.Many,
-				key: "pending_users",
+				key: "pending_members",
 				collectionType: Profiles,
 				relatedModel: Profile,
 			}
@@ -45,7 +45,7 @@ export default class Guild extends Backbone.AssociatedModel {
 		ang: '',
 		points: 0,
 		atWar : false,
-		users: []
+		members: []
 	};
    }
 

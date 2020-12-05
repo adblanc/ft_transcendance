@@ -1,11 +1,11 @@
 json.partial! "guilds/guild", guild: @guild
-json.users do
-  json.array! @guild.users do |user|
-     json.id user.id
-	 json.name user.name
-	 json.avatar_url url_for(user.avatar) if user.avatar.attached?
-	 json.guild_role user.guild_role?
-	 json.admin user.admin?
-	 json.contribution user.contribution
+json.members do
+  json.array! @guild.members do |member|
+     json.id member.id
+	 json.name member.name
+	 json.avatar_url url_for(member.avatar) if member.avatar.attached?
+	 json.guild_role member.guild_role?
+	 json.admin member.admin?
+	 json.contribution member.contribution
   end
 end

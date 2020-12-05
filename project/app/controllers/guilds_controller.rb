@@ -13,7 +13,7 @@ class GuildsController < ApplicationController
 
   def create
 	@guild = Guild.create(guild_params)
-	@guild.users.push(current_user)
+	@guild.members.push(current_user)
 	current_user.add_role :owner, @guild
 	if @guild.save
 		@guild
@@ -38,8 +38,8 @@ class GuildsController < ApplicationController
 
   def destroy
 	@guild = Guild.find(params[:id])
-	@guild.users.each do |user|
-		user.update(contribution: 0)
+	@guild.members.each do |member|
+		member.update(contribution: 0)
 	end
 	@guild.destroy
   end
@@ -94,17 +94,17 @@ class GuildsController < ApplicationController
   def join
     guild = Guild.find_by(id: params[:id])
 
-    guild.pending_users.push(current_user)
+    guild.pending_members.push(current_user)
 	/owner.send_notification(current_user, "wants to join", @guild)/
 	notify_officers(current_user, "wants to join", @guild)
   end
 
   def accept
     guild = Guild.find_by(id: params[:id])
-    pending_user = User.find_by(id: params[:user_id])
+    pending_member = User.find_by(id: params[:user_id])
 
-    guild.pending_users.delete(pending_user)
-	guild.users.push(pending_user)
+    guild.pending_members.delete(pending_user)
+	guild.members.push(pending_user)
 	pending_user.send_notification(current_user, "accepted your request to join", @guild)
     
   end
@@ -113,7 +113,7 @@ class GuildsController < ApplicationController
     guild = Guild.find_by(id: params[:id])
     pending_user = User.find_by(id: params[:user_id])
 
-    guild.pending_users.delete(pending_user)
+    guild.pending_members.delete(pending_user)
 	pending_user.send_notification(current_user, "rejected your request to join", @guild)
   end
 

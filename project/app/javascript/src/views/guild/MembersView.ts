@@ -18,7 +18,7 @@ export default class MembersView extends Backbone.View {
 
 	this.guild = options.guild;
 	this.profile = options.profile;
-	this.profiles = this.guild.get("users");
+	this.profiles = this.guild.get("members");
 
 	this.listenTo(this.guild, "change", this.render);
 	this.listenTo(this.profile, "change", this.render);

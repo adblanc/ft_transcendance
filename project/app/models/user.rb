@@ -2,9 +2,13 @@ class User < ApplicationRecord
   rolify
   after_create :assign_default_role
 	has_one_attached :avatar
-	belongs_to :guild, optional: true
 	has_many :notifications, foreign_key: :recipient_id
-	belongs_to :pending_guild, class_name: "Guild", optional: true
+
+	has_one :guild_user,  -> (object) { where(status: :confirmed) }, dependent: :destroy
+	has_one :guild, through: :guild_user
+
+	has_one :guild_user_pending,  -> (object) { where(status: :pending) }, class_name: "GuildUser", dependent: :destroy
+	has_one :pending_guild, through: :guild_user_pending, source: :guild
 
 	has_and_belongs_to_many :rooms
 

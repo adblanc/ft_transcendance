@@ -18,7 +18,7 @@ export default class ManageMemberView extends ModalView<Profile> {
 	this.listenTo(this.model, "change", this.render);
 	this.listenTo(this.model, "add", this.render);
 	this.listenTo(this.guild, "change", this.render);
-	this.listenTo(this.guild.get("users"), "update", this.render);
+	this.listenTo(this.guild.get("members"), "update", this.render);
 
   }
 
