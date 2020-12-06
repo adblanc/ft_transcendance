@@ -29,6 +29,7 @@ export default class ItemView extends BaseView {
 	this.$el.html(html);
 
 	$('#time').html(this.momentString);
+	$('#content').attr('href', `/${this.notification.get('notifiable_type').toLowerCase()}/${this.notification.get('notifiable_id')}`);
 
     return this;
   }
