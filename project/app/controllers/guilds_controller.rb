@@ -99,7 +99,6 @@ class GuildsController < ApplicationController
 	(@guild.officers.to_ary << @guild.owner).each do |officers|
 		officers.send_notification(current_user, "wants to join", @guild)
 	end
-
   end
 
   def accept
@@ -109,7 +108,6 @@ class GuildsController < ApplicationController
     @guild.pending_members.delete(pending_member)
 	@guild.members.push(pending_member)
 	pending_member.send_notification(current_user, "accepted your request to join", @guild)
-    
   end
 
   def reject
@@ -120,6 +118,11 @@ class GuildsController < ApplicationController
 	pending_member.send_notification(current_user, "rejected your request to join", @guild)
   end
 
+  def withdraw
+    @guild = Guild.find_by(id: params[:id])
+
+	@guild.pending_members.delete(current_user)
+  end
 
   private
 

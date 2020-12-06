@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 		put :join
 		put :accept
 		put :reject
+		put :withdraw
 	  end
   end
   resources :notifications do

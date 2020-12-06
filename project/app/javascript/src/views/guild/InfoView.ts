@@ -34,6 +34,7 @@ export default class InfoView extends BaseView {
 	  "click #edit-btn": "onEditClicked",
 	  "click #quit-btn": "onQuitClicked",
 	  "click #join-btn": "onJoinClicked",
+	  "click #withdraw-btn": "onWithdrawClicked",
     };
   }
 
@@ -88,6 +89,23 @@ export default class InfoView extends BaseView {
 	this.profile.fetch();
   }
 
+  onWithdrawClicked() {
+    this.guild.withdraw(
+		(errors) => {
+			errors.forEach((error) => {
+			this.displayError(error);
+			});
+		},
+		() => this.guildWithdraw()
+		);
+  }
+
+  guildWithdraw() {
+	displayToast({ text: `You have withdrawn your request to join ${this.guild.get('name')}. ` }, "success");
+	this.guild.fetch();
+	this.profile.fetch();
+  }
+
 
 
   displayError(error: string) {
@@ -124,6 +142,18 @@ export default class InfoView extends BaseView {
 	if (this.guild.get('atWar')) {
 		$('#war-btn').addClass('btn-war-disabled');
 		$('#war-btn').html('This Guild is at war');
+	}
+
+	if (this.profile.get('pending_guild')) {
+		if (this.profile.get("pending_guild").get('id') === this.guild.get('id')) {
+			$('#join-btn').css("font-size", 15 + "px");
+			$('#join-btn').html('Withdraw your join request');
+			$('#join-btn').attr('id', 'withdraw-btn');
+		}
+		else {
+			$('#join-btn').addClass('btn-join-disabled');
+			$('#join-btn').html('You have asked to join another guild');
+		}
 	}
 	
 	this.renderNested(this.imgView, "#pageImg");

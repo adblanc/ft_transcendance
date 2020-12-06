@@ -199,6 +199,23 @@ export default class Guild extends Backbone.AssociatedModel {
 	  );
   }
 
+  withdraw(
+	error: (errors: string[]) => void,
+    success: () => void
+  ) {
+	this.save(
+		{},
+		{
+		  url: `http://localhost:3000/guilds/${this.id}/withdraw`,
+		  success: () => success(),
+		  error: (_, jqxhr) => {
+			error(this.mapServerErrors(jqxhr?.responseJSON));
+		  },
+		}
+	  );
+  }
+
+
 
   mapServerErrors(errors: Record<string, string[]>) {
     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
