@@ -51,9 +51,14 @@ export default class MembersView extends Backbone.View {
 				this.$("#pending").show();
 		}
 	}
+
+	if (this.guild.get("pending_members")) {
+		if (this.guild.get("pending_members").length > 0) {
+			this.$("#pending-btn").addClass('animate-bounce');
+		}
+	}
 	
 	const $element = this.$("#listing");
-	
     this.profiles.forEach(function (item) {
       var memberView = new MemberView({
 		model: item,
