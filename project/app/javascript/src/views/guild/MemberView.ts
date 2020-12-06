@@ -23,6 +23,7 @@ export default class MemberView extends BaseView {
 	this.listenTo(this.model, "add", this.render);
 	this.listenTo(this.guild, "change", this.render);
 	this.listenTo(this.guild.get("members"), "update", this.render);
+	this.listenTo(this.loggedIn, "change", this.render);
 	//console.log(this.model);
   }
 
@@ -36,9 +37,10 @@ export default class MemberView extends BaseView {
     const manageMemberView = new ManageMemberView({
 	  model: this.model,
 	  guild: this.guild,
+	  loggedIn: this.loggedIn,
     });
 
-    manageMemberView.render();
+	manageMemberView.render();
   }
 
   render() {

@@ -6,18 +6,21 @@ import { displayToast } from "src/utils/toast";
 import MainRouter from "src/routers/MainRouter";
 import Guild from "src/models/Guild";
 
-type Options = Backbone.ViewOptions<Profile> & { guild: Guild };
+type Options = Backbone.ViewOptions<Profile> & { guild: Guild, loggedIn: Profile };
 
 export default class ManageMemberView extends ModalView<Profile> {
 	guild: Guild;
+	loggedIn: Profile;
 
   constructor(options?: Options) {
 	super(options);
 
 	this.guild = options.guild;
+	this.loggedIn = options.loggedIn;
 	this.listenTo(this.model, "change", this.render);
 	this.listenTo(this.model, "add", this.render);
 	this.listenTo(this.guild, "change", this.render);
+	this.listenTo(this.loggedIn, "change", this.render);
 	this.listenTo(this.guild.get("members"), "update", this.render);
 
   }
@@ -97,6 +100,7 @@ export default class ManageMemberView extends ModalView<Profile> {
 		displayToast({ text: `You have successfully transferred ownership to ${this.model.get('name')}. You are now an officer.` }, "success");
 	  }
 	this.guild.fetch();
+	this.loggedIn.fetch();
 	this.closeModal();
   }
 
