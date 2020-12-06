@@ -28,7 +28,6 @@ export default class NotificationsView extends BaseView {
 	const $element = this.$("#notifications-container");
 
 	if (this.profile.notifications.length === 0) {
-		console.log("test");
 		this.$('#empty').show();
 		this.$('#see-btn').hide();
 	}
