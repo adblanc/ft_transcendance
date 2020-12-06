@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get '/auth/guest', to: 'authentication#loginGuest', format: false
 
   resource :user, only: [:show, :update]
+
   resources :guilds do
 	member do
 		put :quit
