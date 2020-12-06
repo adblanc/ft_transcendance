@@ -5,3 +5,6 @@ json.admin user.admin?
 if user.guild_role?
   json.img_url url_for(user.guild.img) if user.guild.img.attached?
 end
+if user.pending_guild?
+  json.img_url url_for(user.pending_guild.img) if user.pending_guild.img.attached?
+end

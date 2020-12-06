@@ -47,6 +47,14 @@ class User < ApplicationRecord
 		self.has_role?(:admin)
 	end
 
+	def pending_guild?
+		if self.pending_guild
+			return true
+		else
+			return nil
+		end
+	end
+
 	def send_notification(actor, action, notifiable)
 		@notification = Notification.create(recipient: self, actor: actor, action: action, notifiable: notifiable)
 		ActionCable.server.broadcast("user_#{self.id}", @notification);

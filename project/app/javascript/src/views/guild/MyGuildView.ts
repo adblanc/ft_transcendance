@@ -5,6 +5,7 @@ import CreateGuildView from "./CreateGuildView";
 import Guild from "src/models/Guild";
 import Guilds from "src/collections/Guilds";
 import Profile from "src/models/Profile";
+import { displayToast } from "src/utils/toast";
 
 type Options = Backbone.ViewOptions & { profile: Profile, collection: Guilds };
 
@@ -25,7 +26,8 @@ export default class MyGuildView extends BaseView {
 
   events() {
     return {
-      "click #create-btn": "onCreateClicked",
+	  "click #create-btn": "onCreateClicked",
+	  "click #withdraw-btn": "onWithdrawClicked",
     };
   }
 
@@ -39,9 +41,35 @@ export default class MyGuildView extends BaseView {
     createGuildView.render();
   }
 
+  onWithdrawClicked() {
+    this.profile.get('pending_guild').withdraw(
+		(errors) => {
+			errors.forEach((error) => {
+			this.displayError(error);
+			});
+		},
+		() => this.guildWithdraw()
+		);
+  }
+
+  guildWithdraw() {
+	displayToast({ text: `You have withdrawn your request to join ${ this.profile.get('pending_guild').get('name')}. ` }, "success");
+	this.profile.fetch();
+  }
+
+  displayError(error: string) {
+    displayToast({ text: error }, "error");
+  }
+
+
   render() {
 	if (this.profile.get('guild')) {
 		const template = $("#withGuildTemplate").html();
+		const html = Mustache.render(template, this.profile.toJSON());
+		this.$el.html(html);
+	}
+	else if (this.profile.get('pending_guild')) {
+		const template = $("#withPendingGuildTemplate").html();
 		const html = Mustache.render(template, this.profile.toJSON());
 		this.$el.html(html);
 	}

@@ -106,8 +106,6 @@ export default class InfoView extends BaseView {
 	this.profile.fetch();
   }
 
-
-
   displayError(error: string) {
     displayToast({ text: error }, "error");
   }
