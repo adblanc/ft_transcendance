@@ -6,6 +6,7 @@ json.notifications do
 	 json.action notification.action
 	 json.notifiable notification.notifiable
 	 json.notifiable_type notification.notifiable_type
+	 json.notifiable_id notification.notifiable_id
 	 json.created_at notification.created_at
   end
 end

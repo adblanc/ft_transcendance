@@ -62,7 +62,7 @@ class PagesHandler {
 		this.profile = new Profile();
 		this.profile.fetch({
 		success: () => {
-			this.profile.channel = this.profile.createConsumer();
+			this.profile.channel = this.profile.createNotificationsConsumer();
 		},
 		});
 
