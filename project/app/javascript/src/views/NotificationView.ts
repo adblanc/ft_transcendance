@@ -14,6 +14,8 @@ export default class ItemView extends BaseView {
 
 	this.notification = options.notification;
 
+	console.log(this.notification);
+
 	this.listenTo(this.notification, "change", this.render);
 
 	const moment = require("moment");

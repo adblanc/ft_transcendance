@@ -36,7 +36,7 @@ export default class NotificationsView extends BaseView {
       var notificationView = new NotificationView({
         notification: item,
       });
-	  $element.prepend(notificationView.render().el);
+	  $element.append(notificationView.render().el);
 	});
 
     return this;

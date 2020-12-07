@@ -36,7 +36,7 @@ export default class NotifPageView extends BaseView {
 			}
 		
 			this.notifications.forEach(function (item) {
-				console.log(item);
+				//console.log(item);
 				var notificationView = new NotificationView({
 				  notification: item,
 				});
