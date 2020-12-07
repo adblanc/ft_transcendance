@@ -38,7 +38,7 @@ export default class NotifPageView extends BaseView {
 				var notificationView = new NotifItemPageView({
 				  notification: item,
 				});
-				$element.append(notificationView.render().el);
+				$element.prepend(notificationView.render().el);
 			  });
 		},
 	});
