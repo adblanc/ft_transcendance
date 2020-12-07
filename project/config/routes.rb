@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get '/auth/guest', to: 'authentication#loginGuest', format: false
 
   resource :user, only: [:show, :update]
+  get "user/notifications", to: "users#show"
 
   resources :guilds do
 	member do

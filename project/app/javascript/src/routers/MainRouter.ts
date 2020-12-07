@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import axios from "axios";
 import { pagesHandler } from "../lib/ViewsHandler";
 import IndexView from "../views/IndexView";
+import NotifPageView from "../views/NotifPageView";
 import GuildView from "../views/guild/GuildView";
 import GuildIndexView from "../views/guild/GuildIndexView";
 import NotFoundView from "../views/NotFoundView";
@@ -22,7 +23,8 @@ export default class MainRouter extends Backbone.Router {
         game: "game",
         "game/:id": "gameShow",
         guildindex: "guildIndex",
-        "guild/:id": "guildShow",
+		"guild/:id": "guildShow",
+		"me/notifications": "notifShow",
         "*path": "notFound",
       },
     });
@@ -77,8 +79,14 @@ export default class MainRouter extends Backbone.Router {
     const guildView = new GuildView({ guild: new Guild({ id }) });
     pagesHandler.showPage(guildView);
   }
+
   gameShow(id: number) {
     const gameView = new GameView({ game: new Game({ id }) });
     pagesHandler.showPage(gameView);
+  }
+
+  notifShow() {
+	  const notifPageView = new NotifPageView();
+	  pagesHandler.showPage(notifPageView);
   }
 }
