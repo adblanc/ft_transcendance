@@ -32,7 +32,7 @@ export default class NotificationsView extends BaseView {
 		this.$('#see-btn').hide();
 	}
 
-    this.profile.notifications.slice(this.profile.notifications.length - 5, this.profile.notifications.length).forEach(function (item) {
+    this.profile.notifications.slice(0, 5).forEach(function (item) {
       var notificationView = new NotificationView({
         notification: item,
       });

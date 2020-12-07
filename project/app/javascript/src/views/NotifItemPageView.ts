@@ -14,8 +14,6 @@ export default class NotifItemPageView extends BaseView {
 
 	this.notification = options.notification;
 
-	//console.log(this.notification);
-
 	const moment = require("moment");
 
 	let dateString = this.notification.get("created_at");

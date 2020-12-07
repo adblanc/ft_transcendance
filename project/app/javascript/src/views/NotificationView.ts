@@ -5,7 +5,7 @@ import Notification from "src/models/Notification";
 
 type Options = Backbone.ViewOptions & { notification: Notification };
 
-export default class NotificationView extends BaseView {
+export default class ItemView extends BaseView {
   notification: Notification;
   momentString: string;
 
@@ -14,9 +14,12 @@ export default class NotificationView extends BaseView {
 
 	this.notification = options.notification;
 
-	//console.log(this.notification);
-
 	this.listenTo(this.notification, "change", this.render);
+
+	const moment = require("moment");
+
+	let dateString = this.notification.get("created_at");
+	this.momentString = moment(dateString).format("MMM Do YY, h:mm a");
 
   }
 
@@ -25,12 +28,7 @@ export default class NotificationView extends BaseView {
     const html = Mustache.render(template, this.notification.toJSON());
 	this.$el.html(html);
 
-	/*const moment = require("moment");
-
-	let dateString = this.notification.get("created_at");
-	this.momentString = moment(dateString).format("MMM Do YY, h:mm a");
-
-	$('#time').html(this.momentString);*/
+	$('#time').html(this.momentString);
 	$('#content').attr('href', `/${this.notification.get('notifiable_type').toLowerCase()}/${this.notification.get('notifiable_id')}`);
 
     return this;
