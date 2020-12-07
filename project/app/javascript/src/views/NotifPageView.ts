@@ -4,18 +4,19 @@ import BaseView from "../lib/BaseView";
 import Profile from "src/models/Profile";
 import Notification from "src/models/Notification";
 import NotificationView from "./NotificationView";
+import Notifications from "src/collections/Notifications";
 
 
 export default class NotifPageView extends BaseView {
 	profile: Profile;
+	notifications: Notifications;
 
   constructor() {
 	super();
 	
 	this.profile = new Profile();
-	this.profile.fetch();
 
-	this.listenTo(this.profile.notifications, "add", this.render);
+	this.listenTo(this.notifications, "add", this.render);
   }
   
 
@@ -26,15 +27,22 @@ export default class NotifPageView extends BaseView {
 
 	const $element = this.$("#listing");
 
-	if (this.profile.notifications.length === 0) {
-		this.$('#empty').show();
-	}
-
-    this.profile.notifications.forEach(function (item) {
-      var notificationView = new NotificationView({
-        notification: item,
-      });
-	  $element.prepend(notificationView.render().el);
+	this.profile.fetch({
+		success: () => {
+			this.notifications = this.profile.get('notifications');
+			console.log(this.profile.get('notifications'));
+			if (this.notifications.length === 0) {
+				this.$('#empty').show();
+			}
+		
+			this.notifications.forEach(function (item) {
+				console.log(item);
+				var notificationView = new NotificationView({
+				  notification: item,
+				});
+				$element.prepend(notificationView.render().el);
+			  });
+		},
 	});
 
     return this;

@@ -34,6 +34,12 @@ export default class Profile extends Backbone.AssociatedModel {
       			key: "pending_guild",
       			relatedModel: Guild,
 			},
+			{
+				type: Backbone.Many,
+				key: "notifications",
+				collectionType: Notifications,
+				relatedModel: Notification,
+			}
 		];
 	}
 

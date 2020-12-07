@@ -1,7 +1,7 @@
 import Backbone from "backbone";
 import _ from "underscore";
 
-export default class Notification extends Backbone.Model {
+export default class Notification extends Backbone.AssociatedModel {
 	url = () => "http://localhost:3000/notifications";
 
 	markAsRead() {
