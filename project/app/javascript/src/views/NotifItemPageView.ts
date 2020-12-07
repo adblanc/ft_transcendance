@@ -5,7 +5,7 @@ import Notification from "src/models/Notification";
 
 type Options = Backbone.ViewOptions & { notification: Notification };
 
-export default class NotificationView extends BaseView {
+export default class NotifItemPageView extends BaseView {
   notification: Notification;
   momentString: string;
 

@@ -3,7 +3,7 @@ import Mustache from "mustache";
 import BaseView from "../lib/BaseView";
 import Profile from "src/models/Profile";
 import Notification from "src/models/Notification";
-import NotificationView from "./NotificationView";
+import NotifItemPageView from "./NotifItemPageView";
 import Notifications from "src/collections/Notifications";
 
 
@@ -30,17 +30,15 @@ export default class NotifPageView extends BaseView {
 	this.profile.fetch({
 		success: () => {
 			this.notifications = this.profile.get('notifications');
-			console.log(this.profile.get('notifications'));
 			if (this.notifications.length === 0) {
 				this.$('#empty').show();
 			}
 		
 			this.notifications.forEach(function (item) {
-				//console.log(item);
-				var notificationView = new NotificationView({
+				var notificationView = new NotifItemPageView({
 				  notification: item,
 				});
-				$element.prepend(notificationView.render().el);
+				$element.append(notificationView.render().el);
 			  });
 		},
 	});
