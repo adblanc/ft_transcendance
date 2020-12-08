@@ -92,15 +92,13 @@ export default class InfoView extends BaseView {
     this.profile.fetch();
   }
 
-  onWithdrawClicked() {
-    this.guild.withdraw(
-      (errors) => {
-        errors.forEach((error) => {
-          displayError(error);
-        });
-      },
-      () => this.guildWithdraw()
-    );
+  async onWithdrawClicked() {
+    try {
+      await this.guild.withdraw();
+      this.guildWithdraw();
+    } catch (err) {
+      displayErrors(err);
+    }
   }
 
   guildWithdraw() {
