@@ -82,16 +82,11 @@ export default class Guild extends BaseModel {
     });
   }
 
-  quit(error: (errors: string[]) => void, success: () => void) {
-    this.save(
+  quit() {
+    return this.asyncSave(
       {},
       {
-        url: `http://localhost:3000/guilds/${this.id}/quit`,
-
-        success: () => success(),
-        error: (_, jqxhr) => {
-          error(mapServerErrors(jqxhr?.responseJSON));
-        },
+        url: `http://localhost:3000/guilds/${this.get("id")}/quit`,
       }
     );
   }

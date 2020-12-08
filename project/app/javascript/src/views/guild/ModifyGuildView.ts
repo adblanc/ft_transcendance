@@ -57,12 +57,6 @@ export default class ModifyGuildView extends ModalView<Guild> {
     }
   }
 
-  guildSaved() {
-    displayToast({ text: "Guild successfully updated." }, "success");
-    this.closeModal();
-    this.model.fetch();
-  }
-
   render() {
     super.render(); // we render the modal
     const template = $("#guildEditFormTemplate").html();

@@ -5,9 +5,7 @@ import PageImgView from "./imgsViews/PageImgView";
 import Profile from "src/models/Profile";
 import Guild from "src/models/Guild";
 import ModifyGuildView from "./ModifyGuildView";
-import { displayToast } from "src/utils/toast";
-import MainRouter from "src/routers/MainRouter";
-import { displayError } from "src/utils";
+import { displayError, displayErrors, displaySuccess } from "src/utils";
 
 type Options = Backbone.ViewOptions & { guild: Guild; profile: Profile };
 
@@ -46,44 +44,31 @@ export default class InfoView extends BaseView {
     modifyGuildView.render();
   }
 
-  onQuitClicked() {
-    this.guild.quit(
-      (errors) => {
-        errors.forEach((error) => {
-          displayError(error);
-        });
-      },
-      () => this.guildQuit()
-    );
+  async onQuitClicked() {
+    try {
+      await this.guild.quit();
+      this.guildQuit();
+    } catch (err) {
+      displayErrors(err);
+    }
   }
 
   guildQuit() {
-    displayToast(
-      { text: `You have successfully quit ${this.guild.get("name")}. ` },
-      "success"
-    );
+    displaySuccess(`You successfully left ${this.guild.get("name")}.`);
     this.guild.fetch();
     this.profile.fetch();
     if (this.guild.get("members").length == 0) {
-      displayToast(
-        {
-          text: `You were the only member of ${this.guild.get(
-            "name"
-          )}, so the guild was destroyed.`,
-        },
-        "success"
+      displaySuccess(
+        `You were the only member of ${this.guild.get(
+          "name"
+        )}, so the guild was destroyed.`
       );
-      const router = new MainRouter();
-      router.navigate("notFound", { trigger: true });
-      return;
+      return Backbone.history.navigate("/", { trigger: true });
     } else if (this.profile.get("guild_role") == "Owner") {
-      displayToast(
-        {
-          text: `Your owner privileges were transferred to ${this.guild.get(
-            "name"
-          )}'s oldest member.`,
-        },
-        "success"
+      displaySuccess(
+        `Your owner privileges were transferred to ${this.guild.get(
+          "name"
+        )}'s oldest member.`
       );
     }
   }
@@ -100,9 +85,8 @@ export default class InfoView extends BaseView {
   }
 
   guildJoin() {
-    displayToast(
-      { text: `You have sent a join request to ${this.guild.get("name")}. ` },
-      "success"
+    displaySuccess(
+      `You have sent a join request to ${this.guild.get("name")}. `
     );
     this.guild.fetch();
     this.profile.fetch();
@@ -120,13 +104,8 @@ export default class InfoView extends BaseView {
   }
 
   guildWithdraw() {
-    displayToast(
-      {
-        text: `You have withdrawn your request to join ${this.guild.get(
-          "name"
-        )}. `,
-      },
-      "success"
+    displaySuccess(
+      `You have withdrawn your request to join ${this.guild.get("name")}. `
     );
     this.guild.fetch();
     this.profile.fetch();
