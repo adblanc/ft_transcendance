@@ -1,0 +1,42 @@
+import Backbone from "backbone";
+import { mapServerErrors } from "src/utils";
+
+export default class BaseModel<
+  T = any,
+  S = Backbone.ModelSetOptions,
+  E = {}
+> extends Backbone.Model<T, S, E> {
+  asyncFetch(options?: Backbone.ModelFetchOptions): Promise<this> {
+    return new Promise((res, rej) => {
+      super.fetch({
+        ...options,
+        success: () => res(this),
+        error: (_, jqxhr) => {
+          rej(mapServerErrors(jqxhr.responseJSON));
+        },
+      });
+    });
+  }
+
+  asyncDestroy(options?: Backbone.ModelDestroyOptions): Promise<this> {
+    return new Promise((res, rej) => {
+      super.destroy({
+        ...options,
+        success: () => res(this),
+        error: (_, jqxhr) => {
+          rej(mapServerErrors(jqxhr.responseJSON));
+        },
+      });
+    });
+  }
+
+  asyncSave(attrs?: any, options?: Backbone.ModelSaveOptions): Promise<this> {
+    return new Promise((res, rej) => {
+      super.save(attrs, {
+        ...options,
+        success: () => res(this),
+        error: (_, jqxhr) => rej(mapServerErrors(jqxhr.responseJSON)),
+      });
+    });
+  }
+}

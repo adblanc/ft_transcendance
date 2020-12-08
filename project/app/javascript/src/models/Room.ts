@@ -1,7 +1,6 @@
-import Backbone from "backbone";
 import consumer from "channels/consumer";
 import Messages from "src/collections/Messages";
-import { mapServerErrors } from "src/utils";
+import BaseModel from "src/lib/BaseModel";
 import Message, { IMessage } from "./Message";
 
 export interface IRoom {
@@ -11,7 +10,7 @@ export interface IRoom {
   selected?: boolean;
 }
 
-export default class Room extends Backbone.Model<IRoom> {
+export default class Room extends BaseModel<IRoom> {
   channel: ActionCable.Channel;
   messages: Messages;
   currentUserId?: number;
@@ -69,44 +68,6 @@ export default class Room extends Backbone.Model<IRoom> {
     await this.asyncDestroy({
       url: `http://localhost:3000/quit-room?name=${this.get("name")}`,
     });
-  }
-
-  asyncFetch(options?: Backbone.ModelFetchOptions): Promise<Room> {
-    return new Promise((res, rej) => {
-      super.fetch({
-        ...options,
-        success: () => res(this),
-        error: (_, jqxhr) => {
-          rej(mapServerErrors(jqxhr.responseJSON));
-        },
-      });
-    });
-  }
-
-  asyncDestroy(options?: Backbone.ModelDestroyOptions): Promise<Room> {
-    return new Promise((res, rej) => {
-      super.destroy({
-        ...options,
-        success: () => res(this),
-        error: (_, jqxhr) => {
-          rej(mapServerErrors(jqxhr.responseJSON));
-        },
-      });
-    });
-  }
-
-  asyncSave(attrs?: any, options?: Backbone.ModelSaveOptions): Promise<Room> {
-    return new Promise((res, rej) => {
-      super.save(attrs, {
-        ...options,
-        success: () => res(this),
-        error: (_, jqxhr) => rej(mapServerErrors(jqxhr.responseJSON)),
-      });
-    });
-  }
-
-  mapServerErrors(errors: Record<string, string[]>) {
-    return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
   }
 
   select() {
