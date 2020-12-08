@@ -3,7 +3,7 @@ import Mustache from "mustache";
 import ModalView from "./ModalView";
 import Profile from "../models/Profile";
 import { displayToast } from "../utils/toast";
-import { displayError } from "src/utils";
+import { displayError, displayErrors } from "src/utils";
 
 export default class ModifyProfileView extends ModalView<Profile> {
   constructor(options?: Backbone.ViewOptions<Profile>) {
@@ -17,7 +17,7 @@ export default class ModifyProfileView extends ModalView<Profile> {
     return { ...super.events(), "click #input-profile-submit": "onSubmit" };
   }
 
-  onSubmit(e: JQuery.Event) {
+  async onSubmit(e: JQuery.Event) {
     e.preventDefault();
     const attrs = {
       name: this.$("#input-profile-name").val() as string,
@@ -28,21 +28,15 @@ export default class ModifyProfileView extends ModalView<Profile> {
 
     if (!attrs.avatar) delete attrs.avatar;
 
-    this.model.modifyProfil(
-      attrs,
-      (errors) => {
-        errors.forEach((error) => {
-          displayError(error);
-        });
-      },
-      () => this.profileSaved()
-    );
-  }
+    try {
+      await this.model.modifyProfil(attrs);
 
-  profileSaved() {
-    displayToast({ text: "Profile successfully changed." }, "success");
-    this.closeModal();
-    this.model.fetch();
+      displayToast({ text: "Profile successfully changed." }, "success");
+      this.closeModal();
+      this.model.fetch();
+    } catch (err) {
+      displayErrors(err);
+    }
   }
 
   render() {

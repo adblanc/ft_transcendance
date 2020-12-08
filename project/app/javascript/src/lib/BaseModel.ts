@@ -31,13 +31,19 @@ export default class BaseModel<
     });
   }
 
-  asyncSave(attrs?: any, options?: Backbone.ModelSaveOptions): Promise<this> {
+  asyncSave(
+    attrs?: any,
+    options?: Backbone.ModelSaveOptions
+  ): Promise<this | false> {
     return new Promise((res, rej) => {
-      this.save(attrs, {
+      const valid = this.save(attrs, {
         ...options,
         success: () => res(this),
         error: (_, jqxhr) => rej(mapServerErrors(jqxhr.responseJSON)),
       });
+      if (!valid) {
+        rej([this.validationError]);
+      }
     });
   }
 }

@@ -100,27 +100,7 @@ export default class Profile extends BaseModel {
     return syncWithFormData(method, model, options);
   }
 
-  modifyProfil(
-    attrs: ModifiableProfileArgs,
-    error: (errors: string[]) => void,
-    success: () => void
-  ) {
-    this.set(attrs);
-
-    const valid = this.save(
-      {},
-      {
-        url: this.urlRoot(),
-
-        success: () => success(),
-        error: (_, jqxhr) => {
-          error(mapServerErrors(jqxhr?.responseJSON));
-        },
-      }
-    );
-
-    if (!valid) {
-      error([this.validationError]);
-    }
+  async modifyProfil(attrs: ModifiableProfileArgs) {
+    await this.asyncSave(attrs, { url: this.urlRoot() });
   }
 }
