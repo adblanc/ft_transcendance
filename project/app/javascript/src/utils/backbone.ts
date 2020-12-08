@@ -1,11 +1,11 @@
 import Backbone from "backbone";
 import _ from "underscore";
 
-export function syncWithFormData(
+export const syncWithFormData = (
   method: string,
   model: Backbone.Model,
   options: JQueryAjaxSettings
-): any {
+): any => {
   if (method == "create" || method == "update") {
     var formData = new FormData();
 
@@ -19,4 +19,8 @@ export function syncWithFormData(
     });
   }
   return Backbone.sync.call(this, method, model, options);
-}
+};
+
+export const mapServerErrors = (errors: Record<string, string[]>) => {
+  return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
+};

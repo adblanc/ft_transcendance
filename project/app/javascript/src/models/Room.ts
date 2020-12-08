@@ -1,6 +1,7 @@
 import Backbone from "backbone";
 import consumer from "channels/consumer";
 import Messages from "src/collections/Messages";
+import { mapServerErrors } from "src/utils";
 import Message, { IMessage } from "./Message";
 
 export interface IRoom {
@@ -76,7 +77,7 @@ export default class Room extends Backbone.Model<IRoom> {
         ...options,
         success: () => res(this),
         error: (_, jqxhr) => {
-          rej(this.mapServerErrors(jqxhr.responseJSON));
+          rej(mapServerErrors(jqxhr.responseJSON));
         },
       });
     });
@@ -88,7 +89,7 @@ export default class Room extends Backbone.Model<IRoom> {
         ...options,
         success: () => res(this),
         error: (_, jqxhr) => {
-          rej(this.mapServerErrors(jqxhr.responseJSON));
+          rej(mapServerErrors(jqxhr.responseJSON));
         },
       });
     });
@@ -99,7 +100,7 @@ export default class Room extends Backbone.Model<IRoom> {
       super.save(attrs, {
         ...options,
         success: () => res(this),
-        error: (_, jqxhr) => rej(this.mapServerErrors(jqxhr.responseJSON)),
+        error: (_, jqxhr) => rej(mapServerErrors(jqxhr.responseJSON)),
       });
     });
   }

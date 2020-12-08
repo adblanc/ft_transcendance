@@ -5,7 +5,7 @@ import Guild from "src/models/Guild";
 import Notifications from "src/collections/Notifications";
 import Notification from "src/models/Notification";
 import consumer from "channels/consumer";
-import { syncWithFormData } from "src/utils";
+import { mapServerErrors, syncWithFormData } from "src/utils";
 
 interface IProfile {
   login: string;
@@ -113,7 +113,7 @@ export default class Profile extends Backbone.AssociatedModel {
 
         success: () => success(),
         error: (_, jqxhr) => {
-          error(this.mapServerErrors(jqxhr?.responseJSON));
+          error(mapServerErrors(jqxhr?.responseJSON));
         },
       }
     );
@@ -121,9 +121,5 @@ export default class Profile extends Backbone.AssociatedModel {
     if (!valid) {
       error([this.validationError]);
     }
-  }
-
-  mapServerErrors(errors: Record<string, string[]>) {
-    return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
   }
 }

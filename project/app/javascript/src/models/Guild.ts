@@ -2,7 +2,7 @@ import Backbone from "backbone";
 import _ from "underscore";
 import Profile from "src/models/Profile";
 import Profiles from "src/collections/Profiles";
-import { syncWithFormData } from "src/utils";
+import { mapServerErrors, syncWithFormData } from "src/utils";
 
 interface IGuild {
   id: string;
@@ -69,7 +69,7 @@ export default class Guild extends Backbone.AssociatedModel {
 
         success: () => success(),
         error: (_, jqxhr) => {
-          error(this.mapServerErrors(jqxhr?.responseJSON));
+          error(mapServerErrors(jqxhr?.responseJSON));
         },
       }
     );
@@ -90,7 +90,7 @@ export default class Guild extends Backbone.AssociatedModel {
 
         success: () => success(),
         error: (_, jqxhr) => {
-          error(this.mapServerErrors(jqxhr?.responseJSON));
+          error(mapServerErrors(jqxhr?.responseJSON));
         },
       }
     );
@@ -104,7 +104,7 @@ export default class Guild extends Backbone.AssociatedModel {
 
         success: () => success(),
         error: (_, jqxhr) => {
-          error(this.mapServerErrors(jqxhr?.responseJSON));
+          error(mapServerErrors(jqxhr?.responseJSON));
         },
       }
     );
@@ -124,7 +124,7 @@ export default class Guild extends Backbone.AssociatedModel {
         url: `http://localhost:3000/guilds/${this.id}/${method}`,
         success: () => success(),
         error: (_, jqxhr) => {
-          error(this.mapServerErrors(jqxhr?.responseJSON));
+          error(mapServerErrors(jqxhr?.responseJSON));
         },
       }
     );
@@ -137,7 +137,7 @@ export default class Guild extends Backbone.AssociatedModel {
         url: `http://localhost:3000/guilds/${this.id}/join`,
         success: () => success(),
         error: (_, jqxhr) => {
-          error(this.mapServerErrors(jqxhr?.responseJSON));
+          error(mapServerErrors(jqxhr?.responseJSON));
         },
       }
     );
@@ -156,7 +156,7 @@ export default class Guild extends Backbone.AssociatedModel {
         url: `http://localhost:3000/guilds/${this.id}/accept`,
         success: () => success(),
         error: (_, jqxhr) => {
-          error(this.mapServerErrors(jqxhr?.responseJSON));
+          error(mapServerErrors(jqxhr?.responseJSON));
         },
       }
     );
@@ -175,7 +175,7 @@ export default class Guild extends Backbone.AssociatedModel {
         url: `http://localhost:3000/guilds/${this.id}/reject`,
         success: () => success(),
         error: (_, jqxhr) => {
-          error(this.mapServerErrors(jqxhr?.responseJSON));
+          error(mapServerErrors(jqxhr?.responseJSON));
         },
       }
     );
@@ -188,13 +188,9 @@ export default class Guild extends Backbone.AssociatedModel {
         url: `http://localhost:3000/guilds/${this.id}/withdraw`,
         success: () => success(),
         error: (_, jqxhr) => {
-          error(this.mapServerErrors(jqxhr?.responseJSON));
+          error(mapServerErrors(jqxhr?.responseJSON));
         },
       }
     );
-  }
-
-  mapServerErrors(errors: Record<string, string[]>) {
-    return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
   }
 }
