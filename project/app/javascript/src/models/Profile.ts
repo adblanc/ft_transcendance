@@ -69,11 +69,7 @@ export default class Profile extends Backbone.AssociatedModel {
         },
         received: (notification: Notification) => {
           //console.log("we received", notification);
-          this.notifications.add(
-            new Notification({
-              ...notification,
-            })
-          );
+          this.notifications.add(notification);
         },
       }
     );
