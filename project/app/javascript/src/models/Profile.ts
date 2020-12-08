@@ -5,6 +5,7 @@ import Guild from "src/models/Guild";
 import Notifications from "src/collections/Notifications";
 import Notification from "src/models/Notification";
 import consumer from "channels/consumer";
+import { syncWithFormData } from "src/utils";
 
 interface IProfile {
   login: string;
@@ -19,34 +20,34 @@ interface IProfile {
 type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar">>;
 
 export default class Profile extends Backbone.AssociatedModel {
-	channel: ActionCable.Channel;
-  	notifications: Notifications;
-	
-	preinitialize() {
-		this.relations = [
-			{
-				type: Backbone.One,
-      			key: "guild",
-      			relatedModel: Guild,
-			},
-			{
-				type: Backbone.One,
-      			key: "pending_guild",
-      			relatedModel: Guild,
-			},
-			{
-				type: Backbone.Many,
-				key: "notifications",
-				collectionType: Notifications,
-				relatedModel: Notification,
-			}
-		];
-	}
+  channel: ActionCable.Channel;
+  notifications: Notifications;
 
-	initialize() {
-		this.notifications = new Notifications();
-		//this.channel = this.createConsumer();
-	  }
+  preinitialize() {
+    this.relations = [
+      {
+        type: Backbone.One,
+        key: "guild",
+        relatedModel: Guild,
+      },
+      {
+        type: Backbone.One,
+        key: "pending_guild",
+        relatedModel: Guild,
+      },
+      {
+        type: Backbone.Many,
+        key: "notifications",
+        collectionType: Notifications,
+        relatedModel: Notification,
+      },
+    ];
+  }
+
+  initialize() {
+    this.notifications = new Notifications();
+    //this.channel = this.createConsumer();
+  }
 
   defaults() {
     return {
@@ -60,9 +61,9 @@ export default class Profile extends Backbone.AssociatedModel {
   urlRoot = () => "http://localhost:3000/user";
 
   createNotificationsConsumer() {
-	const user_id = this.get("id");
+    const user_id = this.get("id");
     return consumer.subscriptions.create(
-      { channel: "NotificationsChannel", user_id: user_id},
+      { channel: "NotificationsChannel", user_id: user_id },
       {
         connected: () => {
           //console.log("connected to", user_id);
@@ -94,24 +95,8 @@ export default class Profile extends Backbone.AssociatedModel {
     return null;
   }
 
-  sync(method: string, model: Profile, options: JQueryAjaxSettings): any {
-    // Post data as FormData object on create to allow file upload
-    if (method == "update") {
-      var formData = new FormData();
-
-      // Loop over model attributes and append to formData
-      _.each(model.attributes, function (value, key) {
-        formData.append(key, value);
-      });
-
-      // Set processData and contentType to false so data is sent as FormData
-      _.defaults(options || (options = {}), {
-        data: formData,
-        processData: false,
-        contentType: false,
-      });
-    }
-    return Backbone.sync.call(this, method, model, options);
+  sync(method: string, model: Profile, options: JQueryAjaxSettings) {
+    return syncWithFormData(method, model, options);
   }
 
   modifyProfil(
