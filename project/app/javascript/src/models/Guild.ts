@@ -11,14 +11,16 @@ interface IGuild {
   ang: string;
   points: number;
   atWar: boolean;
-  img?: any;
+  img_url?: string;
+  members: Profiles;
+  pending_members: Profiles;
   created_at: string;
   updated_at: string;
 }
 
-type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img">>;
+type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img_url">>;
 
-export default class Guild extends BaseModel {
+export default class Guild extends BaseModel<IGuild> {
   preinitialize() {
     this.relations = [
       {
