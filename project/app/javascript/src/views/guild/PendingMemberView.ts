@@ -3,8 +3,7 @@ import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import Profile from "src/models/Profile";
 import Guild from "src/models/Guild";
-import { displayToast } from "src/utils/toast";
-import { displayError } from "src/utils";
+import { displayErrors, displaySuccess } from "src/utils";
 
 type Options = Backbone.ViewOptions & { model: Profile; guild: Guild };
 
@@ -31,44 +30,30 @@ export default class PendingMemberView extends BaseView {
     };
   }
 
-  onAcceptClicked() {
-    this.guild.accept(
-      this.model.get("id"),
-      (errors) => {
-        errors.forEach((error) => {
-          displayError(error);
-        });
-      },
-      () => this.saved("accept")
-    );
+  async onAcceptClicked() {
+    try {
+      await this.guild.accept(this.model.get("id"));
+      this.saved("accepted");
+    } catch (err) {
+      displayErrors(err);
+    }
   }
 
-  onRefuseClicked() {
-    this.guild.reject(
-      this.model.get("id"),
-      (errors) => {
-        errors.forEach((error) => {
-          displayError(error);
-        });
-      },
-      () => this.saved("refuse")
-    );
+  async onRefuseClicked() {
+    try {
+      await this.guild.reject(this.model.get("id"));
+      this.saved("refused");
+    } catch (err) {
+      displayErrors(err);
+    }
   }
 
-  saved(method: string) {
-    if (method === "accept") {
-      displayToast(
-        { text: `You have accepted ${this.model.get("name")} into your guild` },
-        "success"
-      );
-    } else if (method === "refuse") {
-      displayToast(
-        {
-          text: `You have refused ${this.model.get(
-            "name"
-          )}'s request to join your guild`,
-        },
-        "success"
+  saved(method: "accepted" | "refused") {
+    if (method === "accepted") {
+      displaySuccess(`You accepted ${this.model.get("name")} into your guild`);
+    } else if (method === "refused") {
+      displaySuccess(
+        `You refused ${this.model.get("name")}'s request to join your guild`
       );
     }
     this.guild.fetch();

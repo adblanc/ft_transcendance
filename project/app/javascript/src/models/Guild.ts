@@ -20,6 +20,8 @@ interface IGuild {
 
 type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img_url">>;
 
+export type GUILD_ACTION = "promote" | "demote" | "fire" | "transfer";
+
 export default class Guild extends BaseModel<IGuild> {
   preinitialize() {
     this.relations = [
@@ -77,22 +79,13 @@ export default class Guild extends BaseModel<IGuild> {
     );
   }
 
-  manageMembers(
-    method: string,
-    user_id: string,
-    error: (errors: string[]) => void,
-    success: () => void
-  ) {
-    this.save(
+  manageMembers(method: GUILD_ACTION, user_id: string) {
+    return this.asyncSave(
       {
         user_id: user_id,
       },
       {
-        url: `http://localhost:3000/guilds/${this.id}/${method}`,
-        success: () => success(),
-        error: (_, jqxhr) => {
-          error(mapServerErrors(jqxhr?.responseJSON));
-        },
+        url: `http://localhost:3000/guilds/${this.get("id")}/${method}`,
       }
     );
   }
@@ -110,53 +103,31 @@ export default class Guild extends BaseModel<IGuild> {
     );
   }
 
-  accept(
-    user_id: string,
-    error: (errors: string[]) => void,
-    success: () => void
-  ) {
-    this.save(
+  accept(user_id: string) {
+    return this.asyncSave(
+      { user_id: user_id },
       {
-        user_id: user_id,
-      },
-      {
-        url: `http://localhost:3000/guilds/${this.id}/accept`,
-        success: () => success(),
-        error: (_, jqxhr) => {
-          error(mapServerErrors(jqxhr?.responseJSON));
-        },
+        url: `http://localhost:3000/guilds/${this.get("id")}/accept`,
       }
     );
   }
 
-  reject(
-    user_id: string,
-    error: (errors: string[]) => void,
-    success: () => void
-  ) {
-    this.save(
+  reject(user_id: string) {
+    return this.asyncSave(
       {
         user_id: user_id,
       },
       {
         url: `http://localhost:3000/guilds/${this.id}/reject`,
-        success: () => success(),
-        error: (_, jqxhr) => {
-          error(mapServerErrors(jqxhr?.responseJSON));
-        },
       }
     );
   }
 
-  withdraw(error: (errors: string[]) => void, success: () => void) {
-    this.save(
+  withdraw() {
+    return this.asyncSave(
       {},
       {
-        url: `http://localhost:3000/guilds/${this.id}/withdraw`,
-        success: () => success(),
-        error: (_, jqxhr) => {
-          error(mapServerErrors(jqxhr?.responseJSON));
-        },
+        url: `http://localhost:3000/guilds/${this.get("id")}/withdraw`,
       }
     );
   }
