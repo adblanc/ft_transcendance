@@ -4,69 +4,64 @@ import ModalView from "../ModalView";
 import Guild from "src/models/Guild";
 import { displayToast } from "src/utils/toast";
 import MainRouter from "src/routers/MainRouter";
-
+import { displayError } from "src/utils";
 
 export default class ModifyGuildView extends ModalView<Guild> {
-
   constructor(options?: Backbone.ViewOptions<Guild>) {
-	super(options);
+    super(options);
 
-	/*maybe i don't need this*/
-	this.listenTo(this.model, "change", this.render);
-	this.listenTo(this.model, "add", this.render);
+    /*maybe i don't need this*/
+    this.listenTo(this.model, "change", this.render);
+    this.listenTo(this.model, "add", this.render);
   }
 
   events() {
-	return {
-		...super.events(), "click #input-guild-submit": "onSubmit",
-		...super.events(), "click #destroy-guild": "onDestroy",
-	  };
+    return {
+      ...super.events(),
+      "click #input-guild-submit": "onSubmit",
+      ...super.events(),
+      "click #destroy-guild": "onDestroy",
+    };
   }
 
   onDestroy(e: JQuery.Event) {
-	//e.preventDefault();
+    //e.preventDefault();
 
-	this.model.destroy();
+    this.model.destroy();
     displayToast({ text: "Guild successfully destroyed." }, "success");
-	this.closeModal();
-	
-	const router = new MainRouter();
-	router.navigate("notFound", { trigger: true });
+    this.closeModal();
+
+    const router = new MainRouter();
+    router.navigate("notFound", { trigger: true });
   }
 
   onSubmit(e: JQuery.Event) {
-	e.preventDefault();
-	let acr = this.$("#input-guild-ang").val() as string;
-	const attrs = {
-	name: this.$("#input-guild-name").val() as string,
-	ang: acr.toUpperCase(),
-	img: (this.$(
-		"#input-guild-img"
-	)[0] as HTMLInputElement).files?.item(0),
-	};
+    e.preventDefault();
+    let acr = this.$("#input-guild-ang").val() as string;
+    const attrs = {
+      name: this.$("#input-guild-name").val() as string,
+      ang: acr.toUpperCase(),
+      img: (this.$("#input-guild-img")[0] as HTMLInputElement).files?.item(0),
+    };
 
-	if (!attrs.img) delete attrs.img;
+    if (!attrs.img) delete attrs.img;
 
-	this.model.modifyGuild(
-	attrs,
-	this.model.get('id'),
-	(errors) => {
-		errors.forEach((error) => {
-		this.displayError(error);
-		});
-	},
-	() => this.guildSaved()
-	);
+    this.model.modifyGuild(
+      attrs,
+      this.model.get("id"),
+      (errors) => {
+        errors.forEach((error) => {
+          displayError(error);
+        });
+      },
+      () => this.guildSaved()
+    );
   }
 
   guildSaved() {
     displayToast({ text: "Guild successfully updated." }, "success");
-	this.closeModal();
-	this.model.fetch();
-  }
-
-  displayError(error: string) {
-    displayToast({ text: error }, "error");
+    this.closeModal();
+    this.model.fetch();
   }
 
   render() {

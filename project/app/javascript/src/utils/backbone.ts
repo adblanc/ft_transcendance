@@ -20,7 +20,3 @@ export const syncWithFormData = (
   }
   return Backbone.sync.call(this, method, model, options);
 };
-
-export const mapServerErrors = (errors: Record<string, string[]>) => {
-  return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
-};
