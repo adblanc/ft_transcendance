@@ -6,6 +6,7 @@ import Notifications from "src/collections/Notifications";
 import Notification from "src/models/Notification";
 import consumer from "channels/consumer";
 import { mapServerErrors, syncWithFormData } from "src/utils";
+import BaseModel from "src/lib/BaseModel";
 
 interface IProfile {
   login: string;
@@ -19,7 +20,7 @@ interface IProfile {
 
 type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar">>;
 
-export default class Profile extends Backbone.AssociatedModel {
+export default class Profile extends BaseModel {
   channel: ActionCable.Channel;
   notifications: Notifications;
 

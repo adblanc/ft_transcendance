@@ -3,6 +3,7 @@ import _ from "underscore";
 import Profile from "src/models/Profile";
 import Profiles from "src/collections/Profiles";
 import { mapServerErrors, syncWithFormData } from "src/utils";
+import BaseModel from "src/lib/BaseModel";
 
 interface IGuild {
   id: string;
@@ -17,7 +18,7 @@ interface IGuild {
 
 type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img">>;
 
-export default class Guild extends Backbone.AssociatedModel {
+export default class Guild extends BaseModel {
   preinitialize() {
     this.relations = [
       {
