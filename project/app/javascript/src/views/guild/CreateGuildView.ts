@@ -5,10 +5,9 @@ import Guild from "src/models/Guild";
 import { displayToast } from "src/utils/toast";
 import MainRouter from "src/routers/MainRouter";
 import { generateAcn } from "src/utils/acronym";
-import { displayError } from "src/utils";
+import { displayError, displayErrors } from "src/utils";
 
 export default class CreateGuildView extends ModalView<Guild> {
-  idd: string;
   list: string[];
 
   constructor(options?: Backbone.ViewOptions<Guild>) {
@@ -28,7 +27,7 @@ export default class CreateGuildView extends ModalView<Guild> {
     return { ...super.events(), "click #input-guild-submit": "onSubmit" };
   }
 
-  onSubmit(e: JQuery.Event) {
+  async onSubmit(e: JQuery.Event) {
     e.preventDefault();
     var acn = generateAcn(
       this.$("#input-guild-name").val() as string,
@@ -48,15 +47,12 @@ export default class CreateGuildView extends ModalView<Guild> {
 
       if (!attrs.img) delete attrs.img;
 
-      this.model.createGuild(
-        attrs,
-        (errors) => {
-          errors.forEach((error) => {
-            displayError(error);
-          });
-        },
-        () => this.guildSaved()
-      );
+      try {
+        await this.model.createGuild(attrs);
+        this.guildSaved();
+      } catch (err) {
+        displayErrors(err);
+      }
     }
   }
 
@@ -64,10 +60,9 @@ export default class CreateGuildView extends ModalView<Guild> {
     displayToast({ text: "Guild successfully created." }, "success");
     this.closeModal();
     this.model.fetch();
-
-    this.idd = this.model.id;
-    const router = new MainRouter();
-    router.navigate(`guild/${this.idd}`, { trigger: true });
+    Backbone.history.navigate(`guild/${this.model.get("id")}`, {
+      trigger: true,
+    });
   }
 
   render() {

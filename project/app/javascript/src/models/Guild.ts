@@ -56,24 +56,8 @@ export default class Guild extends BaseModel {
     return syncWithFormData(method, model, options);
   }
 
-  createGuild(
-    attrs: CreatableGuildArgs,
-    error: (errors: string[]) => void,
-    success: () => void
-  ) {
-    this.set(attrs);
-
-    this.save(
-      {},
-      {
-        url: this.urlRoot(),
-
-        success: () => success(),
-        error: (_, jqxhr) => {
-          error(mapServerErrors(jqxhr?.responseJSON));
-        },
-      }
-    );
+  createGuild(attrs: CreatableGuildArgs) {
+    return this.asyncSave(attrs, { url: this.urlRoot() });
   }
 
   modifyGuild(attrs: CreatableGuildArgs) {
