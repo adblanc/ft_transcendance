@@ -71,11 +71,7 @@ export default class Profile extends BaseModel {
         },
         received: (notification: Notification) => {
           //console.log("we received", notification);
-          this.notifications.add(
-            new Notification({
-              ...notification,
-            })
-          );
+          this.notifications.add(notification);
         },
       }
     );
