@@ -4,7 +4,7 @@ import ModalView from "../ModalView";
 import Guild from "src/models/Guild";
 import { displayToast } from "src/utils/toast";
 import MainRouter from "src/routers/MainRouter";
-import { displayError } from "src/utils";
+import { displayError, displayErrors } from "src/utils";
 
 export default class ModifyGuildView extends ModalView<Guild> {
   constructor(options?: Backbone.ViewOptions<Guild>) {
@@ -35,7 +35,7 @@ export default class ModifyGuildView extends ModalView<Guild> {
     router.navigate("notFound", { trigger: true });
   }
 
-  onSubmit(e: JQuery.Event) {
+  async onSubmit(e: JQuery.Event) {
     e.preventDefault();
     let acr = this.$("#input-guild-ang").val() as string;
     const attrs = {
@@ -46,16 +46,15 @@ export default class ModifyGuildView extends ModalView<Guild> {
 
     if (!attrs.img) delete attrs.img;
 
-    this.model.modifyGuild(
-      attrs,
-      this.model.get("id"),
-      (errors) => {
-        errors.forEach((error) => {
-          displayError(error);
-        });
-      },
-      () => this.guildSaved()
-    );
+    try {
+      await this.model.modifyGuild(attrs);
+
+      displayToast({ text: "Guild successfully updated." }, "success");
+      this.closeModal();
+      this.model.fetch();
+    } catch (err) {
+      displayErrors(err);
+    }
   }
 
   guildSaved() {

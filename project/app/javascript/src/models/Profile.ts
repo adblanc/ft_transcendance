@@ -100,7 +100,9 @@ export default class Profile extends BaseModel {
     return syncWithFormData(method, model, options);
   }
 
-  async modifyProfil(attrs: ModifiableProfileArgs) {
-    await this.asyncSave(attrs, { url: this.urlRoot() });
+  modifyProfil(attrs: ModifiableProfileArgs) {
+    return this.asyncSave(attrs, {
+      url: this.urlRoot(),
+    });
   }
 }

@@ -31,12 +31,10 @@ export default class BaseModel<
     });
   }
 
-  asyncSave(
-    attrs?: any,
-    options?: Backbone.ModelSaveOptions
-  ): Promise<this | false> {
+  asyncSave(attrs?: any, options?: Backbone.ModelSaveOptions): Promise<this> {
     return new Promise((res, rej) => {
       const valid = this.save(attrs, {
+        wait: true,
         ...options,
         success: () => res(this),
         error: (_, jqxhr) => rej(mapServerErrors(jqxhr.responseJSON)),

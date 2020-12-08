@@ -2,8 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "./ModalView";
 import Profile from "../models/Profile";
-import { displayToast } from "../utils/toast";
-import { displayError, displayErrors } from "src/utils";
+import { displayErrors, displayToast } from "src/utils";
 
 export default class ModifyProfileView extends ModalView<Profile> {
   constructor(options?: Backbone.ViewOptions<Profile>) {
@@ -37,6 +36,8 @@ export default class ModifyProfileView extends ModalView<Profile> {
     } catch (err) {
       displayErrors(err);
     }
+
+    console.log("attrs", this.model.attributes);
   }
 
   render() {

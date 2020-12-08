@@ -76,25 +76,10 @@ export default class Guild extends BaseModel {
     );
   }
 
-  modifyGuild(
-    attrs: CreatableGuildArgs,
-    id: string,
-    error: (errors: string[]) => void,
-    success: () => void
-  ) {
-    this.set(attrs);
-
-    this.save(
-      {},
-      {
-        url: `http://localhost:3000/guilds/${id}`,
-
-        success: () => success(),
-        error: (_, jqxhr) => {
-          error(mapServerErrors(jqxhr?.responseJSON));
-        },
-      }
-    );
+  modifyGuild(attrs: CreatableGuildArgs) {
+    return this.asyncSave(attrs, {
+      url: `${this.urlRoot()}/${this.get("id")}`,
+    });
   }
 
   quit(error: (errors: string[]) => void, success: () => void) {
