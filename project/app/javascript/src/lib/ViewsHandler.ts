@@ -4,6 +4,7 @@ import NavbarView from "src/views/NavbarView";
 import NotificationsView from "src/views/NotificationsView";
 import BaseView from "./BaseView";
 import Profile from "src/models/Profile";
+import { AUTH_TOKEN } from "src/constants";
 
 class PagesHandler {
   private currentPage?: BaseView;
@@ -15,16 +16,16 @@ class PagesHandler {
   constructor() {
     this.currentPage = undefined;
     this.navbarView = undefined;
-	this.chatView = undefined;
-	this.notificationsView = undefined;
-	this.profile = undefined;
+    this.chatView = undefined;
+    this.notificationsView = undefined;
+    this.profile = undefined;
   }
 
   addNavbar() {
     this.removeNavbar();
     this.navbarView = new NavbarView({
-		profile: this.profile,
-	});
+      profile: this.profile,
+    });
 
     $("body").prepend(this.navbarView.render().el);
   }
@@ -43,8 +44,8 @@ class PagesHandler {
   setupNotif() {
     if (!this.notificationsView) {
       this.notificationsView = new NotificationsView({
-		className: "invisible",
-		profile: this.profile,
+        className: "invisible",
+        profile: this.profile,
       });
 
       this.notificationsView.render();
@@ -55,18 +56,21 @@ class PagesHandler {
     }
   }
 
-  showPage(page: BaseView, withNavbar = true, withChat = true, withNotif = true) {
-	const token = localStorage.getItem("tokenAuth");
-	if (token)
-	{
-		this.profile = new Profile();
-		this.profile.fetch({
-		success: () => {
-			this.profile.channel = this.profile.createNotificationsConsumer();
-		},
-		});
-
-	}
+  showPage(
+    page: BaseView,
+    withNavbar = true,
+    withChat = true,
+    withNotif = true
+  ) {
+    const token = localStorage.getItem(AUTH_TOKEN);
+    if (token) {
+      this.profile = new Profile();
+      this.profile.fetch({
+        success: () => {
+          this.profile.channel = this.profile.createNotificationsConsumer();
+        },
+      });
+    }
 
     if (this.currentPage) {
       this.currentPage.close();
@@ -83,10 +87,10 @@ class PagesHandler {
 
     $("#container").html(this.currentPage.el);
 
-	if (withNotif) {
-		this.setupNotif();
-		$("#container").append(this.notificationsView.el);
-	  }
+    if (withNotif) {
+      this.setupNotif();
+      $("#container").append(this.notificationsView.el);
+    }
 
     this.handleChat(withChat);
   }
