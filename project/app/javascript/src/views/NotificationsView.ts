@@ -34,7 +34,8 @@ export default class NotificationsView extends BaseView {
 
     this.profile.notifications.slice(this.profile.notifications.length - 5, this.profile.notifications.length).forEach(function (item) {
       var notificationView = new NotificationView({
-        notification: item,
+		notification: item,
+		page: false,
       });
 	  $element.prepend(notificationView.render().el);
 	});

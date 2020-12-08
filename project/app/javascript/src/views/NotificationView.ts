@@ -4,21 +4,20 @@ import BaseView from "../lib/BaseView";
 import Notification from "src/models/Notification";
 import moment from "moment";
 
-type Options = Backbone.ViewOptions & { notification: Notification };
+type Options = Backbone.ViewOptions & { notification: Notification, page: boolean };
 
 export default class ItemView extends BaseView {
   notification: Notification;
   momentString: string;
+  page: boolean;
 
   constructor(options?: Options) {
     super(options);
 
 	this.notification = options.notification;
+	this.page = options.page;
 
 	this.listenTo(this.notification, "change", this.render);
-
-	//let dateString = this.notification.get("created_at");
-	//this.momentString = moment(dateString).format("MMM Do YY, h:mm a");
 
   }
 
@@ -29,14 +28,13 @@ export default class ItemView extends BaseView {
 		notifiable_type: this.notification.get("notifiable_type").toLowerCase(),
 	};
 
-	console.log(notif);
-
     const template = $("#notifTemplate").html();
     const html = Mustache.render(template, notif);
 	this.$el.html(html);
 
-	//this.$('#time').html(this.momentString);
-	//this.$('#content').attr('href', `/${this.notification.get('notifiable_type').toLowerCase()}/${this.notification.get('notifiable_id')}`);
+	if (this.page) {
+		this.$("#notif-item").addClass('notifpage');
+	}
 
     return this;
   }
