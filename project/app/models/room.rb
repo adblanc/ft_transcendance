@@ -1,4 +1,6 @@
 class Room < ApplicationRecord
+	resourcify
+
 	has_secure_password :password, validations: false
 
 	validates :name, presence: true, uniqueness: true
