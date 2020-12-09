@@ -3,7 +3,7 @@ import Rooms from "src/collections/Rooms";
 import { eventBus } from "src/events/EventBus";
 import BaseView from "src/lib/BaseView";
 import Room from "src/models/Room";
-import ChatHeaderView from "./ChatHeaderView";
+import ChatHeaderView from "./Header/ChatHeaderView";
 import ChatInputView from "./ChatInputView";
 import CreateJoinChannelView from "./CreateJoinChannelView";
 import RoomView from "./RoomView";

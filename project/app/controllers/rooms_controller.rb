@@ -8,14 +8,9 @@ class RoomsController < ApplicationController
 	def create
 		@room = Room.create(room_params)
 
-		logger = Logger.new(STDOUT)
-
-
-
 		if @room.save
 			@room.users.push(current_user)
 			current_user.add_role :owner, @room
-			logger.info("========= we create a room with password #{@room.password} =========")
 			@room
 		else
 			render json: @room.errors, status: :unprocessable_entity
@@ -35,14 +30,11 @@ class RoomsController < ApplicationController
 	  end
 
 	  def join
-		logger = Logger.new(STDOUT)
 		@room = Room.find_by(name: room_params[:name])
 
 		if (@room && current_user.rooms.exists?(@room.id))
 			render json: {"you" => ["already joined this room."]}, status: :unprocessable_entity
 		elsif (@room && @room.try(:authenticate, params[:password]))
-			logger.info("params password  #{params[:password]} ")
-
 			@room.users.push(current_user)
 			@room
 		else

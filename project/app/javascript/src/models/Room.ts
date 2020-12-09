@@ -8,6 +8,7 @@ export interface IRoom {
   password?: string;
   id?: number;
   selected?: boolean;
+  isOwner?: boolean;
 }
 
 export default class Room extends BaseModel<IRoom> {
@@ -23,7 +24,7 @@ export default class Room extends BaseModel<IRoom> {
     this.listenTo(this, "change:id", this.updateChannel);
   }
 
-  url = () => "http://localhost:3000/rooms";
+  urlRoot = () => "http://localhost:3000/rooms";
 
   createConsumer() {
     const room_id = this.get("id");
@@ -64,12 +65,6 @@ export default class Room extends BaseModel<IRoom> {
     this.channel = this.createConsumer();
   }
 
-  async quit() {
-    return this.asyncDestroy({
-      url: `http://localhost:3000/quit-room?name=${this.get("name")}`,
-    });
-  }
-
   select() {
     //@ts-ignore
     this.collection.setSelected(this);
@@ -77,5 +72,18 @@ export default class Room extends BaseModel<IRoom> {
 
   toggle() {
     this.set("selected", !this.get("selected"));
+  }
+
+  quit() {
+    return this.asyncDestroy({
+      url: `http://localhost:3000/quit-room?name=${this.get("name")}`,
+    });
+  }
+
+  modifyPassword(password: string) {
+    console.log("modify room password", password);
+    return this.asyncSave({
+      password,
+    });
   }
 }
