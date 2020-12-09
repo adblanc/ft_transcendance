@@ -21,10 +21,6 @@ export default class ManageRoomView extends ModalView<Room> {
 
     const password = this.$("#input-room-password").val() as string;
 
-    if (!password) {
-      return;
-    }
-
     const success = await this.model.modifyPassword(password);
 
     if (success) {

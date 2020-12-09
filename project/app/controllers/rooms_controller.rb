@@ -19,13 +19,18 @@ class RoomsController < ApplicationController
 
 	  def update
 		@room = Room.find(params[:id])
-		if @room
+
+		if @room && !@current_user.is_room_owner?(@room)
+			render json: {"you" => ["must be owner of this room."]}, status: :unauthorized
+		elsif @room
 			@room.password = params[:password]
 			if (@room.save)
 				@room
 			else
 				render json: @room.errors, status: :unprocessable_entity
 			end
+		else
+			render json: {"room" => ["not found."]}, status: :not_found
 		end
 	  end
 
