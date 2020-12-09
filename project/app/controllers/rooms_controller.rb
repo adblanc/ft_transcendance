@@ -1,41 +1,53 @@
 class RoomsController < ApplicationController
+	before_action :authenticate_user!
+
 	def index
-		@rooms = current_user.rooms if current_user
+		@rooms = current_user.rooms
 	end
 
 	def create
 		@room = Room.create(room_params)
 
+		logger = Logger.new(STDOUT)
+
+
 
 		if @room.save
 			@room.users.push(current_user)
 			current_user.add_role :owner, @room
+			logger.info("========= we create a room with password #{@room.password} =========")
 			@room
 		else
 			render json: @room.errors, status: :unprocessable_entity
 		  end
 	  end
 
+	  def update
+		@room = Room.find(params[:id])
+		if @room
+			@room.password = params[:password]
+			if (@room.save)
+				@room
+			else
+				render json: @room.errors, status: :unprocessable_entity
+			end
+		end
+	  end
 
 	  def join
+		logger = Logger.new(STDOUT)
 		@room = Room.find_by(name: room_params[:name])
 
 		if (@room && current_user.rooms.exists?(@room.id))
 			render json: {"you" => ["already joined this room."]}, status: :unprocessable_entity
+		elsif (@room && @room.try(:authenticate, params[:password]))
+			logger.info("params password  #{params[:password]} ")
+
+			@room.users.push(current_user)
+			@room
 		else
-			begin
-				if (!(room_params[:password].nil? || room_params[:password].empty?) && @room)
-					@room = @room.authenticate(room_params[:password])
-				end
-			rescue BCrypt::Errors::InvalidHash
-				@room = false;
-			end
-				if @room
-					@room.users.push(current_user)
-					@room
-				else
-					render json: {"name or password" => ["is incorrect."]}, status: :unprocessable_entity
-				end
+			render json: {"name or password" => ["is incorrect."]}, status: :unprocessable_entity
+
 		end
 	end
 
