@@ -31,30 +31,33 @@ export default class PendingMemberView extends BaseView {
   }
 
   async onAcceptClicked() {
-    try {
-      await this.guild.accept(this.model.get("id"));
+    const success = await this.guild.accept(this.model.get("id"));
+
+    if (success) {
       this.saved("accepted");
-    } catch (err) {
-      displayErrors(err);
     }
   }
 
   async onRefuseClicked() {
-    try {
-      await this.guild.reject(this.model.get("id"));
+    const success = await this.guild.reject(this.model.get("id"));
+
+    if (success) {
       this.saved("refused");
-    } catch (err) {
-      displayErrors(err);
     }
   }
 
   saved(method: "accepted" | "refused") {
-    if (method === "accepted") {
-      displaySuccess(`You accepted ${this.model.get("name")} into your guild`);
-    } else if (method === "refused") {
-      displaySuccess(
-        `You refused ${this.model.get("name")}'s request to join your guild`
-      );
+    switch (method) {
+      case "accepted":
+        displaySuccess(
+          `You accepted ${this.model.get("name")} into your guild`
+        );
+        break;
+      case "refused":
+        displaySuccess(
+          `You refused ${this.model.get("name")}'s request to join your guild`
+        );
+        break;
     }
     this.guild.fetch();
   }

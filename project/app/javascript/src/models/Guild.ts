@@ -90,15 +90,11 @@ export default class Guild extends BaseModel<IGuild> {
     );
   }
 
-  join(error: (errors: string[]) => void, success: () => void) {
-    this.save(
+  join() {
+    return this.asyncSave(
       {},
       {
         url: `http://localhost:3000/guilds/${this.id}/join`,
-        success: () => success(),
-        error: (_, jqxhr) => {
-          error(mapServerErrors(jqxhr?.responseJSON));
-        },
       }
     );
   }
