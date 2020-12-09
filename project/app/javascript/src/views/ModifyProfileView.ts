@@ -2,7 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "./ModalView";
 import Profile from "../models/Profile";
-import { displayErrors, displaySuccess, displayToast } from "src/utils";
+import { displaySuccess } from "src/utils";
 
 export default class ModifyProfileView extends ModalView<Profile> {
   constructor(options?: Backbone.ViewOptions<Profile>) {

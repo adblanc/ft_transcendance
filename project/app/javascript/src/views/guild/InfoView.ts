@@ -5,7 +5,7 @@ import PageImgView from "./imgsViews/PageImgView";
 import Profile from "src/models/Profile";
 import Guild from "src/models/Guild";
 import ModifyGuildView from "./ModifyGuildView";
-import { displayError, displayErrors, displaySuccess } from "src/utils";
+import { displaySuccess } from "src/utils";
 
 type Options = Backbone.ViewOptions & { guild: Guild; profile: Profile };
 
