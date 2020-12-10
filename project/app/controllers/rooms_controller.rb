@@ -35,11 +35,14 @@ class RoomsController < ApplicationController
 	  end
 
 	  def join
+		logger = Logger.new(STDOUT);
 		@room = Room.find_by(name: room_params[:name])
+
+		logger.info("invalid hash ? #{!BCrypt::Password.valid_hash?(@room.password_digest)}")
 
 		if (@room && current_user.rooms.exists?(@room.id))
 			render json: {"you" => ["already joined this room."]}, status: :unprocessable_entity
-		elsif (@room && @room.try(:authenticate, params[:password]))
+		elsif (@room && (!BCrypt::Password.valid_hash?(@room.password_digest) || @room.try(:authenticate, params[:password])))
 			@room.users.push(current_user)
 			@room
 		else
