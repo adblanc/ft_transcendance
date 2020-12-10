@@ -62,6 +62,11 @@ class RoomsController < ApplicationController
 		end
 	end
 
+	def update_user_role
+		@room = Room.find(params[:id])
+
+	end
+
 	private
 
 	def room_password

@@ -1,4 +1,6 @@
 <script type="text/html" id="manage-room-template">
+ <div id="room-users-list" class="overflow-y-auto h-64">
+    </div>
   <form action="">
     <label class="block" for="room-password">
       <span class="text-gray-700">Change room's password</span>
@@ -9,6 +11,7 @@
         id="input-room-password"
       />
     </label>
+
     <div class="flex justify-center items-center">
       <button class="btn-primary mt-8" id="room-submit" type="submit">
         Save modifications

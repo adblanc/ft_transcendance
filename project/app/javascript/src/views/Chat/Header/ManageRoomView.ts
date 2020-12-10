@@ -3,6 +3,7 @@ import Mustache from "mustache";
 import Room from "src/models/Room";
 import { displaySuccess } from "src/utils";
 import ModalView from "src/views/ModalView";
+import RoomUsersView from "./RoomUsersView";
 
 export default class ManageRoomView extends ModalView<Room> {
   constructor(options?: Backbone.ViewOptions<Room>) {
@@ -35,7 +36,14 @@ export default class ManageRoomView extends ModalView<Room> {
     super.render(); // we render the modal
     const template = $("#manage-room-template").html();
     const html = Mustache.render(template, this.model.toJSON());
+
     this.$content.html(html);
+
+    this.renderNested(
+      new RoomUsersView({ roomUsers: this.model.get("users") }),
+      "#room-users-list"
+    );
+
     return this;
   }
 }

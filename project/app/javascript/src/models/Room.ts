@@ -1,9 +1,13 @@
+import Backbone from "backbone";
 import consumer from "channels/consumer";
 import Messages from "src/collections/Messages";
+import RoomUsers from "src/collections/RoomUsers";
 import BaseModel from "src/lib/BaseModel";
 import Message, { IMessage } from "./Message";
+import RoomUser from "./RoomUser";
 
 export interface IRoom {
+  users?: RoomUsers;
   name: string;
   password?: string;
   id?: number;
@@ -15,6 +19,17 @@ export default class Room extends BaseModel<IRoom> {
   channel: ActionCable.Channel;
   messages: Messages;
   currentUserId?: number;
+
+  preinitialize() {
+    this.relations = [
+      {
+        type: Backbone.Many,
+        key: "users",
+        collectionType: RoomUsers,
+        relatedModel: RoomUser,
+      },
+    ];
+  }
 
   initialize() {
     this.messages = new Messages();
@@ -57,7 +72,6 @@ export default class Room extends BaseModel<IRoom> {
   }
 
   updateChannel() {
-    console.log("we change channel");
     if (this.channel) {
       this.channel.unsubscribe();
     }
@@ -81,7 +95,6 @@ export default class Room extends BaseModel<IRoom> {
   }
 
   modifyPassword(password: string) {
-    console.log("modify room password", password);
     return this.asyncSave({
       password,
     });
