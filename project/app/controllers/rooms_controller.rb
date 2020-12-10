@@ -1,3 +1,5 @@
+EMPTY_PASSWORD = "empty";
+
 class RoomsController < ApplicationController
 	before_action :authenticate_user!
 
@@ -23,7 +25,7 @@ class RoomsController < ApplicationController
 		if @room && !@current_user.is_room_owner?(@room)
 			render json: {"you" => ["must be owner of this room."]}, status: :unauthorized
 		elsif @room
-			@room.password = params[:password]
+			@room.password = room_password;
 			if (@room.save)
 				@room
 			else
@@ -35,14 +37,11 @@ class RoomsController < ApplicationController
 	  end
 
 	  def join
-		logger = Logger.new(STDOUT);
 		@room = Room.find_by(name: room_params[:name])
-
-		logger.info("invalid hash ? #{!BCrypt::Password.valid_hash?(@room.password_digest)}")
 
 		if (@room && current_user.rooms.exists?(@room.id))
 			render json: {"you" => ["already joined this room."]}, status: :unprocessable_entity
-		elsif (@room && (!BCrypt::Password.valid_hash?(@room.password_digest) || @room.try(:authenticate, params[:password])))
+		elsif (@room && (!BCrypt::Password.valid_hash?(@room.password_digest) || @room.try(:authenticate, room_password)))
 			@room.users.push(current_user)
 			@room
 		else
@@ -64,6 +63,10 @@ class RoomsController < ApplicationController
 	end
 
 	private
+
+	def room_password
+		params[:password].blank? ? EMPTY_PASSWORD : params[:password];
+	end
 
 	def room_params
 		params.permit(:name, :password)
