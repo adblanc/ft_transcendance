@@ -1,25 +1,64 @@
 import Backbone from "backbone";
 import _ from "underscore";
-import Profile from "./Profile";
+import Profile from "src/models/Profile";
+import Profiles from "src/collections/Profiles";
 
 interface IGame
 {
-    Id: number;
+    Id?: number;
     Type: string;
     Points: number;
+    url?: string;
     user: Profile;
-    url: string;
 }
 
-type CreatableGameArgs = Partial<Pick<IGame, "Id" | "user" | "url">>;
+type CreatableGameArgs = Partial<Pick<IGame, "Id" | "Points" | "Type" | "url">>;
 
-export default class Game extends Backbone.Model<IGame>
-{
-   urlRoot = () => "http://localhost:3000/game";
-   user = new Profile(); 
-    Points: number;
-    Type: string;
+export default class Game extends Backbone.AssociatedModel {
+	preinitialize() {
+		this.relations = [
+			{
+				type: Backbone.Many,
+				key: "users",
+				collectionType: Profiles,
+				relatedModel: Profile,
+			}
+		];
+    }
     
+    constructor(options?: any)
+    {
+        super(options);
+    }
+
+    defaults() {
+        return {
+        Type: '',
+        Points: 0,
+        users: []
+        };  }
+   
+    urlRoot = () => "http://localhost:3000/games";
+
+   sync(method: string, model: Game, options: JQueryAjaxSettings): any {
+    if (method == "create") {
+      var formData = new FormData();
+
+      _.each(model.attributes, function (value, key) {
+		formData.append(key, value);
+      });
+      _.defaults(options || (options = {}), {
+        data: formData,
+        processData: false,
+		contentType: false,
+      });
+    }
+    return Backbone.sync.call(this, method, model, options);
+  }
+
+//    user = new Profile(); 
+//     Points: number;
+//     Type: string;
     // constructor(Id: number, type: string, Pts: number, Profil: Profile) {
     //     super();
     //     this.set(this.Type: type);
@@ -28,37 +67,28 @@ export default class Game extends Backbone.Model<IGame>
     //     this.url = this.urlRoot;
     //     console.log(this.id);
     // }
-    constructor(options?: any)
-    {
-        super(options);
-    }
-    defaults() {
- 	return {
- 		Type: 'blabla',
- 		Points: 0,
- 	};  }
+
+
    
-    createGame(game: Game, success: () => void) {
-        this.Points = game.Points;
-        this.Type = game.Type;
-        this.url = game.url;
+    createGame(attrs: CreatableGameArgs, error: (errors: string[]) => void, success: () => void) {
+       this.set(attrs),
         this.save(
             {},
             {
               url: this.urlRoot(),
               success: () => success(),
-              //error: (_, jqxhr) => {
-              //  error(this.mapServerErrors(jqxhr?.responseJSON));
-              }
+              // error: (_, jqxhr) => {
+              //   error(this.mapServerErrors(jqxhr?.responseJSON));};
+            }
           );
-        success();
+       // success();
     }
-    // set sName(nom: string)
-    // {
-    //     this.set('name', nom);
-    // }
-    get gType(): string
-     {
-         return this.get('Type');
-     }
+
 }
+
+// type rec = Record<string, string>;
+
+// mapServerErrors(errors: rec) {
+//     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
+//   }
+// }

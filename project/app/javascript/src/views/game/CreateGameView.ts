@@ -5,6 +5,7 @@ import Game from "src/models/Game";
 import { displayToast } from "src/utils/toast";
 import MainRouter from "src/routers/MainRouter";
 import Profile from "src/models/Profile";
+import { generateAcn } from "src/utils/acronym";
 
 export default class CreateGameView extends ModalView<Game>
 {
@@ -49,32 +50,36 @@ export default class CreateGameView extends ModalView<Game>
         //    return this.oups();
         // else {
         this.id = this.i.toString();
-        var jeu = new Game({
-        //const attrs = {
+        //var jeu = new Game(
+        const attrs = {
         Id: this.i,
         Type: "BRAVO",
-        Points: points,
-        Profile: new Profile({ name: "Moby", login: "Marshell" }),
-        url: 'http://localhost:3000/game/${id}',
-        });
+        Points: +points,
+        //Profile: new Profile({ name: "Moby", login: "Marshell" }),
+        url: 'http://localhost:3000/game/${this.id}',
+        };
         this.i++;
-        this.model = new Game({
-            //const attrs = {
-            Id: this.i,
-            Type: level,
-            Points: points,
-            Profile: new Profile({ name: "Moby", login: "Marshell" }),
-            url: 'http://localhost:3000/game/${id}',
-            });
-        this.model.createGame(jeu, () => this.gameSaved());
+        // this.model = new Game({
+        //     //const attrs = {
+        //     Id: this.i,
+        //     Type: level,
+        //     Points: points,
+        //     Profile: new Profile({ name: "Moby", login: "Marshell" }),
+        //     url: 'http://localhost:3000/game/${id}',
+        //     });
+        this.model.createGame(attrs, 
+          (errors) => {
+          errors.forEach((error) => {
+          this.displayError(error);});},
+          () => this.gameSaved());
       }
     }
       gameSaved() {
         s: String;
-       var s =  "Game successfully created." + this.model.Type;
-        displayToast({ text: s }, "success");
         this.closeModal();
         this.model.fetch();
+        var s =  "Game successfully created.";
+        displayToast({ text: s }, "success");
         const router = new MainRouter();
         router.navigate(`game/${this.id}`, { trigger: true });
        // return this.play(s); 
@@ -87,6 +92,10 @@ export default class CreateGameView extends ModalView<Game>
     //     this.$content.html(html + s);
     //     return this;
     //   }
+  
+    displayError(error: string) {
+      displayToast({ text: error }, "error");
+    }
 
       render()
       {

@@ -70,7 +70,7 @@ export default class Guild extends Backbone.AssociatedModel {
     this.save(
       {},
       {
-		url: this.urlRoot(),
+		    url: this.urlRoot(),
 
         success: () => success(),
         error: (_, jqxhr) => {
@@ -137,7 +137,6 @@ export default class Guild extends Backbone.AssociatedModel {
 		}
 	  );
   }
-
 
   mapServerErrors(errors: Record<string, string[]>) {
     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
