@@ -62,22 +62,6 @@ class RoomsController < ApplicationController
 		end
 	end
 
-	def update_user_role
-		@room = Room.find(params[:id])
-
-		action = params[:action];
-
-		if !@room
-			render json: {"room" => ["not found."]}, status: :not_found and return;
-		elsif !@current_user.is_room_owner?(@room)
-			render json: {"you" => ["must be owner of this room."]}, status: :unauthorized and return;
-		elsif params[:user_id].blank? || !User.find(params[:user_id])
-			render json: "Please provide a valid user_id", status: :unprocessable_entity and return;
-		elsif params[:action].blank?
-			render json: "Please provide a valid action", status: :unprocessable_entity and return;
-		end
-	end
-
 	private
 
 	def room_password

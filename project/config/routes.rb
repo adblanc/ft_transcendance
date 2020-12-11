@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   resources :rooms
   get '/join-room', to: 'rooms#join'
   delete "/quit-room", to: 'rooms#quit'
+  put "/:room_id/:user_id/update_role", to: "users#update_room_role"
 
   root to: "application#index"
   match '*path', via: [:get, :post], to: "application#index", constraints: lambda { |req|
