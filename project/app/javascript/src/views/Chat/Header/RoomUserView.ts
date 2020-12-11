@@ -26,6 +26,8 @@ export default class RoomUserView extends BaseView<RoomUser> {
       ...this.model.toJSON(),
       isCurrentUser:
         $("#current-user-profile").data("login") === this.model.get("login"),
+      canPromote: !this.model.get("isRoomAdministrator"),
+      canDemote: this.model.get("isRoomAdministrator"),
     });
     this.$el.html(html);
 

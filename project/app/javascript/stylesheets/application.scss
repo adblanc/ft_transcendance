@@ -12,6 +12,12 @@
 
     @apply py-4 px-12 text-lg;
   }
+
+  &--disabled {
+    @extend .btn-primary;
+
+    @apply bg-teal-600 cursor-default;
+  }
 }
 
 .btn-primary:hover {
@@ -47,16 +53,15 @@
 }
 
 .floated {
-	float:left;
-	margin-right:5px;
-  }
+  float: left;
+  margin-right: 5px;
+}
 
 .notif-container {
-	@apply bg-white absolute top-0 right-0 flex flex-col items-stretch rounded-lg shadow-lg;
+  @apply bg-white absolute top-0 right-0 flex flex-col items-stretch rounded-lg shadow-lg;
 }
 
 .notifpage {
-	font-size: 15px;
-	color: #ffffff;
+  font-size: 15px;
+  color: #ffffff;
 }
-
