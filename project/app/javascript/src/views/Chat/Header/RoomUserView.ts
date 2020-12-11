@@ -1,6 +1,7 @@
 import Mustache from "mustache";
 import BaseView from "src/lib/BaseView";
 import RoomUser from "src/models/RoomUser";
+import { displaySuccess } from "src/utils";
 
 export default class RoomUserView extends BaseView<RoomUser> {
   constructor(options?: Backbone.ViewOptions<RoomUser>) {
@@ -17,7 +18,11 @@ export default class RoomUserView extends BaseView<RoomUser> {
   }
 
   updateRole(action: "promote" | "demote") {
-    this.model.updateRole(action);
+    const success = this.model.updateRole(action);
+
+    if (success) {
+      displaySuccess(`${this.model.get("login")} has been ${action}d`);
+    }
   }
 
   render() {
