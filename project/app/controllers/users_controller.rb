@@ -13,12 +13,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def promote
-	@guild = self.guild
-	@user.add_role(:officer, @guild)
-  end
-
-
   private
 
   def user_params

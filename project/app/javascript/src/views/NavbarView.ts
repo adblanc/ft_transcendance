@@ -6,22 +6,30 @@ import { clearAuthHeaders } from "../utils/auth";
 import BaseView from "../lib/BaseView";
 import { eventBus } from "src/events/EventBus";
 
+type Options = Backbone.ViewOptions & { profile: Profile };
+
 export default class NavbarView extends BaseView {
+  profile: Profile;
   profileView: Backbone.View;
 
-  constructor() {
-    super();
+	constructor(options?: Options) {
+		super(options);
+		
+	this.profile = options.profile;
 
-    const profile = new Profile();
-    this.profileView = new ProfileView({
-      model: profile,
-	});
-	profile.fetch();
+	this.profileView = new ProfileView({
+		model: this.profile,
+	  });
+
+	this.listenTo(this.profile.notifications, "add", this.render);
+	this.listenTo(this.profile.notifications, "change", this.render);
+	
   }
 
   events() {
     return {
-      "click #btn-logout": "onLogout",
+	  "click #btn-logout": "onLogout",
+	  "click #btn-notifications": "onClickNotification",
       "click #btn-messages": "onClickMessage",
       "click #navbar-brand": "onBrandClick",
     };
@@ -32,18 +40,30 @@ export default class NavbarView extends BaseView {
   }
 
   onLogout() {
-    clearAuthHeaders();
-    Backbone.history.navigate("/auth", { trigger: true });
+	clearAuthHeaders();
+	Backbone.history.navigate("/auth", { trigger: true });
   }
 
   onClickMessage() {
     eventBus.trigger("chat:open");
   }
 
+  onClickNotification() {
+	eventBus.trigger("notifications:open");
+	this.profile.notifications.forEach(function (item) {
+		if (!item.get("read_at")) {
+			item.markAsRead();
+		}
+	});
+  }
+
   render() {
     const template = $("#navbarTemplate").html();
-    const html = Mustache.render(template, {});
-    this.$el.html(html);
+    const html = Mustache.render(template, this.profile.toJSON());
+	this.$el.html(html);
+	
+	const $element = this.$("#unread");
+	$element.replaceWith(`${this.profile.notifications.getUnreadNb()}`);
 
     this.renderNested(this.profileView, "#nav-profile");
 

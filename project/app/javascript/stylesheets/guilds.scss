@@ -32,3 +32,12 @@ body {
 	color: #ffffff;
 	background-color: #ef6666;
 }
+
+.btn-join-disabled{
+	cursor: not-allowed;
+	box-shadow: 0 0 0 0 rgba(0,0,0,0);
+	font-size: 15px;
+	pointer-events: none;
+	color: #ffffff;
+	background-color: #808080;
+}

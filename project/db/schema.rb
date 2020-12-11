@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_04_145820) do
+
+ActiveRecord::Schema.define(version: 2020_12_05_214612) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,12 +37,23 @@ ActiveRecord::Schema.define(version: 2020_12_04_145820) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+<<<<<<< HEAD
   create_table "games", force: :cascade do |t|
     t.string "Type"
     t.integer "Points"
     t.string "url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+=======
+  create_table "guild_users", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "status"
+    t.bigint "user_id"
+    t.bigint "guild_id"
+    t.index ["guild_id"], name: "index_guild_users_on_guild_id"
+    t.index ["user_id"], name: "index_guild_users_on_user_id"
+>>>>>>> 15e83a68c4992a1c90282fac4b450a074f2018b5
   end
 
   create_table "guilds", force: :cascade do |t|
@@ -49,6 +61,17 @@ ActiveRecord::Schema.define(version: 2020_12_04_145820) do
     t.string "ang"
     t.integer "points", default: 0
     t.boolean "atWar", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer "recipient_id"
+    t.integer "actor_id"
+    t.datetime "read_at"
+    t.string "action"
+    t.integer "notifiable_id"
+    t.string "notifiable_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -105,6 +128,8 @@ ActiveRecord::Schema.define(version: 2020_12_04_145820) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "guild_users", "guilds"
+  add_foreign_key "guild_users", "users"
   add_foreign_key "room_messages", "rooms"
   add_foreign_key "room_messages", "users"
 end

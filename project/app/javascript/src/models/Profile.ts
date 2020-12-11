@@ -2,6 +2,11 @@ import Backbone, { ModelFetchOptions } from "backbone";
 import "backbone-associations";
 import _ from "underscore";
 import Guild from "src/models/Guild";
+import Notifications from "src/collections/Notifications";
+import Notification from "src/models/Notification";
+import consumer from "channels/consumer";
+import { mapServerErrors, syncWithFormData } from "src/utils";
+import BaseModel from "src/lib/BaseModel";
 
 interface IProfile {
   login: string;
@@ -15,7 +20,10 @@ interface IProfile {
 
 type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar">>;
 
-export default class Profile extends Backbone.AssociatedModel {
+export default class Profile extends BaseModel {
+  channel: ActionCable.Channel;
+  notifications: Notifications;
+
   preinitialize() {
     this.relations = [
       {
@@ -23,11 +31,23 @@ export default class Profile extends Backbone.AssociatedModel {
         key: "guild",
         relatedModel: Guild,
       },
+      {
+        type: Backbone.One,
+        key: "pending_guild",
+        relatedModel: Guild,
+      },
+      {
+        type: Backbone.Many,
+        key: "notifications",
+        collectionType: Notifications,
+        relatedModel: Notification,
+      },
     ];
   }
 
-  constructor(options?: any) {
-    super(options);
+  initialize() {
+    this.notifications = new Notifications();
+    //this.channel = this.createConsumer();
   }
 
   defaults() {
@@ -40,6 +60,22 @@ export default class Profile extends Backbone.AssociatedModel {
   }
 
   urlRoot = () => "http://localhost:3000/user";
+
+  createNotificationsConsumer() {
+    const user_id = this.get("id");
+    return consumer.subscriptions.create(
+      { channel: "NotificationsChannel", user_id: user_id },
+      {
+        connected: () => {
+          //console.log("connected to", user_id);
+        },
+        received: (notification: Notification) => {
+          //console.log("we received", notification);
+          this.notifications.add(notification);
+        },
+      }
+    );
+  }
 
   fetch(options?: ModelFetchOptions): JQueryXHR {
     return super.fetch({
@@ -56,51 +92,13 @@ export default class Profile extends Backbone.AssociatedModel {
     return null;
   }
 
-  sync(method: string, model: Profile, options: JQueryAjaxSettings): any {
-    // Post data as FormData object on create to allow file upload
-    if (method == "update") {
-      var formData = new FormData();
-
-      // Loop over model attributes and append to formData
-      _.each(model.attributes, function (value, key) {
-        formData.append(key, value);
-      });
-
-      // Set processData and contentType to false so data is sent as FormData
-      _.defaults(options || (options = {}), {
-        data: formData,
-        processData: false,
-        contentType: false,
-      });
-    }
-    return Backbone.sync.call(this, method, model, options);
+  sync(method: string, model: Profile, options: JQueryAjaxSettings) {
+    return syncWithFormData(method, model, options);
   }
 
-  modifyProfil(
-    attrs: ModifiableProfileArgs,
-    error: (errors: string[]) => void,
-    success: () => void
-  ) {
-    this.set(attrs);
-
-    const valid = this.save(
-      {},
-      {
-        url: this.urlRoot(),
-
-        success: () => success(),
-        error: (_, jqxhr) => {
-          error(this.mapServerErrors(jqxhr?.responseJSON));
-        },
-      }
-    );
-
-    if (!valid) {
-      error([this.validationError]);
-    }
-  }
-
-  mapServerErrors(errors: Record<string, string[]>) {
-    return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
+  modifyProfil(attrs: ModifiableProfileArgs) {
+    return this.asyncSave(attrs, {
+      url: this.urlRoot(),
+    });
   }
 }

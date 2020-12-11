@@ -14,3 +14,11 @@ export const displayToast = (args: ToastArgs, type: ToastType) => {
     ...args,
   }).showToast();
 };
+
+export const displayError = (error: string) => {
+  displayToast({ text: error }, "error");
+};
+
+export const displaySuccess = (text: string) => {
+  displayToast({ text }, "success");
+};

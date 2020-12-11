@@ -3,7 +3,7 @@ import Mustache from "mustache";
 import axios from "axios";
 import { get42LoginUrl } from "../utils/api";
 import { addAuthHeaders } from "../utils/auth";
-import { displayToast } from "../utils/toast";
+import { displayError } from "../utils/toast";
 import BaseView from "src/lib/BaseView";
 
 export default class AuthView extends BaseView {
@@ -26,12 +26,7 @@ export default class AuthView extends BaseView {
         );
         addAuthHeaders(token);
       } catch (ex) {
-        displayToast(
-          {
-            text: `${input} n'est pas un guest valide.`,
-          },
-          "error"
-        );
+        displayError(`${input} n'est pas un guest valide.`);
 
         this.$("#input-guest").val("");
 

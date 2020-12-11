@@ -2,13 +2,20 @@ class User < ApplicationRecord
   rolify
   after_create :assign_default_role
 	has_one_attached :avatar
-	belongs_to :guild, optional: true
+	has_many :notifications, foreign_key: :recipient_id
+
+	has_one :guild_user,  -> (object) { where(status: :confirmed) }, dependent: :destroy
+	has_one :guild, through: :guild_user
+
+	has_one :guild_user_pending,  -> (object) { where(status: :pending) }, class_name: "GuildUser", dependent: :destroy
+	has_one :pending_guild, through: :guild_user_pending, source: :guild
+
 	has_and_belongs_to_many :rooms
 
 	validates :avatar, blob: { content_type: :image, size_range: 1..5.megabytes }
 	validates :name, presence: true
 	validates :name, length: {minimum: 3, maximum: 32}
-	  validates :login, presence: true, uniqueness: true
+	validates :login, presence: true, uniqueness: true
 
 	def assign_default_role
 		/global role - could be switched to admin/
@@ -38,5 +45,18 @@ class User < ApplicationRecord
 
 	def admin?
 		self.has_role?(:admin)
+	end
+
+	def pending_guild?
+		if self.pending_guild
+			return true
+		else
+			return nil
+		end
+	end
+
+	def send_notification(actor, action, notifiable)
+		@notification = Notification.create(recipient: self, actor: actor, action: action, notifiable: notifiable)
+		ActionCable.server.broadcast("user_#{self.id}", @notification);
 	end
 end
