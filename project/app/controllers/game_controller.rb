@@ -11,18 +11,19 @@ class GameController < ApplicationController
     def new
         game = Game.new
     end
-    
+
     def create
         @game = Game.create(game_params)
-        @game.users.push(current_user)
-        current_user.add_role :owner, @game
+        #@game.user.push(current_user)
+       #current_user.add_role :owner, @game
         if @game.save
             @game
         else
             render json: @game.errors, status: :unprocessable_entity
         end
-private:
-    def guild_params
-        params.permit(:Id, :Points, :Type, :url)
     end
+private
+    def game_params
+        params.permit(:id, :level, :points, :url)
     end
+end

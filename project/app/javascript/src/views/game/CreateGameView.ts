@@ -49,26 +49,30 @@ export default class CreateGameView extends ModalView<Game> {
       this.id = this.i.toString();
       var jeu = new Game({
         //const attrs = {
-        Id: this.i,
-        Type: "BRAVO",
-        Points: points,
+        id: this.i,
+        level: "BRAVO",
+        points: points,
         Profile: new Profile({ name: "Moby", login: "Marshell" }),
-        url: "http://localhost:3000/game/${id}",
+        url: "http://localhost:3000/games/${this.id}",
       });
       this.i++;
-      this.model = new Game({
-        //const attrs = {
-        Id: this.i,
-        Type: level,
-        Points: points,
-        Profile: new Profile({ name: "Moby", login: "Marshell" }),
-        url: "http://localhost:3000/game/${id}",
-      });
-      this.model.createGame(jeu, () => this.gameSaved());
+      //this.model = new Game({
+        const attrs = {
+        id: this.i,
+        points: +points,
+        //Type: level,
+        level: "FACILE",
+        //Profile: new Profile({ name: "Moby", login: "Marshell" }),
+        url: `games/${this.model.get("id")}`,
+      };
+      const success = await this.model.createGame(attrs);
+      if (success) {
+        this.gameSaved();
+      }
     }
   }
   gameSaved() {
-    displaySuccess(`Game successfully created.${this.model.Type}`);
+    displaySuccess(`Game successfully created.${this.model.get('level')}`);
     this.closeModal();
     this.model.fetch();
 

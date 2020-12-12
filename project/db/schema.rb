@@ -10,7 +10,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema.define(version: 2020_12_05_214612) do
 
   # These are extensions that must be enabled in order to support this database
@@ -37,14 +36,14 @@ ActiveRecord::Schema.define(version: 2020_12_05_214612) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-<<<<<<< HEAD
   create_table "games", force: :cascade do |t|
-    t.string "Type"
-    t.integer "Points"
+    t.string "level"
+    t.integer "points"
     t.string "url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-=======
+  end
+
   create_table "guild_users", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -53,7 +52,6 @@ ActiveRecord::Schema.define(version: 2020_12_05_214612) do
     t.bigint "guild_id"
     t.index ["guild_id"], name: "index_guild_users_on_guild_id"
     t.index ["user_id"], name: "index_guild_users_on_user_id"
->>>>>>> 15e83a68c4992a1c90282fac4b450a074f2018b5
   end
 
   create_table "guilds", force: :cascade do |t|

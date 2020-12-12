@@ -74,6 +74,7 @@ export default class Guild extends BaseModel<IGuild> {
     return this.asyncSave(
       {},
       {
+
         url: `http://localhost:3000/guilds/${this.get("id")}/quit`,
       }
     );
@@ -119,10 +120,9 @@ export default class Guild extends BaseModel<IGuild> {
     );
   }
 
-<<<<<<< HEAD
-  mapServerErrors(errors: Record<string, string[]>) {
-    return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
-=======
+  // mapServerErrors(errors: Record<string, string[]>) {
+  //   return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
+  // }
   withdraw() {
     return this.asyncSave(
       {},
@@ -130,6 +130,5 @@ export default class Guild extends BaseModel<IGuild> {
         url: `http://localhost:3000/guilds/${this.get("id")}/withdraw`,
       }
     );
->>>>>>> 15e83a68c4992a1c90282fac4b450a074f2018b5
   }
 }

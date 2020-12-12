@@ -1,1 +1,1 @@
-json.extract! guild, :id, :Type, :Points, :users
+json.extract! game, :id, :level, :points, :url,
