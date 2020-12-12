@@ -19,6 +19,14 @@ bob.avatar.attach(
 
 bill = User.create(name: "bill", login: "bill", contribution: 10);
 ben = User.create(name: "ben", login: "ben", contribution: 15);
+bon = User.create(name: "bon", login: "bon", contribution: 15);
+babar = User.create(name: "babar", login: "babar", contribution: 15);
+bin = User.create(name: "bin", login: "bin", contribution: 15);
+bun = User.create(name: "bun", login: "bun", contribution: 15);
+bkkn = User.create(name: "bkkn", login: "bkkn", contribution: 15);
+boon = User.create(name: "boon", login: "boon", contribution: 15);
+beejn = User.create(name: "beejn", login: "beejn", contribution: 15);
+bppn = User.create(name: "bppn", login: "bppn", contribution: 15);
 
 bill.avatar.attach(
 	io: URI.open("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Hotdog_-_Evan_Swigart.jpg/1024px-Hotdog_-_Evan_Swigart.jpg"),
@@ -51,3 +59,11 @@ guild2.img.attach(
 guild1.members << bill
 bill.add_role(:owner, guild1)
 guild1.members << ben
+guild1.members << bon
+guild1.members << babar
+guild1.members << bin
+guild1.members << bun
+guild1.members << bkkn
+guild1.members << boon
+guild1.members << beejn
+guild1.members << bppn
