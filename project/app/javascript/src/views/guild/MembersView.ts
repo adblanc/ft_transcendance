@@ -59,8 +59,10 @@ export default class MembersView extends Backbone.View {
 				this.renderMember(item);
 			}, this);
 		  	this.count += members.length;
-	  } else {
-		  //disable
+	  } 
+	  if (this.count == this.profiles.length) {
+		  console.log("Test");
+		  this.$("#load-more").hide();
 	  }
   }
 
@@ -84,16 +86,6 @@ export default class MembersView extends Backbone.View {
         this.$("#pending-btn").addClass("animate-bounce");
       }
     }
-
-    const $element = this.$("#listing");
-    /*this.profiles.forEach(function (item) {
-      var memberView = new MemberView({
-        model: item,
-        loggedIn: this.profile,
-        guild: this.guild,
-      });
-      $element.append(memberView.render().el);
-    }, this);*/
 
 	var members = this.profiles.first(this.max);
 	members.forEach(function (item) {
