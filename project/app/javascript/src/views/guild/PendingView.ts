@@ -33,11 +33,11 @@ export default class PendingView extends ModalView<Guild> {
 	const $element = this.$("#listing");
 
 	if (this.profiles.length === 0) {
-		$('#empty').show();
+		this.$('#empty').show();
 	}
 	else
 	{
-		$('#notEmpty').show();
+		this.$('#notEmpty').show();
 	}
 
 	this.profiles.forEach(function (item) {
