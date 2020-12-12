@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import _ from "underscore";
 import BaseModel from "src/lib/BaseModel";
 import Rectangle from "./Rectangle";
+import { displaySuccess } from "src/utils/toast";
 
 export default class Ball extends Backbone.Model{ 
     paddle: Rectangle;
@@ -15,7 +16,7 @@ export default class Ball extends Backbone.Model{
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.velocity = 20;
+        this.velocity = 10;
     }
     // defaults() {
     //     return {
@@ -30,6 +31,7 @@ export default class Ball extends Backbone.Model{
     }
 
     update() {
+        
         this.x += this.velocity;
         this.y += this.velocity;
     }

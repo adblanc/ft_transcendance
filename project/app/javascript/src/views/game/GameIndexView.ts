@@ -8,8 +8,13 @@ import CreateGameView from "./CreateGameView";
 import CanvaView from "./CanvaView";
 import MainRouter from "src/routers/MainRouter";
 import GameView from "./GameView"
+import { displaySuccess } from "src/utils/toast";
 
 var canvas = document.createElement("canvas");
+var rectangle = new Rectangle(0, 0, 480, 480);
+var canvaView = new CanvaView({
+  model: rectangle,
+  });
 
 export default class GameIndexView extends BaseView {
   static i: number = 1;
@@ -17,28 +22,42 @@ export default class GameIndexView extends BaseView {
     super(options);
    // GameIndexView.i++;
   }
+
+
+  
   render() {
     const template = $("#index_game").html();
     const html = Mustache.render(template, {});
     this.$el.html(html);
-    this.init(500, 250, '#AAA');
+   // this.init(500, 250, '#AAA');
+   
+    var canvas = canvaView.init(500, 250, '#EEE');
+     canvas.addEventListener('click', this.canvasClicked, false);
+     canvas.addEventListener('mousemove', this.canvasClicked, false);
     //$('#index_game').append(canvaView.render().el);
     return this;
   }
-   events() {
+  canvasClicked() {
+    displaySuccess("Game updated created.");
+    canvaView.update(100);
+    }
+  
+  events() {
      return {
   //     "click #game-enter": "loginGame",
-      "click #create_game": "move",
+      //"click #create_game": "move",
+     // 'mouseout': "move",
+      //'mouseleave': "move",
      // "click #canvas": "move",
      };
    }
 
-   init(width, height, bg) {
-    canvas.width = width;
-    canvas.height = height;
-    canvas.style.backgroundColor = bg;
-    document.body.appendChild(canvas);
-  }
+  //  init(width, height, bg) {
+  //   canvas.width = width;
+  //   canvas.height = height;
+  //   canvas.style.backgroundColor = bg;
+  //   document.body.appendChild(canvas);
+  // }
 //   async loginGame(e: JQuery.Event)
 //   {
 //     //if (e.key === "click") {
@@ -64,13 +83,8 @@ export default class GameIndexView extends BaseView {
   }
 
   move() {
-    const rectangle = new Rectangle(0, 0, 480, 480);
-    const canvaView = new CanvaView({
-	  model: rectangle,
-    collection: this.collection,
-    });
-   // var myView = new RectangleView({model: myRectangle});
-    $('#canvas').append(canvaView.render().el);
+   canvaView.update(10);
+   canvaView.callback(new Date().getSeconds());
   }
 //   createGame() {
 //   const template = $("#game").html();
