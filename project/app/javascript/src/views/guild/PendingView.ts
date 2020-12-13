@@ -35,8 +35,7 @@ export default class PendingView extends ModalView<Guild> {
 	if (this.profiles.length === 0) {
 		this.$('#empty').show();
 	}
-	else
-	{
+	else {
 		this.$('#notEmpty').show();
 	}
 

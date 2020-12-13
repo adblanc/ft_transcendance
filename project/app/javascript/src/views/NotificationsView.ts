@@ -18,6 +18,16 @@ export default class NotificationsView extends BaseView {
 
 	this.listenTo(this.profile.notifications, "add", this.render);
   }
+
+  events() {
+    return {
+      "click #see-btn": "onSeeClicked",
+    };
+  }
+
+  onSeeClicked() {
+	this.$el.toggleClass("invisible");
+  }
   
 
   render() {
