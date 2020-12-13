@@ -5,6 +5,7 @@ class GuildsController < ApplicationController
 
   def show
 	@guild = Guild.find(params[:id])
+	return head :not_found unless @guild
   end
 
   def new
