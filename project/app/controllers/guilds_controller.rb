@@ -5,6 +5,7 @@ class GuildsController < ApplicationController
 
   def show
 	@guild = Guild.find(params[:id])
+	return head :not_found unless @guild
   end
 
   def new
@@ -12,6 +13,8 @@ class GuildsController < ApplicationController
   end
 
   def create
+	return head :unauthorized if current_user.guild.present? || current_user.guild_pending.present?
+
 	@guild = Guild.create(guild_params)
 	@guild.members.push(current_user)
 	current_user.add_role :owner, @guild
@@ -23,11 +26,14 @@ class GuildsController < ApplicationController
   end
 
   def edit
-    @guild = Guild.find(params[:id])
+	@guild = Guild.find(params[:id])
+	return head :unauthorized unless current_user.guild_owner?(@guild)
   end
 
   def update
-    @guild = Guild.find(params[:id])
+	@guild = Guild.find(params[:id])
+	return head :unauthorized unless current_user.guild_owner?(@guild)
+
 	@guild.update(guild_params)
 	if @guild.save
 		@guild
@@ -38,6 +44,8 @@ class GuildsController < ApplicationController
 
   def destroy
 	@guild = Guild.find(params[:id])
+	return head :unauthorized unless current_user.guild_owner?(@guild)
+
 	@guild.members.each do |member|
 		member.update(contribution: 0)
 	end
@@ -46,13 +54,17 @@ class GuildsController < ApplicationController
 
   def quit
 	@guild = Guild.find(params[:id])
+	return head :unauthorized unless current_user.guild == @guild
+
 	if @guild.remove_user(current_user)
 		@guild
 	end
   end
 
   def promote
-    @guild = Guild.find_by(id: params[:id])
+	@guild = Guild.find_by(id: params[:id])
+	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin? 
+
     user = User.find(params[:user_id])
 	if user.add_role(:officer, @guild)
 		@guild
@@ -61,7 +73,9 @@ class GuildsController < ApplicationController
   end
 
   def demote
-    @guild = Guild.find_by(id: params[:id])
+	@guild = Guild.find_by(id: params[:id])
+	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin? 
+
     user = User.find(params[:user_id])
 	if user.remove_role(:officer, @guild)
 		@guild
@@ -70,7 +84,9 @@ class GuildsController < ApplicationController
   end
 
   def fire
-    @guild = Guild.find_by(id: params[:id])
+	@guild = Guild.find_by(id: params[:id])
+	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin? 
+
     user = User.find(params[:user_id])
 	if @guild.remove_user(user)
 		@guild
@@ -80,7 +96,9 @@ class GuildsController < ApplicationController
   end
 
   def transfer
-    @guild = Guild.find_by(id: params[:id])
+	@guild = Guild.find_by(id: params[:id])
+	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin? 
+
 	user = User.find(params[:user_id])
 	owner = User.with_role(:owner, @guild).first
 	user.add_role(:owner, @guild)
@@ -92,7 +110,8 @@ class GuildsController < ApplicationController
   end
 
   def join
-    @guild = Guild.find_by(id: params[:id])
+	@guild = Guild.find_by(id: params[:id])
+	return head :unauthorized if current_user.guild.present? || current_user.guild_pending.present?
 
 	@guild.pending_members.push(current_user)
 	
@@ -102,8 +121,10 @@ class GuildsController < ApplicationController
   end
 
   def accept
-    @guild = Guild.find_by(id: params[:id])
-    pending_member = User.find_by(id: params[:user_id])
+	@guild = Guild.find_by(id: params[:id])
+	return head :unauthorized unless authorized_for_guild?(current_user, @guild) || current_user.admin?
+
+	pending_member = User.find_by(id: params[:user_id])
 
     @guild.pending_members.delete(pending_member)
 	@guild.members.push(pending_member)
@@ -111,7 +132,9 @@ class GuildsController < ApplicationController
   end
 
   def reject
-    @guild = Guild.find_by(id: params[:id])
+	@guild = Guild.find_by(id: params[:id])
+	return head :unauthorized unless authorized_for_guild?(current_user, @guild) || current_user.admin?
+
     pending_member = User.find_by(id: params[:user_id])
 
     @guild.pending_members.delete(pending_member)
@@ -119,12 +142,17 @@ class GuildsController < ApplicationController
   end
 
   def withdraw
-    @guild = Guild.find_by(id: params[:id])
+	@guild = Guild.find_by(id: params[:id])
+	return head :unauthorized unless current_user.pending_guild == @guild
 
 	@guild.pending_members.delete(current_user)
   end
 
   private
+
+  def authorized_for_guild?(user, guild)
+    user.guild_owner?(guild) || user.guild_officer?(guild)
+  end
 
   def guild_params
 	params.permit(:name, :ang, :img)

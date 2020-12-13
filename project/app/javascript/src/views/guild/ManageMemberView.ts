@@ -74,9 +74,9 @@ export default class ManageMemberView extends ModalView<Profile> {
 
     //disable button according to status
     if (this.model.get("guild_role") == "Officer") {
-      $("#promote").addClass("btn-disabled");
+      this.$("#promote").addClass("btn-disabled");
     } else {
-      $("#demote").addClass("btn-disabled");
+      this.$("#demote").addClass("btn-disabled");
     }
 
     return this;
