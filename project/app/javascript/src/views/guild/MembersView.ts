@@ -21,11 +21,13 @@ export default class MembersView extends Backbone.View {
     this.guild = options.guild;
     this.profile = options.profile;
 	this.profiles = this.guild.get("members");
+	this.profiles.sort();
 	this.max = 5;
 
     this.listenTo(this.guild, "change", this.render);
     this.listenTo(this.profile, "change", this.render);
-    this.listenTo(this.profiles, "update", this.render);
+	this.listenTo(this.profiles, "update", this.render);
+	this.listenTo(this.profiles, "sort", this.render);
   }
 
   events() {
