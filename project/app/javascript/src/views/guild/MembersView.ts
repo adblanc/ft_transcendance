@@ -61,7 +61,6 @@ export default class MembersView extends Backbone.View {
 		  	this.count += members.length;
 	  } 
 	  if (this.count == this.profiles.length) {
-		  console.log("Test");
 		  this.$("#load-more").hide();
 	  }
   }

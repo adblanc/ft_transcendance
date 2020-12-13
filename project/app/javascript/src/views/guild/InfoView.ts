@@ -136,20 +136,20 @@ export default class InfoView extends BaseView {
     }
 
     if (this.guild.get("atWar")) {
-      $("#war-btn").addClass("btn-war-disabled");
-      $("#war-btn").html("This Guild is at war");
+      this.$("#war-btn").addClass("btn-war-disabled");
+      this.$("#war-btn").html("This Guild is at war");
     }
 
     if (this.profile.get("pending_guild")) {
       if (
         this.profile.get("pending_guild").get("id") === this.guild.get("id")
       ) {
-        $("#join-btn").css("font-size", 15 + "px");
-        $("#join-btn").html("Withdraw your join request");
-        $("#join-btn").attr("id", "withdraw-btn");
+        this.$("#join-btn").css("font-size", 15 + "px");
+        this.$("#join-btn").html("Withdraw your join request");
+        this.$("#join-btn").attr("id", "withdraw-btn");
       } else {
-        $("#join-btn").addClass("btn-join-disabled");
-        $("#join-btn").html("You have asked to join another guild");
+        this.$("#join-btn").addClass("btn-join-disabled");
+        this.$("#join-btn").html("You have asked to join another guild");
       }
     }
 

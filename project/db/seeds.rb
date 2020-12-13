@@ -19,14 +19,14 @@ bob.avatar.attach(
 
 bill = User.create(name: "bill", login: "bill", contribution: 10);
 ben = User.create(name: "ben", login: "ben", contribution: 15);
-bon = User.create(name: "bon", login: "bon", contribution: 15);
-babar = User.create(name: "babar", login: "babar", contribution: 15);
-bin = User.create(name: "bin", login: "bin", contribution: 15);
-bun = User.create(name: "bun", login: "bun", contribution: 15);
-bkkn = User.create(name: "bkkn", login: "bkkn", contribution: 15);
-boon = User.create(name: "boon", login: "boon", contribution: 15);
-beejn = User.create(name: "beejn", login: "beejn", contribution: 15);
-bppn = User.create(name: "bppn", login: "bppn", contribution: 15);
+boule = User.create(name: "boule", login: "boule", contribution: 0);
+babar = User.create(name: "babar", login: "babar", contribution: 5);
+billy = User.create(name: "billy", login: "billy", contribution: 1);
+jeff = User.create(name: "jeff", login: "jeff", contribution: 15);
+jack = User.create(name: "jack", login: "jack", contribution: 15);
+john = User.create(name: "john", login: "john", contribution: 15);
+benj = User.create(name: "benj", login: "benj", contribution: 15);
+blabla = User.create(name: "blabla", login: "blabla", contribution: 15);
 
 bill.avatar.attach(
 	io: URI.open("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Hotdog_-_Evan_Swigart.jpg/1024px-Hotdog_-_Evan_Swigart.jpg"),
@@ -43,6 +43,12 @@ ben.avatar.attach(
 
 guild1 = Guild.create(name: 'The Best Guild', ang: "TBG", points: 0, atWar: true)
 guild2 = Guild.create(name: 'The Doom', ang: "TDM", points: 2)
+guild3 = Guild.create(name: 'The Dancing Queens', ang: "TDQ", points: 7, atWar: true)
+guild4 = Guild.create(name: 'The Loophole', ang: "LPE", points: 3)
+guild5 = Guild.create(name: 'The Worst Guild', ang: "TWG", points: 5, atWar: true)
+guild6 = Guild.create(name: 'The Ice', ang: "ICE", points: 2)
+
+
 
 guild1.img.attach(
 	io: URI.open("https://i.pinimg.com/originals/1a/27/ff/1a27ff81c19e1c10583ea970b0f3827f.jpg"),
@@ -59,11 +65,7 @@ guild2.img.attach(
 guild1.members << bill
 bill.add_role(:owner, guild1)
 guild1.members << ben
-guild1.members << bon
+guild1.members << boule
 guild1.members << babar
-guild1.members << bin
-guild1.members << bun
-guild1.members << bkkn
-guild1.members << boon
-guild1.members << beejn
-guild1.members << bppn
+guild1.members << billy
+guild1.members << jeff
