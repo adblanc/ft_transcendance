@@ -21,14 +21,13 @@ export default class NotificationsView extends BaseView {
 
   events() {
     return {
-      "click #see-btn": "onSeeClicked",
+	  "click #see-btn": "onSeeClicked",
     };
   }
 
   onSeeClicked() {
 	this.$el.toggleClass("invisible");
   }
-  
 
   render() {
 	const template = $("#notificationsTemplate").html();
