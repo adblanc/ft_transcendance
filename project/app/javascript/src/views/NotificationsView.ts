@@ -17,6 +17,14 @@ export default class NotificationsView extends BaseView {
 	this.profile = options.profile;
 
 	this.listenTo(this.profile.notifications, "add", this.render);
+
+	/*var self = this;
+	$('body').on('click', function(e) {
+        if($(e.target).closest('#notifications-container').length == 0) {
+			if (!self.$el.hasClass("invisible"))
+				self.$el.toggleClass("invisible");
+        }
+    });*/
   }
 
   events() {

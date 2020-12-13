@@ -73,6 +73,9 @@ export default class GuildIndexView extends BaseView {
 		this.renderGuild(item);
 	}, this);
 	this.count = guilds.length;
+	if (this.count == this.collection.length) {
+		this.$("#load-more").hide();
+	}
 
     if (this.myGuildView) {
       this.renderNested(this.myGuildView, "#myguild");
