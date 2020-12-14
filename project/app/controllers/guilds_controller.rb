@@ -13,7 +13,7 @@ class GuildsController < ApplicationController
   end
 
   def create
-	return head :unauthorized if current_user.guild.present? || current_user.guild_pending.present?
+	return head :unauthorized if current_user.guild.present? || current_user.pending_guild.present?
 
 	@guild = Guild.create(guild_params)
 	@guild.members.push(current_user)
@@ -63,7 +63,7 @@ class GuildsController < ApplicationController
 
   def promote
 	@guild = Guild.find_by(id: params[:id])
-	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin? 
+	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin?
 
     user = User.find(params[:user_id])
 	if user.add_role(:officer, @guild)
@@ -74,7 +74,7 @@ class GuildsController < ApplicationController
 
   def demote
 	@guild = Guild.find_by(id: params[:id])
-	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin? 
+	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin?
 
     user = User.find(params[:user_id])
 	if user.remove_role(:officer, @guild)
@@ -85,7 +85,7 @@ class GuildsController < ApplicationController
 
   def fire
 	@guild = Guild.find_by(id: params[:id])
-	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin? 
+	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin?
 
     user = User.find(params[:user_id])
 	if @guild.remove_user(user)
@@ -97,7 +97,7 @@ class GuildsController < ApplicationController
 
   def transfer
 	@guild = Guild.find_by(id: params[:id])
-	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin? 
+	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin?
 
 	user = User.find(params[:user_id])
 	owner = User.with_role(:owner, @guild).first
@@ -111,10 +111,10 @@ class GuildsController < ApplicationController
 
   def join
 	@guild = Guild.find_by(id: params[:id])
-	return head :unauthorized if current_user.guild.present? || current_user.guild_pending.present?
+	return head :unauthorized if current_user.guild.present? || current_user.pending_guild.present?
 
 	@guild.pending_members.push(current_user)
-	
+
 	(@guild.officers.to_ary << @guild.owner).each do |officers|
 		officers.send_notification(current_user, "wants to join", @guild)
 	end
