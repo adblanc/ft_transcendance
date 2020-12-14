@@ -26,7 +26,7 @@ export default class MainRouter extends Backbone.Router {
         guildindex: "guildIndex",
         "guild/:id": "guildShow",
         "me/notifications": "notifShow",
-		"user/:id": "userShow",
+		    "user/:id": "userShow",
         "*path": "notFound",
       },
     });

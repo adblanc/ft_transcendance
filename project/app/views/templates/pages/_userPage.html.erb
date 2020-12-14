@@ -20,12 +20,12 @@
 			<div style='margin: auto; margin-bottom:20px; text-align: center'>
 			{{#has_guild}}
 				<p><span style='font-weight:bold'>{{guild_role}}</span> de la guilde</p>
-				<a style="text-decoration: underline" href="/guild/{{guild_id}}">
-				<img style='margin: auto; margin-top:10px' width="80" height="80" class="rounded-full p-2" src={{guild_img}}/>
-				<p style='margin-bottom:20px'>{{guild_name}}</p></a>
+				<a style="text-decoration: underline" href="/guild/{{guild.id}}">
+				<img style='margin: auto; margin-top:10px' width="80" height="80" class="rounded-full p-2" src={{img_url}}/>
+				<p style='margin-bottom:20px'>{{guild.name}}</p></a>
 			{{/has_guild}}
 			{{^has_guild}}
-				<p style='margin-bottom:20px;' class="justify-center flex">N'appartient a aucune guilde</p>	
+				<p style='margin-bottom:20px;' class="justify-center flex">N'appartient a aucune guilde</p>
 			{{/has_guild}}
 			</div>
 		</div>
