@@ -3,11 +3,18 @@ import BaseView from "src/lib/BaseView";
 import RoomUser from "src/models/RoomUser";
 import { displaySuccess } from "src/utils";
 
+type Options = Backbone.ViewOptions<RoomUser> & {
+  isCurrentUserOwner: boolean;
+};
+
 export default class RoomUserView extends BaseView<RoomUser> {
-  constructor(options?: Backbone.ViewOptions<RoomUser>) {
+  isCurrentUserOwner: boolean;
+  constructor(options?: Options) {
     super(options);
 
     this.listenTo(this.model, "change", this.render);
+
+    this.isCurrentUserOwner = options.isCurrentUserOwner;
   }
 
   events() {
@@ -27,12 +34,15 @@ export default class RoomUserView extends BaseView<RoomUser> {
 
   render() {
     const template = $("#room-user-template").html();
+
+    const isCurrentUser =
+      $("#current-user-profile").data("login") === this.model.get("login");
+
     const html = Mustache.render(template, {
       ...this.model.toJSON(),
-      isCurrentUser:
-        $("#current-user-profile").data("login") === this.model.get("login"),
-      canPromote: !this.model.get("isRoomAdministrator"),
-      canDemote: this.model.get("isRoomAdministrator"),
+      showButtons: !isCurrentUser && this.isCurrentUserOwner,
+      canPromote: this.model.canBePromote(),
+      canDemote: this.model.canBeDemote(),
     });
     this.$el.html(html);
 

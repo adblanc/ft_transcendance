@@ -12,7 +12,6 @@ export interface IRoom {
   password?: string;
   id?: number;
   selected?: boolean;
-  isOwner?: boolean;
 }
 
 export default class Room extends BaseModel<IRoom> {

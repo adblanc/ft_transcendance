@@ -3,7 +3,8 @@ import { IProfile } from "./Profile";
 import Room from "./Room";
 
 interface IRoomUser extends IProfile {
-  isRoomAdministrator: boolean;
+  roomRole: "Owner" | "Administrator" | "Member";
+  isRoomAdministrator?: boolean;
 }
 
 export default class RoomUser extends BaseModel<IRoomUser> {
@@ -21,5 +22,13 @@ export default class RoomUser extends BaseModel<IRoomUser> {
         )}/update_role`,
       }
     );
+  }
+
+  canBePromote() {
+    return this.get("roomRole") === "Member";
+  }
+
+  canBeDemote() {
+    return this.get("roomRole") === "Administrator";
   }
 }
