@@ -4,11 +4,22 @@ import BaseModel from "src/lib/BaseModel";
 import Rectangle from "./Rectangle";
 import { displaySuccess } from "src/utils/toast";
 
+class Vec
+{
+    x: number;
+    y: number;
+    constructor(x = 0, y = 0)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
+
 export default class Ball extends Backbone.Model{ 
     paddle: Rectangle;
     x: number;
     y: number;
-    velocity: number;
+    velocity: Vec;
     radius: number;
     constructor(x, y, radius)
     {
@@ -16,7 +27,7 @@ export default class Ball extends Backbone.Model{
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.velocity = 10;
+        this.velocity = new Vec(2,2);
     }
     // defaults() {
     //     return {
@@ -31,8 +42,25 @@ export default class Ball extends Backbone.Model{
     }
 
     update() {
-        
-        this.x += this.velocity;
-        this.y += this.velocity;
+        if (this.top() < 0 || this.bottom() > 250)
+            this.velocity.y *= -1;
+        this.x += this.velocity.x;
+        this.y += this.velocity.y;
+    }
+    left()
+    {
+        return this.x - this.radius;
+    }
+    right()
+    {
+        return this.x + this.radius;
+    }
+    top()
+    {
+        return this.y - this.radius;
+    }
+    bottom()
+    {
+        return this.y + this.radius;
     }
 };
