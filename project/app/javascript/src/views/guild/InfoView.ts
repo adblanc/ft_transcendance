@@ -5,7 +5,7 @@ import PageImgView from "./imgsViews/PageImgView";
 import Profile from "src/models/Profile";
 import Guild from "src/models/Guild";
 import ModifyGuildView from "./ModifyGuildView";
-import { displayError, displayErrors, displaySuccess } from "src/utils";
+import { displaySuccess } from "src/utils";
 
 type Options = Backbone.ViewOptions & { guild: Guild; profile: Profile };
 
@@ -45,11 +45,9 @@ export default class InfoView extends BaseView {
   }
 
   async onQuitClicked() {
-    try {
-      await this.guild.quit();
+    const success = await this.guild.quit();
+    if (success) {
       this.guildQuit();
-    } catch (err) {
-      displayErrors(err);
     }
   }
 
@@ -73,15 +71,11 @@ export default class InfoView extends BaseView {
     }
   }
 
-  onJoinClicked() {
-    this.guild.join(
-      (errors) => {
-        errors.forEach((error) => {
-          displayError(error);
-        });
-      },
-      () => this.guildJoin()
-    );
+  async onJoinClicked() {
+    const success = await this.guild.join();
+    if (success) {
+      this.guildJoin();
+    }
   }
 
   guildJoin() {
@@ -93,11 +87,10 @@ export default class InfoView extends BaseView {
   }
 
   async onWithdrawClicked() {
-    try {
-      await this.guild.withdraw();
+    const success = await this.guild.withdraw();
+
+    if (success) {
       this.guildWithdraw();
-    } catch (err) {
-      displayErrors(err);
     }
   }
 

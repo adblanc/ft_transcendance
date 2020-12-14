@@ -2,7 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import Rooms from "src/collections/Rooms";
 import Room from "src/models/Room";
-import { displayToast } from "src/utils";
+import { displaySuccess } from "src/utils";
 
 type Options = Backbone.ViewOptions & {
   rooms: Rooms;
@@ -34,29 +34,16 @@ export default class CreateJoinChannelView extends Backbone.View {
     const name = this.nameInput().val() as string;
     const password = this.passwordInput().val() as string;
 
-    let room: Room = undefined;
+    const { success, room } = !this.isJoin
+      ? await this.createChannel(name, password)
+      : await this.joinChannel(name, password);
 
-    try {
-      if (!this.isJoin) {
-        room = await this.createChannel(name, password);
-      } else {
-        room = await this.joinChannel(name, password);
-      }
-
+    if (success) {
       this.rooms.add(room);
-
       this.clearInput();
-
-      displayToast(
-        {
-          text: `Room ${name} successfully ${
-            this.isJoin ? "joined" : "created"
-          }.`,
-        },
-        "success"
+      displaySuccess(
+        `Room ${name} successfully ${this.isJoin ? "joined" : "created"}.`
       );
-    } catch (err) {
-      displayToast({ text: err }, "error");
     }
   }
 
@@ -65,9 +52,9 @@ export default class CreateJoinChannelView extends Backbone.View {
 
   async createChannel(name: string, password: string) {
     const room = new Room();
-    await room.asyncSave({ name: name, password: password });
+    const success = await room.asyncSave({ name: name, password: password });
 
-    return room;
+    return { room, success };
   }
 
   async joinChannel(name: string, password: string) {
@@ -75,12 +62,12 @@ export default class CreateJoinChannelView extends Backbone.View {
       name,
       password,
     });
-    await room.asyncFetch({
+    const success = await room.asyncFetch({
       url: "http://localhost:3000/join-room",
       data: room.toJSON(),
     });
 
-    return room;
+    return { room, success };
   }
 
   private clearInput() {

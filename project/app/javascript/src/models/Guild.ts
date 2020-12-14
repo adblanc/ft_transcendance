@@ -74,6 +74,7 @@ export default class Guild extends BaseModel<IGuild> {
     return this.asyncSave(
       {},
       {
+
         url: `http://localhost:3000/guilds/${this.get("id")}/quit`,
       }
     );
@@ -90,15 +91,11 @@ export default class Guild extends BaseModel<IGuild> {
     );
   }
 
-  join(error: (errors: string[]) => void, success: () => void) {
-    this.save(
+  join() {
+    return this.asyncSave(
       {},
       {
         url: `http://localhost:3000/guilds/${this.id}/join`,
-        success: () => success(),
-        error: (_, jqxhr) => {
-          error(mapServerErrors(jqxhr?.responseJSON));
-        },
       }
     );
   }
@@ -123,6 +120,9 @@ export default class Guild extends BaseModel<IGuild> {
     );
   }
 
+  // mapServerErrors(errors: Record<string, string[]>) {
+  //   return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
+  // }
   withdraw() {
     return this.asyncSave(
       {},

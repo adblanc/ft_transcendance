@@ -2,9 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
 import Guild from "src/models/Guild";
-import { displayToast } from "src/utils/toast";
-import MainRouter from "src/routers/MainRouter";
-import { displayError, displayErrors } from "src/utils";
+import { displaySuccess } from "src/utils/toast";
 
 export default class ModifyGuildView extends ModalView<Guild> {
   constructor(options?: Backbone.ViewOptions<Guild>) {
@@ -28,11 +26,10 @@ export default class ModifyGuildView extends ModalView<Guild> {
     //e.preventDefault();
 
     this.model.destroy();
-    displayToast({ text: "Guild successfully destroyed." }, "success");
+    displaySuccess("Guild successfully destroyed.");
     this.closeModal();
 
-    const router = new MainRouter();
-    router.navigate("notFound", { trigger: true });
+    Backbone.history.navigate("/", { trigger: true });
   }
 
   async onSubmit(e: JQuery.Event) {
@@ -46,14 +43,12 @@ export default class ModifyGuildView extends ModalView<Guild> {
 
     if (!attrs.img) delete attrs.img;
 
-    try {
-      await this.model.modifyGuild(attrs);
+    const success = await this.model.modifyGuild(attrs);
 
-      displayToast({ text: "Guild successfully updated." }, "success");
+    if (success) {
+      displaySuccess("Guild successfully updated.");
       this.closeModal();
       this.model.fetch();
-    } catch (err) {
-      displayErrors(err);
     }
   }
 

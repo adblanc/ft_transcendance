@@ -2,7 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "./ModalView";
 import Profile from "../models/Profile";
-import { displayErrors, displayToast } from "src/utils";
+import { displaySuccess } from "src/utils";
 
 export default class ModifyProfileView extends ModalView<Profile> {
   constructor(options?: Backbone.ViewOptions<Profile>) {
@@ -27,17 +27,13 @@ export default class ModifyProfileView extends ModalView<Profile> {
 
     if (!attrs.avatar) delete attrs.avatar;
 
-    try {
-      await this.model.modifyProfil(attrs);
+    const success = await this.model.modifyProfil(attrs);
 
-      displayToast({ text: "Profile successfully changed." }, "success");
+    if (success) {
+      displaySuccess("Profile successfully changed.");
       this.closeModal();
       this.model.fetch();
-    } catch (err) {
-      displayErrors(err);
     }
-
-    console.log("attrs", this.model.attributes);
   }
 
   render() {

@@ -1,25 +1,71 @@
 import Backbone from "backbone";
 import _ from "underscore";
-import Profile from "./Profile";
+import Profile from "src/models/Profile";
+import Profiles from "src/collections/Profiles";
+import { mapServerErrors, syncWithFormData } from "src/utils";
+import BaseModel from "src/lib/BaseModel";
 
 interface IGame
 {
-    Id: number;
-    Type: string;
-    Points: number;
+    id?: number;
+    level: string;
+    points: number;
+    url?: string;
     user: Profile;
-    url: string;
 }
 
-type CreatableGameArgs = Partial<Pick<IGame, "Id" | "user" | "url">>;
+type CreatableGameArgs = Partial<Pick<IGame, "id" | "points" | "level" | "url">>;
 
-export default class Game extends Backbone.Model<IGame>
-{
-   urlRoot = () => "http://localhost:3000/game";
-   user = new Profile(); 
-    Points: number;
-    Type: string;
+export default class Game extends BaseModel<IGame> {
+	preinitialize() {
+		this.relations = [
+			{
+				type: Backbone.Many,
+				key: "user",
+				collectionType: Profiles,
+				relatedModel: Profile,
+			}
+		];
+    }
     
+    constructor(options?: any)
+    {
+        super(options);
+    }
+
+    defaults() {
+        return {
+        level: '',
+        points: 0,
+        };  }
+   
+    urlRoot = () => "http://localhost:3000/games";
+    sync(method: string, model: Game, options: JQueryAjaxSettings): any {
+      return syncWithFormData(method, model, options);
+    }
+  
+    createGame(attrs: CreatableGameArgs) {
+      return this.asyncSave(attrs, { url: this.urlRoot() });
+    }
+  //  sync(method: string, model: Game, options: JQueryAjaxSettings): any {
+  //   if (method == "create") {
+  //     var formData = new FormData();
+
+  //     _.each(model.attributes, function (value, key) {
+	// 	formData.append(key, value);
+  //     });
+  //     _.defaults(options || (options = {}), {
+  //       data: formData,
+  //       processData: false,
+	// 	contentType: false,
+  //     });
+  //   }
+  //   return Backbone.sync.call(this, method, model, options);
+  // }
+
+//    user = new Profile(); 
+//     Points: number;
+//     Type: string;
     // constructor(Id: number, type: string, Pts: number, Profil: Profile) {
     //     super();
     //     this.set(this.Type: type);
@@ -28,37 +74,28 @@ export default class Game extends Backbone.Model<IGame>
     //     this.url = this.urlRoot;
     //     console.log(this.id);
     // }
-    constructor(options?: any)
-    {
-        super(options);
-    }
-    defaults() {
- 	return {
- 		Type: 'blabla',
- 		Points: 0,
- 	};  }
+
+
    
-    createGame(game: Game, success: () => void) {
-        this.Points = game.Points;
-        this.Type = game.Type;
-        this.url = game.url;
-        this.save(
-            {},
-            {
-              url: this.urlRoot(),
-              success: () => success(),
-              //error: (_, jqxhr) => {
-              //  error(this.mapServerErrors(jqxhr?.responseJSON));
-              }
-          );
-        success();
-    }
-    // set sName(nom: string)
-    // {
-    //     this.set('name', nom);
+    // createGame(attrs: CreatableGameArgs,  success: () => void) {
+    //    this.set(attrs),
+    //     this.save(
+    //         {},
+    //         {
+    //           url: this.urlRoot(),
+    //           success: () => success(),
+    //           // error: (_, jqxhr) => {
+    //           //   error(this.mapServerErrors(jqxhr?.responseJSON));};
+    //         }
+    //       );
+    //    // success();
     // }
-    get gType(): string
-     {
-         return this.get('Type');
-     }
+
 }
+
+// type rec = Record<string, string>;
+
+// mapServerErrors(errors: rec) {
+//     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
+//   }
+// }

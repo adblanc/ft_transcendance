@@ -5,8 +5,7 @@ import CreateGuildView from "./CreateGuildView";
 import Guild from "src/models/Guild";
 import Guilds from "src/collections/Guilds";
 import Profile from "src/models/Profile";
-import { displayToast } from "src/utils/toast";
-import { displayError } from "src/utils";
+import { displaySuccess } from "src/utils";
 
 type Options = Backbone.ViewOptions & { profile: Profile; collection: Guilds };
 
@@ -41,25 +40,19 @@ export default class MyGuildView extends BaseView {
     createGuildView.render();
   }
 
-  onWithdrawClicked() {
-    this.profile.get("pending_guild").withdraw(
-      (errors) => {
-        errors.forEach((error) => {
-          displayError(error);
-        });
-      },
-      () => this.guildWithdraw()
-    );
+  async onWithdrawClicked() {
+    const success = await this.profile.get("pending_guild").withdraw();
+
+    if (success) {
+      this.guildWithdraw();
+    }
   }
 
   guildWithdraw() {
-    displayToast(
-      {
-        text: `You have withdrawn your request to join ${this.profile
-          .get("pending_guild")
-          .get("name")}. `,
-      },
-      "success"
+    displaySuccess(
+      `You have withdrawn your request to join ${this.profile
+        .get("pending_guild")
+        .get("name")}.`
     );
     this.profile.fetch();
   }

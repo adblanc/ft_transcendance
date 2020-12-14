@@ -65,7 +65,7 @@ export default class Room extends BaseModel<IRoom> {
   }
 
   async quit() {
-    await this.asyncDestroy({
+    return this.asyncDestroy({
       url: `http://localhost:3000/quit-room?name=${this.get("name")}`,
     });
   }

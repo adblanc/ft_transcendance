@@ -37,13 +37,13 @@ export default class ManageMemberView extends ModalView<Profile> {
   }
 
   async onManage(action: GUILD_ACTION) {
-    try {
-      await this.guild.manageMembers(action, this.model.get("id"));
+    const success = await this.guild.manageMembers(
+      action,
+      this.model.get("id")
+    );
 
+    if (success) {
       this.saved(action);
-    } catch (err) {
-      console.log("error", err);
-      displayErrors(err);
     }
   }
 

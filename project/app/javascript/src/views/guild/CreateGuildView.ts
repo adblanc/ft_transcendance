@@ -2,10 +2,9 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
 import Guild from "src/models/Guild";
-import { displayToast } from "src/utils/toast";
-import MainRouter from "src/routers/MainRouter";
+import { displaySuccess } from "src/utils/toast";
 import { generateAcn } from "src/utils/acronym";
-import { displayError, displayErrors } from "src/utils";
+import { displayError } from "src/utils";
 
 export default class CreateGuildView extends ModalView<Guild> {
   list: string[];
@@ -47,17 +46,15 @@ export default class CreateGuildView extends ModalView<Guild> {
 
       if (!attrs.img) delete attrs.img;
 
-      try {
-        await this.model.createGuild(attrs);
+      const success = await this.model.createGuild(attrs);
+      if (success) {
         this.guildSaved();
-      } catch (err) {
-        displayErrors(err);
       }
     }
   }
 
   guildSaved() {
-    displayToast({ text: "Guild successfully created." }, "success");
+    displaySuccess("Guild successfully created.");
     this.closeModal();
     this.model.fetch();
     Backbone.history.navigate(`guild/${this.model.get("id")}`, {

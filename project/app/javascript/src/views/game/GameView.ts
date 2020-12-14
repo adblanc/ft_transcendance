@@ -12,7 +12,7 @@ export default class GameView extends BaseView {
    // static i: number = 0;
     constructor(options?: Options) {
         super(options);
-        this.game= options.game;
+        this.game = options.game;
         this.game.fetch();
        // this.i++;
       }

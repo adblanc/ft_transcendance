@@ -7,3 +7,14 @@ export const mapServerErrors = (errors: Record<string, string[]>) => {
 export const displayErrors = (error: string[]) => {
   error.forEach((err) => displayError(err));
 };
+
+export const handleServerErrors = async (promise: Promise<any>) => {
+  try {
+    await promise;
+
+    return true;
+  } catch (errors) {
+    displayErrors(errors);
+    return false;
+  }
+};
