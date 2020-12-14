@@ -35,9 +35,9 @@ export default class ModalView<
     this.$el.html(html);
     $("body").append(this.$el);
 
-    if (!this.$content) {
-      this.$content = $("#modal-content");
-    }
+    
+    this.$content = $("#modal-content");
+
 
     return this;
   }

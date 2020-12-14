@@ -17,10 +17,6 @@ export default class PendingMemberView extends BaseView {
     this.model = options.model;
     this.guild = options.guild;
 
-    this.listenTo(this.model, "change", this.render);
-    this.listenTo(this.model, "add", this.render);
-    this.listenTo(this.guild, "add", this.render);
-    this.listenTo(this.guild, "delete", this.render);
   }
 
   events() {

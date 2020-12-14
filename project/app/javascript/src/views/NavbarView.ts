@@ -48,7 +48,8 @@ export default class NavbarView extends BaseView {
     eventBus.trigger("chat:open");
   }
 
-  onClickNotification() {
+  onClickNotification(e: JQuery.Event) {
+	e.stopPropagation();
 	eventBus.trigger("notifications:open");
 	this.profile.notifications.forEach(function (item) {
 		if (!item.get("read_at")) {
