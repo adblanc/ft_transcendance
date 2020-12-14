@@ -23,6 +23,7 @@ export default class NavbarView extends BaseView {
 
 	this.listenTo(this.profile.notifications, "add", this.render);
 	this.listenTo(this.profile.notifications, "change", this.render);
+	this.listenTo(this.profile, "change:id", this.render);
 	
   }
 

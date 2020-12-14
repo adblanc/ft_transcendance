@@ -1,8 +1,7 @@
 Rails.application.routes.draw do
   get '/auth/42', to: 'authentication#login42', format: false
-
   get '/auth/guest', to: 'authentication#loginGuest', format: false
- 
+  get '/profile/:id', to: 'users#show_other_user'
 
   resource :user, only: [:show, :update]
   get "user/notifications", to: "users#show"

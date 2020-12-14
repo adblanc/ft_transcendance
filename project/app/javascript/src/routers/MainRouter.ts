@@ -12,6 +12,7 @@ import { addAuthHeaders, isAuth } from "../utils";
 import AuthView from "../views/AuthView";
 import Guild from "src/models/Guild";
 import Game from "src/models/Game";
+import UserView from "../views/user/UserView";
 
 export default class MainRouter extends Backbone.Router {
   constructor() {
@@ -25,6 +26,7 @@ export default class MainRouter extends Backbone.Router {
         guildindex: "guildIndex",
         "guild/:id": "guildShow",
         "me/notifications": "notifShow",
+		"user/:id": "userShow",
         "*path": "notFound",
       },
     });
@@ -109,5 +111,13 @@ export default class MainRouter extends Backbone.Router {
     }
     const notifPageView = new NotifPageView();
     pagesHandler.showPage(notifPageView);
+  }
+
+  userShow(id: number) {
+    if (!isAuth()) {
+      return this.navigate("/auth", { trigger: true });
+    }
+	const userView = new UserView({ userId: id });
+	pagesHandler.showPage(userView);
   }
 }
