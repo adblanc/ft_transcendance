@@ -18,23 +18,30 @@ export default class NotificationsView extends BaseView {
 
 	this.listenTo(this.profile.notifications, "add", this.render);
 
-	/*var self = this;
-	$('body').on('click', function(e) {
-        if($(e.target).closest('#notifications-container').length == 0) {
-			if (!self.$el.hasClass("invisible"))
-				self.$el.toggleClass("invisible");
-        }
-    });*/
+
+	$('body').on('click', this.dismissNotif);
   }
 
   events() {
     return {
 	  "click #see-btn": "onSeeClicked",
+	  "click #content": "onSeeClicked",
     };
   }
 
   onSeeClicked() {
 	this.$el.toggleClass("invisible");
+  }
+
+  dismissNotif =  (e: Event) => {
+	if($(e.target).closest('#notifications-container').length == 0) {
+		if (!this.$el.hasClass("invisible"))
+			this.$el.toggleClass("invisible");
+	}
+  }
+
+  onClose = () => {
+	$('body').off('click');
   }
 
   render() {
