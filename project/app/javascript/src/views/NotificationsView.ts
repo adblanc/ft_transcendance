@@ -25,6 +25,7 @@ export default class NotificationsView extends BaseView {
   events() {
     return {
 	  "click #see-btn": "onSeeClicked",
+	  "click #content": "onSeeClicked",
     };
   }
 
