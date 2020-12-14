@@ -1,7 +1,7 @@
 
 <script type="text/html" id="index_game">
 <div class="flex h-screen">
-  <h1 class="m-auto text-5xl text-teal-500">Page of Thrones</h1>
+  <h1 class="m-auto text-5xl text-teal-500" id="score">Page of Game points:{{score}}</h1>
   <label class="block m-auto text-5xl text-teal-500" for="input-enemy">
   <input class="form-input block mt-1"
             type="button"
@@ -11,13 +11,8 @@
             name="join_tournament"
             id="join_tournament" value="join a tournament">
           </label>
-          <body>
-<h1>Pong</h1>
-
-<div id="header-plugin"></div>
-
-<canvas id="canvas" width=480 height=640>Click on the rectangle...</canvas>
-
+    <p class="block m-auto text-teal-500">Joueur 1 : <em id="player-score">0</em> - Joueur 2 : <em id="computer-score">0</em></p>
+<canvas type="canvas" id="canvas"> </canvas>
 </script>
 
 

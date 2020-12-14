@@ -17,6 +17,8 @@ export default class ItemView extends BaseView {
 	this.notification = options.notification;
 	this.page = options.page;
 
+	//console.log(this.notification);
+
 	this.listenTo(this.notification, "change", this.render);
 
   }

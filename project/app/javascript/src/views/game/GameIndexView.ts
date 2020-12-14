@@ -1,6 +1,7 @@
 import Mustache from "mustache";
 import Backbone from "backbone";
 import Game from "src/models/Game";
+//import Guild from "src/models/Guild";
 import Rectangle from "src/models/Rectangle";
 import Profile from "src/models/Profile";
 import BaseView from "src/lib/BaseView";
@@ -8,37 +9,75 @@ import CreateGameView from "./CreateGameView";
 import CanvaView from "./CanvaView";
 import MainRouter from "src/routers/MainRouter";
 import GameView from "./GameView"
+import Player from "src/models/Player";
+import { displaySuccess } from "src/utils/toast";
 
 var canvas = document.createElement("canvas");
+var rectangle = new Rectangle(0, 0, 480, 480);
+var canvaView = new CanvaView({
+  model: rectangle,
+  });
+  var mouse = new MouseEvent('mousedown');
+//var player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
 
 export default class GameIndexView extends BaseView {
+  player_one: Player;
   static i: number = 1;
+  jeu: Game;
   constructor(options?) {
     super(options);
-   // GameIndexView.i++;
+    this.jeu = new Game();
+    this.player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
+    this.listenTo(this.player_one, "add", this.render);
   }
+
+
+  
   render() {
     const template = $("#index_game").html();
-    const html = Mustache.render(template, {});
+    const html = Mustache.render(template, {'score': +this.player_one.score});
     this.$el.html(html);
-    this.init(500, 250, '#AAA');
+   // this.init(500, 250, '#AAA');
+   
+    var canvas = canvaView.init(500, 250, '#EEE', this.player_one);
+    var evtarget = new EventTarget();
+    mouse.initMouseEvent('mousemove', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, evtarget);
+     canvas.addEventListener('click', this.canvasClicked, false);
+     canvas.addEventListener('mousemove', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
+     //canvas.addEventListener('mouseover', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
+    
+    //evtarget.addEventListener('mousedown', this.canvasClicked, false)
+    
+
     //$('#index_game').append(canvaView.render().el);
     return this;
   }
-   events() {
+  canvasClicked(e) {
+    const scale: number = e.offsetY / 250;
+    s : String;
+    var s = "Mouse down" + String(scale);
+    
+    // canvas.getBoundingClientRect().height;
+   canvaView.player.paddle.y = canvas.height * scale;
+    canvaView.update(100);
+    }
+  
+  events() {
      return {
   //     "click #game-enter": "loginGame",
-      "click #create_game": "move",
+      //"click #create_game": "move",
+     // 'mouseout': "move",
+      //'mouseleave': "move",
      // "click #canvas": "move",
      };
    }
 
-   init(width, height, bg) {
-    canvas.width = width;
-    canvas.height = height;
-    canvas.style.backgroundColor = bg;
-    document.body.appendChild(canvas);
-  }
+  //  init(width, height, bg) {
+  //   canvas.width = width;
+  //   canvas.height = height;
+  //   canvas.style.backgroundColor = bg;
+  //   document.body.appendChild(canvas);
+  // }
 //   async loginGame(e: JQuery.Event)
 //   {
 //     //if (e.key === "click") {
@@ -64,13 +103,8 @@ export default class GameIndexView extends BaseView {
   }
 
   move() {
-    const rectangle = new Rectangle(0, 0, 480, 480);
-    const canvaView = new CanvaView({
-	  model: rectangle,
-    collection: this.collection,
-    });
-   // var myView = new RectangleView({model: myRectangle});
-    $('#canvas').append(canvaView.render().el);
+   canvaView.update(10);
+   canvaView.callback(new Date().getSeconds());
   }
 //   createGame() {
 //   const template = $("#game").html();

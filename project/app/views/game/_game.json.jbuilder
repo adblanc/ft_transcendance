@@ -1,1 +1,1 @@
-json.extract! game, :id, :level, :points, :url,
+json.extract! game, :id, :level, :points, :url
