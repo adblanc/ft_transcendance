@@ -111,7 +111,7 @@ class GuildsController < ApplicationController
 
   def join
 	@guild = Guild.find_by(id: params[:id])
-	return head :unauthorized if current_user.guild.present? || current_user.guild_pending.present?
+	return head :unauthorized if current_user.guild.present? || current_user.pending_guild.present?
 
 	@guild.pending_members.push(current_user)
 	
