@@ -1,9 +1,7 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "src/lib/BaseView";
-import Message from "src/models/Message";
 import Room from "src/models/Room";
-import MessageView from "./MessageView";
 import RoomMessagesView from "./RoomMessagesView";
 
 export default class RoomView extends BaseView<Room> {
@@ -33,16 +31,9 @@ export default class RoomView extends BaseView<Room> {
     }
   }
 
-  renderMsg(message: Message) {
-    $("#messages-container").append(
-      new MessageView({ model: message }).render().el
-    );
-  }
-
   render() {
     if (this.model.get("selected")) {
       this.roomMessagesView.render();
-    } else {
     }
 
     const template = $("#roomTemplate").html();

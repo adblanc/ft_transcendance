@@ -74,7 +74,6 @@ export default class ChatView extends BaseView {
   }
 
   removeRoom(room: Room) {
-    console.log("we remove", room.get("id"));
     this.$(`#room-${room.get("id")}`)
       .parent()
       .remove();

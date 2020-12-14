@@ -12,13 +12,9 @@ class Room < ApplicationRecord
 
 
 	def update_user_role(user, action)
-		logger = Logger.new(STDOUT);
-		logger.debug("-------- update_user_role -----");
 		case action
 		when "promote"
-			logger.debug("-------- promote -----");
 			if (user.is_member?(self))
-				logger.debug("-------- is member -----");
 				user.add_role :administrator, self
 			end
 		when "demote"

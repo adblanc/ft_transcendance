@@ -27,9 +27,9 @@ class UsersController < ApplicationController
 		action = params[:update_action];
 
 		if !@user_to_update
-			render json: "Please provide a valid user_id", status: :unprocessable_entity and return;
+      render json: {"member" => ["not found in this room."]}, status: :not_found and return;
 		elsif !valid_update_role_action(action)
-			render json: "Please provide a valid action", status: :unprocessable_entity and return;
+			render json: {"you" => ["must provide a valid action"]}, status: :unprocessable_entity and return;
 		end
 
 		@room.update_user_role(@user_to_update, action)

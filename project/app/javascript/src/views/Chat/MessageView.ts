@@ -12,6 +12,16 @@ export default class MessageView extends Backbone.View<Message> {
     }
   }
 
+  events() {
+    return {
+      "click .user-avatar": this.onProfileClicked,
+    };
+  }
+
+  onProfileClicked() {
+    console.log("on profile clicked");
+  }
+
   render() {
     const template = $("#message-template").html();
     const html = Mustache.render(template, this.model.toJSON());
