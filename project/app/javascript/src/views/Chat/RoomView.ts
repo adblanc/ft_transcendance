@@ -5,7 +5,7 @@ import Room from "src/models/Room";
 import RoomMessagesView from "./RoomMessagesView";
 
 export default class RoomView extends BaseView<Room> {
-  roomMessagesView: Backbone.View;
+  roomMessagesView: RoomMessagesView;
 
   constructor(options?: Backbone.ViewOptions<Room>) {
     super(options);
@@ -15,7 +15,8 @@ export default class RoomView extends BaseView<Room> {
     }
 
     this.listenTo(this.model, "change", this.render);
-    this.roomMessagesView = new RoomMessagesView({ model: this.model });
+
+    this.roomMessagesView = undefined;
   }
 
   events() {
@@ -25,20 +26,27 @@ export default class RoomView extends BaseView<Room> {
   }
 
   onClick() {
-    console.log("on click room name");
     if (!this.model.get("selected")) {
       this.model.select();
     }
   }
 
-  render() {
-    if (this.model.get("selected")) {
-      this.roomMessagesView.render();
+  renderMessages() {
+    if (this.roomMessagesView) {
+      this.roomMessagesView.close();
     }
+    this.roomMessagesView = new RoomMessagesView({ model: this.model });
+    this.roomMessagesView.render();
+  }
 
+  render() {
     const template = $("#roomTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
     this.$el.html(html);
+
+    if (this.model.get("selected")) {
+      this.renderMessages();
+    }
 
     return this;
   }
