@@ -3,7 +3,7 @@ import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import Profile from "src/models/Profile";
 import Guild from "src/models/Guild";
-import { displayErrors, displaySuccess } from "src/utils";
+import { displaySuccess } from "src/utils";
 
 type Options = Backbone.ViewOptions & { model: Profile; guild: Guild };
 
@@ -16,7 +16,6 @@ export default class PendingMemberView extends BaseView {
 
     this.model = options.model;
     this.guild = options.guild;
-
   }
 
   events() {

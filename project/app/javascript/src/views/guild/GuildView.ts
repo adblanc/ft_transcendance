@@ -28,12 +28,15 @@ export default class GuildView extends BaseView {
       guild: this.guild,
       profile: this.profile,
     });
-    this.guild.fetch();
-	this.profile.fetch();
-	
-	this.listenTo(this.guild, "change", this.render);
-	this.listenTo(this.profile, "change", this.render);
+    this.guild.fetch({
+      error: () => {
+        Backbone.history.navigate("/not-found", { trigger: true });
+      },
+    });
+    this.profile.fetch();
 
+    this.listenTo(this.guild, "change", this.render);
+    this.listenTo(this.profile, "change", this.render);
   }
 
   render() {

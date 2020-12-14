@@ -1,14 +1,14 @@
 <script type="text/html" id="pendingMemberTemplate">
-<div class="row" >
+<div id="pending-member-{{id}}" class="row" >
 	<img style="float:left" width="80" height="80" class="rounded-full p-2 ml-5" src="{{avatar_url}}" />
 	<div style="padding:15px">
 		<table>
 		<tr>
 			<td style="padding:0 20px;"> <h1 class="text-white m-auto ml-1">{{name}}</h1></td>
-			<td> 
+			<td>
 				<button id="accept-btn" class="btn-primary ml-5" type="button">Accept</button>
 			</td>
-			<td> 
+			<td>
 				<button id="refuse-btn" class="btn-primary" type="button">Refuse</button>
 			</td>
 		</tr>
