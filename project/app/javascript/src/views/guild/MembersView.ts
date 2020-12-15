@@ -48,6 +48,7 @@ export default class MembersView extends Backbone.View {
   renderMember(member: Profile) {
 	var memberView = new MemberView({
 		model: member,
+		id: this.profile.attributes.id,
 		loggedIn: this.profile,
 		guild: this.guild,
 	  });

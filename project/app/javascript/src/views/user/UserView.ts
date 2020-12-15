@@ -26,7 +26,7 @@ export default class UserView extends BaseView {
     const template = $("#userPageTemplate").html();
     const html = Mustache.render(template, {
       ...this.user.toJSON(),
-      created_at: moment(this.user.get("created_at"))?.format("MM/DD/YYYY"),
+      created_at: moment(this.user.get("created_at"))?.format("DD/MM/YYYY"),
       has_guild: !!this.user.get("guild"),
     });
     this.$el.html(html);
