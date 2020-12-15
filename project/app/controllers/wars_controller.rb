@@ -4,8 +4,10 @@ class WarsController < ApplicationController
 		@recipient = Guild.find(params[:guild_id])
 
 		@war = War.create!(war_params)
-		GuildWar.create!(guild: @initiator, war: @war, status: :accepted)
-		GuildWar.create!(guild: @recipient, war: @war, status: :pending)
+		/GuildWar.create!(guild: @initiator, war: @war, status: :accepted)
+		GuildWar.create!(guild: @recipient, war: @war, status: :pending)/
+		@war.guilds.push(@initiator);
+		@war.guilds.push(@recipient);
 
 		/Notif/
 	end
