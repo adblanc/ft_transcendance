@@ -32,6 +32,8 @@ Rails.application.routes.draw do
   get '/join-room', to: 'rooms#join'
   delete "/quit-room", to: 'rooms#quit'
 
+  resources :wars
+
   root to: "application#index"
   match '*path', via: [:get, :post], to: "application#index", constraints: lambda { |req|
     req.path.exclude? 'rails/active_storage'

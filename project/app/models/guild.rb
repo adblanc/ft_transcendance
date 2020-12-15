@@ -7,6 +7,9 @@ class Guild < ApplicationRecord
 	has_many :pending, -> (object) { where(status: :pending) }, class_name: "GuildUser", foreign_key: :guild_id, dependent: :destroy
 	has_many :pending_members, through: :pending, source: :user
 
+	has_many :guild_wars
+	has_many :wars, through: :guild_wars
+
 	validates :img, blob: { content_type: :image }
 	validates :name, presence: true, uniqueness: true, length: {minimum: 5, maximum: 20}
 	validates :ang, presence: true, length: {minimum: 2, maximum: 5}
