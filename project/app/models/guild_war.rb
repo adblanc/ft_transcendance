@@ -1,5 +1,12 @@
 class GuildWar < ApplicationRecord
 	belongs_to :war
 	belongs_to :guild 
-	/will be the one to declare war/
+	/each will have a guild_war with own points/
+
+	enum status: [
+		:accepted,
+		:pending,
+		:rejected
+	]
+
 end

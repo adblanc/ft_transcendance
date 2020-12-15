@@ -55,8 +55,14 @@ ActiveRecord::Schema.define(version: 2020_12_15_173708) do
   end
 
   create_table "guild_wars", force: :cascade do |t|
+    t.bigint "war_id"
+    t.bigint "guild_id"
+    t.integer "points", default: 0
+    t.integer "status", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["guild_id"], name: "index_guild_wars_on_guild_id"
+    t.index ["war_id"], name: "index_guild_wars_on_war_id"
   end
 
   create_table "guilds", force: :cascade do |t|
@@ -131,11 +137,18 @@ ActiveRecord::Schema.define(version: 2020_12_15_173708) do
   end
 
   create_table "war_times", force: :cascade do |t|
+    t.integer "war_id"
+    t.datetime "start"
+    t.datetime "end"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "wars", force: :cascade do |t|
+    t.datetime "start"
+    t.datetime "end"
+    t.integer "prize"
+    t.integer "status", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -143,6 +156,8 @@ ActiveRecord::Schema.define(version: 2020_12_15_173708) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "guild_users", "guilds"
   add_foreign_key "guild_users", "users"
+  add_foreign_key "guild_wars", "guilds"
+  add_foreign_key "guild_wars", "wars"
   add_foreign_key "room_messages", "rooms"
   add_foreign_key "room_messages", "users"
 end
