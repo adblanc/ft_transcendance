@@ -1,9 +1,9 @@
 import Backbone from "backbone";
 import _ from "underscore";
 import Guild from "src/models/Guild";
-import Guilds from "src/models/Guilds";
 import { mapServerErrors, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
+import Guilds from "src/collections/Guilds";
 
 interface IWar {
   id: string;
@@ -11,23 +11,24 @@ interface IWar {
   end: Date;
   status: number;
   prize: number;
+  guilds: Guilds;
   created_at: string;
   updated_at: string;
 }
 
-type CreatableWarArgs = Partial<Pick<IWar, "start" | "end" | "prize">>;
+type CreatableWarArgs = Partial<Pick<IWar, "start" | "end" | "prize" | "guilds">>;
 
 export default class War extends BaseModel<IWar> {
-  preinitialize() {
-    this.relations = [
-      {
-        type: Backbone.Many,
-        key: "guilds",
-        collectionType: Guilds,
-        relatedModel: Guild,
-      },
-    ];
-  }
+	preinitialize() {
+		this.relations = [
+		  {
+			type: Backbone.Many,
+			key: "guilds",
+			//collectionType: Guilds,
+			relatedModel: Guild,
+		  },
+		];
+	  }
 
   constructor(options?: any) {
     super(options);

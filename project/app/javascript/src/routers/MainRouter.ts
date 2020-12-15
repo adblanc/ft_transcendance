@@ -13,6 +13,7 @@ import AuthView from "../views/AuthView";
 import Guild from "src/models/Guild";
 import Game from "src/models/Game";
 import UserView from "../views/user/UserView";
+import WarIndexView from "../views/wars/WarIndexView";
 
 export default class MainRouter extends Backbone.Router {
   constructor() {
@@ -26,7 +27,8 @@ export default class MainRouter extends Backbone.Router {
         guildindex: "guildIndex",
         "guild/:id": "guildShow",
         "me/notifications": "notifShow",
-		    "user/:id": "userShow",
+		"user/:id": "userShow",
+		warindex: "warIndex",
         "*path": "notFound",
       },
     });
@@ -120,4 +122,13 @@ export default class MainRouter extends Backbone.Router {
 	const userView = new UserView({ userId: id });
 	pagesHandler.showPage(userView);
   }
+
+  warIndex() {
+    if (!isAuth()) {
+      return this.navigate("/auth", { trigger: true });
+    }
+    const warIndexView = new WarIndexView();
+    pagesHandler.showPage(warIndexView);
+  }
+
 }
