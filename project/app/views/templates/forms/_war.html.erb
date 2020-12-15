@@ -1,0 +1,40 @@
+<script type="text/html" id="warFormTemplate">
+            <form action="">
+                <label class="block" for="war-start">
+                    <span class="text-gray-700">When do you want the war to start?*</span>
+                    <input
+                        class="form-input mt-1 block w-full"
+                        type="text"
+                        name="start-date"
+                        id="input-start-date"
+                    />
+				</label>
+				<label class="block" for="war end">
+                    <span class="text-gray-700">When do you want it to end?*</span>
+                    <input
+                        class="form-input mt-1 block w-full"
+                        type="text"
+                        name="end-date"
+                        id="input-end-date"
+                    />
+				</label>
+				<label class="block" for="guild-start">
+                    <span class="text-gray-700">How many points will be awarded to the winner?*</span>
+                    <input
+                        class="form-input mt-1 block w-full"
+                        type="text"
+                        name="war-prize"
+                        id="input-prize"
+                    />
+				</label>
+                <div class="flex justify-center items-center">
+                    <button
+                        class="btn-primary mt-8"
+                        id="input-war-submit"
+                        type="submit"
+                    >
+                        Declare War
+                    </button>
+                </div>
+            </form>
+</script>

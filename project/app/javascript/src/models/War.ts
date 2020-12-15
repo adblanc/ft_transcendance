@@ -7,16 +7,16 @@ import Guilds from "src/collections/Guilds";
 
 interface IWar {
   id: string;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   status: number;
-  prize: number;
+  prize: string;
   guilds: Guilds;
   created_at: string;
   updated_at: string;
 }
 
-type CreatableWarArgs = Partial<Pick<IWar, "start" | "end" | "prize" | "guilds">>;
+type CreatableWarArgs = Partial<Pick<IWar, "start" | "end" | "prize">>;
 
 export default class War extends BaseModel<IWar> {
 	preinitialize() {
@@ -49,7 +49,17 @@ export default class War extends BaseModel<IWar> {
     return syncWithFormData(method, model, options);
   }
 
-  createWar(attrs: CreatableWarArgs) {
-    return this.asyncSave(attrs, { url: this.urlRoot() });
-  }
+  createWar(attrs: CreatableWarArgs, initiator_id: string, recipient_id: string) {
+    return this.asyncSave(
+		{
+			attrs,
+			initiator_id, 
+			recipient_id,
+		},
+		{ 
+			url: this.urlRoot() 
+		});
+  	}
 }
+
+

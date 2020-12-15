@@ -5,7 +5,9 @@ import PageImgView from "./imgsViews/PageImgView";
 import Profile from "src/models/Profile";
 import Guild from "src/models/Guild";
 import ModifyGuildView from "./ModifyGuildView";
+import DeclareWarView from "../wars/DeclareWarView";
 import { displaySuccess } from "src/utils";
+import War from "src/models/War";
 
 type Options = Backbone.ViewOptions & { guild: Guild; profile: Profile };
 
@@ -32,7 +34,8 @@ export default class InfoView extends BaseView {
       "click #edit-btn": "onEditClicked",
       "click #quit-btn": "onQuitClicked",
       "click #join-btn": "onJoinClicked",
-      "click #withdraw-btn": "onWithdrawClicked",
+	  "click #withdraw-btn": "onWithdrawClicked",
+	  "click #war-btn": "onWarClicked",
     };
   }
 
@@ -100,6 +103,17 @@ export default class InfoView extends BaseView {
     );
     this.guild.fetch();
     this.profile.fetch();
+  }
+
+  onWarClicked() {
+	const war = new War();
+    const declareWarView = new DeclareWarView({
+	  model: war,
+	  guild: this.guild,
+	  profile : this.profile,
+    });
+
+    declareWarView.render();
   }
 
   render() {
