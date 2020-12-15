@@ -29,8 +29,15 @@ export default class RoomMessagesView extends BaseView<Room> {
       displayError("This user is no longer in the room.");
     }
 
+    const currentUser = this.model
+      .get("users")
+      .find((u) => u.get("login") === $("#current-user-profile").data("login"));
+
+    console.log("current user", currentUser);
+
     const profileView = new RoomUserProfileView({
       model: user,
+      currentUser,
     });
 
     profileView.render();
