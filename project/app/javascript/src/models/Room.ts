@@ -87,10 +87,15 @@ export default class Room extends BaseModel<IRoom> {
     this.set("selected", !this.get("selected"));
   }
 
-  quit() {
-    return this.asyncDestroy({
+  async quit() {
+    const success = await this.asyncDestroy({
       url: `http://localhost:3000/quit-room?name=${this.get("name")}`,
     });
+
+    if (success) {
+      this.channel.unsubscribe();
+    }
+    return success;
   }
 
   modifyPassword(password: string) {
