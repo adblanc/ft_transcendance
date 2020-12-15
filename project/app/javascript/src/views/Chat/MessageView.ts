@@ -1,5 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
+import { eventBus } from "src/events/EventBus";
 import Message from "src/models/Message";
 import _ from "underscore";
 
@@ -14,12 +15,9 @@ export default class MessageView extends Backbone.View<Message> {
 
   events() {
     return {
-      "click .user-avatar": this.onProfileClicked,
+      "click .user-avatar": () =>
+        eventBus.trigger("chat:profile-clicked", this.model.get("user_id")),
     };
-  }
-
-  onProfileClicked() {
-    console.log("on profile clicked");
   }
 
   render() {

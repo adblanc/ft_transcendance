@@ -1,0 +1,23 @@
+<script type="text/html" id="room-user-profile-template">
+
+	<div class="p-4">
+	<div class="mb-8 flex flex-row items-center justify-center">
+		<img
+		class="w-16 h-16 rounded-full"
+		src="{{ avatar_url }}"
+		/>
+		<div class="ml-4">
+		<span class="text-xl text-gray-900 font-semibold">{{login}}</span>
+		<div class="text-gray-600 text-xs font-semibold">
+			{{roomRole}}
+		</div>
+		</div>
+		</div>
+	<div class="space-y-4 flex flex-col justify-center items-center">
+		<a class="link-primary block" href="/user/{{id}}">Go to profile</a>
+		<a id="invite-to-play-user" class="link-primary block">Invite to play</a>
+		<a id="block-user" class="link-primary block">Block</a>
+	</div>
+
+	</div>
+</script>
