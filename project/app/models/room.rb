@@ -24,4 +24,24 @@ class Room < ApplicationRecord
 		end
 	end
 
+	def remove_user(user)
+		users.delete(user)
+		if user.is_room_owner?(self)
+			remove_owner(user)
+		elsif user.is_room_administrator?(self)
+			user.remove_role(:administrator, self)
+		end
+	end
+
+	def remove_owner(user)
+		user.remove_role(:owner, self)
+		if users.blank?
+			self.destroy
+		else
+			new_owner = users.first
+			new_owner.remove_role(:administrator, self) if new_owner.is_room_administrator?(self)
+			new_owner.add_role(:owner, self)
+		end
+	end
+
 end
