@@ -81,7 +81,8 @@ export default class Guild extends BaseModel<IGuild> {
     );
   }
 
-  manageMembers(method: GUILD_ACTION, user_id: string) {
+  manageMembers(method: GUILD_ACTION, user_id: number) {
+    console.log("user_id", typeof user_id, user_id);
     return this.asyncSave(
       {
         user_id: user_id,
@@ -101,7 +102,7 @@ export default class Guild extends BaseModel<IGuild> {
     );
   }
 
-  accept(user_id: string) {
+  accept(user_id: number) {
     return this.asyncSave(
       { user_id: user_id },
       {
@@ -110,7 +111,7 @@ export default class Guild extends BaseModel<IGuild> {
     );
   }
 
-  reject(user_id: string) {
+  reject(user_id: number) {
     return this.asyncSave(
       {
         user_id: user_id,

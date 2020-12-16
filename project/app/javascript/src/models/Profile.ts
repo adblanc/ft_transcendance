@@ -12,16 +12,19 @@ import { BASE_ROOT } from "src/constants";
 export interface IProfile {
   login: string;
   name: string;
-  guild_role: string;
   id?: number;
   avatar?: any;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
+  guild_role?: "Owner" | "Officer" | "Member";
+  pending_guild?: Guild;
+  guild?: Guild;
+  notifications?: Notifications;
 }
 
 type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar">>;
 
-export default class Profile extends BaseModel {
+export default class Profile extends BaseModel<IProfile> {
   channel: ActionCable.Channel;
   notifications: Notifications;
 
