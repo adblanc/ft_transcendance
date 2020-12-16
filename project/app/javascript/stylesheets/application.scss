@@ -80,3 +80,19 @@ $chatInputHeight: 4rem;
   font-size: 15px;
   color: #ffffff;
 }
+
+.notifications-count {
+  top: -10px;
+  left: 15px;
+  position: absolute;
+
+  font-size: 12px;
+  color: #fff;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+  text-align: center;
+
+  @apply bg-red-500;
+}
