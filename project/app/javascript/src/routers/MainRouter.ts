@@ -26,7 +26,7 @@ export default class MainRouter extends Backbone.Router {
         guildindex: "guildIndex",
         "guild/:id": "guildShow",
         "me/notifications": "notifShow",
-		    "user/:id": "userShow",
+        "user/:id": "userShow",
         "*path": "notFound",
       },
     });
@@ -117,7 +117,7 @@ export default class MainRouter extends Backbone.Router {
     if (!isAuth()) {
       return this.navigate("/auth", { trigger: true });
     }
-	const userView = new UserView({ userId: id });
-	pagesHandler.showPage(userView);
+    const userView = new UserView({ userId: id });
+    pagesHandler.showPage(userView);
   }
 }
