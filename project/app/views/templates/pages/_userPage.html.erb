@@ -3,7 +3,12 @@
     <div style="background-color:#115E59"
       class=" bg-teal-900 w-1/4 rounded-3xl flex flex-col flex-grow max-w-2xl hover:shadow-2xl transition-shadow ease-in-out duration-300">
 		<div style="background-color:#134E4A; height:50px; text-align: center;" class="px-32 py-0 flex-grow flex-col text-3xl">{{name}}</div>
+		{{#avatar_url}}
 		<img style="margin-left: auto; margin-right:auto; margin-top:10px" class="w-40 h-40 rounded-full p-2" src={{avatar_url}} alt="User avatar"/>
+		{{/avatar_url}}
+		{{^avatar_url}}
+		<p style="text-align: center; margin-top: 20px" class"justify-center flex flex-grow">Pas d'avatar disponible</p>
+		{{/avatar_url}}
 		<div style="padding-bottom:50px; padding-left:100px; padding-right:100px">
 			<h2 style='margin-top:20px; margin-bottom:20px' class="justify-center flex flex-grow text-2xl">Compte:</h2>
 			<div style="text-align: center; margin-bottom: 20px" class"justify-center flex flex-grow">
@@ -19,13 +24,13 @@
 			<h2 style='margin-top:20px; margin-bottom:20px' class="justify-center flex flex-grow text-2xl text-white">Guild:</h2>
 			<div style='margin: auto; margin-bottom:20px; text-align: center'>
 			{{#has_guild}}
-				<p><span style='font-weight:bold'>{{guild_role}}</span> de la guilde</p>
-				<a style="text-decoration: underline" href="/guild/{{guild.id}}">
-				<img style='margin: auto; margin-top:10px' width="80" height="80" class="rounded-full p-2" src={{img_url}}/>
-				<p style='margin-bottom:20px'>{{guild.name}}</p></a>
+			<p><span style='font-weight:bold'>{{guild_role}}</span> de la guilde</p>
+			<a style="text-decoration: underline" href="/guild/{{guild.id}}">
+			<img style='margin: auto; margin-top:10px' width="80" height="80" class="rounded-full p-2" src={{img_url}}/>
+			<p style='margin-bottom:20px'>{{guild.name}}</p></a>
 			{{/has_guild}}
 			{{^has_guild}}
-				<p style='margin-bottom:20px;' class="justify-center flex">N'appartient a aucune guilde</p>
+			<p style='margin-bottom:20px;' class="justify-center flex">N'appartient a aucune guilde</p>
 			{{/has_guild}}
 			</div>
 		</div>
