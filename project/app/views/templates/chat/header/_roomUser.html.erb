@@ -1,0 +1,25 @@
+<script type="text/html" id="room-user-template">
+	<div class="flex flex-row items-center p-4">
+	<img
+		id="user-profile"
+		class="w-16 h-16 rounded-full p-2"
+		src="{{ avatar_url }}"
+	/>
+		<div class="w-48">
+		{{login}}
+		<div class="text-gray-600 text-xs font-semibold">
+		{{roomRole}}
+		</div>
+		</div>
+		{{#showButtons}}
+		<div class="flex flex-col ml-4">
+			<button {{^canPromote}}disabled{{/canPromote}} id="promote" class="btn-primary{{^canPromote}}--disabled{{/canPromote}} my-2">
+				Promote
+			</button>
+				<button {{^canDemote}}disabled{{/canDemote}} id="demote" class="btn-primary{{^canDemote}}--disabled{{/canDemote}} my-2">
+				Demote
+			</button>
+		</div>
+			{{/showButtons}}
+	</div>
+</script>

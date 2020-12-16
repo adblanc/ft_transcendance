@@ -5,10 +5,10 @@ import Guild from "src/models/Guild";
 import Notifications from "src/collections/Notifications";
 import Notification from "src/models/Notification";
 import consumer from "channels/consumer";
-import { mapServerErrors, syncWithFormData } from "src/utils";
+import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 
-interface IProfile {
+export interface IProfile {
   login: string;
   name: string;
   guild_role: string;

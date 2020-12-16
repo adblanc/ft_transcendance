@@ -4,6 +4,7 @@ import Rooms from "src/collections/Rooms";
 import BaseView from "src/lib/BaseView";
 import { displaySuccess } from "src/utils";
 import _ from "underscore";
+import ManageRoomView from "./ManageRoomView";
 
 type Options = Backbone.ViewOptions & {
   rooms: Rooms;
@@ -26,6 +27,7 @@ export default class ChatHeaderView extends BaseView {
 
   events() {
     return {
+      "click #manage-room": this.manageRoom,
       "click #quit-room": this.quitRoom,
     };
   }
@@ -40,11 +42,13 @@ export default class ChatHeaderView extends BaseView {
     }
   }
 
+  async manageRoom() {
+    new ManageRoomView({ model: this.rooms.selectedRoom }).render();
+  }
+
   render() {
     const template = $("#chat-header-template").html();
-    const html = Mustache.render(template, {
-      room_name: this.rooms.selectedRoom?.get("name") || "",
-    });
+    const html = Mustache.render(template, this.rooms.selectedRoom?.toJSON());
 
     this.$el.html(html);
 

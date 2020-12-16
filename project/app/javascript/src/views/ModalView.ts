@@ -1,9 +1,10 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
+import BaseView from "src/lib/BaseView";
 
 export default class ModalView<
   TModel extends Backbone.Model = Backbone.Model
-> extends Backbone.View<TModel> {
+> extends BaseView<TModel> {
   $content: any;
 
   constructor(options?: Backbone.ViewOptions<TModel>) {
@@ -14,19 +15,18 @@ export default class ModalView<
 
   events() {
     return {
-      "click #modal-backdrop": "closeModal",
-      "click #modal-container": "dismissClick",
-      "click #close-modal": "closeModal",
+      "click #modal-backdrop": this.close,
+      "click #modal-container": this.dismissClick,
+      "click #close-modal": this.close,
     };
-  }
-
-  closeModal() {
-    this.remove();
-    this.unbind();
   }
 
   dismissClick(e: JQuery.Event) {
     e.stopPropagation();
+  }
+
+  closeModal() {
+    this.close();
   }
 
   render() {
