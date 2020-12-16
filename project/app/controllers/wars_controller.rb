@@ -1,15 +1,15 @@
 class WarsController < ApplicationController
 
 	def create
-		@initiator = Guild.find(params[:initiator_id])
-		@recipient = Guild.find(params[:recipient_id])
+		/@initiator = Guild.find(params[:initiator_id])
+		@recipient = Guild.find(params[:recipient_id])/
 
 		@war = War.create(war_params)
 
 		/GuildWar.create!(guild: @initiator, war: @war, status: :accepted)
 		GuildWar.create!(guild: @recipient, war: @war, status: :pending)/
-		@war.guilds.push(@initiator);
-		@war.guilds.push(@recipient);
+		/@war.guilds.push(@initiator);
+		@war.guilds.push(@recipient);/
 
 		if @war.save
 			@war
@@ -23,7 +23,7 @@ class WarsController < ApplicationController
 	private
 
 	def war_params
-		params.permit( :start, :end, :prize)
+		params.permit( :start, :end, :prize, :guilds)
 	end
 
 end

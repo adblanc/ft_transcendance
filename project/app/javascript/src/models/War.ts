@@ -40,14 +40,8 @@ export default class War extends BaseModel<IWar> {
     return syncWithFormData(method, model, options);
   }
 
-  createWar(attrs: CreatableWarArgs, initiator_id: string, recipient_id: string) {
-    return this.asyncSave(
-		{
-			attrs,
-			initiator_id, 
-			recipient_id,
-		},
-		{ 
+  createWar(attrs: CreatableWarArgs) {
+    return this.asyncSave(attrs, { 
 			url: this.urlRoot() 
 		});
   	}
