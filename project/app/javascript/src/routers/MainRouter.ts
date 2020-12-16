@@ -13,7 +13,12 @@ import AuthView from "../views/AuthView";
 import Guild from "src/models/Guild";
 import Game from "src/models/Game";
 import UserView from "../views/user/UserView";
-import { transpileModule } from "typescript";
+import { BASE_ROOT } from "src/constants";
+
+const NO_AUTH_ROUTES = ["auth", "authCallBack"];
+
+const shouldBeAuth = (routeName: string) =>
+  !NO_AUTH_ROUTES.find((route) => route === routeName);
 
 export default class MainRouter extends Backbone.Router {
   constructor() {
@@ -33,20 +38,22 @@ export default class MainRouter extends Backbone.Router {
     });
   }
 
-  execute(callback: () => void, _: any, name: string) {
-    if (name !== "auth" && !isAuth()) {
+  execute(callback: (...args: any[]) => void, args: any[], name: string) {
+    if (shouldBeAuth(name) && !isAuth()) {
       this.navigate("/auth", { trigger: true });
       return false;
     }
 
-    callback();
+    if (callback) {
+      callback.apply(this, args);
+    }
     return true;
   }
 
   async authCallBack(code: string) {
     try {
       const { data: token } = await axios.get(
-        `http://localhost:3000/auth/42?code=${code}`
+        `${BASE_ROOT}/auth/42?code=${code}`
       );
       addAuthHeaders(token);
     } catch (ex) {
