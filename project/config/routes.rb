@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   end
   resources :room_messages
   resources :rooms
+  get 'my-rooms', to: 'rooms#my_rooms'
   get '/join-room', to: 'rooms#join'
   delete "/quit-room", to: 'rooms#quit'
   put "/:room_id/:user_id/update_role", to: "users#update_room_role"

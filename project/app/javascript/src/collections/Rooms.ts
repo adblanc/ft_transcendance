@@ -51,5 +51,5 @@ export default class Rooms extends Backbone.Collection<Room> {
     this.selectedRoom.toggle();
   }
 
-  url = () => `${BASE_ROOT}/rooms`;
+  url = () => `${BASE_ROOT}/my-rooms`;
 }

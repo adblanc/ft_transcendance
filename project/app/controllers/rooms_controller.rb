@@ -4,6 +4,10 @@ class RoomsController < ApplicationController
 	before_action :authenticate_user!
 
 	def index
+		@rooms = Room.joins(:users).where.not(users: {id: @current_user.id}).where(is_private: false)
+	end
+
+	def my_rooms
 		@rooms = current_user.rooms
 	end
 
