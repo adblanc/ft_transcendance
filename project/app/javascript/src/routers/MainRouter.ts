@@ -13,6 +13,7 @@ import AuthView from "../views/AuthView";
 import Guild from "src/models/Guild";
 import Game from "src/models/Game";
 import UserView from "../views/user/UserView";
+import { transpileModule } from "typescript";
 
 export default class MainRouter extends Backbone.Router {
   constructor() {
@@ -30,6 +31,16 @@ export default class MainRouter extends Backbone.Router {
         "*path": "notFound",
       },
     });
+  }
+
+  execute(callback: () => void, _: any, name: string) {
+    if (name !== "auth" && !isAuth()) {
+      this.navigate("/auth", { trigger: true });
+      return false;
+    }
+
+    callback();
+    return true;
   }
 
   async authCallBack(code: string) {
@@ -52,9 +63,6 @@ export default class MainRouter extends Backbone.Router {
   }
 
   index() {
-    if (!isAuth()) {
-      return this.navigate("/auth", { trigger: true });
-    }
     const indexView = new IndexView({
       className: "flex flex-col",
     });
@@ -63,60 +71,39 @@ export default class MainRouter extends Backbone.Router {
   }
 
   game() {
-    if (!isAuth()) {
-      return this.navigate("/auth", { trigger: true });
-    }
     const gameIndexView = new GameIndexView({});
 
     pagesHandler.showPage(gameIndexView);
   }
 
   notFound() {
-    if (!isAuth()) {
-      return this.navigate("/auth", { trigger: true });
-    }
     const notFoundView = new NotFoundView({});
 
     pagesHandler.showPage(notFoundView);
   }
 
   guildIndex() {
-    if (!isAuth()) {
-      return this.navigate("/auth", { trigger: true });
-    }
     const guildIndexView = new GuildIndexView();
 
     pagesHandler.showPage(guildIndexView);
   }
 
   guildShow(id: string) {
-    if (!isAuth()) {
-      return this.navigate("/auth", { trigger: true });
-    }
     const guildView = new GuildView({ guild: new Guild({ id }) });
     pagesHandler.showPage(guildView);
   }
 
   gameShow(id: number) {
-    if (!isAuth()) {
-      return this.navigate("/auth", { trigger: true });
-    }
     const gameView = new GameView({ game: new Game({ id }) });
     pagesHandler.showPage(gameView);
   }
 
   notifShow() {
-    if (!isAuth()) {
-      return this.navigate("/auth", { trigger: true });
-    }
     const notifPageView = new NotifPageView();
     pagesHandler.showPage(notifPageView);
   }
 
   userShow(id: number) {
-    if (!isAuth()) {
-      return this.navigate("/auth", { trigger: true });
-    }
     const userView = new UserView({ userId: id });
     pagesHandler.showPage(userView);
   }
