@@ -3,7 +3,7 @@ import Mustache from "mustache";
 import ModalView from "../ModalView";
 import Profile from "src/models/Profile";
 import Guild, { GUILD_ACTION } from "src/models/Guild";
-import { displayErrors, displaySuccess } from "src/utils";
+import { displaySuccess } from "src/utils";
 
 type Options = Backbone.ViewOptions<Profile> & {
   guild: Guild;

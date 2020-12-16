@@ -5,22 +5,26 @@ import Guild from "src/models/Guild";
 import Notifications from "src/collections/Notifications";
 import Notification from "src/models/Notification";
 import consumer from "channels/consumer";
-import { mapServerErrors, syncWithFormData } from "src/utils";
+import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
+import { BASE_ROOT } from "src/constants";
 
-interface IProfile {
+export interface IProfile {
   login: string;
   name: string;
-  guild_role: string;
   id?: number;
   avatar?: any;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
+  guild_role?: "Owner" | "Officer" | "Member";
+  pending_guild?: Guild;
+  guild?: Guild;
+  notifications?: Notifications;
 }
 
 type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar">>;
 
-export default class Profile extends BaseModel {
+export default class Profile extends BaseModel<IProfile> {
   channel: ActionCable.Channel;
   notifications: Notifications;
 
@@ -59,7 +63,7 @@ export default class Profile extends BaseModel {
     };
   }
 
-  urlRoot = () => "http://localhost:3000/user";
+  urlRoot = () => `${BASE_ROOT}/user`;
 
   createNotificationsConsumer() {
     const user_id = this.get("id");

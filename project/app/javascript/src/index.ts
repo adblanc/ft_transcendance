@@ -25,7 +25,6 @@ export function start() {
     Backbone.history.start({
       pushState: true,
     });
+    catchNavigation();
   });
-
-  catchNavigation();
 }

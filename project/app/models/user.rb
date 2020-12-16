@@ -47,6 +47,28 @@ class User < ApplicationRecord
 		self.has_role?(:admin)
 	end
 
+	def room_role(room)
+		if self.is_room_owner?(room)
+			return "Owner"
+		elsif self.is_room_administrator?(room)
+			return "Administrator"
+		else
+			return "Member"
+		end
+	end
+
+	def	is_room_owner?(room)
+		self.has_role?(:owner, room)
+	end
+
+	def is_room_administrator?(room)
+		self.has_role?(:administrator, room) || is_room_owner?(room)
+	end
+
+	def is_member?(room)
+		!is_room_administrator?(room)
+	end
+
 	def pending_guild?
 		if self.pending_guild
 			return true

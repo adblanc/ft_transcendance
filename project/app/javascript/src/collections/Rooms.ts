@@ -1,4 +1,5 @@
 import Backbone from "backbone";
+import { BASE_ROOT } from "src/constants";
 import Room from "../models/Room";
 
 export default class Rooms extends Backbone.Collection<Room> {
@@ -50,5 +51,5 @@ export default class Rooms extends Backbone.Collection<Room> {
     this.selectedRoom.toggle();
   }
 
-  url = () => "http://localhost:3000/rooms";
+  url = () => `${BASE_ROOT}/rooms`;
 }
