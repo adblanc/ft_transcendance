@@ -49,13 +49,13 @@ export default class DeclareWarView extends ModalView<War> {
 	const dateTimeStart = fp_start.selectedDates[0];
     const dateTimeEnd = fp_end.selectedDates[0];
 
-	var guilds = new Guilds([this.profile.get("guild"), this.guild.get("id")]);
+	//var guilds = new Guilds([this.profile.get("guild"), this.guild.get("id")]);
 
     const attrs = {
 	  start: dateTimeStart, //good format for rails?
 	  end: dateTimeEnd, ////good format for rails?
 	  prize: this.$("#input-prize").val() as string,
-	  guilds: guilds,
+	  guilds: [this.profile.get("guild"), this.guild.get("id")],
     };
 
     const success = await this.model.createWar(attrs);

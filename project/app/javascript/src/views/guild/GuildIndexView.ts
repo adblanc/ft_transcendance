@@ -18,7 +18,7 @@ export default class GuildIndexView extends BaseView {
     super(options);
 
 	this.max = 5;
-    this.collection = new Guilds({});
+    this.collection = new Guilds();
 	this.profile = new Profile();
 	
     this.myGuildView = new MyGuildView({

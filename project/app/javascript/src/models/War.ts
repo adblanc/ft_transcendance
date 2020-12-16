@@ -24,7 +24,7 @@ export default class War extends BaseModel<IWar> {
 		  {
 			type: Backbone.Many,
 			key: "guilds",
-			//collectionType: Guilds,
+			collectionType: Guilds,
 			relatedModel: Guild,
 		  },
 		];

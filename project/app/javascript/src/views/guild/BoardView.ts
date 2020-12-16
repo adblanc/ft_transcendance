@@ -12,7 +12,7 @@ export default class BoardView extends BaseView {
   constructor(options?: Backbone.ViewOptions) {
     super(options);
 
-    this.collection = new Guilds({});
+    this.collection = new Guilds();
     this.listenTo(this.collection, "reset", this.render);
     this.listenTo(this.collection, "change", this.render);
     this.listenTo(this.collection, "sort", this.render);
