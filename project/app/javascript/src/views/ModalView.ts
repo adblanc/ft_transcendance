@@ -1,6 +1,7 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "src/lib/BaseView";
+import { navigate } from "src/utils";
 
 export default class ModalView<
   TModel extends Backbone.Model = Backbone.Model
@@ -18,7 +19,14 @@ export default class ModalView<
       "click #modal-backdrop": this.close,
       "click #modal-container": this.dismissClick,
       "click #close-modal": this.close,
+      "click a": this.onLinkOpen,
     };
+  }
+
+  onLinkOpen(e: JQuery.ClickEvent) {
+    this.close();
+
+    navigate(e);
   }
 
   dismissClick(e: JQuery.Event) {
