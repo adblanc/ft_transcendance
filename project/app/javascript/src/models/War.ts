@@ -34,15 +34,6 @@ export default class War extends BaseModel<IWar> {
     super(options);
   }
 
-  defaults() {
-    return {
-      //start: "",
-      //end: "",
-      prize: 0,
-      guilds: [],
-    };
-  }
-
   urlRoot = () => "http://localhost:3000/wars";
 
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
