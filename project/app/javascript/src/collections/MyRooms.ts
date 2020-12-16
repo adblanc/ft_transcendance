@@ -2,7 +2,7 @@ import Backbone from "backbone";
 import { BASE_ROOT } from "src/constants";
 import Room from "../models/Room";
 
-export default class Rooms extends Backbone.Collection<Room> {
+export default class MyRooms extends Backbone.Collection<Room> {
   selectedRoom?: Room;
   preinitialize() {
     this.model = Room;

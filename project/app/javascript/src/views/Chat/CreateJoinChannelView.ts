@@ -1,6 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import Rooms from "src/collections/Rooms";
+import Rooms from "src/collections/MyRooms";
 import { BASE_ROOT } from "src/constants";
 import Room from "src/models/Room";
 import { displaySuccess } from "src/utils";
