@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import consumer from "channels/consumer";
 import Messages from "src/collections/Messages";
 import RoomUsers from "src/collections/RoomUsers";
+import { BASE_ROOT } from "src/constants";
 import BaseModel from "src/lib/BaseModel";
 import Message, { IMessage } from "./Message";
 import RoomUser from "./RoomUser";
@@ -38,7 +39,7 @@ export default class Room extends BaseModel<IRoom> {
     this.listenTo(this, "change:id", this.updateChannel);
   }
 
-  urlRoot = () => "http://localhost:3000/rooms";
+  urlRoot = () => `${BASE_ROOT}/rooms`;
 
   createConsumer() {
     const room_id = this.get("id");
@@ -89,7 +90,7 @@ export default class Room extends BaseModel<IRoom> {
 
   async quit() {
     const success = await this.asyncDestroy({
-      url: `http://localhost:3000/quit-room?name=${this.get("name")}`,
+      url: `${BASE_ROOT}/quit-room?name=${this.get("name")}`,
     });
 
     if (success) {

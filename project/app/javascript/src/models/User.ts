@@ -1,5 +1,6 @@
 import Backbone from "backbone";
+import { BASE_ROOT } from "src/constants";
 
 export default class User extends Backbone.Model {
-  urlRoot = () => "http://localhost:3000/profile/";
+  urlRoot = () => `${BASE_ROOT}/profile/`;
 }

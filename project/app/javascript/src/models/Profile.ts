@@ -7,6 +7,7 @@ import Notification from "src/models/Notification";
 import consumer from "channels/consumer";
 import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
+import { BASE_ROOT } from "src/constants";
 
 export interface IProfile {
   login: string;
@@ -59,7 +60,7 @@ export default class Profile extends BaseModel {
     };
   }
 
-  urlRoot = () => "http://localhost:3000/user";
+  urlRoot = () => `${BASE_ROOT}/user`;
 
   createNotificationsConsumer() {
     const user_id = this.get("id");

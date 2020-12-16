@@ -1,8 +1,16 @@
+import { BASE_ROOT } from "src/constants";
 import BaseModel from "src/lib/BaseModel";
 import _ from "underscore";
 
-export default class Notification extends BaseModel {
-  url = () => "http://localhost:3000/notifications";
+interface INotification {
+  id: number;
+  read_at: string;
+  created_at: string;
+  notifiable_type: string;
+}
+
+export default class Notification extends BaseModel<INotification> {
+  url = () => `${BASE_ROOT}/notifications`;
 
   markAsRead() {
     this.save(
@@ -10,7 +18,7 @@ export default class Notification extends BaseModel {
         //'notification_id': this.get('id'),
       },
       {
-        url: `http://localhost:3000/notifications/${this.id}/mark_as_read`,
+        url: `${this.url()}/${this.get("id")}/mark_as_read`,
       }
     );
   }

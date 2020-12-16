@@ -1,6 +1,7 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import Rooms from "src/collections/Rooms";
+import { BASE_ROOT } from "src/constants";
 import Room from "src/models/Room";
 import { displaySuccess } from "src/utils";
 
@@ -63,7 +64,7 @@ export default class CreateJoinChannelView extends Backbone.View {
       password,
     });
     const success = await room.asyncFetch({
-      url: "http://localhost:3000/join-room",
+      url: `${BASE_ROOT}/join-room`,
       data: room.toJSON(),
     });
 

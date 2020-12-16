@@ -5,6 +5,7 @@ import Game from "src/models/Game";
 import { displaySuccess } from "src/utils/toast";
 import Profile from "src/models/Profile";
 import { generateAcn } from "src/utils/acronym";
+import { BASE_ROOT } from "src/constants";
 
 export default class CreateGameView extends ModalView<Game> {
   //jeu: Game;
@@ -53,11 +54,11 @@ export default class CreateGameView extends ModalView<Game> {
         level: "BRAVO",
         points: points,
         Profile: new Profile({ name: "Moby", login: "Marshell" }),
-        url: "http://localhost:3000/games/${this.id}",
+        url: `${BASE_ROOT}/games/${this.id}`,
       });
       this.i++;
       //this.model = new Game({
-        const attrs = {
+      const attrs = {
         id: this.i,
         points: +points,
         //Type: level,
@@ -72,7 +73,7 @@ export default class CreateGameView extends ModalView<Game> {
     }
   }
   gameSaved() {
-    displaySuccess(`Game successfully created.${this.model.get('level')}`);
+    displaySuccess(`Game successfully created.${this.model.get("level")}`);
     this.closeModal();
     this.model.fetch();
 

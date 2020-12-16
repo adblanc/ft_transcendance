@@ -1,3 +1,4 @@
+import { BASE_ROOT } from "src/constants";
 import BaseModel from "src/lib/BaseModel";
 import { IProfile } from "./Profile";
 import Room from "./Room";
@@ -17,9 +18,7 @@ export default class RoomUser extends BaseModel<IRoomUser> {
         update_action: action,
       },
       {
-        url: `http://localhost:3000/${room.get("id")}/${this.get(
-          "id"
-        )}/update_role`,
+        url: `${BASE_ROOT}/${room.get("id")}/${this.get("id")}/update_role`,
       }
     );
   }

@@ -5,6 +5,7 @@ import { get42LoginUrl } from "../utils/api";
 import { addAuthHeaders } from "../utils/auth";
 import { displayError } from "../utils/toast";
 import BaseView from "src/lib/BaseView";
+import { BASE_ROOT } from "src/constants";
 
 export default class AuthView extends BaseView {
   events() {
@@ -22,7 +23,7 @@ export default class AuthView extends BaseView {
       }
       try {
         const { data: token } = await axios.get(
-          `http://localhost:3000/auth/guest?login=${input}`
+          `${BASE_ROOT}/auth/guest?login=${input}`
         );
         addAuthHeaders(token);
       } catch (ex) {

@@ -4,6 +4,7 @@ import Profile from "src/models/Profile";
 import Profiles from "src/collections/Profiles";
 import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
+import { BASE_ROOT } from "src/constants";
 
 interface IGuild {
   id: string;
@@ -54,7 +55,8 @@ export default class Guild extends BaseModel<IGuild> {
     };
   }
 
-  urlRoot = () => "http://localhost:3000/guilds";
+  urlRoot = () => `${BASE_ROOT}/guilds`;
+  baseGuildRoot = () => `${this.urlRoot()}/${this.get("id")}`;
 
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
     return syncWithFormData(method, model, options);
@@ -66,7 +68,7 @@ export default class Guild extends BaseModel<IGuild> {
 
   modifyGuild(attrs: CreatableGuildArgs) {
     return this.asyncSave(attrs, {
-      url: `${this.urlRoot()}/${this.get("id")}`,
+      url: this.baseGuildRoot(),
     });
   }
 
@@ -74,8 +76,7 @@ export default class Guild extends BaseModel<IGuild> {
     return this.asyncSave(
       {},
       {
-
-        url: `http://localhost:3000/guilds/${this.get("id")}/quit`,
+        url: `${this.baseGuildRoot()}/quit`,
       }
     );
   }
@@ -86,7 +87,7 @@ export default class Guild extends BaseModel<IGuild> {
         user_id: user_id,
       },
       {
-        url: `http://localhost:3000/guilds/${this.get("id")}/${method}`,
+        url: `${this.baseGuildRoot()}/${method}`,
       }
     );
   }
@@ -95,7 +96,7 @@ export default class Guild extends BaseModel<IGuild> {
     return this.asyncSave(
       {},
       {
-        url: `http://localhost:3000/guilds/${this.id}/join`,
+        url: `${this.baseGuildRoot()}/join`,
       }
     );
   }
@@ -104,7 +105,7 @@ export default class Guild extends BaseModel<IGuild> {
     return this.asyncSave(
       { user_id: user_id },
       {
-        url: `http://localhost:3000/guilds/${this.get("id")}/accept`,
+        url: `${this.baseGuildRoot()}/accept`,
       }
     );
   }
@@ -115,19 +116,16 @@ export default class Guild extends BaseModel<IGuild> {
         user_id: user_id,
       },
       {
-        url: `http://localhost:3000/guilds/${this.id}/reject`,
+        url: `${this.baseGuildRoot()}/reject`,
       }
     );
   }
 
-  // mapServerErrors(errors: Record<string, string[]>) {
-  //   return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
-  // }
   withdraw() {
     return this.asyncSave(
       {},
       {
-        url: `http://localhost:3000/guilds/${this.get("id")}/withdraw`,
+        url: `${this.baseGuildRoot()}/withdraw`,
       }
     );
   }

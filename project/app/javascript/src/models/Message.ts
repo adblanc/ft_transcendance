@@ -1,4 +1,5 @@
 import Backbone from "backbone";
+import { BASE_ROOT } from "src/constants";
 
 export interface IMessage {
   content: string;
@@ -11,5 +12,5 @@ export interface IMessage {
 }
 
 export default class Message extends Backbone.Model<IMessage> {
-  url = () => "http://localhost:3000/room_messages";
+  url = () => `${BASE_ROOT}/room_messages`;
 }
