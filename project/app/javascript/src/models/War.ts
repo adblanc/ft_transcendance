@@ -16,7 +16,7 @@ interface IWar {
   updated_at: string;
 }
 
-type CreatableWarArgs = Partial<Pick<IWar, "start" | "end" | "prize">>;
+type CreatableWarArgs = Partial<Pick<IWar, "start" | "end" | "prize" | "guilds">>;
 
 export default class War extends BaseModel<IWar> {
 	preinitialize() {
