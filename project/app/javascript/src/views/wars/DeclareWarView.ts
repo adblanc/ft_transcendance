@@ -5,6 +5,8 @@ import Guild from "src/models/Guild";
 import Profile from "src/models/Profile";
 import War from "src/models/War";
 import { displaySuccess } from "src/utils/toast";
+import moment from "moment";
+const flatpickr = require("flatpickr");
 
 type Options = Backbone.ViewOptions<War> & {
 	guild: Guild, 
@@ -27,10 +29,28 @@ export default class DeclareWarView extends ModalView<War> {
   }
 
   async onSubmit(e: JQuery.Event) {
-    e.preventDefault();
+	e.preventDefault();
+	const fp_start = flatpickr(this.$("#input-start-date"), {
+		enableTime: true,
+		dateFormat: "Y-m-d H:i",
+		minuteIncrement: 1,
+		static: true,
+		minDate: new Date(),
+	});
+	const fp_end = flatpickr(this.$("#input-end-date"), {
+		enableTime: true,
+		dateFormat: "Y-m-d H:i",
+		minuteIncrement: 1,
+		static: true,
+		minDate: new Date(),
+	});
+
+	const dateTimeStart = fp_start.selectedDates[0];
+    const dateTimeEnd = fp_end.selectedDates[0];
+
     const attrs = {
-      start: this.$("#input-start-date").val() as string, //as Date
-	  end: this.$("#input-end-date").val() as string, //as Date
+	  start: dateTimeStart, //good format for rails?
+	  end: dateTimeEnd, ////good format for rails?
 	  prize: this.$("#input-prize").val() as string,
     };
 

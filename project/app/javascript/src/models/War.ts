@@ -7,8 +7,8 @@ import Guilds from "src/collections/Guilds";
 
 interface IWar {
   id: string;
-  start: string;
-  end: string;
+  start: Date;
+  end: Date;
   status: number;
   prize: string;
   guilds: Guilds;
@@ -36,8 +36,8 @@ export default class War extends BaseModel<IWar> {
 
   defaults() {
     return {
-      start: "",
-      end: "",
+      //start: "",
+      //end: "",
       prize: 0,
       guilds: [],
     };
