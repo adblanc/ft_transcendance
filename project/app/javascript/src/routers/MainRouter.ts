@@ -13,16 +13,13 @@ import AuthView from "../views/AuthView";
 import Guild from "src/models/Guild";
 import Game from "src/models/Game";
 import UserView from "../views/user/UserView";
-<<<<<<< HEAD
 import WarIndexView from "../views/wars/WarIndexView";
-=======
 import { BASE_ROOT } from "src/constants";
 
 const NO_AUTH_ROUTES = ["auth", "authCallBack"];
 
 const shouldBeAuth = (routeName: string) =>
   !NO_AUTH_ROUTES.find((route) => route === routeName);
->>>>>>> main
 
 export default class MainRouter extends Backbone.Router {
   constructor() {
