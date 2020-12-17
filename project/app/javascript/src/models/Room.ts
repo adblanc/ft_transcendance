@@ -3,19 +3,11 @@ import consumer from "channels/consumer";
 import Messages from "src/collections/Messages";
 import RoomUsers from "src/collections/RoomUsers";
 import { BASE_ROOT } from "src/constants";
-import BaseModel from "src/lib/BaseModel";
+import BaseRoom from "./BaseRoom";
 import Message, { IMessage } from "./Message";
 import RoomUser from "./RoomUser";
 
-export interface IRoom {
-  users?: RoomUsers;
-  name: string;
-  password?: string;
-  id?: number;
-  selected?: boolean;
-}
-
-export default class Room extends BaseModel<IRoom> {
+export default class Room extends BaseRoom {
   channel: ActionCable.Channel;
   messages: Messages;
   currentUserId?: number;

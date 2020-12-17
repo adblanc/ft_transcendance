@@ -1,10 +1,9 @@
 import Backbone from "backbone";
 import RoomUsers from "src/collections/RoomUsers";
-import BaseModel from "src/lib/BaseModel";
-import { IRoom } from "./Room";
+import BaseRoom from "./BaseRoom";
 import RoomUser from "./RoomUser";
 
-export default class PublicRoom extends BaseModel<IRoom> {
+export default class PublicRoom extends BaseRoom {
   preinitialize() {
     this.relations = [
       {

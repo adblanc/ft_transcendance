@@ -1,6 +1,9 @@
 import Mustache from "mustache";
+import { eventBus } from "src/events/EventBus";
 
 import PublicRoom from "src/models/PublicRoom";
+import Room from "src/models/Room";
+import { displaySuccess } from "src/utils";
 import ModalView from "../ModalView";
 
 export default class JoinPublicChannelView extends ModalView<PublicRoom> {
@@ -15,14 +18,27 @@ export default class JoinPublicChannelView extends ModalView<PublicRoom> {
   events() {
     return {
       ...super.events(),
+      "click #join-public-channel": this.joinPublicChannel,
     };
+  }
+
+  async joinPublicChannel() {
+    const room = new Room({
+      name: this.model.get("name"),
+    });
+
+    const success = await room.join();
+
+    if (success) {
+      displaySuccess(`Room ${this.model.get("name")} successfully joined`);
+      eventBus.trigger("chat:public-channel-joined", this.model.toJSON());
+    }
+    this.closeModal();
   }
 
   render() {
     super.render(); // we render the modal
     const template = $("#join-public-channel-template").html();
-
-    console.log("users", this.model.get("users"));
 
     const owner = this.model
       .get("users")
@@ -42,6 +58,7 @@ export default class JoinPublicChannelView extends ModalView<PublicRoom> {
       membersEmpty: members.length === 0,
     });
     this.$content.html(html);
+
     return this;
   }
 }

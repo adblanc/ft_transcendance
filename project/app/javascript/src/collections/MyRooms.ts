@@ -1,5 +1,7 @@
 import Backbone from "backbone";
 import { BASE_ROOT } from "src/constants";
+import { eventBus } from "src/events/EventBus";
+import { IRoom } from "src/models/BaseRoom";
 import Room from "../models/Room";
 
 export default class MyRooms extends Backbone.Collection<Room> {
@@ -14,14 +16,11 @@ export default class MyRooms extends Backbone.Collection<Room> {
     this.selectedRoom = undefined;
     this.listenTo(this, "add", this.checkSelectedAdd);
     this.listenTo(this, "remove", this.checkSelectedRemove);
+    this.listenTo(eventBus, "chat:public-channel-joined", this.addPublicRoom);
   }
 
-  initSelectedRoom() {
-    this.selectFirst();
-  }
-
-  selectFirst() {
-    this.setSelected(this.first());
+  addPublicRoom(room: IRoom) {
+    this.add(new Room(room));
   }
 
   checkSelectedAdd(room: Room) {

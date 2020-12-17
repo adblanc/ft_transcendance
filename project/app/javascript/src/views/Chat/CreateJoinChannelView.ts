@@ -63,10 +63,8 @@ export default class CreateJoinChannelView extends Backbone.View {
       name,
       password,
     });
-    const success = await room.asyncFetch({
-      url: `${BASE_ROOT}/join-room`,
-      data: room.toJSON(),
-    });
+
+    const success = await room.join();
 
     return { room, success };
   }
