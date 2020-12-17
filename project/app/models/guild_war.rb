@@ -4,8 +4,8 @@ class GuildWar < ApplicationRecord
 	/each will have a guild_war with own points/
 
 	enum status: [
-		:accepted,
 		:pending,
+		:accepted,
 		:rejected
 	]
 

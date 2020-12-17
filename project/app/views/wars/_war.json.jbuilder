@@ -1,2 +1,2 @@
-json.extract! war, :id, :start, :end, :prize, :guilds, :created_at, :updated_at
+json.extract! war, :id, :start, :end, :prize, :created_at, :updated_at
 

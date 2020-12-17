@@ -2,11 +2,9 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
 import Guild from "src/models/Guild";
-import Guilds from "src/collections/Guilds";
 import Profile from "src/models/Profile";
 import War from "src/models/War";
 import { displaySuccess } from "src/utils/toast";
-import moment from "moment";
 const flatpickr = require("flatpickr");
 
 type Options = Backbone.ViewOptions<War> & {
@@ -49,18 +47,20 @@ export default class DeclareWarView extends ModalView<War> {
 	const dateTimeStart = fp_start.selectedDates[0];
     const dateTimeEnd = fp_end.selectedDates[0];
 
-	var guilds = new Guilds;
-	guilds.add(this.profile.get("guild"));
-	guilds.add(this.guild);
-
-    const attrs = {
+    /*const attrs = {
 	  start: dateTimeStart, //good format for rails?
 	  end: dateTimeEnd, ////good format for rails?
 	  prize: this.$("#input-prize").val() as string,
-	  guilds: guilds,
-    };
+	};*/
+	
+	const start = dateTimeStart; //good format for rails?
+	const end = dateTimeEnd; ////good format for rails?
+	const prize = this.$("#input-prize").val() as string;
 
-    const success = await this.model.createWar(attrs);
+	const initiator_id = this.profile.get("guild").get("id");
+	const recipient_id = this.guild.get("id");
+
+    const success = await this.model.createWar(start, end, prize, initiator_id, recipient_id);
     if (success) {
       this.warSaved();
     }

@@ -16,7 +16,7 @@ interface IWar {
   updated_at: string;
 }
 
-type CreatableWarArgs = Partial<Pick<IWar, "start" | "end" | "prize" | "guilds">>;
+type CreatableWarArgs = Partial<Pick<IWar, "start" | "end" | "prize">>;
 
 export default class War extends BaseModel<IWar> {
 	preinitialize() {
@@ -40,11 +40,20 @@ export default class War extends BaseModel<IWar> {
     return syncWithFormData(method, model, options);
   }
 
-  createWar(attrs: CreatableWarArgs) {
-    return this.asyncSave(attrs, { 
+  createWar(start: Date, end:Date, prize: string, initiator_id: string, recipient_id: string) {
+    return this.asyncSave( 
+		{
+			'start': start,
+			'end': end,
+			'prize': prize,
+			'initiator_id': initiator_id,
+			'recipient_id': recipient_id,
+		}, 
+		{ 
 			url: this.urlRoot() 
 		});
-  	}
+	  }
+	  
 }
 
 

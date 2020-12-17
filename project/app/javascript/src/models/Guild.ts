@@ -2,6 +2,8 @@ import Backbone from "backbone";
 import _ from "underscore";
 import Profile from "src/models/Profile";
 import Profiles from "src/collections/Profiles";
+import War from "src/models/War";
+import Wars from "src/collections/Wars";
 import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
@@ -15,6 +17,7 @@ interface IGuild {
   img_url?: string;
   members: Profiles;
   pending_members: Profiles;
+  wars: Wars;
   created_at: string;
   updated_at: string;
 }
@@ -37,6 +40,12 @@ export default class Guild extends BaseModel<IGuild> {
         key: "pending_members",
         collectionType: Profiles,
         relatedModel: Profile,
+	  },
+	  {
+        type: Backbone.Many,
+        key: "wars",
+        collectionType: Wars,
+        relatedModel: War,
       },
     ];
   }
