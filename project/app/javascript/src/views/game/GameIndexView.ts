@@ -14,11 +14,8 @@ import { displaySuccess } from "src/utils/toast";
 
 var canvas = document.createElement("canvas");
 var canvaView= new CanvaView({
-  model: rectangle,
-});
+  model: rectangle,});
 var rectangle = new Rectangle(0, 0, 480, 480);
-
-//var player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
 
 export default class GameIndexView extends BaseView {
   player_one: Player;
@@ -62,35 +59,26 @@ export default class GameIndexView extends BaseView {
   events() {
      return {
        "click #create_game": "createGame",
-
      };
    }
 
    createGame() {
+    //this.playing();
      const jeu = new Game();
      var gameView = new CreateGameView(GameIndexView.i, {model: jeu, collection: this.collection,});
-    gameView.render();
+     gameView.render();
    // var canvas = canvaView.init(500, 250, '#EEE', this.player_one, 3);
    // canvas.addEventListener('click', this.canvasClicked, false);
    // canvas.addEventListener('mousemove', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
    }
 
-    // playGame(points)
-    // {
-    //   var canvas = canvaView.init(500, 250, '#EEE', this.player_one, points);
-    //   canvas.addEventListener('click', this.canvasClicked, false);
-    //   canvas.addEventListener('mousemove', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
-    // }
-
-  // onCreateGame() {
-  //   const game = new Game();
-  //   const createGameView = new CreateGameView(GameIndexView.i, {
-	//   model: game,
-  //   collection: this.collection,
-  //   });
-  //   GameIndexView.i++;
-  //   createGameView.render();
-  // }
+   playing()
+  {
+    const template = $("#playing").html();
+    const html = Mustache.render(template, {});
+    this.$el.html(html);
+    return this;
+  }
 
 //   createGame() {
 //   const template = $("#game").html();
