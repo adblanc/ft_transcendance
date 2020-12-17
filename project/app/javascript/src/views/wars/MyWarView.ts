@@ -3,19 +3,22 @@ import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import War from "src/models/War";
 import Wars from "src/collections/Wars";
+import GuildWars from "src/collections/GuildWars";
 import Guild from "src/models/Guild";
 import WarPendingView from "./WarPendingView";
 import WarConfirmedView from "./WarConfirmedView";
 import NoWarView from "./NoWarView";
+import WarWaitingView from "./WarWaitingView";
 
 //or maybe pass a guild
 type Options = Backbone.ViewOptions & { guild: Guild};
 
 export default class MyWarView extends BaseView {
 	guild: Guild;
-	wars: Wars;
+	wars: GuildWars;
 	warPendingView: WarPendingView;
 	warConfirmedView: WarConfirmedView;
+	warWaitingView: WarWaitingView;
 	noWarView: NoWarView;
 
   constructor(options?: Options) {
@@ -26,21 +29,32 @@ export default class MyWarView extends BaseView {
 	this.warConfirmedView = undefined;
 	this.noWarView = undefined;
 
-	this.wars = this.guild.get("wars");
+	this.wars = this.guild.get("guild_wars");
+	if (this.wars.isEmpty()) {
+		this.noWarView = new NoWarView();
+	}
 
 	console.log(this.wars);
 
-	this.guild.get("wars").forEach(function (item) {
+	this.wars.forEach(function (item) {
 		if (item.get("status") == "pending") {
 			this.warPendingView = new WarPendingView({
-				collection: this.guild.get("wars"),
+				collection: this.wars,
 			})
-		} else if (item.get("status") == "confirmed" || item.get("status") == "started") {
-			this.warConfirmedView = new WarConfirmedView({
-				war: item,
-			})
-		}
-		else {
+		} else if (item.get("status") == "accepted") {
+			var id = item.get("id");
+			  var war = new War({id});
+			  war.fetch();
+			  if (war.get("status") == "confirmed" || war.get("status") == "started") {
+					this.warConfirmedView = new WarConfirmedView({
+						war: war,
+					})
+				} else {
+					this.warWaitingView = new WarWaitingView({
+						war: war,
+					})
+				}
+		} else {
 			this.noWarView = new NoWarView();
 		}
 	}, this);
@@ -56,6 +70,9 @@ export default class MyWarView extends BaseView {
 	}
 	else if (this.warConfirmedView) {
 		this.renderNested(this.warConfirmedView, "#content");
+	}
+	else if (this.warWaitingView) {
+		this.renderNested(this.warWaitingView, "#content");
 	}
 	else if (this.noWarView) {
 		this.renderNested(this.noWarView, "#content");

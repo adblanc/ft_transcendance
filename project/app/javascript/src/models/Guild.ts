@@ -2,8 +2,8 @@ import Backbone from "backbone";
 import _ from "underscore";
 import Profile from "src/models/Profile";
 import Profiles from "src/collections/Profiles";
-import War from "src/models/War";
-import Wars from "src/collections/Wars";
+import GuildWar from "src/models/GuildWar";
+import GuildWars from "src/collections/GuildWars";
 import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
@@ -17,7 +17,7 @@ interface IGuild {
   img_url?: string;
   members: Profiles;
   pending_members: Profiles;
-  wars: Wars;
+  guild_wars: GuildWars;
   created_at: string;
   updated_at: string;
 }
@@ -43,9 +43,9 @@ export default class Guild extends BaseModel<IGuild> {
 	  },
 	  {
         type: Backbone.Many,
-        key: "wars",
-        collectionType: Wars,
-        relatedModel: War,
+        key: "guild_wars",
+        collectionType: GuildWars,
+        relatedModel: GuildWar,
       },
     ];
   }
@@ -61,7 +61,7 @@ export default class Guild extends BaseModel<IGuild> {
       points: 0,
       atWar: false,
 	  members: [],
-	  wars: [],
+	  guild_wars: [],
     };
   }
 

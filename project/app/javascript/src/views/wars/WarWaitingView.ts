@@ -8,7 +8,7 @@ import { displaySuccess } from "src/utils";
 //or maybe pass a guild
 type Options = Backbone.ViewOptions & { war: War};
 
-export default class WarConfirmedView extends BaseView {
+export default class WarWaitingView extends BaseView {
 	war: War;
 
   constructor(options?: Options) {
@@ -18,7 +18,7 @@ export default class WarConfirmedView extends BaseView {
   }
 
   render() {
-	const template = $("#confirmedWarTemplate").html();
+	const template = $("#warWaitingTemplate").html();
     const html = Mustache.render(template, this.war.toJSON()); //replace with this.war if it exists and if confirmed
 	this.$el.html(html);
 

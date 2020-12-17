@@ -2,10 +2,11 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import Wars from "src/collections/Wars";
+import GuildWars from "src/collections/GuildWars";
 import War from "src/models/War";
 import ItemPendingView from "./ItemPendingView";
 
-type Options = Backbone.ViewOptions & { collection: Wars };
+type Options = Backbone.ViewOptions & { collection: GuildWars };
 
 export default class WarPendingView extends BaseView {
   collection: Wars;
@@ -27,8 +28,11 @@ export default class WarPendingView extends BaseView {
 	const $element = this.$("#listing");
 
     this.collection.forEach(function (item) {
+	  var id = item.get("id");
+	  var war = new War({id});
+	  war.fetch();
       var itemView = new ItemPendingView({
-        model: item,
+        model: war,
       });
       $element.append(itemView.render().el);
     });

@@ -4,6 +4,11 @@ class WarsController < ApplicationController
 		@wars = War.all
 	end
 
+	def show
+		@war = War.find_by_id(params[:id])
+		return head :not_found unless @war
+	end
+
 	def create
 		@initiator = Guild.find(params[:initiator_id])
 		@recipient = Guild.find(params[:recipient_id])
