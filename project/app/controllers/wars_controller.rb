@@ -1,5 +1,9 @@
 class WarsController < ApplicationController
 
+	def index
+		@wars = War.all
+	end
+
 	def create
 		@initiator = Guild.find(params[:initiator_id])
 		@recipient = Guild.find(params[:recipient_id])
