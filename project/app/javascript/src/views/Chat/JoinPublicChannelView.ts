@@ -1,8 +1,6 @@
 import Mustache from "mustache";
-import { eventBus } from "src/events/EventBus";
 
 import PublicRoom from "src/models/PublicRoom";
-import Room from "src/models/Room";
 import { displaySuccess } from "src/utils";
 import ModalView from "../ModalView";
 

@@ -5,17 +5,22 @@ import PublicRoom from "src/models/PublicRoom";
 import Room from "../models/Room";
 
 export default class PublicRooms extends Backbone.Collection<PublicRoom> {
-  selectedRoom?: Room;
   preinitialize() {
     this.model = PublicRoom;
 
     this.listenTo(this, "remove", this.onRemove);
+    this.listenTo(eventBus, "chat:my-room-left", this.checkMyRoomLeft);
   }
 
   url = () => `${BASE_ROOT}/rooms`;
 
   onRemove(room: PublicRoom) {
-    console.log("we remove", room);
     eventBus.trigger("chat:public-channel-joined", room);
+  }
+
+  checkMyRoomLeft(room: Room) {
+    if (!room.get("is_private")) {
+      this.add(new PublicRoom({ ...room.toJSON(), selected: false }));
+    }
   }
 }

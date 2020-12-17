@@ -16,7 +16,7 @@ export default class MyRooms extends Backbone.Collection<Room> {
 
     this.selectedRoom = undefined;
     this.listenTo(this, "add", this.checkSelectedAdd);
-    this.listenTo(this, "remove", this.checkSelectedRemove);
+    this.listenTo(this, "remove", this.onRemove);
     this.listenTo(eventBus, "chat:public-channel-joined", this.addPublicRoom);
   }
 
@@ -28,6 +28,11 @@ export default class MyRooms extends Backbone.Collection<Room> {
     if (!this.selectedRoom) {
       this.setSelected(room);
     }
+  }
+
+  onRemove(room: Room) {
+    eventBus.trigger("chat:my-room-left", room);
+    this.checkSelectedRemove(room);
   }
 
   checkSelectedRemove(room: Room) {
