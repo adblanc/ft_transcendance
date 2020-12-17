@@ -13,7 +13,7 @@ export interface IProfile {
   login: string;
   name: string;
   id?: number;
-  avatar?: any;
+  avatar_url?: string;
   created_at?: string;
   updated_at?: string;
   guild_role?: "Owner" | "Officer" | "Member";
@@ -22,7 +22,10 @@ export interface IProfile {
   notifications?: Notifications;
 }
 
-type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar">>;
+type ModifiableProfileArgs = {
+  name?: string;
+  avatar: any;
+};
 
 export default class Profile extends BaseModel<IProfile> {
   channel: ActionCable.Channel;

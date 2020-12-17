@@ -3,6 +3,7 @@ import Mustache from "mustache";
 import PublicRooms from "src/collections/PublicRooms";
 import BaseView from "src/lib/BaseView";
 import PublicRoom from "src/models/PublicRoom";
+import PublicRoomView from "./PublicRoomView";
 
 type Options = Backbone.ViewOptions & {
   publicRooms: PublicRooms;
@@ -23,20 +24,19 @@ export default class PublicRoomsView extends BaseView {
     this.publicRooms.fetch();
 
     this.listenTo(this.publicRooms, "add", this.renderPublicRoom);
-  }
-
-  events() {
-    return {
-      "click .room-name": this.onClick,
-    };
-  }
-
-  onClick() {
-    console.log("public room clicked");
+    this.listenTo(this.publicRooms, "remove", this.removePublicRoom);
   }
 
   renderPublicRoom(room: PublicRoom) {
-    console.log("render public room", room);
+    this.$("#public-rooms-list").append(
+      new PublicRoomView({ model: room }).render().el
+    );
+  }
+
+  removePublicRoom(room: PublicRoom) {
+    this.$(`#room-${room.get("id")}`)
+      .parent()
+      .remove();
   }
 
   render() {

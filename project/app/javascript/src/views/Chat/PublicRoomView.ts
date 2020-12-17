@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "src/lib/BaseView";
 import PublicRoom from "src/models/PublicRoom";
+import JoinPublicChannelView from "./JoinPublicChannelView";
 
 export default class PublicRoomView extends BaseView<PublicRoom> {
   constructor(options?: Backbone.ViewOptions<PublicRoom>) {
@@ -22,6 +23,11 @@ export default class PublicRoomView extends BaseView<PublicRoom> {
 
   onClick() {
     console.log("public room clicked");
+    const joinPublicChannelView = new JoinPublicChannelView({
+      model: this.model,
+    });
+
+    joinPublicChannelView.render();
   }
 
   render() {
