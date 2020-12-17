@@ -1,7 +1,10 @@
 <script type="text/html" id="pendingWarTemplate">
 	<div class="row">
-		<div> IMG 1 & name</div>
-		<button id="accept-btn" class="btn-primary" type="button">See war terms</button>
+		<img style="float:left" width="60" height="60" class="rounded-full p-2 ml-8 mr-5 mt-6" src="{{guilds.0.img_url}}" />
+		<div>
+			<a style="float:left; margin-top:42px; text-decoration: underline;" href="/guild/{{guilds.0.id}}" class="justify-center flex flex-row text-white">{{guilds.0.name}} </a>
+			<button style="float:right" class="mt-10 bg-teal-500 text-white rounded-lg shadow-lg py-1 px-1 mr-12" id="see" type="button">See war terms</button>
+		</div>
 	</div>
-	<div class="line flex" style="border: 1px solid; color: #14B8A6; margin:auto;"></div>
 </script>
+
