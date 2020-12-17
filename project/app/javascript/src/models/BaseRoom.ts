@@ -3,11 +3,12 @@ import { BASE_ROOT } from "src/constants";
 import BaseModel from "src/lib/BaseModel";
 
 export interface IRoom {
-  users?: RoomUsers;
   name: string;
   password?: string;
+  is_private?: boolean;
   id?: number;
   selected?: boolean;
+  users?: RoomUsers;
 }
 
 export default class BaseRoom extends BaseModel<IRoom> {

@@ -23,15 +23,16 @@ export default class JoinPublicChannelView extends ModalView<PublicRoom> {
   }
 
   async joinPublicChannel() {
-    const room = new Room({
-      name: this.model.get("name"),
-    });
-
-    const success = await room.join();
+    const success = await this.model.join();
 
     if (success) {
       displaySuccess(`Room ${this.model.get("name")} successfully joined`);
-      eventBus.trigger("chat:public-channel-joined", this.model.toJSON());
+
+      console.log("this.model/collection", this.model.collection);
+
+      const removed = this.model.collection.remove(this.model);
+
+      console.log("removed", removed);
     }
     this.closeModal();
   }

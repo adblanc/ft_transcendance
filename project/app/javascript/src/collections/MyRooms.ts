@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import { BASE_ROOT } from "src/constants";
 import { eventBus } from "src/events/EventBus";
 import { IRoom } from "src/models/BaseRoom";
+import PublicRoom from "src/models/PublicRoom";
 import Room from "../models/Room";
 
 export default class MyRooms extends Backbone.Collection<Room> {
@@ -19,8 +20,8 @@ export default class MyRooms extends Backbone.Collection<Room> {
     this.listenTo(eventBus, "chat:public-channel-joined", this.addPublicRoom);
   }
 
-  addPublicRoom(room: IRoom) {
-    this.add(new Room(room));
+  addPublicRoom(room: PublicRoom) {
+    this.add(new Room(room.toJSON()));
   }
 
   checkSelectedAdd(room: Room) {
