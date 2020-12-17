@@ -1,7 +1,6 @@
 import Backbone from "backbone";
 import { BASE_ROOT } from "src/constants";
 import { eventBus } from "src/events/EventBus";
-import { IRoom } from "src/models/BaseRoom";
 import PublicRoom from "src/models/PublicRoom";
 import Room from "../models/Room";
 
@@ -20,8 +19,11 @@ export default class MyRooms extends Backbone.Collection<Room> {
     this.listenTo(eventBus, "chat:public-channel-joined", this.addPublicRoom);
   }
 
-  addPublicRoom(room: PublicRoom) {
-    this.add(new Room(room.toJSON()));
+  addPublicRoom(publicRoom: PublicRoom) {
+    const room = new Room(publicRoom.toJSON());
+    this.selectedRoom?.toggle();
+    this.selectedRoom = undefined;
+    this.add(room);
   }
 
   checkSelectedAdd(room: Room) {
@@ -50,10 +52,12 @@ export default class MyRooms extends Backbone.Collection<Room> {
       this.selectedRoom &&
       this.find((r) => r.get("id") === this.selectedRoom.get("id"))
     ) {
+      console.log("toggle previosu selectedRoom");
       this.selectedRoom.toggle();
     }
     this.selectedRoom = room;
     this.selectedRoom.toggle();
+    console.log("set and toggle selectedRoom", room);
   }
 
   url = () => `${BASE_ROOT}/my-rooms`;
