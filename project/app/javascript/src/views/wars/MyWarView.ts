@@ -32,18 +32,15 @@ export default class MyWarView extends BaseView {
 
 	this.guild.get("wars").forEach(function (item) {
 		if (item.get("status") == "pending") {
-			console.log("1");
 			this.warPendingView = new WarPendingView({
 				collection: this.guild.get("wars"),
 			})
 		} else if (item.get("status") == "confirmed" || item.get("status") == "started") {
-			console.log("2");
 			this.warConfirmedView = new WarConfirmedView({
 				war: item,
 			})
 		}
 		else {
-			console.log("3");
 			this.noWarView = new NoWarView();
 		}
 	}, this);

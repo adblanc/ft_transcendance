@@ -26,7 +26,7 @@ export default class ItemPendingView extends BaseView {
 
 
   render() {
-    const template = $("#itemWarTemplate").html();
+    const template = $("#pendingWarTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
 	this.$el.html(html);
 	
