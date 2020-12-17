@@ -16,7 +16,7 @@ interface IWar {
   updated_at: string;
 }
 
-type CreatableWarArgs = Partial<Pick<IWar, "start" | "end" | "prize">>;
+export type WAR_ACTION = "accept" | "reject";
 
 export default class War extends BaseModel<IWar> {
 	preinitialize() {
@@ -35,6 +35,7 @@ export default class War extends BaseModel<IWar> {
   }
 
   urlRoot = () => "http://localhost:3000/wars";
+  baseGuildRoot = () => `${this.urlRoot()}/${this.get("id")}`;
 
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
     return syncWithFormData(method, model, options);
@@ -52,6 +53,31 @@ export default class War extends BaseModel<IWar> {
 		{ 
 			url: this.urlRoot() 
 		});
+	}
+
+	manageAction(method: WAR_ACTION) {
+		return this.asyncSave({},
+		  {
+			url: `${this.baseGuildRoot()}/${method}`,
+		  }
+		);
+	  }
+	
+	  accept() {
+		return this.asyncSave({},
+		  {
+			url: `${this.baseGuildRoot()}/accept`,
+		  }
+		);
+	  }
+	
+	  reject() {
+		return this.asyncSave(
+		  {},
+		  {
+			url: `${this.baseGuildRoot()}/reject`,
+		  }
+		);
 	  }
 	  
 }

@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import War from "src/models/War";
+import NegotiateView from "./NegotiateView";
 
 type Options = Backbone.ViewOptions & { model: War };
 
@@ -22,6 +23,11 @@ export default class ItemPendingView extends BaseView {
   }
 
   onSeeClicked() {
+	const negotiateView = new NegotiateView({
+		model: this.model,
+	  });
+  
+	  negotiateView.render();
   }
 
 

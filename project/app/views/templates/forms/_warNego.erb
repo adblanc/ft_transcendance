@@ -1,0 +1,40 @@
+<script type="text/html" id="negoTemplate">
+            <form action="">
+                <label class="block" for="war-start">
+                    <span class="text-gray-700">When do you want the war to start?*</span>
+                    <input
+                        class="form-input mt-1 block w-full"
+                        type="datetime-local"
+						name="start-date"
+						value="{{start}}"
+                        id="input-start-date"
+					/>
+				</label>
+				<label class="block" for="war end">
+                    <span class="text-gray-700">When do you want it to end?*</span>
+                    <input
+                        class="form-input mt-1 block w-full"
+                        type="datetime-local"
+						name="end-date"
+						value="{{end}}"
+                        id="input-end-date"
+					/>
+				</label>
+				<label class="block" for="guild-start">
+                    <span class="text-gray-700">How many points will be awarded to the winner?*</span>
+                    <input
+                        class="form-input mt-1 block w-full"
+                        type="text"
+						name="war-prize"
+						value="{{prize}}"
+                        id="input-prize"
+                    />
+				</label>
+                <button style="margin-left:110px" class="floated mt-6 bg-teal-500 text-white rounded-lg shadow-lg py-1 px-2" id="accept" type="button">Accept</button>
+				<button class="floated mt-6 bg-red-400 text-white rounded-lg shadow-lg py-1 px-2" id="reject" type="button">Reject</button>
+				<div>
+					<button class="mt-3 ml-10 bg-teal-500 text-white rounded-lg shadow-lg py-1 px-2" id="transfer" type="button">Send back your proposed changes</button>
+				</div>
+
+            </form>
+</script>

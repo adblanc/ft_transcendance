@@ -92,7 +92,6 @@ export default class Guild extends BaseModel<IGuild> {
   }
 
   manageMembers(method: GUILD_ACTION, user_id: number) {
-    console.log("user_id", typeof user_id, user_id);
     return this.asyncSave(
       {
         user_id: user_id,
