@@ -15,6 +15,8 @@ export default class WarConfirmedView extends BaseView {
     super(options);
 
 	this.war = options.war;
+
+	this.listenTo(this.war, "change", this.render);
   }
 
   render() {

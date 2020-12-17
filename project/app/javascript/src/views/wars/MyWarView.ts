@@ -57,6 +57,9 @@ export default class MyWarView extends BaseView {
 			this.noWarView = new NoWarView();
 		}
 	}, this);
+
+	this.listenTo(this.war, "change", this.render);
+    //this.listenTo(this.model, "add", this.render);
   }
 
   render() {

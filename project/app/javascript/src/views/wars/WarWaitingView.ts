@@ -5,7 +5,6 @@ import War from "src/models/War";
 import Guild from "src/models/Guild";
 import { displaySuccess } from "src/utils";
 
-//or maybe pass a guild
 type Options = Backbone.ViewOptions & { war: War};
 
 export default class WarWaitingView extends BaseView {
@@ -16,6 +15,7 @@ export default class WarWaitingView extends BaseView {
 
 	this.war = options.war;
 	//console.log(this.war);
+	this.listenTo(this.war, "change", this.render);
   }
 
   render() {

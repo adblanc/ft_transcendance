@@ -1,9 +1,11 @@
 <script type="text/html" id="warWaitingTemplate">
 	<h1 style="margin-top:10px;" class="justify-center flex flex-row  text-white"> You are waiting for </h1>
-	<a style="margin-top:10px;" class="justify-center flex flex-row  text-white">{{guilds[1].name}} </a>
-	<h1 style="margin-top:10px;" class="justify-center flex flex-row  text-white"> to confirm the terms of the war : </h1>
-
-	<h1 style="margin-top:10px;" class="flex flex-row  text-white"> Prize : {{prize}} points </h1>
-	<h1 style="margin-top:10px; margin-down:10px" class="flex flex-row text-white"> Start: {{start}} </h1>
-	<h1 style="margin-top:10px; margin-down:10px" class="flex flex-row text-white"> End: {{end}} </h1>
+	<div>
+		<img style="margin-left: auto; margin-right: auto; margin-top:10px" width="100" height="100" class="flex flex-row rounded-full p-2" src="{{guilds.1.img_url}}" />
+	</div>
+	<a style="margin-top:10px; text-decoration: underline;" href="/guild/{{guilds.1.id}}" class="justify-center flex flex-row text-white">{{guilds.1.name}} </a>
+	<h1 style="margin-top:10px;" class="justify-center flex flex-row text-white"> to confirm the terms of the war : </h1>
+	<h1 style="margin-top:10px; font-size: 15px;" class="flex flex-row text-white ml-5"> Prize : {{prize}} points </h1>
+	<h1 style="margin-top:10px; margin-down:10px; font-size: 15px;" class="flex flex-row text-white ml-5"> Start: {{start}} </h1>
+	<h1 style="margin-top:10px; margin-down:10px; font-size: 15px;" class="flex flex-row text-white ml-5 mb-5"> End: {{end}} </h1>
 </script>
