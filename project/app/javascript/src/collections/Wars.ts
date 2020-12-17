@@ -5,6 +5,7 @@ export default class Wars extends Backbone.Collection<War> {
   constructor() {
     super();
 
-    this.model = War;
+	this.model = War;
+	this.url = "/wars";
   }
 }
