@@ -15,6 +15,7 @@ export default class WarWaitingView extends BaseView {
     super(options);
 
 	this.war = options.war;
+	//console.log(this.war);
   }
 
   render() {

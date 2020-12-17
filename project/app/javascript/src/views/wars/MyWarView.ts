@@ -16,6 +16,7 @@ type Options = Backbone.ViewOptions & { guild: Guild};
 export default class MyWarView extends BaseView {
 	guild: Guild;
 	wars: GuildWars;
+	war: War;
 	warPendingView: WarPendingView;
 	warConfirmedView: WarConfirmedView;
 	warWaitingView: WarWaitingView;
@@ -34,24 +35,22 @@ export default class MyWarView extends BaseView {
 		this.noWarView = new NoWarView();
 	}
 
-	console.log(this.wars);
-
 	this.wars.forEach(function (item) {
 		if (item.get("status") == "pending") {
 			this.warPendingView = new WarPendingView({
 				collection: this.wars,
 			})
 		} else if (item.get("status") == "accepted") {
-			var id = item.get("id");
-			  var war = new War({id});
-			  war.fetch();
-			  if (war.get("status") == "confirmed" || war.get("status") == "started") {
+		      const id = item.get("war_id");
+			  this.war = new War({id});
+			  this.war.fetch();
+			  if (this.war.get("status") == "confirmed" || this.war.get("status") == "started") {
 					this.warConfirmedView = new WarConfirmedView({
-						war: war,
+						war: this.war,
 					})
 				} else {
 					this.warWaitingView = new WarWaitingView({
-						war: war,
+						war: this.war,
 					})
 				}
 		} else {

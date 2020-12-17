@@ -9,7 +9,7 @@ import ItemPendingView from "./ItemPendingView";
 type Options = Backbone.ViewOptions & { collection: GuildWars };
 
 export default class WarPendingView extends BaseView {
-  collection: Wars;
+  collection: GuildWars;
 
   constructor(options?: Options) {
 	super(options);
@@ -28,7 +28,7 @@ export default class WarPendingView extends BaseView {
 	const $element = this.$("#listing");
 
     this.collection.forEach(function (item) {
-	  var id = item.get("id");
+	  var id = item.get("war_id");
 	  var war = new War({id});
 	  war.fetch();
       var itemView = new ItemPendingView({

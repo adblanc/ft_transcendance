@@ -1,7 +1,7 @@
 import Backbone from "backbone";
-import GuildWar from "../models/War";
+import GuildWar from "../models/GuildWar";
 
-export default class Wars extends Backbone.Collection<GuildWar> {
+export default class GuildWars extends Backbone.Collection<GuildWar> {
   constructor() {
     super();
 
