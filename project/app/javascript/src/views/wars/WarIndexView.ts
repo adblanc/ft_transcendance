@@ -12,24 +12,29 @@ export default class WarIndexView extends BaseView {
 	profile: Profile;
 	wars: Wars;
 	warBoardView: WarBoardView;
-	myWar: War;
 	myWarView: MyWarView;
 
   constructor(options?: Backbone.ViewOptions) {
 	super(options);
 	
 	this.profile = new Profile();
-	this.profile.fetch();
+	this.profile.fetch({
+		success: () => {
+			var id = this.profile.get("guild").get("id");
+			var guild = new Guild({id});
+			guild.asyncFetch();
+			this.myWarView = new MyWarView({
+				guild: guild,
+			})
+			this.renderNested(this.myWarView, "#mywar");
+		}
+	});
 	this.wars = new Wars();
 	this.wars.fetch();
 	
 	this.warBoardView = new WarBoardView({
 		collection: this.wars,
 	});
-
-	this.myWarView = new MyWarView({
-		war: this.myWar,
-	})
 
   }
 
@@ -39,7 +44,6 @@ export default class WarIndexView extends BaseView {
 	this.$el.html(html);
 	
 	this.renderNested(this.warBoardView, "#board");
-	this.renderNested(this.myWarView, "#mywar");
 
     return this;
   }

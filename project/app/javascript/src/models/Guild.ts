@@ -60,7 +60,8 @@ export default class Guild extends BaseModel<IGuild> {
       ang: "",
       points: 0,
       atWar: false,
-      members: [],
+	  members: [],
+	  wars: [],
     };
   }
 

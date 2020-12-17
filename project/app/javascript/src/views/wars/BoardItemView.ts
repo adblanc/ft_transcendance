@@ -5,7 +5,7 @@ import War from "src/models/War";
 
 type Options = Backbone.ViewOptions & { model: War };
 
-export default class ItemView extends BaseView {
+export default class BoardItemView extends BaseView {
   model: War;
 
   constructor(options?: Options) {

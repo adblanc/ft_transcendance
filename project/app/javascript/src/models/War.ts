@@ -9,7 +9,7 @@ interface IWar {
   id: string;
   start: Date;
   end: Date;
-  status: number;
+  status: string;
   prize: string;
   guilds: Guilds;
   created_at: string;

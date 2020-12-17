@@ -3,13 +3,12 @@ import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import Wars from "src/collections/Wars";
 import War from "src/models/War";
-import WarItemView from "./WarItemView";
+import BoardItemView from "./BoardItemView";
 
 type Options = Backbone.ViewOptions & { collection: Wars };
 
 export default class WarBoardView extends BaseView {
   collection: Wars;
-  itemView: Backbone.View;
   max: number;
   count: number;
 
@@ -22,11 +21,10 @@ export default class WarBoardView extends BaseView {
 
     this.listenTo(this.collection, "reset", this.render);
     this.listenTo(this.collection, "change", this.render);
-    this.listenTo(this.collection, "sort", this.render);
   }
 
   renderWar(war: War) {
-	var itemWarView = new WarItemView({
+	var itemWarView = new BoardItemView({
 		model: war,
 	  });
 	  this.$("#listing").append(itemWarView.render().el);
