@@ -2,16 +2,16 @@ import Mustache from "mustache";
 import MyRooms from "src/collections/MyRooms";
 import { eventBus } from "src/events/EventBus";
 import BaseView from "src/lib/BaseView";
-import Room from "src/models/Room";
 import ChatHeaderView from "./Header/ChatHeaderView";
 import ChatInputView from "./ChatInputView";
 import CreateJoinChannelView from "./CreateJoinChannelView";
-import RoomView from "./RoomView";
 import PublicRoomsView from "./PublicRoomsView";
+import MyRoomsView from "./MyRoomsView";
 
 export default class ChatView extends BaseView {
   myRooms: MyRooms;
   publicRoomsView: PublicRoomsView;
+  myRoomsView: MyRoomsView;
   createJoinChannelView: CreateJoinChannelView;
   chatHeaderView?: ChatHeaderView;
   chatInputView?: ChatInputView;
@@ -20,7 +20,9 @@ export default class ChatView extends BaseView {
     super(options);
 
     this.myRooms = new MyRooms();
-    this.myRooms.fetch();
+    this.myRoomsView = new MyRoomsView({
+      myRooms: this.myRooms,
+    });
 
     this.createJoinChannelView = new CreateJoinChannelView({
       rooms: this.myRooms,
@@ -32,8 +34,8 @@ export default class ChatView extends BaseView {
     this.chatInputView = undefined;
 
     this.listenTo(eventBus, "chat:open", this.toggleChat);
-    this.listenTo(this.myRooms, "add", this.renderMyRoom);
-    this.listenTo(this.myRooms, "remove", this.removeMyRoom);
+    this.listenTo(this.myRooms, "add", this.refreshHeaderInput);
+    this.listenTo(this.myRooms, "remove", this.removeHeaderInput);
   }
 
   hideChat() {
@@ -58,8 +60,7 @@ export default class ChatView extends BaseView {
     this.$el.toggleClass("invisible");
   }
 
-  renderMyRoom(room: Room) {
-    console.log("we render", room.get("id"));
+  refreshHeaderInput() {
     if (!this.chatHeaderView) {
       this.chatHeaderView = new ChatHeaderView({
         rooms: this.myRooms,
@@ -72,15 +73,9 @@ export default class ChatView extends BaseView {
       });
       this.renderChatInput();
     }
-
-    this.$("#my-rooms-list").append(new RoomView({ model: room }).render().el);
   }
 
-  removeMyRoom(room: Room) {
-    this.$(`#room-${room.get("id")}`)
-      .parent()
-      .remove();
-
+  removeHeaderInput() {
     if (!this.myRoomsLength()) {
       if (this.chatHeaderView) {
         this.chatHeaderView.close();
@@ -104,6 +99,7 @@ export default class ChatView extends BaseView {
 
     this.preprendNested(this.createJoinChannelView, "#left-container-chat");
 
+    this.appendNested(this.myRoomsView, "#left-container-chat");
     this.appendNested(this.publicRoomsView, "#left-container-chat");
 
     return this;
