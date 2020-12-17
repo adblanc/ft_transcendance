@@ -28,63 +28,31 @@ export default class CanvaView extends ModalView<Rectangle> {
 	constructor(options?: Backbone.ViewOptions<Rectangle>) {
 		super(options);
 	  }
-
-	// events() {
-	// 	return {
-	// 		...super.events(),
-	// 		"click #canvas-id": "move",
-	// 	};
-	// 	}
-		// initialize() {
-		// 	this.render();
-		// }
 		player: Player;
 		ball: Ball;
 		ai: Player;
+		points: Number;
 		//render() {
 		//const template = $("#canvas").html();
     	//const html = Mustache.render(template, {});
-		main(){
-		this.update(10);
-		this.callback(new Date().getSeconds());
-		this.callback(new Date().getSeconds());
-		this.callback(new Date().getSeconds());
-		}
-		//  this.setDimensions();
-		//  this.setPosition();
-		//  this.setColor(); 
-		//return this;
-		//}
-		init(width, height, bg, player) {
+
+		init(width, height, bg, player, points) {
+			this.points = points;
 			canvas.width = width;
 		  canvas.height = height;
 		  canvas.style.backgroundColor = bg;
 		  canvas.id = "canvas-id";
 		  document.body.appendChild(canvas);
-		var txt = document.createElement("LI");
-		var textnode = document.createTextNode("Water");
-		  canvas.appendChild(textnode);
 		  //console.log(canvas);
 		  //document.getElementById("#canvas").appendChild(canvas);
 		 // canvas.addEventListener('mouse', update); 
 		  var paddle = new Rectangle(0, 0, width, height);
 		  paddle.render(ctx, 'rgb(2, 149, 212)');
-		  //this.player = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
 		 this.player = player; 
-		  //this.player.render(ctx, 'rgb(120, 80, 0)');
 		  this.ai = new Player(new Rectangle(0, canvas.height / 2 - 25, 15, 100));
-		  //this.ai.render(ctx, 'rgb(0ƒto, 80, 120)');
 		  this.ball =  new Ball(width /2 , height / 2, 5);
-		  //this.ball.render(ctx, 'rgb(80,80,80)')
-		//  canvas.addEventListener('click', this.canvasClicked, false);
-		//  canvas.addEventListener('mousemove', this.canvasClicked, false);
 		  return canvas;
 		}
-		// canvasClicked() {
-		 	
-		// 	this.update(100);
-    	// }
-		//canvas.addEventListener('mousemove', update);
 
 		collide_player(player, ball)
     	{
@@ -93,9 +61,6 @@ export default class CanvaView extends ModalView<Rectangle> {
 			{
 				//displaySuccess("Collision.");
 				ball.velocity.x -= 1.05;
-				this.player.add();
-				displaySuccess("score" + String(this.player.score));
-				document.querySelector('#computer-score').textContent = String(this.player.score);
             //const len = ball.velocity.len;
             //ball.vel.y += player.vel.y * .2;
             //ball.vel.len = len;
@@ -132,14 +97,21 @@ export default class CanvaView extends ModalView<Rectangle> {
         	b.y = canvas.height / 2;
 		}
 
-		update(dt) {
+		update(dt): Number {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			document.querySelector('#computer-score').textContent = String(this.player.score);
 			this.ball.update();
 			this.player.update(dt);
 			if (this.ball.left() < 0 || this.ball.right() > canvas.width)
 			{
-				this.player.score++;
+				this.player.add();
+				document.querySelector('#computer-score').textContent = String(this.player.score);
 				this.reset();
+				if (this.player.score >= this.points)
+				{
+					document.body.removeChild(canvas);
+					return this.player.score;
+				}
 			}
 				
 			this.collide_player(this.player, this.ball);
@@ -147,29 +119,30 @@ export default class CanvaView extends ModalView<Rectangle> {
 			this.draw();
 			//this.update();
 			//window.requestAnimationFrame(this.update);
+			return 0;
 		}
 		
 		
-		callback(millis: number)
+		callback(millis: number): Number
 		{
 			if (lastTime)
 			{
 				const diff = millis - lastTime;
-				this.update(diff / 1000);
+				var i = this.update(diff / 1000);
+				return i;
 			}
 			lastTime = millis;
 			window.requestAnimationFrame(this.callback);
 		}
 
-		// Paddle.prototype.render() {
-		// 	ctx.fillStyle = 'rgb(2, 149, 212)';
-		// 	ctx.fillRect(this.x, this.y, this.width, this.height);
-		// }
-
-
-
-
-
+		 stop(i: Number)
+  {
+    const template = $("#game_win").html();
+    const html = Mustache.render(template, {});
+    this.$el.html(html);
+    document.querySelector('#computer-score').textContent = String(i);
+    return this;
+  }
 
 		setDimensions() {
 			var width = this.model.get('width') + 'px';

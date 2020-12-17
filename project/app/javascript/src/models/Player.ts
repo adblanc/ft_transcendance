@@ -46,4 +46,8 @@ export default class Player extends Backbone.Model{
     {
         this.score++;
     }
+    score_reset()
+    {
+        this.score = 0;
+    }
 };
