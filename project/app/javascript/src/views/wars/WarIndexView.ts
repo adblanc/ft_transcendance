@@ -22,11 +22,14 @@ export default class WarIndexView extends BaseView {
 		success: () => {
 			var id = this.profile.get("guild").get("id");
 			var guild = new Guild({id});
-			guild.asyncFetch();
-			this.myWarView = new MyWarView({
-				guild: guild,
-			})
-			this.renderNested(this.myWarView, "#mywar");
+			guild.fetch({
+				success: () => {
+					this.myWarView = new MyWarView({
+						guild: guild,
+					})
+					this.renderNested(this.myWarView, "#mywar");
+				}
+			});
 		}
 	});
 	this.wars = new Wars();
