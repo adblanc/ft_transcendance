@@ -4,7 +4,7 @@ class RoomsController < ApplicationController
 	before_action :authenticate_user!
 
 	def index
-		@rooms = Room.where('id NOT IN (?)', @current_user.rooms.ids);
+		@rooms = @current_user.rooms.empty? ? Room.where(is_private: false) : Room.where('id NOT IN (?) AND is_private = false', @current_user.rooms.ids);
 	end
 
 	def my_rooms
