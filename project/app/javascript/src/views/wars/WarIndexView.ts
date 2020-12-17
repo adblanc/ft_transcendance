@@ -30,10 +30,13 @@ export default class WarIndexView extends BaseView {
 		}
 	});
 	this.wars = new Wars();
-	this.wars.fetch();
-	
-	this.warBoardView = new WarBoardView({
-		collection: this.wars,
+	this.wars.fetch({
+		success: () => {
+			this.warBoardView = new WarBoardView({
+				collection: this.wars,
+			});
+			this.renderNested(this.warBoardView, "#board");
+		}
 	});
 
   }
@@ -42,8 +45,6 @@ export default class WarIndexView extends BaseView {
     const template = $("#warIndexTemplate").html();
     const html = Mustache.render(template, {});
 	this.$el.html(html);
-	
-	this.renderNested(this.warBoardView, "#board");
 
     return this;
   }

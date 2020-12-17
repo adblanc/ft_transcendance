@@ -26,7 +26,7 @@ export default class MyWarView extends BaseView {
 	this.warConfirmedView = undefined;
 	this.noWarView = undefined;
 
-	console.log(this.guild.get("wars"));
+	//console.log(this.guild.get("wars"));
 
 	this.guild.get("wars").forEach(function (item) {
 		if (item.get("status") == "pending") {
