@@ -27,8 +27,6 @@ export default class WarWaitingView extends BaseView {
 		tmp++;
 	}, this);
 
-	console.log(this.opponent_id);
-	console.log(this.war.get("guilds").at(this.index));
   }
 
   render() {

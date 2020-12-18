@@ -9,14 +9,32 @@ type Options = Backbone.ViewOptions & { model: War,  opponent_id: number };
 export default class ItemPendingView extends BaseView {
   model: War;
   opponent_id: number;
+  index: number;
+  attrs: {};
 
   constructor(options?: Options) {
     super(options);
 
 	this.opponent_id = options.opponent_id;
 	this.model = options.model;
-	this.model.fetch();
-	this.listenTo(this.model, "change", this.render);
+	this.model.fetch({
+		success: () => {
+			var tmp = 0;
+			this.model.get("guilds").forEach(function (item) {
+				if (item.get("id") == this.opponent_id) {
+					this.index = tmp;
+				}
+				tmp++;
+			}, this);
+
+			this.attrs = {
+				img: this.model.get("guilds").at(this.index).get("img_url"),
+				url: `/guild/${this.opponent_id}`,
+				name: this.model.get("guilds").at(this.index).get("name")
+			}
+		}
+	})
+	this.listenTo(this.model, "all", this.render);
 
   }
 
@@ -37,9 +55,9 @@ export default class ItemPendingView extends BaseView {
 
   render() {
     const template = $("#pendingWarTemplate").html();
-    const html = Mustache.render(template, {
-		war: this.model.toJSON(),
-		id: this.opponent_id
+	const html = Mustache.render(template, { 
+		war: this.model.toJSON(), 
+		attrs: this.attrs,
 	});
 	this.$el.html(html);
 	
