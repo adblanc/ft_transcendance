@@ -20,17 +20,9 @@ export default class RoomMessagesView extends BaseView<Room> {
     this.listenTo(eventBus, "chat:profile-clicked", this.showProfileModal);
   }
 
-  showProfileModal({ userId, roomId }: { userId: number; roomId: number }) {
-    if (roomId !== this.model.get("id")) {
+  showProfileModal(message: Message) {
+    if (message.get("room_id") !== this.model.get("id")) {
       return;
-    }
-
-    const user = this.model
-      .get("users")
-      .find((user) => user.get("id") === userId);
-
-    if (!user) {
-      displayError("This user is no longer in the room.");
     }
 
     const currentUser = this.model
@@ -38,7 +30,7 @@ export default class RoomMessagesView extends BaseView<Room> {
       .find((u) => u.get("login") === $("#current-user-profile").data("login"));
 
     const profileView = new RoomUserProfileView({
-      model: user,
+      model: message,
       currentUser,
     });
 
