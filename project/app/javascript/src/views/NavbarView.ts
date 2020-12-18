@@ -48,6 +48,7 @@ export default class NavbarView extends BaseView {
   }
 
   onLogout() {
+    eventBus.trigger("global:logout");
     clearAuthHeaders();
     Backbone.history.navigate("/auth", { trigger: true });
   }
