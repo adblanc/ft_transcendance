@@ -17,8 +17,6 @@ class WarsController < ApplicationController
 
 		GuildWar.create!(guild: @initiator, war: @war, status: :accepted)
 		GuildWar.create!(guild: @recipient, war: @war, status: :pending)
-		/@war.guilds.push(@initiator);
-		@war.guilds.push(@recipient);/
 
 		if @war.save
 			@war
@@ -28,6 +26,23 @@ class WarsController < ApplicationController
 
 		/Notif/
 	end
+
+	def accept
+		@war = War.find_by_id(params[:id])
+		@guild = Guild.find_by_id(current_user.guild.id)
+		@guild_war = GuildWar.where(war: @war, guild: @guild).first
+
+		@guild_war.accepted!
+		@war.confirmed!
+
+		@guild.guild_wars.each do |guild_war|
+			guild_war.destroy unless @guild_war
+		end
+
+		/Start Jobs/
+
+	end
+
 
 	private
 

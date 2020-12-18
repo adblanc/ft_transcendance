@@ -25,12 +25,13 @@ export default class WarPendingView extends BaseView {
     const html = Mustache.render(template, {});
     this.$el.html(html);
 
-	const $element = this.$("#listing");
+	const $element = this.$("#listing-pending");
+
+	console.log(this.collection);
 
     this.collection.forEach(function (item) {
 	  var id = item.get("war_id");
 	  var war = new War({id});
-	  war.fetch();
       var itemView = new ItemPendingView({
         model: war,
       });

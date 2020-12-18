@@ -72,8 +72,7 @@ export default class War extends BaseModel<IWar> {
 	  }
 	
 	  reject() {
-		return this.asyncSave(
-		  {},
+		return this.asyncSave({},
 		  {
 			url: `${this.baseGuildRoot()}/reject`,
 		  }

@@ -13,7 +13,9 @@ export default class ItemPendingView extends BaseView {
     super(options);
 
 	this.model = options.model;
+	this.model.fetch();
 	this.listenTo(this.model, "change", this.render);
+
   }
 
   events() {
