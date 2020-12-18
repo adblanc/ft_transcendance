@@ -20,6 +20,7 @@ export default class ModifyProfileView extends ModalView<Profile> {
     e.preventDefault();
     const attrs = {
       name: this.$("#input-profile-name").val() as string,
+      email: this.$("#input-profile-email").val() as string,
       avatar: (this.$(
         "#input-profile-avatar"
       )[0] as HTMLInputElement).files?.item(0),

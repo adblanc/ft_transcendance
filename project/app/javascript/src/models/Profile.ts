@@ -12,6 +12,7 @@ import { BASE_ROOT } from "src/constants";
 export interface IProfile {
   login: string;
   name: string;
+  email: string;
   id?: number;
   avatar?: any;
   created_at?: string;
@@ -22,7 +23,7 @@ export interface IProfile {
   notifications?: Notifications;
 }
 
-type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar">>;
+type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar" | "email">>;
 
 export default class Profile extends BaseModel<IProfile> {
   channel: ActionCable.Channel;
@@ -58,6 +59,7 @@ export default class Profile extends BaseModel<IProfile> {
     return {
       login: "",
       name: "",
+	  email: "",
       number: 0,
       guild_role: "none",
     };
@@ -101,6 +103,7 @@ export default class Profile extends BaseModel<IProfile> {
   }
 
   modifyProfil(attrs: ModifiableProfileArgs) {
+// 	console.log(attrs);
     return this.asyncSave(attrs, {
       url: this.urlRoot(),
     });

@@ -1,6 +1,6 @@
 <script type="text/html" id="profileFormTemplate">
   <form action="">
-    <label class="block" for="profile-name">
+    <label class="block" for="input-profile-name">
       <span class="text-gray-700">Pseudo</span>
       <input
         class="form-input mt-1 block w-full"
@@ -8,6 +8,16 @@
         name="profile-name"
         value="{{name}}"
         id="input-profile-name"
+      />
+    </label>
+    <label class="block mt-8" for="input-profile-email">
+      <span class="text-gray-700">Email</span>
+      <input
+        class="form-input mt-1 block w-full"
+        type="text"
+        name="profile-email"
+        value="{{email}}"
+        id="input-profile-email"
       />
     </label>
     <label class="block mt-8" for="input-profile-avatar">

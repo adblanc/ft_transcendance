@@ -6,7 +6,8 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-bob = User.create(name: "bob", login: "bob");
+bob = User.create(name: "bob", login: "bob",
+	email: "ft.transcendance@gmail.com");
 
 bob.avatar.attach(
 	io: URI.open("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1pEVYSLDyjch3zZYccCMgguA2zDSLyVP8EPrOb_2DSPNuV60si_Qju-Ll9fnDvfzEXcDEGDTD&usqp=CAc"),
@@ -15,14 +16,22 @@ bob.avatar.attach(
 )
 
 
-bill = User.create(name: "bill", login: "bill", contribution: 10);
-ben = User.create(name: "ben", login: "ben", contribution: 15);
-boule = User.create(name: "boule", login: "boule", contribution: 0);
-babar = User.create(name: "babar", login: "babar", contribution: 5);
-billy = User.create(name: "billy", login: "billy", contribution: 1);
-jeff = User.create(name: "jeff", login: "jeff", contribution: 1);
-john = User.create(name: "john", login: "john", contribution: 1);
-jack = User.create(name: "jack", login: "jack", contribution: 1);
+bill = User.create(name: "bill", login: "bill", contribution: 10,
+	email: "ft.transcendance@gmail.com");
+ben = User.create(name: "ben", login: "ben", contribution: 15,
+	email: "ft.transcendance@gmail.com");
+boule = User.create(name: "boule", login: "boule", contribution: 0,
+	email: "ft.transcendance@gmail.com");
+babar = User.create(name: "babar", login: "babar", contribution: 5,
+	email: "ft.transcendance@gmail.com");
+billy = User.create(name: "billy", login: "billy", contribution: 1,
+	email: "ft.transcendance@gmail.com");
+jeff = User.create(name: "jeff", login: "jeff", contribution: 1,
+	email: "ft.transcendance@gmail.com");
+john = User.create(name: "john", login: "john", contribution: 1,
+	email: "ft.transcendance@gmail.com");
+jack = User.create(name: "jack", login: "jack", contribution: 1,
+	email: "ft.transcendance@gmail.com");
 
 bill.avatar.attach(
 	io: URI.open("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Hotdog_-_Evan_Swigart.jpg/1024px-Hotdog_-_Evan_Swigart.jpg"),
