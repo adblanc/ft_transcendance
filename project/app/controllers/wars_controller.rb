@@ -41,7 +41,11 @@ class WarsController < ApplicationController
 		/Notif for acceptance and refusal for others/
 
 		/Start Jobs/
+	end
 
+	def reject
+		@war = War.find_by_id(params[:id])
+		@war.destroy
 	end
 
 
