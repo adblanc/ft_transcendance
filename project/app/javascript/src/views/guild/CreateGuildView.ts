@@ -39,7 +39,7 @@ export default class CreateGuildView extends ModalView<Guild> {
       acn = "";
     } else {
       const attrs = {
-        name: this.$("#input-guild-name").val() as string,
+        name: this.$("input-guild-name").val() as string,
         ang: acn,
         img: (this.$("#input-guild-img")[0] as HTMLInputElement).files?.item(0),
       };

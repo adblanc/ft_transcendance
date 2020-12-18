@@ -1,11 +1,12 @@
 
-class GameController < ApplicationController
+class GamesController < ApplicationController
     def index
         @games = Game.all
     end
 
     def show
         @game = Game.find(params[:id])
+        return head :not_found unless @game
     end
     
     def new
@@ -24,6 +25,6 @@ class GameController < ApplicationController
     end
 private
     def game_params
-        params.permit(:id, :level, :points, :url)
+        params.permit(:id, :level, :points)
     end
 end

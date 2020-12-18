@@ -19,7 +19,7 @@ var rectangle = new Rectangle(0, 0, 480, 480);
 
 export default class GameIndexView extends BaseView {
   player_one: Player;
-  static i: number = 1;
+  static i: number = 4;
   jeu: Game;
   //var canvaView= new CanvaView();
   constructor(options?) {
@@ -40,7 +40,7 @@ export default class GameIndexView extends BaseView {
     s : String;
     var y: Number = 0;
     var s = "Mouse down" + String(scale);
-   canvaView.player.paddle.y = canvas.height * scale;
+   canvaView.player_one.paddle.y = canvas.height * scale;
   if ((y = canvaView.callback(10)) != 0 )
     {
       this.stop(y);
@@ -65,7 +65,7 @@ export default class GameIndexView extends BaseView {
    createGame() {
     //this.playing();
      const jeu = new Game();
-     var gameView = new CreateGameView(GameIndexView.i, {model: jeu, collection: this.collection,});
+     var gameView = new CreateGameView(++GameIndexView.i, {model: jeu, collection: this.collection,});
      gameView.render();
    // var canvas = canvaView.init(500, 250, '#EEE', this.player_one, 3);
    // canvas.addEventListener('click', this.canvasClicked, false);

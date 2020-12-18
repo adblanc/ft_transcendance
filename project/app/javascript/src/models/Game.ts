@@ -7,15 +7,14 @@ import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 
 interface IGame {
-  id?: number;
+  id?: string;
   level: string;
   points: number;
-  url?: string;
   user: Profile;
 }
 
 type CreatableGameArgs = Partial<
-  Pick<IGame, "id" | "points" | "level" | "url">
+  Pick<IGame, "id" | "points" | "level">
 >;
 
 export default class Game extends BaseModel<IGame> {
@@ -42,6 +41,7 @@ export default class Game extends BaseModel<IGame> {
   }
 
   urlRoot = () => `${BASE_ROOT}/games`;
+  baseGuildRoot = () => `${this.urlRoot()}/${this.get("id")}`;
 
   sync(method: string, model: Game, options: JQueryAjaxSettings): any {
     return syncWithFormData(method, model, options);

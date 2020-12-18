@@ -21,13 +21,13 @@ export default class Ball extends Backbone.Model{
     y: number;
     velocity: Vec;
     radius: number;
-    constructor(x, y, radius)
+    constructor(x, y, radius, level)
     {
         super(Option);
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.velocity = new Vec(2,2);
+        this.velocity = new Vec(level,level);
     }
     // defaults() {
     //     return {

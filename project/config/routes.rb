@@ -2,12 +2,13 @@ Rails.application.routes.draw do
   get '/auth/42', to: 'authentication#login42', format: false
   get '/auth/guest', to: 'authentication#loginGuest', format: false
   get '/profile/:id', to: 'users#show_other_user'
-
+  get '/games/:id', to: 'games#show'
   resource :user, only: [:show, :update]
   get "user/notifications", to: "users#show"
   resources :game
-  get '/games', to: 'game#index', format:false
-  put '/games', to: 'game#create', format: false
+  get '/games', to: 'games#index', format:false
+ post '/games', to: 'games#create', format: false
+ put '/games', to: 'games#create', format: false
 
   resources :guilds do
 	member do
