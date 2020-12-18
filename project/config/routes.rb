@@ -34,7 +34,12 @@ Rails.application.routes.draw do
   delete "/quit-room", to: 'rooms#quit'
   put "/:room_id/:user_id/update_role", to: "users#update_room_role"
 
-  resources :wars
+  resources :wars do
+  	member do
+	  put :accept
+	  put :reject
+  	end
+  end
 
   root to: "application#index"
   match '*path', via: [:get, :post], to: "application#index", constraints: lambda { |req|
