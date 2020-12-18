@@ -20,7 +20,11 @@ export default class RoomMessagesView extends BaseView<Room> {
     this.listenTo(eventBus, "chat:profile-clicked", this.showProfileModal);
   }
 
-  showProfileModal(userId: number) {
+  showProfileModal({ userId, roomId }: { userId: number; roomId: number }) {
+    if (roomId !== this.model.get("id")) {
+      return;
+    }
+
     const user = this.model
       .get("users")
       .find((user) => user.get("id") === userId);
@@ -32,8 +36,6 @@ export default class RoomMessagesView extends BaseView<Room> {
     const currentUser = this.model
       .get("users")
       .find((u) => u.get("login") === $("#current-user-profile").data("login"));
-
-    console.log("current user", currentUser);
 
     const profileView = new RoomUserProfileView({
       model: user,

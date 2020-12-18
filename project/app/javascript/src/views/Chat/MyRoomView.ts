@@ -33,6 +33,7 @@ export default class MyRoomView extends BaseView<Room> {
 
   renderMessages() {
     if (this.roomMessagesView) {
+      console.log("close roomMessagesView");
       this.roomMessagesView.close();
     }
     this.roomMessagesView = new RoomMessagesView({ model: this.model });

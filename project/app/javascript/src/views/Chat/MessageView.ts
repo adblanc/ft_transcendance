@@ -16,7 +16,10 @@ export default class MessageView extends Backbone.View<Message> {
   events() {
     return {
       "click .user-avatar": () =>
-        eventBus.trigger("chat:profile-clicked", this.model.get("user_id")),
+        eventBus.trigger("chat:profile-clicked", {
+          userId: this.model.get("user_id"),
+          roomId: this.model.get("room_id"),
+        }),
     };
   }
 
