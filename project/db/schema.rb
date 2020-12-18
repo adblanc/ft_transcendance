@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 2020_12_15_173708) do
     t.bigint "guild_id"
     t.integer "points", default: 0
     t.integer "status", default: 0
+    t.integer "opponent_id", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["guild_id"], name: "index_guild_wars_on_guild_id"

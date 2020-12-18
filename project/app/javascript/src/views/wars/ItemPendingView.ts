@@ -4,14 +4,16 @@ import BaseView from "../../lib/BaseView";
 import War from "src/models/War";
 import NegotiateView from "./NegotiateView";
 
-type Options = Backbone.ViewOptions & { model: War };
+type Options = Backbone.ViewOptions & { model: War,  opponent_id: number };
 
 export default class ItemPendingView extends BaseView {
   model: War;
+  opponent_id: number;
 
   constructor(options?: Options) {
     super(options);
 
+	this.opponent_id = options.opponent_id;
 	this.model = options.model;
 	this.model.fetch();
 	this.listenTo(this.model, "change", this.render);
@@ -35,7 +37,10 @@ export default class ItemPendingView extends BaseView {
 
   render() {
     const template = $("#pendingWarTemplate").html();
-    const html = Mustache.render(template, this.model.toJSON());
+    const html = Mustache.render(template, {
+		war: this.model.toJSON(),
+		id: this.opponent_id
+	});
 	this.$el.html(html);
 	
 

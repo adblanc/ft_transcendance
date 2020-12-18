@@ -11,6 +11,7 @@ interface IGuildWar {
   guild_id: string;
   points: string;
   status: string;
+  opponent_id: number;
   created_at: string;
   updated_at: string;
 }

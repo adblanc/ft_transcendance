@@ -6,7 +6,8 @@ json.guilds do
 	 json.img_url url_for(guild.img) if guild.img.attached?
 	 json.guild_wars guild.guild_wars do |guild_war|
 			json.accept_status guild_war.status
-			json.guild_points guild_war.points
+			json.points guild_war.points
+			json.opponent_id guild_war.opponent_id
 	  end
   end
 end

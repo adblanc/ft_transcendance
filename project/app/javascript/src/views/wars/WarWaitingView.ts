@@ -5,21 +5,40 @@ import War from "src/models/War";
 import Guild from "src/models/Guild";
 import { displaySuccess } from "src/utils";
 
-type Options = Backbone.ViewOptions & { war: War};
+type Options = Backbone.ViewOptions & { war: War, opponent_id: number};
 
 export default class WarWaitingView extends BaseView {
 	war: War;
+	opponent_id: number;
+	index: number;
 
   constructor(options?: Options) {
     super(options);
 
 	this.war = options.war;
+	this.opponent_id = options.opponent_id;
 	this.listenTo(this.war, "change", this.render);
+
+	var tmp = 0;
+	this.war.get("guilds").forEach(function (item) {
+		if (item.get("id") == this.opponent_id) {
+			this.index = tmp;
+		}
+		tmp++;
+	}, this);
+
+	console.log(this.opponent_id);
+	console.log(this.war.get("guilds").at(this.index));
   }
 
   render() {
 	const template = $("#warWaitingTemplate").html();
-    const html = Mustache.render(template, this.war.toJSON()); //replace with this.war if it exists and if confirmed
+	const html = Mustache.render(template, { 
+		war: this.war.toJSON(), 
+		img: this.war.get("guilds").at(this.index).get("img_url"),
+		url: `/guild/${this.opponent_id}`,
+		name: this.war.get("guilds").at(this.index).get("name")
+	});
 	this.$el.html(html);
 
     return this;

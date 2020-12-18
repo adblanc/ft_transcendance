@@ -15,8 +15,8 @@ class WarsController < ApplicationController
 
 		@war = War.create(war_params)
 
-		GuildWar.create!(guild: @initiator, war: @war, status: :accepted)
-		GuildWar.create!(guild: @recipient, war: @war, status: :pending)
+		GuildWar.create!(guild: @initiator, war: @war, status: :accepted, opponent_id: @recipient.id)
+		GuildWar.create!(guild: @recipient, war: @war, status: :pending, opponent_id: @initiator.id)
 
 		if @war.save
 			@war

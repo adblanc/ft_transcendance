@@ -5,6 +5,7 @@ class CreateGuildWars < ActiveRecord::Migration[6.0]
 	  t.belongs_to :guild, index: true, foreign_key: true
 	  t.integer :points, default: 0
 	  t.integer :status, default: 0
+	  t.integer :opponent_id, default: 0
       t.timestamps
     end
   end

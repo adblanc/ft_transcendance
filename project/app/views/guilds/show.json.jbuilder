@@ -21,7 +21,8 @@ json.guild_wars do
 		json.array! @guild.guild_wars do |guild_war|
 		json.war_id guild_war.war_id
 		json.status guild_war.status
-		json.guild_points guild_war.points
+		json.opponent_id guild_war.opponent_id
+		json.points guild_war.points
 	end
 end
 
