@@ -39,6 +39,7 @@ ben.avatar.attach(
 
 guild1 = Guild.create(name: 'The Best Guild', ang: "TBG", points: 18, atWar: true)
 guild2 = Guild.create(name: 'The Doom', ang: "TDM", points: 2)
+guild3 = Guild.create(name: 'The Blabla', ang: "BLB", points: 4)
 
 
 guild1.img.attach(
@@ -59,7 +60,7 @@ guild1.members << ben
 guild2.members << boule
 boule.add_role(:owner, guild2)
 guild2.members << babar
-guild1.members << billy
+guild3.members << billy
 guild1.members << jeff
 guild1.members << jack
 guild1.members << john

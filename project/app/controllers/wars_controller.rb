@@ -32,12 +32,13 @@ class WarsController < ApplicationController
 		@guild = Guild.find_by_id(current_user.guild.id)
 		@guild_war = GuildWar.where(war: @war, guild: @guild).first
 
-		@guild_war.accepted!
-		@war.confirmed!
+		@guild_war.update(status: :accepted)
+		@war.update(status: :confirmed)
 
-		@guild.guild_wars.each do |guild_war|
-			guild_war.destroy unless @guild_war
+		@guild.wars.where(status: :pending).each do |war|
+			war.destroy
 		end
+		/Notif for acceptance and refusal for others/
 
 		/Start Jobs/
 

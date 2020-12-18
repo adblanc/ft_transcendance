@@ -43,23 +43,26 @@ export default class MyWarView extends BaseView {
 		} else if (item.get("status") == "accepted") {
 		      const id = item.get("war_id");
 			  this.war = new War({id});
-			  this.war.fetch();
-			  if (this.war.get("status") == "confirmed" || this.war.get("status") == "started") {
-					this.warConfirmedView = new WarConfirmedView({
-						war: this.war,
-					})
-				} else {
-					this.warWaitingView = new WarWaitingView({
-						war: this.war,
-					})
+			  this.war.fetch({
+				success: () => {
+					if (this.war.get("status") == "confirmed" || this.war.get("status") == "started") {
+						this.warConfirmedView = new WarConfirmedView({
+							war: this.war,
+						})
+					} else {
+						this.warWaitingView = new WarWaitingView({
+							war: this.war,
+						})
+					}
 				}
+			  });
 		} else {
 			this.noWarView = new NoWarView();
 		}
 	}, this);
 
-	this.listenTo(this.war, "change", this.render);
-    //this.listenTo(this.model, "add", this.render);
+	this.listenTo(this.war, "all", this.render);
+	this.listenTo(this.wars, "update", this.render);
   }
 
   render() {
@@ -71,6 +74,7 @@ export default class MyWarView extends BaseView {
 		this.renderNested(this.warPendingView, "#content");
 	}
 	else if (this.warConfirmedView) {
+		console.log("test");
 		this.renderNested(this.warConfirmedView, "#content");
 	}
 	else if (this.warWaitingView) {
