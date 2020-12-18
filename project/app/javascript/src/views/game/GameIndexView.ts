@@ -35,17 +35,17 @@ export default class GameIndexView extends BaseView {
     return this;
   }
 
-  canvasClicked(e) {
-    const scale: number = e.offsetY / 250;
-    s : String;
-    var y: Number = 0;
-    var s = "Mouse down" + String(scale);
-   canvaView.player.paddle.y = canvas.height * scale;
-  if ((y = canvaView.callback(10)) != 0 )
-    {
-      this.stop(y);
-    } 
-  }
+  // canvasClicked(e) {
+  //   const scale: number = e.offsetY / 250;
+  //   s : String;
+  //   var y: Number = 0;
+  //   var s = "Mouse down" + String(scale);
+  //  canvaView.player_one.paddle.y = canvas.height * scale;
+  // if ((y = canvaView.callback(10)) != 0 )
+  //   {
+  //     this.stop(y);
+  //   } 
+  // }
 
   stop(i: Number)
   {
