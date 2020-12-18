@@ -72,6 +72,6 @@ class RoomsController < ApplicationController
 	end
 
 	def room_params
-		params.permit(:name, :password)
+		params.permit(:name, :password, :is_private)
 	end
 end
