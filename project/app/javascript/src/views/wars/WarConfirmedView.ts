@@ -10,6 +10,7 @@ type Options = Backbone.ViewOptions & { war: War,  opponent_id: number};
 export default class WarConfirmedView extends BaseView {
 	war: War;
 	opponent_id: number;
+	index: number;
 
   constructor(options?: Options) {
     super(options);
@@ -18,14 +19,24 @@ export default class WarConfirmedView extends BaseView {
 	this.opponent_id = options.opponent_id;
 
 	this.listenTo(this.war, "change", this.render);
-	//console.log("test");
+	
+	var tmp = 0;
+	this.war.get("guilds").forEach(function (item) {
+		if (item.get("id") == this.opponent_id) {
+			this.index = tmp;
+		}
+		tmp++;
+	}, this);
+
   }
 
   render() {
 	const template = $("#confirmedWarTemplate").html();
-	const html = Mustache.render(template, {
-		war: this.war.toJSON(),
-		id: this.opponent_id,
+	const html = Mustache.render(template, { 
+		war: this.war.toJSON(), 
+		img: this.war.get("guilds").at(this.index).get("img_url"),
+		url: `/guild/${this.opponent_id}`,
+		name: this.war.get("guilds").at(this.index).get("name")
 	});
 	this.$el.html(html);
 
