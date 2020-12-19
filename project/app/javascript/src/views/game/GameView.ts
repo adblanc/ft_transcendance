@@ -22,14 +22,18 @@ export default class GameView extends BaseView {
   player_one: Player;
   player_two: Player;
     game: Game;
+    joueur: Profile;
     constructor(options?: Options) {
         super(options);
         this.game = options.game;
+
         this.game.fetch({
           error: () => {
             Backbone.history.navigate("/not-found", { trigger: true });
           },
         });
+        this.joueur = new Profile();
+        this.joueur.fetch();
          this.player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
        this.player_two = new Player(new Rectangle(0, canvas.height / 2, 15, 100));
       }

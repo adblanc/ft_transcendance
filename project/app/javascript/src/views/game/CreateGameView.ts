@@ -48,7 +48,7 @@ export default class CreateGameView extends ModalView<Game> {
           points: this.$("#points").val() as number,
           id: String(this.i) as string,
           status: "waiting",
-          users: [],
+          user: [],
         };
         const success = await this.model.createGame(attrs);
         if (success) {

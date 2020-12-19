@@ -10,7 +10,7 @@ interface IGame {
   id?: string;
   level: string;
   points: number;
-  users: Profile;
+  user: Profile;
   status: string;
 }
 
@@ -23,7 +23,7 @@ export default class Game extends BaseModel<IGame> {
     this.relations = [
       {
         type: Backbone.Many,
-        key: "users",
+        key: "user",
         collectionType: Profiles,
         relatedModel: Profile,
       },
@@ -39,7 +39,7 @@ export default class Game extends BaseModel<IGame> {
       level: "",
       points: 0,
       status: "waiting",
-      users: [],
+      user: [],
     };
   }
 

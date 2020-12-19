@@ -16,8 +16,7 @@ class GamesController < ApplicationController
 
     def create
         @game = Game.create(game_params)
-        user = current_user
-        @game.users += current_user
+        @game.user.push(current_user)
        #current_user.add_role :owner, @game
         if @game.save
             @game
@@ -27,6 +26,6 @@ class GamesController < ApplicationController
     end
 private
     def game_params
-        params.permit(:id, :level, :points, :status, :users)
+        params.permit(:id, :level, :points, :status)
     end
 end
