@@ -13,6 +13,14 @@ class WarsController < ApplicationController
 		@initiator = Guild.find(params[:initiator_id])
 		@recipient = Guild.find(params[:recipient_id])
 
+		/if @initiator.points < params[:prize].to_f
+			render json: "Your guild cannot wager that many points", status: :unprocessable_entity
+			return
+		end
+		if @recipient.points < params[:prize].to_f
+			render json: "Opponent guild cannot wager that many points", status: :unprocessable_entity
+			return
+		end/
 		@war = War.create(war_params)
 
 		if @war.save

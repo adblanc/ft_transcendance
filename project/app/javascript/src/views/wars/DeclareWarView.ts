@@ -4,7 +4,7 @@ import ModalView from "../ModalView";
 import Guild from "src/models/Guild";
 import Profile from "src/models/Profile";
 import War from "src/models/War";
-import { displaySuccess } from "src/utils/toast";
+import { displayError, displaySuccess } from "src/utils/toast";
 const flatpickr = require("flatpickr");
 require("flatpickr/dist/flatpickr.css")
 
@@ -42,6 +42,11 @@ export default class DeclareWarView extends ModalView<War> {
 
 	const initiator_id = this.profile.get("guild").get("id");
 	const recipient_id = this.guild.get("id");
+
+	if (parseInt(prize) > this.profile.get("guild").get("points") || parseInt(prize) > this.guild.get("points")) {
+		displayError("One or both guilds cannot wager that many points");
+		return;
+	}
 
     const success = await this.model.createWar(start, end, prize, initiator_id, recipient_id);
     if (success) {
