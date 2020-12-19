@@ -6,6 +6,7 @@ import Profile from "src/models/Profile";
 import War from "src/models/War";
 import { displaySuccess } from "src/utils/toast";
 const flatpickr = require("flatpickr");
+require("flatpickr/dist/flatpickr.css")
 
 type Options = Backbone.ViewOptions<War> & {
 	guild: Guild, 
@@ -32,21 +33,6 @@ export default class DeclareWarView extends ModalView<War> {
 
   async onSubmit(e: JQuery.Event) {
 	e.preventDefault();
-	
-	this.fp_start = flatpickr(this.$("#input-start-date"), {
-		enableTime: true,
-		dateFormat: "Y-m-d H:i",
-		minuteIncrement: 1,
-		static: true,
-		minDate: new Date(),
-	});
-	this.fp_end = flatpickr(this.$("#input-end-date"), {
-		enableTime: true,
-		dateFormat: "Y-m-d H:i",
-		minuteIncrement: 1,
-		static: true,
-		minDate: new Date(),
-	});
 
 	const dateTimeStart = this.fp_start.selectedDates[0];
     const dateTimeEnd = this.fp_end.selectedDates[0];
@@ -76,7 +62,22 @@ export default class DeclareWarView extends ModalView<War> {
     super.render();
     const template = $("#warFormTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
-    this.$content.html(html);
+	this.$content.html(html);
+	
+	this.fp_start = flatpickr(this.$("#input-start-date"), {
+		enableTime: true,
+		dateFormat: "Y-m-d H:i",
+		minuteIncrement: 1,
+		static: true,
+		minDate: new Date(),
+	});
+	this.fp_end = flatpickr(this.$("#input-end-date"), {
+		enableTime: true,
+		dateFormat: "Y-m-d H:i",
+		minuteIncrement: 1,
+		static: true,
+		minDate: new Date(),
+	});
     return this;
   }
 }
