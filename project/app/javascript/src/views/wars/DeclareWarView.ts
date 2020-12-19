@@ -24,6 +24,15 @@ export default class DeclareWarView extends ModalView<War> {
 	this.profile = options.profile;
 	this.guild = options.guild;
 
+  }
+
+  events() {
+    return { ...super.events(), "click #input-war-submit": "onSubmit" };
+  }
+
+  async onSubmit(e: JQuery.Event) {
+	e.preventDefault();
+	
 	this.fp_start = flatpickr(this.$("#input-start-date"), {
 		enableTime: true,
 		dateFormat: "Y-m-d H:i",
@@ -38,15 +47,6 @@ export default class DeclareWarView extends ModalView<War> {
 		static: true,
 		minDate: new Date(),
 	});
-  }
-
-  events() {
-    return { ...super.events(), "click #input-war-submit": "onSubmit" };
-  }
-
-  async onSubmit(e: JQuery.Event) {
-	e.preventDefault();
-	
 
 	const dateTimeStart = this.fp_start.selectedDates[0];
     const dateTimeEnd = this.fp_end.selectedDates[0];
