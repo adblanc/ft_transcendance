@@ -130,6 +130,7 @@ export default class CanvaView extends ModalView<Rectangle> {
 			}
 			lastTime = millis;
 			window.requestAnimationFrame(this.callback);
+			return 0;
 		}
 
 // 		 stop(i: Number)

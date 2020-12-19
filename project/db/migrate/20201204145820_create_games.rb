@@ -3,8 +3,7 @@ class CreateGames < ActiveRecord::Migration[6.0]
     create_table :games do |t|
       t.string :level
       t.integer :points
-      t.string :url
-
+      t.string :status
       t.timestamps
     end
   end

@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 2020_12_05_214612) do
   create_table "games", force: :cascade do |t|
     t.string "level"
     t.integer "points"
-    t.string "url"
+    t.string "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

@@ -21,11 +21,11 @@ export default class CreateGameView extends ModalView<Game> {
   player_one: Player;
   player_two: Player
   id: string;
-  static i: number = 0;
+  i: number;
   
   constructor(i: number, options?: Backbone.ViewOptions<Game>) {
     super(options);
-    i++;
+    this.i = i;
     this.player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
     this.player_two = new Player(new Rectangle(0, canvas.height / 2, 15, 100));
     this.listenTo(this.model, "add", this.render);
@@ -43,11 +43,11 @@ export default class CreateGameView extends ModalView<Game> {
     if (!points) {
       return;
     } else {
-        CreateGameView.i++;
         const attrs = {
           level: this.$("#level").val() as string,
           points: this.$("#points").val() as number,
-          id: String(CreateGameView.i) as string,
+          id: String(this.i) as string,
+          status: "waiting",
         };
         const success = await this.model.createGame(attrs);
         if (success) {
@@ -56,7 +56,6 @@ export default class CreateGameView extends ModalView<Game> {
   }
 }
   gameSaved() {
-    displaySuccess("Game successfully created.");
     this.closeModal();
     this.model.fetch();
     Backbone.history.navigate(`games/${this.model.get("id")}`, {
@@ -85,7 +84,6 @@ export default class CreateGameView extends ModalView<Game> {
     {
       displaySuccess("You won the game" + String(y));
       var gameIndex = new GameIndexView({});
-      gameIndex.stop(y);
       // const template = $("#game_win").html();
       // const html = Mustache.render(template, {});
       // this.$el.html(html);
@@ -93,13 +91,6 @@ export default class CreateGameView extends ModalView<Game> {
       // return this;
     } 
   }
-  //   play(s: string)
-  //   {
-  //     const template = $("#playGame").html();
-  //     const html = Mustache.render(template, this.model.toJSON());
-  //     this.$content.html(html + s);
-  //     return this;
-  //   }
 
   render() {
     super.render(); // we render the modal

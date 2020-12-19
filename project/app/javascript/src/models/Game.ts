@@ -10,11 +10,12 @@ interface IGame {
   id?: string;
   level: string;
   points: number;
-  user: Profile;
+  users: Profile;
+  status: string;
 }
 
 type CreatableGameArgs = Partial<
-  Pick<IGame, "id" | "points" | "level">
+  Pick<IGame, "id" | "points" | "level" | "status">
 >;
 
 export default class Game extends BaseModel<IGame> {
@@ -22,7 +23,7 @@ export default class Game extends BaseModel<IGame> {
     this.relations = [
       {
         type: Backbone.Many,
-        key: "user",
+        key: "users",
         collectionType: Profiles,
         relatedModel: Profile,
       },
@@ -37,6 +38,8 @@ export default class Game extends BaseModel<IGame> {
     return {
       level: "",
       points: 0,
+      status: "waiting",
+      users: [],
     };
   }
 

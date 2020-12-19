@@ -11,27 +11,19 @@
             name="join_tournament"
             id="join_tournament" value="join a tournament">
           </label>
-    <p class="block m-auto text-teal-500">Joueur 1 : <em id="player-score">0</em> - Joueur 2 : <em id="computer-score">0</em></p>
 </script>
 
 <script type="text/html" id="game_win">
 <div class="flex h-screen">
-<h1 class="m-auto text-5xl text-teal-500" id="score">You won</h1>
-<p class="block m-auto text-teal-500">Joueur 1 : <em id="player-score">0</em> - Joueur 2 : <em id="computer-score">0</em></p>
-<label class="block m-auto text-5xl text-teal-500" for="input-enemy">
-<input class="form-input block mt-1"
-          type="button"
-          name="create_game"
-          id="create_game" value="create a game"/>
-          <input class="form-input block mt-1" type="button"
-          name="join_tournament"
-          id="join_tournament" value="join a tournament">
-        </label>
+<h1 class="m-auto text-5xl text-teal-500" id="score">You won a {{level}} game</h1>
 </script>
 
 <script type="text/html" id="playing">
 <div class="flex h-screen">
-<h1 class="m-auto text-5xl text-teal-500" id="score">You are playing {{level}}</h1>
+<h1 class="m-auto text-5xl text-teal-500" id="score">You are playing {{level}} </h1>
+<p class="block m-auto text-teal-500">Joueur 1 : <em id="player-score">0</em> - Joueur 2 : <em id="computer-score">0</em></p>
+<input class="form-input block mt-1" type="button"
+          name="play_game" id="play-game" value="play"/>
 </script>
 
 <script type="text/html" id="game">
@@ -56,20 +48,6 @@
       <option value=8>8</option>
       <option value=9>9</option>
   </select>
-  <div>
-    <input type="radio" id="one" name="radio_points" value="1">
-    <label for="one">1</label>
-  </div>
-
-<div>
-  <input type="radio" id="two" name="radio_points" value="two">
-  <label for="two">2</label>
-</div>
-
-<div>
-  <input type="radio" id="three" name="radio_points" value="three">
-  <label for="three">3</label>
-</div>
 
         <label class="block" for="input-enemy">
           <span class="text-white font-semibold">Add an enemy</span>
@@ -87,14 +65,4 @@
   </div>
 </script>
 
-<script type="text/html" id="play">
-  <div class="flex h-screen">
-    <h1 class="m-auto text-5xl text-teal-500">You are playing {{Type}}</h1>
-  </div>
-</script>
 
-<script type="text/html" id="oups">
-  <div class="flex h-screen">
-    <h1 class="m-auto text-5xl text-teal-500">oups</h1>
-  </div>
-</script>

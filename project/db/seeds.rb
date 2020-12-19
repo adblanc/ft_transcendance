@@ -24,6 +24,8 @@ jeff = User.create(name: "jeff", login: "jeff", contribution: 1);
 john = User.create(name: "john", login: "john", contribution: 1);
 jack = User.create(name: "jack", login: "jack", contribution: 1);
 
+game1 = Game.create(id: "32", level: "easy", points: 3, status: "waiting");
+
 bill.avatar.attach(
 	io: URI.open("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Hotdog_-_Evan_Swigart.jpg/1024px-Hotdog_-_Evan_Swigart.jpg"),
 	filename: "bill.png",

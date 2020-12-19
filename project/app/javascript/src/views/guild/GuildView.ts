@@ -5,6 +5,7 @@ import MembersView from "./MembersView";
 import Guild from "src/models/Guild";
 import Profile from "src/models/Profile";
 import BaseView from "src/lib/BaseView";
+import { displaySuccess } from "src/utils/toast";
 
 type Options = Backbone.ViewOptions & { guild: Guild };
 
@@ -33,6 +34,9 @@ export default class GuildView extends BaseView {
         Backbone.history.navigate("/not-found", { trigger: true });
       },
     });
+    //displaySuccess(
+     // `You have successfully transferred ownership to ${this.guild.get(
+    //    "name")}. You are now an officer.`);
     this.profile.fetch();
 
     this.listenTo(this.guild, "change", this.render);
