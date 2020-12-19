@@ -15,10 +15,9 @@ class WarsController < ApplicationController
 
 		@war = War.create(war_params)
 
-		GuildWar.create!(guild: @initiator, war: @war, status: :accepted, opponent_id: @recipient.id)
-		GuildWar.create!(guild: @recipient, war: @war, status: :pending, opponent_id: @initiator.id)
-
 		if @war.save
+			GuildWar.create!(guild: @initiator, war: @war, status: :accepted, opponent_id: @recipient.id)
+			GuildWar.create!(guild: @recipient, war: @war, status: :pending, opponent_id: @initiator.id)
 			@war
 		else
 			render json: @war.errors, status: :unprocessable_entity
@@ -34,6 +33,10 @@ class WarsController < ApplicationController
 
 		@guild_war.update(status: :accepted)
 		@war.update(status: :confirmed)
+
+		if @war.save
+			@war
+		end
 
 		@guild.wars.where(status: :pending).each do |war|
 			war.destroy

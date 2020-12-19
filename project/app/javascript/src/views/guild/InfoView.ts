@@ -135,7 +135,7 @@ export default class InfoView extends BaseView {
       }
       if (this.profile.get("guild").get("id") === this.guild.get("id")) {
         $elementquit.show();
-      } else {
+      } else if (this.profile.get("guild_role") === "Owner"){
         $elementwar.show();
       }
     } else {
