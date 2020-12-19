@@ -1,11 +1,21 @@
 <script type="text/html" id="itemWarTemplate">
 	<div class="row">
-		<div> IMG 1</div>
-		<div> IMG 2</div>
-			<h1 style="" class="text-white"> Start : {{start}}</h1>
-			<h1 style="" class="text-white"> End : {{end}}</h1>
-			<h1 style="" class="text-white"> for {{prize}} points</h1>
+		<div class="column" style="padding: 5px; height:90px">
+			<div>
+				<div class="column justify-center" style="float:left; padding: 10px;">
+					<a style="margin-bottom:5px; text-decoration: underline;" href="/guild/{{guilds.0.name}}" class="justify-center flex flex-row text-white">{{guilds.0.name}} </a>
+					<h1 class="justify-center flex flex-row text-white"> VS </h1>
+					<a style="margin-top:5px; text-decoration: underline;" href="/guild/{{guilds.1.name}}" class="justify-center flex flex-row text-white">{{guilds.1.name}} </a>
+				</div>
+				<div class="column ml-5" style="float:left; padding: 10px;">
+					<h1 class="flex flex-row text-white">XX pts</h1>
+					<h1 style="margin-top:35px" class="flex flex-row text-white">XX pts</h1>
+				</div>
+				<h1 style="float:left; margin-top:38px;" class="flex flex-row text-white ml-10"> for {{prize}} points</h1>
+				<h1 style="float:right; margin-top:38px;" class="flex flex-row text-white">Ends on: {{end}}</h1>
+			</div>
+		</div>
 	</div>
-	<div class="line flex" style="border: 1px solid; color: #14B8A6; margin:auto;"></div>
+	<div class="line mt-5" style="width:520px; margin-left:70px; border: 1px solid; color: #14B8A6;"></div>
 </script>
 
