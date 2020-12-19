@@ -15,12 +15,29 @@ type Options = Backbone.ViewOptions<War> & {
 export default class DeclareWarView extends ModalView<War> {
 	profile: Profile;
 	guild: Guild;
+	fp_start: typeof flatpickr;
+	fp_end: typeof flatpickr;
 
   constructor(options?: Options) {
 	super(options);
 	
 	this.profile = options.profile;
 	this.guild = options.guild;
+
+	this.fp_start = flatpickr(this.$("#input-start-date"), {
+		enableTime: true,
+		dateFormat: "Y-m-d H:i",
+		minuteIncrement: 1,
+		static: true,
+		minDate: new Date(),
+	});
+	this.fp_end = flatpickr(this.$("#input-end-date"), {
+		enableTime: true,
+		dateFormat: "Y-m-d H:i",
+		minuteIncrement: 1,
+		static: true,
+		minDate: new Date(),
+	});
   }
 
   events() {
@@ -29,32 +46,12 @@ export default class DeclareWarView extends ModalView<War> {
 
   async onSubmit(e: JQuery.Event) {
 	e.preventDefault();
-	const fp_start = flatpickr(this.$("#input-start-date"), {
-		enableTime: true,
-		dateFormat: "Y-m-d H:i",
-		minuteIncrement: 1,
-		static: true,
-		minDate: new Date(),
-	});
-	const fp_end = flatpickr(this.$("#input-end-date"), {
-		enableTime: true,
-		dateFormat: "Y-m-d H:i",
-		minuteIncrement: 1,
-		static: true,
-		minDate: new Date(),
-	});
-
-	const dateTimeStart = fp_start.selectedDates[0];
-    const dateTimeEnd = fp_end.selectedDates[0];
-
-    /*const attrs = {
-	  start: dateTimeStart, //good format for rails?
-	  end: dateTimeEnd, ////good format for rails?
-	  prize: this.$("#input-prize").val() as string,
-	};*/
 	
-	const start = dateTimeStart; //good format for rails?
-	const end = dateTimeEnd; ////good format for rails?
+
+	const dateTimeStart = this.fp_start.selectedDates[0];
+    const dateTimeEnd = this.fp_end.selectedDates[0];
+	const start = dateTimeStart; 
+	const end = dateTimeEnd;
 	const prize = this.$("#input-prize").val() as string;
 
 	const initiator_id = this.profile.get("guild").get("id");
@@ -69,7 +66,7 @@ export default class DeclareWarView extends ModalView<War> {
   warSaved() {
     displaySuccess(`You declared war to ${this.guild.get("name")}`);
     this.closeModal();
-    //this.model.fetch();
+    this.model.fetch();
     Backbone.history.navigate(`/warindex`, {
       trigger: true,
     });
