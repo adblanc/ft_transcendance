@@ -4,7 +4,6 @@ class CreateGuilds < ActiveRecord::Migration[6.0]
       t.string :name
 	  t.string :ang
 	  t.integer :points, default: 0
-	  t.boolean :atWar, default: 0
       t.timestamps
     end
   end

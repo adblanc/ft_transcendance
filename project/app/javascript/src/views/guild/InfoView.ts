@@ -140,12 +140,25 @@ export default class InfoView extends BaseView {
       }
     } else {
       $elementjoin.show();
-    }
+	}
+	
+	//console.log(this.guild);
 
     if (this.guild.get("atWar")) {
       this.$("#war-btn").addClass("btn-war-disabled");
       this.$("#war-btn").html("This Guild is at war");
-    }
+	}
+	else if (this.profile.get("guild")) {
+			console.log(this.profile.get("guild"));
+			if (this.profile.get("guild").get("atWar")) {
+			this.$("#war-btn").addClass("btn-war-disabled");
+			this.$("#war-btn").html("Your Guild is at war");
+		}
+		else if (this.profile.get("guild").get("warInitiator")) {
+			this.$("#war-btn").addClass("btn-war-disabled");
+			this.$("#war-btn").html("Your Guild has initiated a war");
+		}
+	}
 
     if (this.profile.get("pending_guild")) {
       if (

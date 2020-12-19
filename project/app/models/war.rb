@@ -14,4 +14,10 @@ class War < ApplicationRecord
 	validates :start, presence: true
 	validates :end, presence: true
 	validates :prize, presence: true
+
+	def initiator
+		if self.pending?
+			self.guild_wars.accepted.first.guild
+		end
+	end
 end

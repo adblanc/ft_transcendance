@@ -13,7 +13,8 @@ interface IGuild {
   name: string;
   ang: string;
   points: number;
-  atWar: boolean;
+  atWar?: "true" | "false";
+  warInitiator?: "true" | "false";
   img_url?: string;
   members: Profiles;
   pending_members: Profiles;
@@ -59,7 +60,8 @@ export default class Guild extends BaseModel<IGuild> {
       name: "",
       ang: "",
       points: 0,
-      atWar: false,
+	  atWar: false,
+	  warInitiator: false,
 	  members: [],
 	  guild_wars: [],
     };

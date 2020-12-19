@@ -36,6 +36,17 @@ class Guild < ApplicationRecord
 		end
 	end
 
+	def atWar?
+		self.wars.started.present? || self.wars.confirmed.present?
+	end
+
+	def warInitiator?
+		self.wars.pending.each do |war|
+			return true if war.initiator == self
+		end
+		return false
+	end
+
 	def owner
 		User.with_role(:owner, self).first
 	end

@@ -70,7 +70,6 @@ ActiveRecord::Schema.define(version: 2020_12_15_173708) do
     t.string "name"
     t.string "ang"
     t.integer "points", default: 0
-    t.boolean "atWar", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
