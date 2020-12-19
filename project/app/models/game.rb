@@ -1,7 +1,7 @@
 class Game < ApplicationRecord
     #resourcify
-    #validates :id, presence: true
-    has_many :users, source: :user
+    validates :users, length: {minimum: 0}
+    #has_and_belongs_to_many :users
     validates :level,  presence: true
         #accepts_nested_attributes_for :user
     validates :status, length: {minimum: 1} 
