@@ -34,7 +34,7 @@ export default class ItemPendingView extends BaseView {
 			}
 		}
 	})
-	this.listenTo(this.model, "change", this.render);
+	this.listenTo(this.model, "sync", this.render);
 
   }
 

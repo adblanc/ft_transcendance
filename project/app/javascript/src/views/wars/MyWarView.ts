@@ -63,7 +63,7 @@ export default class MyWarView extends BaseView {
 		}
 	}, this);
 
-	this.listenTo(this.war, "change", this.render);
+	this.listenTo(this.war, "sync", this.render);
 	this.listenTo(this.guild_wars, "update", this.render);
   }
 
