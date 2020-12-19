@@ -19,7 +19,7 @@ class WarsController < ApplicationController
 			GuildWar.create!(guild: @initiator, war: @war, status: :accepted, opponent_id: @recipient.id)
 			GuildWar.create!(guild: @recipient, war: @war, status: :pending, opponent_id: @initiator.id)
 			@initiator.wars.where(status: :pending).each do |war|
-				war.destroy unless @war
+				war.destroy unless war == @war
 			end
 			@war
 		else
