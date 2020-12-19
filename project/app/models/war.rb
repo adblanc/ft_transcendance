@@ -16,11 +16,6 @@ class War < ApplicationRecord
 	validates :end, presence: true
 	validates :prize, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
 	validates_with WarDateValidator	
-	/validates_each :guilds do |record, attr, value|
-		if value.points < record.prize
-		  record.errors.add :base, "One or both Guilds cannot wager that many points"
-		end
-	end/
 
 	def initiator
 		if self.pending?
