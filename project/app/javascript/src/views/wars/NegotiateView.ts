@@ -6,6 +6,7 @@ import { displaySuccess, displayError } from "src/utils";
 import Guild from "src/models/Guild";
 const flatpickr = require("flatpickr");
 require("flatpickr/dist/flatpickr.css")
+import moment from "moment";
 
 type Options = Backbone.ViewOptions<War> & {
 	guild: Guild, 
@@ -80,9 +81,19 @@ export default class NegotiateView extends ModalView<War> {
   }
 
   render() {
+	const model = {
+		...this.model.toJSON(),
+		start: moment(this.model.get("start")).format(
+			"YYYY-MM-DDTHH:mm"
+		),
+		end: moment(this.model.get("end")).format(
+		  "YYYY-MM-DDTHH:mm"
+		)
+	};
+
     super.render();
     const template = $("#negoTemplate").html();
-    const html = Mustache.render(template, this.model.toJSON());
+    const html = Mustache.render(template, model);
 	this.$content.html(html);
 	
 	this.fp_start = flatpickr(this.$("#input-start-date"), {
