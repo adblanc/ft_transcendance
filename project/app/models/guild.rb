@@ -62,9 +62,9 @@ class Guild < ApplicationRecord
 		return nil
 	end
 
-	/def pendingWars
+	def pendingWars
 		wars.pending.where.not(id: war_request)
-	end/
+	end
 
 	def warOpponent(war)
 		war.guilds.where.not(id: self.id).first

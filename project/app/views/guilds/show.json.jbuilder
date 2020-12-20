@@ -27,3 +27,14 @@ json.wars do
 		json.warOpponent @guild.warOpponent(war)
 	end
 end
+json.pendingWars do
+		json.array! @guild.pendingWars do |pendingWar|
+		json.id pendingWar.id
+		json.prize pendingWar.prize
+		json.status pendingWar.status
+		json.start pendingWar.start
+		json.end pendingWar.end
+		json.warOpponent @guild.warOpponent(pendingWar)
+		json.img url_for(@guild.warOpponent(pendingWar).img)
+	end
+end

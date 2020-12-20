@@ -4,37 +4,19 @@ import BaseView from "../../lib/BaseView";
 import War from "src/models/War";
 import NegotiateView from "./NegotiateView";
 
-type Options = Backbone.ViewOptions & { model: War,  opponent_id: number };
+type Options = Backbone.ViewOptions & { model: War};
 
 export default class ItemPendingView extends BaseView {
   model: War;
   opponent_id: number;
   index: number;
-  attrs: {};
 
   constructor(options?: Options) {
     super(options);
 
-	this.opponent_id = options.opponent_id;
 	this.model = options.model;
-	this.model.fetch({
-		success: () => {
-			var tmp = 0;
-			this.model.get("guilds").forEach(function (item) {
-				if (item.get("id") == this.opponent_id) {
-					this.index = tmp;
-				}
-				tmp++;
-			}, this);
 
-			this.attrs = {
-				img: this.model.get("guilds").at(this.index).get("img_url"),
-				url: `/guild/${this.opponent_id}`,
-				name: this.model.get("guilds").at(this.index).get("name")
-			}
-		}
-	})
-	this.listenTo(this.model, "sync", this.render);
+	this.listenTo(this.model, "change", this.render);
 
   }
 
@@ -52,12 +34,14 @@ export default class ItemPendingView extends BaseView {
 	  negotiateView.render();
   }
 
-
   render() {
     const template = $("#pendingWarTemplate").html();
-	const html = Mustache.render(template, { 
-		attrs: this.attrs,
-	});
+	const html = Mustache.render(template,  
+		/*img: this.model.get("img"),
+		url: `/guild/${this.opponent_id}`,
+		name: this.model.get("guilds").at(this.index).get("name")*/
+		this.model.toJSON(),
+	);
 	this.$el.html(html);
 	
 

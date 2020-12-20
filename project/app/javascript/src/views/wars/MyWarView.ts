@@ -14,7 +14,6 @@ type Options = Backbone.ViewOptions & { guild: Guild};
 export default class MyWarView extends BaseView {
 	guild: Guild;
 	war: War;
-	wars: Wars;
 	warPendingView: WarPendingView;
 	warConfirmedView: WarConfirmedView;
 	warWaitingView: WarWaitingView;
@@ -28,8 +27,6 @@ export default class MyWarView extends BaseView {
 	this.warConfirmedView = undefined;
 	this.warWaitingView = undefined;
 	this.noWarView = undefined;
-
-	this.wars = this.guild.get("wars");
 
 	this.listenTo(this.guild, "change", this.render);
   }
@@ -79,7 +76,7 @@ export default class MyWarView extends BaseView {
 		}
 		else {
 			this.warPendingView = new WarPendingView({
-				collection: this.wars,
+				collection: this.guild.get("pendingWars")
 			})
 			this.setundefined("pending");
 		}

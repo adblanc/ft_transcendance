@@ -22,7 +22,9 @@ interface IGuild {
   wars: Wars;
   activeWar: War;
   waitingWar: War;
+  pendingWars: Wars;
   warOpponent: Guild;
+  warOpponentImg: any;
   created_at: string;
   updated_at: string;
 }
@@ -49,6 +51,12 @@ export default class Guild extends BaseModel<IGuild> {
 	  {
         type: Backbone.Many,
         key: "wars",
+        collectionType: Wars,
+        relatedModel: War,
+	  },
+	  {
+        type: Backbone.Many,
+        key: "pendingWars",
         collectionType: Wars,
         relatedModel: War,
 	  },
@@ -84,6 +92,7 @@ export default class Guild extends BaseModel<IGuild> {
 	  warPending: false,
 	  members: [],
 	  wars: [],
+	  pendingWars: [],
 	  activeWar: null,
 	  waitingWar: null,
 	  warOpponent: null,

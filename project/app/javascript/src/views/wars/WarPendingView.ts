@@ -29,12 +29,8 @@ export default class WarPendingView extends BaseView {
 	console.log(this.collection);
 
     this.collection.forEach(function (item) {
-	  const opponent_id = item.get("opponent_id");
-	  var id = item.get("war_id");
-	  var war = new War({id});
       var itemView = new ItemPendingView({
-		model: war,
-		opponent_id: opponent_id,
+		model: item,
       });
       $element.append(itemView.render().el);
     });
