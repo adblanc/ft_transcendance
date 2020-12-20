@@ -36,7 +36,9 @@ export default class WarConfirmedView extends BaseView {
 	const template = $("#confirmedWarTemplate").html();
 	const html = Mustache.render(template, { 
 		war: war,
-		guild: this.guild,
+		img: this.guild.get("warOpponentImg"),
+		name: this.guild.get("warOpponent").get("name"),
+		url: `/guild/${this.guild.get("warOpponent").get("id")}`,
 	});
 	this.$el.html(html);
 
