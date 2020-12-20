@@ -76,7 +76,8 @@ export default class MyWarView extends BaseView {
 		}
 		else {
 			this.warPendingView = new WarPendingView({
-				collection: this.guild.get("pendingWars")
+				collection: this.guild.get("pendingWars"),
+				guild: this.guild,
 			})
 			this.setundefined("pending");
 		}

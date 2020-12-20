@@ -40,10 +40,6 @@ class Guild < ApplicationRecord
 		self.wars.started.present? || self.wars.confirmed.present?
 	end
 
-	def activeWar
-		wars.where(status: [:started, :confirmed]).first
-	end
-
 	def pendingWar?
 		self.wars.pending.present?
 	end
@@ -55,6 +51,10 @@ class Guild < ApplicationRecord
 		return false
 	end
 
+	def warOpponent(war)
+		war.guilds.where.not(id: self.id).first
+	end
+
 	def war_request
 		wars.pending.each do |war|
 			return war if war.initiator == self
@@ -62,17 +62,18 @@ class Guild < ApplicationRecord
 		return nil
 	end
 
-	def pendingWars
-		wars.pending.where.not(id: war_request)
-	end
-
-	def warOpponent(war)
-		war.guilds.where.not(id: self.id).first
+	def activeWar
+		wars.where(status: [:started, :confirmed]).first
 	end
 
 	def waitingWar
 		wars.pending.where(id: war_request).first
 	end
+
+	def pendingWars
+		wars.pending.where.not(id: war_request)
+	end
+
 
 	def owner
 		User.with_role(:owner, self).first

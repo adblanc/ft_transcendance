@@ -37,12 +37,12 @@ class WarsController < ApplicationController
 		@guild_war.update(status: :accepted)
 		@war.update(status: :confirmed)
 
-		if @war.save
-			@war
-		end
-
 		@guild.wars.where(status: :pending).each do |war|
 			war.destroy
+		end
+
+		if @war.save
+			@war
 		end
 		/Notif for acceptance and refusal for others/
 
@@ -54,6 +54,25 @@ class WarsController < ApplicationController
 		@war.destroy
 	end
 
+	def update
+		@war = War.find_by_id(params[:id])
+		@guild = Guild.find_by_id(current_user.guild.id)
+		@gw_initiator = GuildWar.where(war: @war, guild: @guild).first
+		@gw_recipient = GuildWar.where(war: @war).where.not(guild: @guild).first
+
+		@war.update(guild_params)
+		if @war.save
+			@gw_initiator.update(status: :accepted)
+			@gw_recipient.update(status: :pending)
+			@guild.wars.where(status: :pending).each do |war|
+				war.destroy
+			end
+			@war
+		else
+			render json: @war.errors, status: :unprocessable_entity
+		end
+
+	end
 
 	private
 

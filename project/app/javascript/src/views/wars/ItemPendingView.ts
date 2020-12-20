@@ -2,19 +2,20 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import War from "src/models/War";
+import Guild from "src/models/Guild";
 import NegotiateView from "./NegotiateView";
 
-type Options = Backbone.ViewOptions & { model: War};
+type Options = Backbone.ViewOptions & { model: War, guild: Guild};
 
 export default class ItemPendingView extends BaseView {
   model: War;
-  opponent_id: number;
-  index: number;
+  guild: Guild;
 
   constructor(options?: Options) {
     super(options);
 
 	this.model = options.model;
+	this.guild = options.guild;
 
 	this.listenTo(this.model, "change", this.render);
 
@@ -29,6 +30,7 @@ export default class ItemPendingView extends BaseView {
   onSeeClicked() {
 	const negotiateView = new NegotiateView({
 		model: this.model,
+		guild: this.guild,
 	  });
   
 	  negotiateView.render();
@@ -37,9 +39,6 @@ export default class ItemPendingView extends BaseView {
   render() {
     const template = $("#pendingWarTemplate").html();
 	const html = Mustache.render(template,  
-		/*img: this.model.get("img"),
-		url: `/guild/${this.opponent_id}`,
-		name: this.model.get("guilds").at(this.index).get("name")*/
 		this.model.toJSON(),
 	);
 	this.$el.html(html);

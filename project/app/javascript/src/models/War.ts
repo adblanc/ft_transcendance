@@ -35,7 +35,7 @@ export default class War extends BaseModel<IWar> {
   }
 
   urlRoot = () => "http://localhost:3000/wars";
-  baseGuildRoot = () => `${this.urlRoot()}/${this.get("id")}`;
+  baseWarRoot = () => `${this.urlRoot()}/${this.get("id")}`;
 
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
     return syncWithFormData(method, model, options);
@@ -55,10 +55,22 @@ export default class War extends BaseModel<IWar> {
 		});
 	}
 
+	modifyWar(start: Date, end:Date, prize: string) {
+		return this.asyncSave( 
+		{
+			'start': start,
+			'end': end,
+			'prize': prize,
+		}, 
+		{ 
+			url: this.baseWarRoot(),
+		});
+	}
+
 	manageAction(method: WAR_ACTION) {
 		return this.asyncSave({},
 		  {
-			url: `${this.baseGuildRoot()}/${method}`,
+			url: `${this.baseWarRoot()}/${method}`,
 		  }
 		);
 	  }
@@ -66,7 +78,7 @@ export default class War extends BaseModel<IWar> {
 	  accept() {
 		return this.asyncSave({},
 		  {
-			url: `${this.baseGuildRoot()}/accept`,
+			url: `${this.baseWarRoot()}/accept`,
 		  }
 		);
 	  }
@@ -74,7 +86,7 @@ export default class War extends BaseModel<IWar> {
 	  reject() {
 		return this.asyncSave({},
 		  {
-			url: `${this.baseGuildRoot()}/reject`,
+			url: `${this.baseWarRoot()}/reject`,
 		  }
 		);
 	  }
