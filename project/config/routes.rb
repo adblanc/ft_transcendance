@@ -21,7 +21,6 @@ Rails.application.routes.draw do
 		put :reject
 		put :withdraw
 	  end
-	  resources :guild_wars
   end
   resources :notifications do
 	member do

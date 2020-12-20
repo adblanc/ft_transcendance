@@ -6,28 +6,19 @@ import Guild from "src/models/Guild";
 import { displaySuccess } from "src/utils";
 import moment from "moment";
 
-type Options = Backbone.ViewOptions & { war: War,  opponent_id: number};
+type Options = Backbone.ViewOptions & { war: War,  guild: Guild};
 
 export default class WarConfirmedView extends BaseView {
 	war: War;
-	opponent_id: number;
-	index: number;
+	guild: Guild;
 
   constructor(options?: Options) {
     super(options);
 
 	this.war = options.war;
-	this.opponent_id = options.opponent_id;
+	this.guild = options.guild;
 
 	this.listenTo(this.war, "change", this.render);
-	
-	var tmp = 0;
-	this.war.get("guilds").forEach(function (item) {
-		if (item.get("id") == this.opponent_id) {
-			this.index = tmp;
-		}
-		tmp++;
-	}, this);
 
   }
 
@@ -45,9 +36,7 @@ export default class WarConfirmedView extends BaseView {
 	const template = $("#confirmedWarTemplate").html();
 	const html = Mustache.render(template, { 
 		war: war,
-		img: this.war.get("guilds").at(this.index).get("img_url"),
-		url: `/guild/${this.opponent_id}`,
-		name: this.war.get("guilds").at(this.index).get("name")
+		guild: this.guild,
 	});
 	this.$el.html(html);
 

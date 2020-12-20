@@ -2,8 +2,8 @@ import Backbone from "backbone";
 import _ from "underscore";
 import Profile from "src/models/Profile";
 import Profiles from "src/collections/Profiles";
-import GuildWar from "src/models/GuildWar";
-import GuildWars from "src/collections/GuildWars";
+import War from "src/models/War";
+import Wars from "src/collections/Wars";
 import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
@@ -14,11 +14,15 @@ interface IGuild {
   ang: string;
   points: number;
   atWar?: "true" | "false";
+  pendingWar?: "true" | "false";
   warInitiator?: "true" | "false";
   img_url?: string;
   members: Profiles;
   pending_members: Profiles;
-  guild_wars: GuildWars;
+  wars: Wars;
+  activeWar: War;
+  waitingWar: War;
+  warOpponent: Guild;
   created_at: string;
   updated_at: string;
 }
@@ -44,10 +48,25 @@ export default class Guild extends BaseModel<IGuild> {
 	  },
 	  {
         type: Backbone.Many,
-        key: "guild_wars",
-        collectionType: GuildWars,
-        relatedModel: GuildWar,
-      },
+        key: "wars",
+        collectionType: Wars,
+        relatedModel: War,
+	  },
+	  {
+        type: Backbone.One,
+        key: "activeWar",
+        relatedModel: War,
+	  },
+	  {
+        type: Backbone.One,
+        key: "waitingWar",
+        relatedModel: War,
+	  },
+	  {
+        type: Backbone.One,
+        key: "warOpponent",
+        relatedModel: Guild,
+	  },
     ];
   }
 
@@ -62,8 +81,12 @@ export default class Guild extends BaseModel<IGuild> {
       points: 0,
 	  atWar: false,
 	  warInitiator: false,
+	  warPending: false,
 	  members: [],
-	  guild_wars: [],
+	  wars: [],
+	  activeWar: null,
+	  waitingWar: null,
+	  warOpponent: null,
     };
   }
 

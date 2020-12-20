@@ -17,12 +17,13 @@ json.pending_members do
 	 json.contribution pending_member.contribution
   end
 end
-json.guild_wars do
-		json.array! @guild.guild_wars do |guild_war|
-		json.war_id guild_war.war_id
-		json.status guild_war.status
-		json.opponent_id guild_war.opponent_id
-		json.points guild_war.points
+json.wars do
+		json.array! @guild.wars do |war|
+		json.id war.id
+		json.prize war.prize
+		json.status war.status
+		json.start war.start
+		json.end war.end
+		json.warOpponent @guild.warOpponent(war)
 	end
 end
-

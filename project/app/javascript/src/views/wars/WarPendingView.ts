@@ -2,14 +2,13 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import Wars from "src/collections/Wars";
-import GuildWars from "src/collections/GuildWars";
 import War from "src/models/War";
 import ItemPendingView from "./ItemPendingView";
 
-type Options = Backbone.ViewOptions & { collection: GuildWars };
+type Options = Backbone.ViewOptions & { collection: Wars };
 
 export default class WarPendingView extends BaseView {
-  collection: GuildWars;
+  collection: Wars;
 
   constructor(options?: Options) {
 	super(options);

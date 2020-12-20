@@ -6,7 +6,6 @@ class GuildWar < ApplicationRecord
 	enum status: [
 		:pending,
 		:accepted,
-		:rejected
 	]
 
 end

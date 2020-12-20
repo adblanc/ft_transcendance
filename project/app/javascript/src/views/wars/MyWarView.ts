@@ -3,7 +3,6 @@ import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import War from "src/models/War";
 import Wars from "src/collections/Wars";
-import GuildWars from "src/collections/GuildWars";
 import Guild from "src/models/Guild";
 import WarPendingView from "./WarPendingView";
 import WarConfirmedView from "./WarConfirmedView";
@@ -14,8 +13,8 @@ type Options = Backbone.ViewOptions & { guild: Guild};
 
 export default class MyWarView extends BaseView {
 	guild: Guild;
-	guild_wars: GuildWars;
 	war: War;
+	wars: Wars;
 	warPendingView: WarPendingView;
 	warConfirmedView: WarConfirmedView;
 	warWaitingView: WarWaitingView;
@@ -27,44 +26,64 @@ export default class MyWarView extends BaseView {
 	this.guild = options.guild;
 	this.warPendingView = undefined;
 	this.warConfirmedView = undefined;
+	this.warWaitingView = undefined;
 	this.noWarView = undefined;
 
-	this.guild_wars = this.guild.get("guild_wars");
-	if (this.guild_wars.isEmpty()) {
-		this.noWarView = new NoWarView();
+	this.wars = this.guild.get("wars");
+
+	this.listenTo(this.guild, "change", this.render);
+  }
+
+  setundefined(view: string) {
+	if (view == "none") {
+		this.warPendingView = undefined;
+		this.warConfirmedView = undefined;
+		this.warWaitingView = undefined;
 	}
+	else if (view == "pending") {
+		this.warConfirmedView = undefined;
+		this.warWaitingView = undefined;
+		this.noWarView = undefined;
+	}
+	else if (view == "waiting") {
+		this.warPendingView = undefined;
+		this.warConfirmedView = undefined;
+		this.noWarView = undefined;
+	}
+	else {
+		this.warPendingView = undefined;
+		this.warWaitingView = undefined;
+		this.noWarView = undefined;
+	}
+  }
 
-	this.guild_wars.forEach(function (item) {
-		if (item.get("status") == "pending") {
-			this.warPendingView = new WarPendingView({
-				collection: this.guild_wars,
+  chooseView() {
+	if (!this.guild.get("atWar") && !this.guild.get("pendingWar")) {
+		this.noWarView = new NoWarView();
+		this.setundefined("none");
+	}
+	else if (this.guild.get("atWar")) {
+		this.warConfirmedView = new WarConfirmedView({
+			war: this.guild.get("activeWar"),
+			guild: this.guild,
+		})
+		this.setundefined("confirmed");
+	}
+	else if (this.guild.get("pendingWar")) {
+		if (this.guild.get("warInitiator")) {
+			this.warWaitingView = new WarWaitingView({
+				war: this.guild.get("waitingWar"),
+				guild: this.guild,
 			})
-		} else if (item.get("status") == "accepted") {
-			  const opponent_id = item.get("opponent_id");
-			  const id = item.get("war_id");
-			  this.war = new War({id});
-			  this.war.fetch({
-				success: () => {
-					if (this.war.get("status") == "confirmed" || this.war.get("status") == "started") {
-						this.warConfirmedView = new WarConfirmedView({
-							war: this.war,
-							opponent_id: opponent_id,
-						})
-					} else {
-						this.warWaitingView = new WarWaitingView({
-							war: this.war,
-							opponent_id: opponent_id,
-						})
-					}
-				}
-			  });
-		} else {
-			this.noWarView = new NoWarView();
+			this.setundefined("waiting");
 		}
-	}, this);
-
-	this.listenTo(this.war, "sync", this.render);
-	this.listenTo(this.guild_wars, "update", this.render);
+		else {
+			this.warPendingView = new WarPendingView({
+				collection: this.wars,
+			})
+			this.setundefined("pending");
+		}
+	}
   }
 
   render() {
@@ -72,6 +91,8 @@ export default class MyWarView extends BaseView {
     const html = Mustache.render(template, {});
 	this.$el.html(html);
 	  
+	this.chooseView();
+
 	if (this.warPendingView) {
 		this.renderNested(this.warPendingView, "#content");
 	}

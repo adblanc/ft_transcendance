@@ -17,9 +17,18 @@ class War < ApplicationRecord
 	validates :prize, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
 	validates_with WarDateValidator	
 
+	def opponent(guild)
+		self.guilds.where.not(id: guild.id).first
+	end
+
 	def initiator
 		if self.pending?
 			self.guild_wars.accepted.first.guild
 		end
 	end
+
+	def war_points(guild)
+		GuildWar.where(war: self, guild: guild).first.points
+	end
+
 end
