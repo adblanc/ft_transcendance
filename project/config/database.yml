@@ -1,9 +1,9 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-#  host: db #this needs to be name of container
-#  username: postgres
-#  password: password
+  host: db #this needs to be name of container
+  username: postgres
+  password: password
   pool: 5
 
 development:

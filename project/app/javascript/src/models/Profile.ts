@@ -13,6 +13,7 @@ export interface IProfile {
   login: string;
   name: string;
   email: string;
+  two_fact_auth: boolean;
   id?: number;
   avatar?: any;
   created_at?: string;
@@ -23,7 +24,7 @@ export interface IProfile {
   notifications?: Notifications;
 }
 
-type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar" | "email">>;
+type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar" | "email" | "two_fact_auth">>;
 
 export default class Profile extends BaseModel<IProfile> {
   channel: ActionCable.Channel;
@@ -60,6 +61,7 @@ export default class Profile extends BaseModel<IProfile> {
       login: "",
       name: "",
 	  email: "",
+	  two_fact_auth: false,
       number: 0,
       guild_role: "none",
     };

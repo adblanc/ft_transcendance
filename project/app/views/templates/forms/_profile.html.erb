@@ -20,6 +20,11 @@
         id="input-profile-email"
       />
     </label>
+    <label style="text-align:center" class="block mt-8" for="input-profile-tfa">
+		<input type="checkbox" name="two_fact_auth" id="input-profile-tfa"
+		{{#two_fact_auth}}checked{{/two_fact_auth}}/>
+		Two factor authentication
+    </label>
     <label class="block mt-8" for="input-profile-avatar">
       <span class="text-gray-700">Mettre en ligne un avatar</span>
       <input

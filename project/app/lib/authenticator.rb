@@ -4,16 +4,17 @@ class Authenticator
 	end
 
 	def auth42(code)
-		logger = Logger.new(STDOUT)
-		logger.info(code)
-	  user_info_resp = fetch_42_user_info(code)
-	  logger.info(user_info_resp)
-	  {
+	logger = Logger.new(STDOUT)
+	logger.info(code)
+	user_info_resp = fetch_42_user_info(code)
+	logger.info(user_info_resp)
+	{
 		issuer: ENV['CLIENT_URL'],
 		login: user_info_resp['login'],
 		name: user_info_resp['displayname'],
-		avatar_url: user_info_resp['image_url']
-	  }
+		avatar_url: user_info_resp['image_url'],
+		email: user_info_resp['email']
+	}
 	end
 
 	private
