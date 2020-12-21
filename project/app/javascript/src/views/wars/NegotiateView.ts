@@ -36,7 +36,10 @@ export default class NegotiateView extends ModalView<War> {
 	  ...super.events(),
 	  "click #negotiate": "onModify",
       "click #accept": () => this.onAction("accept"),
-      "click #reject": () => this.onAction("reject"),
+	  "click #reject": () => this.onAction("reject"),
+	  "change #input-prize": "onChange",
+	  "change #input-start-date": "onChange",
+	  "change #input-end-date": "onChange",
     };
   }
 
@@ -81,6 +84,12 @@ export default class NegotiateView extends ModalView<War> {
 	  this.model.fetch();
 	  this.guild.fetch();
     }
+  }
+
+  onChange(e: JQuery.Event) {
+	e.preventDefault();
+	this.$("#accept").addClass("btn-nego-disabled");
+	this.$("#negotiate").removeClass("btn-nego-disabled");
   }
 
   render() {
