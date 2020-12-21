@@ -46,7 +46,8 @@ class WarsController < ApplicationController
 		end
 		/Notif for acceptance and refusal for others/
 
-		/Start Jobs/
+		StartWarJob.set(wait_until: @war.start).perform_later(@war)
+		EndWarJob.set(wait_until: @war.end).perform_later(@war)
 	end
 
 	def reject
