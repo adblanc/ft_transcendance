@@ -26,6 +26,7 @@ export default class WarIndexView extends BaseView {
 				success: () => {
 					this.myWarView = new MyWarView({
 						guild: guild,
+						profile: this.profile,
 					})
 					this.renderNested(this.myWarView, "#mywar");
 				}

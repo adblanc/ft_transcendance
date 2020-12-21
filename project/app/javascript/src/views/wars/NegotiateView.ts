@@ -7,13 +7,16 @@ import Guild from "src/models/Guild";
 const flatpickr = require("flatpickr");
 require("flatpickr/dist/flatpickr.css")
 import moment from "moment";
+import Profile from "src/models/Profile";
 
 type Options = Backbone.ViewOptions<War> & {
 	guild: Guild, 
+	profile: Profile,
  };
 
 export default class NegotiateView extends ModalView<War> {
 	guild: Guild;
+	profile: Profile;
 	fp_start: typeof flatpickr;
 	fp_end: typeof flatpickr;
 
@@ -21,6 +24,7 @@ export default class NegotiateView extends ModalView<War> {
     super(options);
 
 	this.guild = options.guild;
+	this.profile = options.profile;
 
 	this.listenTo(this.guild, "change", this.render);
     this.listenTo(this.model, "change", this.render);
@@ -95,6 +99,15 @@ export default class NegotiateView extends ModalView<War> {
     const html = Mustache.render(template, model);
 	this.$content.html(html);
 	
+	const $ranked = this.$("#ranked");
+    const $member = this.$("#member");
+
+	if(this.profile.get("guild_role") == "Member") {
+		$member.show();
+	} else {
+		$ranked.show();
+	}
+
 	this.fp_start = flatpickr(this.$("#input-start-date"), {
 		enableTime: true,
 		dateFormat: "Y-m-d H:i",
