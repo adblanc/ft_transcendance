@@ -60,12 +60,12 @@ class WarsController < ApplicationController
 		@gw_initiator = GuildWar.where(war: @war, guild: @guild).first
 		@gw_recipient = GuildWar.where(war: @war).where.not(guild: @guild).first
 
-		@war.update(guild_params)
+		@war.update(war_params)
 		if @war.save
 			@gw_initiator.update(status: :accepted)
 			@gw_recipient.update(status: :pending)
 			@guild.wars.where(status: :pending).each do |war|
-				war.destroy
+				war.destroy unless war == @war
 			end
 			@war
 		else

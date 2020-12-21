@@ -64,7 +64,6 @@ export default class NegotiateView extends ModalView<War> {
 	const end = dateTimeEnd;
 	const prize = this.$("#input-prize").val() as string;
 
-	//erreur ici
 	if (parseInt(prize) > this.model.get("warOpponent").get("points") || parseInt(prize) > this.guild.get("points")) {
 		displayError("One or both guilds cannot wager that many points");
 		return;
