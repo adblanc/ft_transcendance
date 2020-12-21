@@ -24,8 +24,11 @@ json.wars do
 		json.status war.status
 		json.start war.start
 		json.end war.end
-		json.warOpponent @guild.warOpponent(war)
-		json.img url_for(@guild.warOpponent(war).img) if @guild.warOpponent(war).img.attached?
+		json.warOpponent do 
+			json.id  @guild.warOpponent(war).id
+			json.name  @guild.warOpponent(war).name
+			json.img_url url_for(@guild.warOpponent(war).img) if @guild.warOpponent(war).img.attached?
+		end
 	end
 end
 json.pendingWars do
@@ -35,7 +38,10 @@ json.pendingWars do
 		json.status pendingWar.status
 		json.start pendingWar.start
 		json.end pendingWar.end
-		json.warOpponent @guild.warOpponent(pendingWar)
-		json.img url_for(@guild.warOpponent(pendingWar).img) if @guild.warOpponent(pendingWar).img.attached?
+		json.warOpponent do 
+			json.id  @guild.warOpponent(pendingWar).id
+			json.name  @guild.warOpponent(pendingWar).name
+			json.img_url url_for(@guild.warOpponent(pendingWar).img) if @guild.warOpponent(pendingWar).img.attached?
+		end
 	end
 end

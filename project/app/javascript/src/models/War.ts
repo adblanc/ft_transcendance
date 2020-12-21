@@ -12,6 +12,7 @@ interface IWar {
   status: string;
   prize: string;
   guilds: Guilds;
+  warOpponent: Guild;
   created_at: string;
   updated_at: string;
 }
@@ -25,6 +26,11 @@ export default class War extends BaseModel<IWar> {
 			type: Backbone.Many,
 			key: "guilds",
 			collectionType: Guilds,
+			relatedModel: Guild,
+		  },
+		  {
+			type: Backbone.One,
+			key: "warOpponent",
 			relatedModel: Guild,
 		  },
 		];

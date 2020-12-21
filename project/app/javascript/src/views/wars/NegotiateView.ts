@@ -30,7 +30,7 @@ export default class NegotiateView extends ModalView<War> {
   events() {
     return {
 	  ...super.events(),
-	  "click #negotiate": () => this.onModify,
+	  "click #negotiate": "onModify",
       "click #accept": () => this.onAction("accept"),
       "click #reject": () => this.onAction("reject"),
     };
@@ -57,7 +57,7 @@ export default class NegotiateView extends ModalView<War> {
 
   async onModify(e: JQuery.Event) {
 	e.preventDefault();
-	
+	console.log("test");
 	const dateTimeStart = this.fp_start.selectedDates[0];
     const dateTimeEnd = this.fp_end.selectedDates[0];
 	const start = dateTimeStart; 
@@ -65,7 +65,7 @@ export default class NegotiateView extends ModalView<War> {
 	const prize = this.$("#input-prize").val() as string;
 
 	//erreur ici
-	if (parseInt(prize) > this.guild.get("warOpponent").get("points") || parseInt(prize) > this.guild.get("points")) {
+	if (parseInt(prize) > this.model.get("warOpponent").get("points") || parseInt(prize) > this.guild.get("points")) {
 		displayError("One or both guilds cannot wager that many points");
 		return;
 	}

@@ -28,8 +28,6 @@ export default class WarPendingView extends BaseView {
 
 	const $element = this.$("#listing-pending");
 
-	console.log(this.collection);
-
     this.collection.forEach(function (item) {
       var itemView = new ItemPendingView({
 		model: item,

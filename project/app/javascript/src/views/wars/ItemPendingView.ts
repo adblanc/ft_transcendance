@@ -38,9 +38,11 @@ export default class ItemPendingView extends BaseView {
 
   render() {
     const template = $("#pendingWarTemplate").html();
-	const html = Mustache.render(template,  
-		this.model.toJSON(),
-	);
+	const html = Mustache.render(template, {
+		img: this.model.get("warOpponent").get("img_url"),
+		name: this.model.get("warOpponent").get("name"),
+		url: `/guild/${this.model.get("warOpponent").get("id")}`,
+	});
 	this.$el.html(html);
 	
 
