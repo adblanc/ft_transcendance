@@ -19,6 +19,8 @@ export default class ItemPendingView extends BaseView {
 
 	this.listenTo(this.model, "change", this.render);
 
+	console.log(this.model.get("warOpponent"));
+
   }
 
   events() {
