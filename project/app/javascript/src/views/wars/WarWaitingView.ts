@@ -38,7 +38,8 @@ export default class WarWaitingView extends BaseView {
 	const template = $("#warWaitingTemplate").html();
 	const html = Mustache.render(template, { 
 		war: war,
-		img: this.guild.get("warOpponentImg"),
+		guild: this.guild,
+		img: this.guild.get("warOpponent").get("img_url"),
 		name: this.guild.get("warOpponent").get("name"),
 		url: `/guild/${this.guild.get("warOpponent").get("id")}`,
 	});

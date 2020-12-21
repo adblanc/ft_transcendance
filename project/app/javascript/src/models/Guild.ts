@@ -24,7 +24,6 @@ interface IGuild {
   waitingWar: War;
   pendingWars: Wars;
   warOpponent: Guild;
-  warOpponentImg: any;
   created_at: string;
   updated_at: string;
 }
