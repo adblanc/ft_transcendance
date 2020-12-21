@@ -19,7 +19,6 @@ export default class WarConfirmedView extends BaseView {
 	this.guild = options.guild;
 
 	this.listenTo(this.war, "change", this.render);
-
   }
 
   render() {
@@ -41,6 +40,12 @@ export default class WarConfirmedView extends BaseView {
 		url: `/guild/${this.guild.get("warOpponent").get("id")}`,
 	});
 	this.$el.html(html);
+
+	if (this.war.get("status") === "started") {
+		this.$("#started").show();
+	} else if (this.war.get("status") === "confirmed") {
+		this.$("#confirmed").show();
+	}
 
     return this;
   }

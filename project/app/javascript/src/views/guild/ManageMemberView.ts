@@ -72,7 +72,6 @@ export default class ManageMemberView extends ModalView<Profile> {
     const html = Mustache.render(template, this.model.toJSON());
     this.$content.html(html);
 
-    //disable button according to status
     if (this.model.get("guild_role") == "Officer") {
       this.$("#promote").addClass("btn-disabled");
     } else {

@@ -98,7 +98,6 @@ export default class MyWarView extends BaseView {
 		this.renderNested(this.warPendingView, "#content");
 	}
 	else if (this.warConfirmedView) {
-		console.log("test");
 		this.renderNested(this.warConfirmedView, "#content");
 	}
 	else if (this.warWaitingView) {
