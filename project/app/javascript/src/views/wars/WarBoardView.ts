@@ -49,6 +49,11 @@ export default class WarBoardView extends BaseView {
     this.$el.html(html);
 
 	var wars = this.collection.first(this.max);
+
+	if (wars.length == 0) {
+		this.$("#none").show();
+	}
+
 	wars.forEach(function (item) {
 		this.renderWar(item);
 	}, this);

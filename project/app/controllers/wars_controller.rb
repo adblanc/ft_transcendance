@@ -1,7 +1,7 @@
 class WarsController < ApplicationController
 
 	def index
-		@wars = War.all
+		@wars = War.where(status: :started)
 	end
 
 	def show
