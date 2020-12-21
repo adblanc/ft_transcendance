@@ -21,7 +21,8 @@ export default class WarPendingView extends BaseView {
 	this.profile = options.profile;
 
     this.listenTo(this.collection, "reset", this.render);
-    this.listenTo(this.collection, "change", this.render);
+	this.listenTo(this.collection, "change", this.render);
+	this.listenTo(this.collection, "remove", this.render);
   }
 
   render() {
