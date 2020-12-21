@@ -11,6 +11,7 @@ import MainRouter from "src/routers/MainRouter";
 import GameView from "./GameView"
 import Player from "src/models/Player";
 import { displaySuccess } from "src/utils/toast";
+import Games from "src/collections/Games";
 
 var canvas = document.createElement("canvas");
 var canvaView= new CanvaView({
@@ -18,15 +19,23 @@ var canvaView= new CanvaView({
 var rectangle = new Rectangle(0, 0, 480, 480);
 
 export default class GameIndexView extends BaseView {
+  games: Games;
   player_one: Player;
   static i: number = 0;
   jeu: Game;
+  jeu_2: Game;
   //var canvaView= new CanvaView();
   constructor(options?) {
     GameIndexView.i++;
     super(options);
     this.jeu = new Game();
+    this.jeu_2 = new Game({"id": "28", "level" : "hard", "points" : "2"});
     this.player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
+    this.games = new Games({});
+    this.games.fetch();
+    this.games.add(this.jeu_2);
+   // var len = this.collection.length;
+   
   }
   
   render() {
@@ -58,7 +67,7 @@ export default class GameIndexView extends BaseView {
     GameIndexView.i++;
     displaySuccess(String(GameIndexView.i));
      const jeu = new Game();
-     var gameView = new CreateGameView(GameIndexView.i, {model: jeu, collection: this.collection,});
+     var gameView = new CreateGameView(GameIndexView.i, {model: jeu, collection: this.games});
      gameView.render();
    // var canvas = canvaView.init(500, 250, '#EEE', this.player_one, 3);
    // canvas.addEventListener('click', this.canvasClicked, false);

@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
 import Game from "src/models/Game";
+import Games from "src/collections/Games";
 import { displaySuccess } from "src/utils/toast";
 import Profile from "src/models/Profile";
 import { generateAcn } from "src/utils/acronym";
@@ -18,6 +19,7 @@ var canvaView = new CanvaView({
 var canvas = document.createElement("canvas");
 
 export default class CreateGameView extends ModalView<Game> {
+  collection: Games;
   player_one: Player;
   player_two: Player
   id: string;
@@ -28,6 +30,10 @@ export default class CreateGameView extends ModalView<Game> {
     this.i = i;
     this.player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
     this.player_two = new Player(new Rectangle(0, canvas.height / 2, 15, 100));
+    this.collection = options.collection;
+    displaySuccess("The collection is " + String(this.collection.length));
+    displaySuccess("Length is" + JSON.stringify(this.collection.toJSON()));
+    this.collection.fetch();
     this.listenTo(this.model, "add", this.render);
   }
 
@@ -47,9 +53,13 @@ export default class CreateGameView extends ModalView<Game> {
           level: this.$("#level").val() as string,
           points: this.$("#points").val() as number,
           id: String(this.i) as string,
-          status: "waiting",
+          status: "playing",
           user: [],
         };
+        //this.collection.fetch();
+        const len = this.collection.length;
+        var waiting = this.collection.where({status: "waiting"});
+        displaySuccess("length is" + JSON.stringify(waiting));
         const success = await this.model.createGame(attrs);
         if (success) {
           this.gameSaved();
@@ -59,7 +69,8 @@ export default class CreateGameView extends ModalView<Game> {
   gameSaved() {
     this.closeModal();
     this.model.fetch();
-    Backbone.history.navigate(`games/${this.model.get("id")}`, {
+    displaySuccess("success");
+    Backbone.history.navigate(`game/${this.model.get("id")}`, {
       trigger: true,
     });
     //Backbone.history.navigate(`game/${this.id}`, { trigger: true });

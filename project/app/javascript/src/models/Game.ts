@@ -10,8 +10,8 @@ interface IGame {
   id?: string;
   level: string;
   points: number;
-  user: Profile;
   status: string;
+  user: Profile;
 }
 
 type CreatableGameArgs = Partial<

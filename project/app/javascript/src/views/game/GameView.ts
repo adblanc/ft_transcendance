@@ -9,6 +9,7 @@ import BaseView from "src/lib/BaseView";
 import MainRouter from "src/routers/MainRouter";
 import { displaySuccess } from "src/utils/toast";
 import CanvaView from "./CanvaView";
+import Games from "src/collections/Games";
 
 type Options = Backbone.ViewOptions & { game: Game };
 var canvaView = new CanvaView({
@@ -21,17 +22,19 @@ var points: number = 2;
 export default class GameView extends BaseView {
   player_one: Player;
   player_two: Player;
+  collection: Games;
     game: Game;
     joueur: Profile;
     constructor(options?: Options) {
         super(options);
         this.game = options.game;
-
         this.game.fetch({
           error: () => {
             Backbone.history.navigate("/not-found", { trigger: true });
           },
         });
+        this.collection = new Games({});
+        this.collection.fetch();
         this.joueur = new Profile();
         this.joueur.fetch();
          this.player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
@@ -75,6 +78,8 @@ export default class GameView extends BaseView {
 
   render_won()
   {
+    displaySuccess("The collection is " + String(this.collection.length));
+    displaySuccess("Length is" + JSON.stringify(this.collection.toJSON()));
     const template = $("#game_win").html();
     const html = Mustache.render(template, this.game.toJSON());
     this.$el.html(html);

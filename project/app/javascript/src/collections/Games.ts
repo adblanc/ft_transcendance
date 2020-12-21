@@ -5,5 +5,9 @@ export default class Games extends Backbone.Collection<Game> {
   constructor(options) {
 	super(options);
 	this.model = Game;
-	this.url = "/games";}
+	this.url = "/games";
+	this.comparator = function(model) {
+		return -model.get('points');
+	}
+}
 }

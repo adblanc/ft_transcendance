@@ -27,8 +27,8 @@ export default class MainRouter extends Backbone.Router {
         "": "index",
         auth: "auth",
         "auth/callback?code=:code": "authCallBack",
-        games: "game",
-        "games/:id": "gameShow",
+        gameindex: "gameIndex",
+        "game/:id": "gameShow",
         guildindex: "guildIndex",
         "guild/:id": "guildShow",
         "me/notifications": "notifShow",
@@ -77,7 +77,7 @@ export default class MainRouter extends Backbone.Router {
     pagesHandler.showPage(indexView);
   }
 
-  game() {
+  gameIndex() {
     const gameIndexView = new GameIndexView({});
 
     pagesHandler.showPage(gameIndexView);
@@ -101,7 +101,7 @@ export default class MainRouter extends Backbone.Router {
   }
 
   gameShow(id: string) {
-    const gameView = new GameView({ game: new Game({ id }) });
+    const gameView = new GameView({ game: new Game({ id: id }) });
     pagesHandler.showPage(gameView);
   }
 

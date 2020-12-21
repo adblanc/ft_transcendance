@@ -5,11 +5,8 @@ Rails.application.routes.draw do
   resource :user, only: [:show, :update]
   get "user/notifications", to: "users#show"
   resources :games
-  resources :game
-  get '/games', to: 'games#index', format:false
- post '/games', to: 'games#create', format: false
+ post '/game', to: 'games#create', format: false
  put '/games', to: 'games#create', format: false
- get '/games/:id', to: 'games#show'
 
   resources :guilds do
 	member do
