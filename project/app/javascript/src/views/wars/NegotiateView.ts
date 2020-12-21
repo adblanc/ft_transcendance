@@ -96,7 +96,12 @@ export default class NegotiateView extends ModalView<War> {
 
     super.render();
     const template = $("#negoTemplate").html();
-    const html = Mustache.render(template, model);
+    const html = Mustache.render(template, {
+		war: model,
+		img: this.model.get("warOpponent").get("img_url"),
+		name: this.model.get("warOpponent").get("name"),
+		url: `/guild/${this.model.get("warOpponent").get("id")}`,	
+	});
 	this.$content.html(html);
 	
 	const $ranked = this.$("#ranked");
@@ -104,6 +109,9 @@ export default class NegotiateView extends ModalView<War> {
 
 	if(this.profile.get("guild_role") == "Member") {
 		$member.show();
+		this.$("#input-start-date").prop( "disabled", true );
+		this.$("#input-end-date").prop( "disabled", true );
+		this.$("#input-prize").prop( "disabled", true );
 	} else {
 		$ranked.show();
 	}

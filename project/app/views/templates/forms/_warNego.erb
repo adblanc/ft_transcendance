@@ -1,32 +1,37 @@
 <script type="text/html" id="negoTemplate">
+			<h1 style="margin-top:2px;" class="justify-center flex flex-row"><b> Pending War With : </b></h1>
+			<div>
+				<img style="margin-left: auto; margin-right: auto; margin-top:10px" width="100" height="100" class="flex flex-row rounded-full p-2" src="{{img}}" />
+			</div>
+			<a style="margin-top:10px; text-decoration: underline;" href="{{url}}" class="justify-center flex flex-row mb-4"><b>{{name}}</b></a>
             <form action="">
-                <label class="block" for="war-start">
-                    <span class="text-gray-700">Start date set by your opponent : </span>
+                <label class="block mb-2" for="war-start">
+                    <span class="text-gray-700">Start date : </span>
                     <input
                         class="form-input mt-1 block w-full"
                         type="datetime-local"
 						name="start-date"
-						value="{{start}}"
+						value="{{war.start}}"
                         id="input-start-date"
 					/>
 				</label>
-				<label class="block" for="war end">
-                    <span class="text-gray-700">End date set by your opponent : </span>
+				<label class="block mb-2" for="war end">
+                    <span class="text-gray-700">End date : </span>
                     <input
                         class="form-input mt-1 block w-full"
                         type="datetime-local"
 						name="end-date"
-						value="{{end}}"
+						value="{{war.end}}"
                         id="input-end-date"
 					/>
 				</label>
-				<label class="block" for="guild-start">
-                    <span class="text-gray-700">Prize wagered by your opponent :</span>
+				<label class="block mb-2" for="guild-start">
+                    <span class="text-gray-700">Prize wagered :</span>
                     <input
-                        class="form-input mt-1 block w-full"
+                        class="form-input mt-1 block"
                         type="text"
 						name="war-prize"
-						value="{{prize}}"
+						value="{{war.prize}}"
                         id="input-prize"
                     />
 				</label>
