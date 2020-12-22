@@ -5,6 +5,7 @@ import IndexView from "../views/IndexView";
 import NotifPageView from "../views/NotifPageView";
 import GuildView from "../views/guild/GuildView";
 import GuildIndexView from "../views/guild/GuildIndexView";
+import WarHistoryView from "../views/guild/WarHistoryView";
 import NotFoundView from "../views/NotFoundView";
 import GameView from "../views/game/GameView";
 import GameIndexView from "../views/game/GameIndexView";
@@ -31,7 +32,8 @@ export default class MainRouter extends Backbone.Router {
         games: "game",
         "games/:id": "gameShow",
         guildindex: "guildIndex",
-        "guild/:id": "guildShow",
+		"guild/:id": "guildShow",
+		"guild/:id/wars": "guildWarHistory",
         "me/notifications": "notifShow",
 		"user/:id": "userShow",
 		warindex: "warIndex",
@@ -100,6 +102,11 @@ export default class MainRouter extends Backbone.Router {
   guildShow(id: string) {
     const guildView = new GuildView({ guild: new Guild({ id }) });
     pagesHandler.showPage(guildView);
+  }
+
+  guildWarHistory(id: string) {
+    const warHistoryView = new WarHistoryView({ guild: new Guild({ id }) });
+    pagesHandler.showPage(warHistoryView);
   }
 
   gameShow(id: number) {
