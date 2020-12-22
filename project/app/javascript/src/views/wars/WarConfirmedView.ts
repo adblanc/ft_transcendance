@@ -29,7 +29,9 @@ export default class WarConfirmedView extends BaseView {
 		),
 		end: moment(this.war.get("end")).format(
 		  "MMM Do YY, h:mm a"
-		)
+		),
+		countStart: moment(this.war.get("start")).fromNow(),
+		countEnd: moment(this.war.get("end")).fromNow(),
 	};
 
 	const template = $("#confirmedWarTemplate").html();
