@@ -4,6 +4,8 @@ import _ from "underscore";
 
 interface INotification {
   id: number;
+  message: string;
+  link: string;
   read_at: string;
   created_at: string;
   notifiable_type: string;
@@ -14,9 +16,7 @@ export default class Notification extends BaseModel<INotification> {
 
   markAsRead() {
     this.save(
-      {
-        //'notification_id': this.get('id'),
-      },
+      {},
       {
         url: `${this.url()}/${this.get("id")}/mark_as_read`,
       }

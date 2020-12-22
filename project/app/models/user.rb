@@ -79,8 +79,8 @@ class User < ApplicationRecord
 		end
 	end
 
-	def send_notification(actor, action, notifiable)
-		@notification = Notification.create(recipient: self, actor: actor, action: action, notifiable: notifiable)
+	def send_notification(message, link)
+		@notification = Notification.create(recipient: self, message: message, link: link)
 		ActionCable.server.broadcast("user_#{self.id}", @notification);
 	end
 end

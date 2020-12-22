@@ -28,8 +28,7 @@ export default class ItemView extends BaseView {
       ...this.notification.toJSON(),
       created_at: moment(this.notification.get("created_at")).format(
         "MMM Do YY, h:mm a"
-      ),
-      notifiable_type: this.notification.get("notifiable_type").toLowerCase(),
+      )
     };
 
     const template = $("#notifTemplate").html();
