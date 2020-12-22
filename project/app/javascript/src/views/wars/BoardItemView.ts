@@ -16,9 +16,7 @@ export default class BoardItemView extends BaseView {
   render() {
 	const war = {
 		...this.model.toJSON(),
-		end: moment(this.model.get("end")).format(
-		  "MMM Do YY, h:mm a"
-		)
+		end: moment(this.model.get("end")).fromNow(),
 	};
 
     const template = $("#itemWarTemplate").html();
