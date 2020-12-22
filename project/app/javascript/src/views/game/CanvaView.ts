@@ -103,12 +103,12 @@ export default class CanvaView extends ModalView<Rectangle> {
 			if (this.player_one.score >= this.points)
 				{
 					document.body.removeChild(canvas);
-					return this.player_one.score;
+					return 1;
 				}
 			else if (this.player_two.score >= this.points)
 				{
 					document.body.removeChild(canvas);
-					return this.player_two.score;
+					return 2;
 				}
 			if (this.ball.left() < this.player_two.paddle.x + 15 || this.ball.right() > this.player_one.paddle.x)
 			{

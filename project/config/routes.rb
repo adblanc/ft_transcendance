@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   resources :games
  post '/game', to: 'games#create', format: false
  put '/games', to: 'games#create', format: false
+ put '/games/:id/join', to: 'games#join', format:false
+ put '/games/:id/finish', to: 'games#finish', format: false
 
   resources :guilds do
 	member do

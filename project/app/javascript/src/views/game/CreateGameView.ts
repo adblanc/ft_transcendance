@@ -31,8 +31,6 @@ export default class CreateGameView extends ModalView<Game> {
     this.player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
     this.player_two = new Player(new Rectangle(0, canvas.height / 2, 15, 100));
     this.collection = options.collection;
-    displaySuccess("The collection is " + String(this.collection.length));
-    displaySuccess("Length is" + JSON.stringify(this.collection.toJSON()));
     this.collection.fetch();
     this.listenTo(this.model, "add", this.render);
   }
@@ -45,24 +43,44 @@ export default class CreateGameView extends ModalView<Game> {
   }
   async loginGame(e: JQuery.Event) {
     e.preventDefault();
-    const points =  this.$("#points").val() as number;
-    if (!points) {
+    var pts =  this.$("#points").val() as number;
+    const lvl= this.$("#level").val() as string;
+    if (!pts) {
       return;
     } else {
         const attrs = {
           level: this.$("#level").val() as string,
           points: this.$("#points").val() as number,
           id: String(this.i) as string,
-          status: "playing",
+          status: "waiting",
           user: [],
         };
+        
+        p_points: Number;
+        var p_points = Number(pts);
+        
         //this.collection.fetch();
-        const len = this.collection.length;
-        var waiting = this.collection.where({status: "waiting"});
-        displaySuccess("length is" + JSON.stringify(waiting));
-        const success = await this.model.createGame(attrs);
-        if (success) {
-          this.gameSaved();
+        //const len = this.collection.length;
+        var waiting = this.collection.findWhere({status: "waiting", points: p_points, level: lvl});
+        if (waiting != undefined)
+        {
+          var game_id = waiting.get("id");
+          displaySuccess("length is not null" + String(game_id));
+          var game_exist = this.collection.get(game_id) as Game;
+          displaySuccess("Game is: " + JSON.stringify(game_exist));
+          const success = await game_exist.join();
+          game_exist.set("status", "playing");
+          displaySuccess("After joining" + success);
+          if (success) {
+            this.gameJoined(String(game_id), game_id);
+          }
+        }
+        else 
+        {
+          const success = await this.model.createGame(attrs);
+          if (success) {
+            this.gameSaved();
+          }
         }
   }
 }
@@ -73,14 +91,18 @@ export default class CreateGameView extends ModalView<Game> {
     Backbone.history.navigate(`game/${this.model.get("id")}`, {
       trigger: true,
     });
-    //Backbone.history.navigate(`game/${this.id}`, { trigger: true });
+  }
+  gameJoined(s_game_id, game_id) {
+    this.closeModal();
+    this.model.fetch();
+    Backbone.history.navigate(`game/${game_id}`, {
+      trigger: true,
+    });
   }
 
   playGame(points)
   {
     this.closeModal();
-    //var canvaView = new CanvaView();
-    //var player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
     var canvas = canvaView.init(500, 250, '#EEE', this.player_one, "2", "2", this.player_two);
     canvas.addEventListener('click', this.canvasClicked, false);
     canvas.addEventListener('mousemove', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
@@ -96,11 +118,6 @@ export default class CreateGameView extends ModalView<Game> {
     {
       displaySuccess("You won the game" + String(y));
       var gameIndex = new GameIndexView({});
-      // const template = $("#game_win").html();
-      // const html = Mustache.render(template, {});
-      // this.$el.html(html);
-      // document.querySelector('#computer-score').textContent = String(y);
-      // return this;
     } 
   }
 

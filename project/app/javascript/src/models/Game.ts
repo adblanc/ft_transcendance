@@ -2,7 +2,7 @@ import Backbone from "backbone";
 import _ from "underscore";
 import Profile from "src/models/Profile";
 import Profiles from "src/collections/Profiles";
-import { mapServerErrors, syncWithFormData } from "src/utils";
+import { displaySuccess, mapServerErrors, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 
@@ -44,7 +44,7 @@ export default class Game extends BaseModel<IGame> {
   }
 
   urlRoot = () => `${BASE_ROOT}/games`;
-  baseGuildRoot = () => `${this.urlRoot()}/${this.get("id")}`;
+  baseGameRoot = () => `${this.urlRoot()}/${this.get("id")}`;
 
   sync(method: string, model: Game, options: JQueryAjaxSettings): any {
     return syncWithFormData(method, model, options);
@@ -53,6 +53,18 @@ export default class Game extends BaseModel<IGame> {
   createGame(attrs: CreatableGameArgs) {
     return this.asyncSave(attrs, { url: this.urlRoot() });
   }
+  join() {
+    displaySuccess("Here the game is");
+    return this.asyncSave({status: "playing"},{ url: `${this.baseGameRoot()}/join`,});
+  }
+
+  finish()
+  {
+    displaySuccess("The game is finished");
+    return this.asyncSave({status: "finished"},{ url: `${this.baseGameRoot()}/finish`,});
+  }
+
+
   //  sync(method: string, model: Game, options: JQueryAjaxSettings): any {
   //   if (method == "create") {
   //     var formData = new FormData();
