@@ -33,7 +33,6 @@ export default class MyRooms extends Backbone.Collection<Room> {
   }
 
   onRemove(room: Room) {
-    eventBus.trigger("chat:my-room-left", room);
     this.checkSelectedRemove(room);
   }
 

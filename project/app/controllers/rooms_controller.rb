@@ -61,7 +61,12 @@ class RoomsController < ApplicationController
 		elsif (!@room)
 			render json: {"name" => ["is incorrect"]}, status: :unprocessable_entity
 		else
-			@room.remove_user(current_user)
+
+			if (@room.remove_user(current_user) === "left")
+				render json: {"action" => ["left"]}, status: :ok
+			else
+				render json: {"action" => ["deleted"]}, status: :ok
+			end
 		end
 	end
 
