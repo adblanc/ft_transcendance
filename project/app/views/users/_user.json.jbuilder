@@ -1,4 +1,4 @@
-json.extract! user, :id, :login, :name, :contribution, :created_at, :updated_at
+json.extract! user, :id, :login, :email, :two_fact_auth, :name, :contribution, :created_at, :updated_at
 json.avatar_url url_for(user.avatar) if user.avatar.attached?
 json.guild_role user.guild_role?
 json.admin user.admin?

@@ -21,12 +21,12 @@ export default class BaseModel<
     );
   }
 
-  asyncDestroy(options?: Backbone.ModelDestroyOptions): Promise<boolean> {
+  asyncDestroy(options?: Backbone.ModelDestroyOptions): Promise<any> {
     return handleServerErrors(
       new Promise((res, rej) => {
         this.destroy({
           ...options,
-          success: () => res(true),
+          success: (_, rsp) => res(rsp || true),
           error: (_, jqxhr) => {
             rej(mapServerErrors(jqxhr.responseJSON));
           },

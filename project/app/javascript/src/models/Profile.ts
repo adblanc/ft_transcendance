@@ -1,19 +1,20 @@
 import Backbone, { ModelFetchOptions } from "backbone";
-import "backbone-associations";
 import _ from "underscore";
 import Guild from "src/models/Guild";
 import Notifications from "src/collections/Notifications";
 import Notification from "src/models/Notification";
 import consumer from "channels/consumer";
-import { syncWithFormData } from "src/utils";
+import { clearAuthHeaders, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 
 export interface IProfile {
   login: string;
   name: string;
+  email: string;
+  two_fact_auth: boolean;
   id?: number;
-  avatar?: any;
+  avatar_url?: string;
   created_at?: string;
   updated_at?: string;
   guild_role?: "Owner" | "Officer" | "Member";
@@ -22,7 +23,10 @@ export interface IProfile {
   notifications?: Notifications;
 }
 
-type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar">>;
+type ModifiableProfileArgs = {
+  name?: string;
+  avatar: any;
+};
 
 export default class Profile extends BaseModel<IProfile> {
   channel: ActionCable.Channel;
@@ -58,6 +62,8 @@ export default class Profile extends BaseModel<IProfile> {
     return {
       login: "",
       name: "",
+      email: "",
+      two_fact_auth: false,
       number: 0,
       guild_role: "none",
     };
@@ -106,3 +112,31 @@ export default class Profile extends BaseModel<IProfile> {
     });
   }
 }
+
+let memoizedUser: Profile = undefined;
+
+const fetchCurrentUser = () => {
+  memoizedUser.fetch({
+    success: () => {
+      memoizedUser.channel = memoizedUser.createNotificationsConsumer();
+    },
+  });
+};
+
+export const currentUser = (fetch = false): Profile => {
+  if (!memoizedUser) {
+    memoizedUser = new Profile();
+    fetchCurrentUser();
+  }
+  if (fetch) {
+    fetchCurrentUser();
+  }
+
+  return memoizedUser;
+};
+
+export const logoutUser = () => {
+  clearAuthHeaders();
+  memoizedUser?.channel?.unsubscribe();
+  memoizedUser = undefined;
+};

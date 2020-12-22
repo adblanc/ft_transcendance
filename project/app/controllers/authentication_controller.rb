@@ -23,12 +23,14 @@ class AuthenticationController < ApplicationController
 	  login = user_info[:login]
 	  name = user_info[:name]
 	  avatar_url = user_info[:avatar_url]
+	  email = user_info[:email]
 
 	  # Generate token...
 	  token = TokiToki.encode(login)
 	  # ... create user if it doesn't exist...
 	  user = User.where(login: login).first_or_create!(
 		name: name,
+		email: email
 	  )
 
 	  user.avatar.attach(

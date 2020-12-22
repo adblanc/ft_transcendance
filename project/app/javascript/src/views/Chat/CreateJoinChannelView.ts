@@ -1,6 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import Rooms from "src/collections/Rooms";
+import Rooms from "src/collections/MyRooms";
 import { BASE_ROOT } from "src/constants";
 import Room from "src/models/Room";
 import { displaySuccess } from "src/utils";
@@ -12,6 +12,7 @@ type Options = Backbone.ViewOptions & {
 export default class CreateJoinChannelView extends Backbone.View {
   isJoin: boolean;
   rooms: Rooms;
+  isPrivate: boolean;
 
   constructor(options: Options) {
     super(options);
@@ -21,14 +22,24 @@ export default class CreateJoinChannelView extends Backbone.View {
     }
 
     this.isJoin = false;
+    this.isPrivate = false;
     this.rooms = options.rooms;
   }
 
   events() {
     return {
       "click #switch-create-join": this.switchCreateJoin,
-      "click #create-channel": "onSubmit",
+      "click #create-channel": this.onSubmit,
+      "click #switch-private": this.switchPrivate,
     };
+  }
+
+  private nameInput = () => this.$("#channel-name");
+  private passwordInput = () => this.$("#channel-password");
+
+  switchCreateJoin() {
+    this.isJoin = !this.isJoin;
+    this.render();
   }
 
   async onSubmit() {
@@ -48,12 +59,13 @@ export default class CreateJoinChannelView extends Backbone.View {
     }
   }
 
-  private nameInput = () => this.$("#channel-name");
-  private passwordInput = () => this.$("#channel-password");
-
   async createChannel(name: string, password: string) {
     const room = new Room();
-    const success = await room.asyncSave({ name: name, password: password });
+    const success = await room.asyncSave({
+      name: name,
+      password: password,
+      is_private: this.isPrivate,
+    });
 
     return { room, success };
   }
@@ -62,11 +74,10 @@ export default class CreateJoinChannelView extends Backbone.View {
     const room = new Room({
       name,
       password,
+      is_private: this.isPrivate,
     });
-    const success = await room.asyncFetch({
-      url: `${BASE_ROOT}/join-room`,
-      data: room.toJSON(),
-    });
+
+    const success = await room.join();
 
     return { room, success };
   }
@@ -76,8 +87,8 @@ export default class CreateJoinChannelView extends Backbone.View {
     this.passwordInput().val("");
   }
 
-  switchCreateJoin() {
-    this.isJoin = !this.isJoin;
+  switchPrivate() {
+    this.isPrivate = !this.isPrivate;
     this.render();
   }
 
@@ -85,6 +96,7 @@ export default class CreateJoinChannelView extends Backbone.View {
     const template = $("#create-join-channel-template").html();
     const html = Mustache.render(template, {
       isJoin: this.isJoin,
+      isPrivate: this.isPrivate,
     });
     this.$el.html(html);
 

@@ -1,8 +1,10 @@
 import Backbone from "backbone";
 import { BASE_ROOT } from "src/constants";
+import { eventBus } from "src/events/EventBus";
+import PublicRoom from "src/models/PublicRoom";
 import Room from "../models/Room";
 
-export default class Rooms extends Backbone.Collection<Room> {
+export default class MyRooms extends Backbone.Collection<Room> {
   selectedRoom?: Room;
   preinitialize() {
     this.model = Room;
@@ -13,21 +15,25 @@ export default class Rooms extends Backbone.Collection<Room> {
 
     this.selectedRoom = undefined;
     this.listenTo(this, "add", this.checkSelectedAdd);
-    this.listenTo(this, "remove", this.checkSelectedRemove);
+    this.listenTo(this, "remove", this.onRemove);
+    this.listenTo(eventBus, "chat:public-channel-joined", this.addPublicRoom);
   }
 
-  initSelectedRoom() {
-    this.selectFirst();
-  }
-
-  selectFirst() {
-    this.setSelected(this.first());
+  addPublicRoom(publicRoom: PublicRoom) {
+    const room = new Room(publicRoom.toJSON());
+    this.selectedRoom?.toggle();
+    this.selectedRoom = undefined;
+    this.add(room);
   }
 
   checkSelectedAdd(room: Room) {
     if (!this.selectedRoom) {
       this.setSelected(room);
     }
+  }
+
+  onRemove(room: Room) {
+    this.checkSelectedRemove(room);
   }
 
   checkSelectedRemove(room: Room) {
@@ -45,11 +51,13 @@ export default class Rooms extends Backbone.Collection<Room> {
       this.selectedRoom &&
       this.find((r) => r.get("id") === this.selectedRoom.get("id"))
     ) {
+      console.log("toggle previosu selectedRoom");
       this.selectedRoom.toggle();
     }
     this.selectedRoom = room;
     this.selectedRoom.toggle();
+    console.log("set and toggle selectedRoom", room);
   }
 
-  url = () => `${BASE_ROOT}/rooms`;
+  url = () => `${BASE_ROOT}/my-rooms`;
 }

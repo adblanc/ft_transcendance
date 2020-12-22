@@ -21,7 +21,6 @@ export default class GameView extends BaseView {
     const template = $("#play").html();
     const html = Mustache.render(template, this.game.toJSON());
     this.$el.html(html);
-    //this.renderNested(this, "#play")
     return this;
   }
 

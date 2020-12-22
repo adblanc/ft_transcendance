@@ -3,29 +3,23 @@ import ChatView from "src/views/Chat/ChatView";
 import NavbarView from "src/views/NavbarView";
 import NotificationsView from "src/views/NotificationsView";
 import BaseView from "./BaseView";
-import Profile from "src/models/Profile";
-import { AUTH_TOKEN } from "src/constants";
 
 class PagesHandler {
   private currentPage?: BaseView;
   private navbarView?: BaseView;
   private chatView?: ChatView;
   notificationsView?: BaseView;
-  profile: Profile;
 
   constructor() {
     this.currentPage = undefined;
     this.navbarView = undefined;
     this.chatView = undefined;
     this.notificationsView = undefined;
-    this.profile = undefined;
   }
 
   addNavbar() {
     this.removeNavbar();
-    this.navbarView = new NavbarView({
-      profile: this.profile,
-    });
+    this.navbarView = new NavbarView();
 
     $("body").prepend(this.navbarView.render().el);
   }
@@ -45,7 +39,6 @@ class PagesHandler {
     if (!this.notificationsView) {
       this.notificationsView = new NotificationsView({
         className: "invisible",
-        profile: this.profile,
       });
 
       this.notificationsView.render();
@@ -62,16 +55,6 @@ class PagesHandler {
     withChat = true,
     withNotif = true
   ) {
-    const token = localStorage.getItem(AUTH_TOKEN);
-    if (token) {
-      this.profile = new Profile();
-      this.profile.fetch({
-        success: () => {
-          this.profile.channel = this.profile.createNotificationsConsumer();
-        },
-      });
-    }
-
     if (this.currentPage) {
       this.currentPage.close();
     }
@@ -108,8 +91,6 @@ class PagesHandler {
         className: "invisible",
       });
 
-      console.log("we create chat view and render it");
-
       $("body").append(this.chatView.render().el);
     } else {
       this.chatView.hideChat();
@@ -117,7 +98,6 @@ class PagesHandler {
   }
 
   closeChat() {
-    console.log("we close chat");
     this.chatView.close();
     this.chatView = undefined;
   }

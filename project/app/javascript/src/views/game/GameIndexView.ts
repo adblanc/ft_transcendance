@@ -13,99 +13,73 @@ import Player from "src/models/Player";
 import { displaySuccess } from "src/utils/toast";
 
 var canvas = document.createElement("canvas");
+var canvaView= new CanvaView({
+  model: rectangle,});
 var rectangle = new Rectangle(0, 0, 480, 480);
-var canvaView = new CanvaView({
-  model: rectangle,
-  });
-  var mouse = new MouseEvent('mousedown');
-//var player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
 
 export default class GameIndexView extends BaseView {
   player_one: Player;
   static i: number = 1;
   jeu: Game;
+  //var canvaView= new CanvaView();
   constructor(options?) {
     super(options);
     this.jeu = new Game();
     this.player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
-    this.listenTo(this.player_one, "add", this.render);
   }
-
-
   
   render() {
     const template = $("#index_game").html();
-    const html = Mustache.render(template, {'score': +this.player_one.score});
+    const html = Mustache.render(template, {});
     this.$el.html(html);
-   // this.init(500, 250, '#AAA');
-   
-    var canvas = canvaView.init(500, 250, '#EEE', this.player_one);
-    var evtarget = new EventTarget();
-    mouse.initMouseEvent('mousemove', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, evtarget);
-     canvas.addEventListener('click', this.canvasClicked, false);
-     canvas.addEventListener('mousemove', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
-     //canvas.addEventListener('mouseover', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
-    
-    //evtarget.addEventListener('mousedown', this.canvasClicked, false)
-    
-
-    //$('#index_game').append(canvaView.render().el);
     return this;
   }
-  canvasClicked(e) {
-    const scale: number = e.offsetY / 250;
-    s : String;
-    var s = "Mouse down" + String(scale);
-    
-    // canvas.getBoundingClientRect().height;
-   canvaView.player.paddle.y = canvas.height * scale;
-    canvaView.update(100);
-    }
+
+  // canvasClicked(e) {
+  //   const scale: number = e.offsetY / 250;
+  //   s : String;
+  //   var y: Number = 0;
+  //   var s = "Mouse down" + String(scale);
+  //  canvaView.player_one.paddle.y = canvas.height * scale;
+  // if ((y = canvaView.callback(10)) != 0 )
+  //   {
+  //     this.stop(y);
+  //   } 
+  // }
+
+  stop(i: Number)
+  {
+    const template = $("#game_win").html();
+    const html = Mustache.render(template, {});
+    this.$el.html(html);
+    document.querySelector('#computer-score').textContent = String(i);
+    return this;
+  }
   
   events() {
      return {
-  //     "click #game-enter": "loginGame",
-      //"click #create_game": "move",
-     // 'mouseout': "move",
-      //'mouseleave': "move",
-     // "click #canvas": "move",
+       "click #create_game": "createGame",
      };
    }
 
-  //  init(width, height, bg) {
-  //   canvas.width = width;
-  //   canvas.height = height;
-  //   canvas.style.backgroundColor = bg;
-  //   document.body.appendChild(canvas);
-  // }
-//   async loginGame(e: JQuery.Event)
-//   {
-//     //if (e.key === "click") {
-//     const input = this.$("#points").val();
-//       e.preventDefault();
-//       if (!input) {
-//         return;
-//       }
-//       else {
-//         return this.GameView();
-//       }
-//   //}
-// }
+   createGame() {
+    //this.playing();
+     const jeu = new Game();
+     var gameView = new CreateGameView(GameIndexView.i, {model: jeu, collection: this.collection,});
+     gameView.render();
+   // var canvas = canvaView.init(500, 250, '#EEE', this.player_one, 3);
+   // canvas.addEventListener('click', this.canvasClicked, false);
+   // canvas.addEventListener('mousemove', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
+   }
 
-  onCreateGame() {
-    const game = new Game();
-    const createGameView = new CreateGameView(GameIndexView.i, {
-	  model: game,
-    collection: this.collection,
-    });
-    GameIndexView.i++;
-    createGameView.render();
+   playing()
+  {
+    const template = $("#playing").html();
+    const html = Mustache.render(template, {});
+    this.$el.html(html);
+    return this;
   }
 
-  move() {
-   canvaView.update(10);
-   canvaView.callback(new Date().getSeconds());
-  }
 //   createGame() {
 //   const template = $("#game").html();
 //   const html = Mustache.render(template, {});
@@ -169,11 +143,4 @@ export default class GameIndexView extends BaseView {
 	//   router.navigate(`game/${id}`, { trigger: true });
   // }
   //}
-  oups()
-  {
-    const oups = $("#oups").html();
-    const html = Mustache.render(oups, {});
-    this.$el.html(html);
-    return this;
-  }
 }

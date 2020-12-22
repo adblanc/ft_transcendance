@@ -4,7 +4,7 @@ import BaseView from "src/lib/BaseView";
 import Room from "src/models/Room";
 import RoomMessagesView from "./RoomMessagesView";
 
-export default class RoomView extends BaseView<Room> {
+export default class MyRoomView extends BaseView<Room> {
   roomMessagesView: RoomMessagesView;
 
   constructor(options?: Backbone.ViewOptions<Room>) {
@@ -33,6 +33,7 @@ export default class RoomView extends BaseView<Room> {
 
   renderMessages() {
     if (this.roomMessagesView) {
+      console.log("close roomMessagesView");
       this.roomMessagesView.close();
     }
     this.roomMessagesView = new RoomMessagesView({ model: this.model });

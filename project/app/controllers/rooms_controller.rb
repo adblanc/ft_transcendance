@@ -4,6 +4,10 @@ class RoomsController < ApplicationController
 	before_action :authenticate_user!
 
 	def index
+		@rooms = @current_user.rooms.empty? ? Room.where(is_private: false) : Room.where('id NOT IN (?) AND is_private = false', @current_user.rooms.ids);
+	end
+
+	def my_rooms
 		@rooms = current_user.rooms
 	end
 
@@ -57,7 +61,12 @@ class RoomsController < ApplicationController
 		elsif (!@room)
 			render json: {"name" => ["is incorrect"]}, status: :unprocessable_entity
 		else
-			@room.remove_user(current_user)
+
+			if (@room.remove_user(current_user) === "left")
+				render json: {"action" => ["left"]}, status: :ok
+			else
+				render json: {"action" => ["deleted"]}, status: :ok
+			end
 		end
 	end
 
@@ -68,6 +77,6 @@ class RoomsController < ApplicationController
 	end
 
 	def room_params
-		params.permit(:name, :password)
+		params.permit(:name, :password, :is_private)
 	end
 end

@@ -1,6 +1,7 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import Rooms from "src/collections/Rooms";
+import Rooms from "src/collections/MyRooms";
+import { eventBus } from "src/events/EventBus";
 import BaseView from "src/lib/BaseView";
 import { displaySuccess } from "src/utils";
 import _ from "underscore";
@@ -38,7 +39,12 @@ export default class ChatHeaderView extends BaseView {
     const success = await selectedRoom.quit();
 
     if (success) {
-      displaySuccess(`Room ${selectedRoom.get("name")} successfully left`);
+      const [action] = success?.action;
+
+      if (action === "left") {
+        eventBus.trigger("chat:my-room-left", selectedRoom);
+      }
+      displaySuccess(`Room ${selectedRoom.get("name")} successfully ${action}`);
     }
   }
 

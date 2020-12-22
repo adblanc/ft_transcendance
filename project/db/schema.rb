@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_15_173708) do
+ActiveRecord::Schema.define(version: 2020_12_21_183201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,6 +109,7 @@ ActiveRecord::Schema.define(version: 2020_12_15_173708) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "password_digest"
+    t.boolean "is_private", default: false
   end
 
   create_table "rooms_users", id: false, force: :cascade do |t|
@@ -123,6 +124,8 @@ ActiveRecord::Schema.define(version: 2020_12_15_173708) do
     t.integer "contribution", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "email", default: "ft.transcendance@gmail.com"
+    t.boolean "two_fact_auth", default: false, null: false
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["name"], name: "index_users_on_name", unique: true
   end
