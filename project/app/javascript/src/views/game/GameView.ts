@@ -11,6 +11,7 @@ import { displaySuccess } from "src/utils/toast";
 import CanvaView from "./CanvaView";
 import Games from "src/collections/Games";
 import Profiles from "src/collections/Profiles";
+import Mouvement from "src/models/Mouvement";
 
 type Options = Backbone.ViewOptions & { game: Game };
 var canvaView = new CanvaView({
@@ -77,11 +78,16 @@ export default class GameView extends BaseView {
       }
 
       canvasClicked(e) {
-        
         const scale: number = e.offsetY / 250;
         s : String;
         var y: Number = 0;
         var s = "Mouse down" + String(scale);
+        var g_id = this.game.get("id") as number;
+        const mouvement = new Mouvement({
+          scale,
+          game_id: g_id,
+        });
+        const success = mouvement.save();
        canvaView.player_two.paddle.y = canvas.height * scale;
        y = canvaView.callback(10);
       if ( y == 2)

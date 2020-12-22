@@ -162,7 +162,6 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    redis (4.2.5)
     regexp_parser (1.8.2)
     rolify (5.3.0)
     ruby2_keywords (0.0.2)
@@ -239,7 +238,6 @@ DEPENDENCIES
   puma (~> 4.1)
   rack-cors
   rails (~> 6.0.3, >= 6.0.3.4)
-  redis (~> 4.0)
   rolify
   sass-rails (>= 6)
   selenium-webdriver

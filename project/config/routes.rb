@@ -10,6 +10,8 @@ Rails.application.routes.draw do
  put '/games/:id/join', to: 'games#join', format:false
  put '/games/:id/finish', to: 'games#finish', format: false
 
+ resources :game_mouv
+
   resources :guilds do
 	member do
 		put :quit
@@ -28,6 +30,7 @@ Rails.application.routes.draw do
 		put :mark_as_read
 	end
   end
+
   resources :room_messages
   resources :rooms
   get '/join-room', to: 'rooms#join'

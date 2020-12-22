@@ -5,6 +5,10 @@ import Profiles from "src/collections/Profiles";
 import { displaySuccess, mapServerErrors, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
+import consumer from "channels/consumer";
+//import Mouvements from "src/collections/Mouvements";
+import IMouvement from "src/models/Mouvement";
+import Mouvements from "src/collections/Mouvements";
 
 interface IGame {
   id?: string;
@@ -19,6 +23,8 @@ type CreatableGameArgs = Partial<
 >;
 
 export default class Game extends BaseModel<IGame> {
+  channel: ActionCable.Channel;
+  mouvements: Mouvements;
   preinitialize() {
     this.relations = [
       {
@@ -28,6 +34,11 @@ export default class Game extends BaseModel<IGame> {
         relatedModel: Profile,
       },
     ];
+  }
+
+  initialize() {
+    this.mouvements = new Mouvements();
+    this.channel = this.createConsumer();
   }
 
   constructor(options?: any) {
@@ -62,6 +73,37 @@ export default class Game extends BaseModel<IGame> {
   {
     displaySuccess("The game is finished");
     return this.asyncSave({status: "finished"},{ url: `${this.baseGameRoot()}/finish`,});
+  }
+
+  createConsumer() {
+    const game_id = this.get("id");
+
+    if (game_id === undefined) {
+      return undefined;
+    }
+
+    return consumer.subscriptions.create(
+      { channel: "GamingChannel", game_id },
+      {
+        connected: () => {
+          console.log("connected to the GAMMME", game_id);
+        },
+        received: (mouvement: IMouvement) => {
+          console.log("received JSON" + JSON.stringify(mouvement));
+          // if (!this.currentUserId) {
+          //   this.currentUserId = parseInt(
+          //     $("#current-user-profile").data("id")
+          //   );
+          }
+          // this.mouvements.add(
+          //   new Mouvement({
+          //     ...mouvement,
+          //    // sent: this.currentUserId === mouvement.user_id,
+          //   })
+          // );
+         },
+       //}
+     );
   }
 
 
