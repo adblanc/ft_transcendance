@@ -1,21 +1,18 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import Profile from "../models/Profile";
+import Profile, { currentUser, logoutUser } from "../models/Profile";
 import ProfileView from "./ProfileView";
-import { clearAuthHeaders } from "../utils/auth";
 import BaseView from "../lib/BaseView";
 import { eventBus } from "src/events/EventBus";
-
-type Options = Backbone.ViewOptions & { profile: Profile };
 
 export default class NavbarView extends BaseView {
   profile: Profile;
   profileView: Backbone.View;
 
-  constructor(options?: Options) {
+  constructor(options?: Backbone.ViewOptions) {
     super(options);
 
-    this.profile = options.profile;
+    this.profile = currentUser();
 
     this.profileView = new ProfileView({
       model: this.profile,
@@ -49,7 +46,7 @@ export default class NavbarView extends BaseView {
 
   onLogout() {
     eventBus.trigger("global:logout");
-    clearAuthHeaders();
+    logoutUser();
     Backbone.history.navigate("/auth", { trigger: true });
   }
 

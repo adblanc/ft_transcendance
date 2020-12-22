@@ -1,18 +1,16 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../lib/BaseView";
-import Profile from "src/models/Profile";
+import Profile, { currentUser } from "src/models/Profile";
 import NotificationView from "./NotificationView";
-
-type Options = Backbone.ViewOptions & { profile: Profile };
 
 export default class NotificationsView extends BaseView {
   profile: Profile;
 
-  constructor(options?: Options) {
+  constructor(options?: Backbone.ViewOptions) {
     super(options);
 
-    this.profile = options.profile;
+    this.profile = currentUser();
 
     this.listenTo(this.profile.notifications, "add", this.render);
 

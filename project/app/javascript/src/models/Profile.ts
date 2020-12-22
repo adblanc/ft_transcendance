@@ -1,11 +1,10 @@
 import Backbone, { ModelFetchOptions } from "backbone";
-import "backbone-associations";
 import _ from "underscore";
 import Guild from "src/models/Guild";
 import Notifications from "src/collections/Notifications";
 import Notification from "src/models/Notification";
 import consumer from "channels/consumer";
-import { syncWithFormData } from "src/utils";
+import { clearAuthHeaders, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 
@@ -108,9 +107,36 @@ export default class Profile extends BaseModel<IProfile> {
   }
 
   modifyProfil(attrs: ModifiableProfileArgs) {
-    // 	console.log(attrs);
     return this.asyncSave(attrs, {
       url: this.urlRoot(),
     });
   }
 }
+
+let memoizedUser: Profile = undefined;
+
+const fetchCurrentUser = () => {
+  memoizedUser.fetch({
+    success: () => {
+      memoizedUser.channel = memoizedUser.createNotificationsConsumer();
+    },
+  });
+};
+
+export const currentUser = (fetch = false): Profile => {
+  if (!memoizedUser) {
+    memoizedUser = new Profile();
+    fetchCurrentUser();
+  }
+  if (fetch) {
+    fetchCurrentUser();
+  }
+
+  return memoizedUser;
+};
+
+export const logoutUser = () => {
+  clearAuthHeaders();
+  memoizedUser?.channel?.unsubscribe();
+  memoizedUser = undefined;
+};
