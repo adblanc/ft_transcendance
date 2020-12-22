@@ -7,6 +7,7 @@ export interface IMessage {
   sent?: boolean;
   id?: number;
   user_id?: number;
+  user_login?: string;
   created_at?: string;
   updated_at?: string;
 }

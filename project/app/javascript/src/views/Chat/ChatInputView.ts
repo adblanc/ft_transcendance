@@ -1,6 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import Rooms from "src/collections/Rooms";
+import Rooms from "src/collections/MyRooms";
 import BaseView from "src/lib/BaseView";
 import Message from "src/models/Message";
 import _ from "underscore";

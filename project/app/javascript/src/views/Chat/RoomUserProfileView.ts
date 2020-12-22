@@ -1,20 +1,22 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
+import Message from "src/models/Message";
 import RoomUser from "src/models/RoomUser";
 import ModalView from "../ModalView";
 
-type Options = Backbone.ViewOptions<RoomUser> & {
+type Options = Backbone.ViewOptions<Message> & {
   currentUser: RoomUser;
 };
 
-export default class RoomUserProfileView extends ModalView<RoomUser> {
+export default class RoomUserProfileView extends ModalView<Message> {
   currentUser: RoomUser;
 
   constructor(options?: Options) {
     super(options);
 
-    if (!this.model)
-      throw Error("Please provide a room user model to RoomUserProfileView");
+    if (!this.model) {
+      throw Error("Please provide a Message model to this view.");
+    }
 
     if (!options.currentUser)
       throw Error("Please provide a current user to RoomUserProfileView");

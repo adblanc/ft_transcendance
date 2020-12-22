@@ -8,13 +8,16 @@ export const displayErrors = (error: string[]) => {
   error.forEach((err) => displayError(err));
 };
 
-export const handleServerErrors = async (promise: Promise<any>) => {
+export const handleServerErrors = async (
+  promise: Promise<any>
+): Promise<any | null> => {
   try {
-    await promise;
+    const res = await promise;
 
-    return true;
+    return res;
   } catch (errors) {
     displayErrors(errors);
-    return false;
+
+    return null;
   }
 };

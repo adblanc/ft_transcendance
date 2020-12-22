@@ -15,7 +15,7 @@ export interface IProfile {
   email: string;
   two_fact_auth: boolean;
   id?: number;
-  avatar?: any;
+  avatar_url?: string;
   created_at?: string;
   updated_at?: string;
   guild_role?: "Owner" | "Officer" | "Member";
@@ -24,7 +24,10 @@ export interface IProfile {
   notifications?: Notifications;
 }
 
-type ModifiableProfileArgs = Partial<Pick<IProfile, "name" | "avatar" | "email" | "two_fact_auth">>;
+type ModifiableProfileArgs = {
+  name?: string;
+  avatar: any;
+};
 
 export default class Profile extends BaseModel<IProfile> {
   channel: ActionCable.Channel;
@@ -60,8 +63,8 @@ export default class Profile extends BaseModel<IProfile> {
     return {
       login: "",
       name: "",
-	  email: "",
-	  two_fact_auth: false,
+      email: "",
+      two_fact_auth: false,
       number: 0,
       guild_role: "none",
     };
@@ -105,7 +108,7 @@ export default class Profile extends BaseModel<IProfile> {
   }
 
   modifyProfil(attrs: ModifiableProfileArgs) {
-// 	console.log(attrs);
+    // 	console.log(attrs);
     return this.asyncSave(attrs, {
       url: this.urlRoot(),
     });

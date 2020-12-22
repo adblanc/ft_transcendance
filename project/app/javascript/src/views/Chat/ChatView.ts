@@ -1,15 +1,17 @@
 import Mustache from "mustache";
-import Rooms from "src/collections/Rooms";
+import MyRooms from "src/collections/MyRooms";
 import { eventBus } from "src/events/EventBus";
 import BaseView from "src/lib/BaseView";
-import Room from "src/models/Room";
 import ChatHeaderView from "./Header/ChatHeaderView";
 import ChatInputView from "./ChatInputView";
 import CreateJoinChannelView from "./CreateJoinChannelView";
-import RoomView from "./RoomView";
+import PublicRoomsView from "./PublicRoomsView";
+import MyRoomsView from "./MyRoomsView";
 
 export default class ChatView extends BaseView {
-  rooms: Rooms;
+  myRooms: MyRooms;
+  publicRoomsView: PublicRoomsView;
+  myRoomsView: MyRoomsView;
   createJoinChannelView: CreateJoinChannelView;
   chatHeaderView?: ChatHeaderView;
   chatInputView?: ChatInputView;
@@ -17,20 +19,23 @@ export default class ChatView extends BaseView {
   constructor(options?: Backbone.ViewOptions) {
     super(options);
 
-    this.rooms = new Rooms();
-
-    this.rooms.fetch();
+    this.myRooms = new MyRooms();
+    this.myRoomsView = new MyRoomsView({
+      myRooms: this.myRooms,
+    });
 
     this.createJoinChannelView = new CreateJoinChannelView({
-      rooms: this.rooms,
+      rooms: this.myRooms,
     });
+
+    this.publicRoomsView = new PublicRoomsView();
 
     this.chatHeaderView = undefined;
     this.chatInputView = undefined;
 
     this.listenTo(eventBus, "chat:open", this.toggleChat);
-    this.listenTo(this.rooms, "add", this.renderRoom);
-    this.listenTo(this.rooms, "remove", this.removeRoom);
+    this.listenTo(this.myRooms, "add", this.refreshHeaderInput);
+    this.listenTo(this.myRooms, "remove", this.removeHeaderInput);
   }
 
   hideChat() {
@@ -55,30 +60,23 @@ export default class ChatView extends BaseView {
     this.$el.toggleClass("invisible");
   }
 
-  renderRoom(room: Room) {
-    console.log("we render", room.get("id"));
+  refreshHeaderInput() {
     if (!this.chatHeaderView) {
       this.chatHeaderView = new ChatHeaderView({
-        rooms: this.rooms,
+        rooms: this.myRooms,
       });
       this.renderChatHeader();
     }
     if (!this.chatInputView) {
       this.chatInputView = new ChatInputView({
-        rooms: this.rooms,
+        rooms: this.myRooms,
       });
       this.renderChatInput();
     }
-
-    this.$("#room-list").append(new RoomView({ model: room }).render().el);
   }
 
-  removeRoom(room: Room) {
-    this.$(`#room-${room.get("id")}`)
-      .parent()
-      .remove();
-
-    if (!this.roomsLength()) {
+  removeHeaderInput() {
+    if (!this.myRoomsLength()) {
       if (this.chatHeaderView) {
         this.chatHeaderView.close();
         this.chatHeaderView = undefined;
@@ -92,7 +90,7 @@ export default class ChatView extends BaseView {
     }
   }
 
-  roomsLength = () => this.$("#room-list").children().length;
+  myRoomsLength = () => this.$("#my-rooms-list").children().length;
 
   render() {
     const template = $("#chat-container-template").html();
@@ -100,6 +98,9 @@ export default class ChatView extends BaseView {
     this.$el.html(html);
 
     this.preprendNested(this.createJoinChannelView, "#left-container-chat");
+
+    this.appendNested(this.myRoomsView, "#left-container-chat");
+    this.appendNested(this.publicRoomsView, "#left-container-chat");
 
     return this;
   }

@@ -7,14 +7,14 @@
 		src="{{ avatar_url }}"
 		/>
 		<div class="ml-4">
-		<span class="text-xl text-gray-900 font-semibold">{{login}}</span>
+		<span class="text-xl text-gray-900 font-semibold">{{user_login}}</span>
 		<div class="text-gray-600 text-xs font-semibold">
 			{{roomRole}}
 		</div>
 		</div>
 		</div>
 	<div class="space-y-4 flex flex-col justify-center items-center">
-		<a class="link-primary block" href="/user/{{id}}">Go to profile</a>
+		<a class="link-primary block" href="/user/{{user_id}}">Go to profile</a>
 		{{^isCurrentUser}}
 		<a id="invite-to-play-user" class="link-primary block">Invite to play</a>
 		<a id="block-user" class="link-primary block">Block</a>
