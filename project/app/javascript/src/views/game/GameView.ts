@@ -11,7 +11,9 @@ import { displaySuccess } from "src/utils/toast";
 import CanvaView from "./CanvaView";
 import Games from "src/collections/Games";
 import Profiles from "src/collections/Profiles";
+import ActionCable from 'actioncable';
 import Mouvement from "src/models/Mouvement";
+import Mouvements from "src/collections/Mouvements";
 
 type Options = Backbone.ViewOptions & { game: Game };
 var canvaView = new CanvaView({
@@ -29,6 +31,7 @@ export default class GameView extends BaseView {
   joueurs: Profiles;
   joueur_un: Profile;
     joueur_deux: Profile;
+   // mouvements: Mouvements;
     constructor(options?: Options) {
         super(options);
         this.game = options.game;
@@ -42,12 +45,15 @@ export default class GameView extends BaseView {
          this.joueur_un = new Profile();
          this.joueur_un.fetch();
          this.joueurs = new Profiles();
+      //   this.mouvements = new Mouvements();
+        // this.mouvements.fetch();
         // this.joueurs.fetch();
         // this.joueur_un = this.joueurs.get(1);
         // displaySuccess("Joueur 1: " + JSON.stringify(this.joueur_un));
          this.player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
        this.player_two = new Player(new Rectangle(0, canvas.height / 2, 15, 100));
        this.listenTo(this.game, "update", this.render_finished);
+       this.listenTo(this.game.mouvements, "add", this.canva_render);
       }
 
       events() {
@@ -69,6 +75,8 @@ export default class GameView extends BaseView {
         {
             displaySuccess("You can play");
         var canvas = canvaView.init(500, 250, '#EEE', this.player_one, this.game.get("points"), this.game.get("level"), this.player_two);
+        //console.log("received JSON Play" + String(this.game.model.get("scale")));
+       // this.listenTo(this.game.mouvements, "add", this.canva_render);
         canvas.addEventListener('click', this.canvasClicked, false);
         canvas.addEventListener('mousemove', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
         }
@@ -77,20 +85,18 @@ export default class GameView extends BaseView {
         }
       }
 
-      canvasClicked(e) {
-        const scale: number = e.offsetY / 250;
-        s : String;
+      canva_render()
+      {
+        //console.log("received JSON render" + JSON.stringify(this.game.model));
+        if (this.game.model.sent)
+        {canvaView.player_two.paddle.y = canvas.height * this.game.model.get("scale");}
+        else
+        {
+          canvaView.player_one.paddle.y = canvas.height * this.game.model.get("scale");
+        }
         var y: Number = 0;
-        var s = "Mouse down" + String(scale);
-        var g_id = this.game.get("id") as number;
-        const mouvement = new Mouvement({
-          scale,
-          game_id: g_id,
-        });
-        const success = mouvement.save();
-       canvaView.player_two.paddle.y = canvas.height * scale;
-       y = canvaView.callback(10);
-      if ( y == 2)
+        y = canvaView.callback(10);
+        if ( y == 2)
         {
           displaySuccess("You won the game" + String(y));
           this.render_won();
@@ -100,6 +106,22 @@ export default class GameView extends BaseView {
         displaySuccess("You lost the game" + String(y));
         this.render_lost();
       } 
+      }
+
+      canvasClicked(e) {
+        const scale: number = e.offsetY / 250;
+        s : String;
+        var s = "Mouse down" + String(scale);
+        var g_id = this.game.get("id") as number;
+        var j_id = Number(this.joueur_un.get("id"));
+        var s_g_id = String("game_" + this.game.get("id"));
+        //ActionCable.server.broadcast(s_g_id, scale);
+        const mouvement = new Mouvement({
+          scale: scale,
+          game_id: g_id,
+          user_id: j_id,
+        });
+        const success = mouvement.save();
       }
 
     render()

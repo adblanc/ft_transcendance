@@ -6,7 +6,7 @@ import { displaySuccess, mapServerErrors, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import consumer from "channels/consumer";
-//import Mouvements from "src/collections/Mouvements";
+import Mouvement from "src/models/Mouvement";
 import IMouvement from "src/models/Mouvement";
 import Mouvements from "src/collections/Mouvements";
 
@@ -25,6 +25,8 @@ type CreatableGameArgs = Partial<
 export default class Game extends BaseModel<IGame> {
   channel: ActionCable.Channel;
   mouvements: Mouvements;
+  model: Mouvement;
+  currentUserId?: Number; 
   preinitialize() {
     this.relations = [
       {
@@ -38,7 +40,9 @@ export default class Game extends BaseModel<IGame> {
 
   initialize() {
     this.mouvements = new Mouvements();
+    this.model = new Mouvement();
     this.channel = this.createConsumer();
+    this.currentUserId = undefined;
   }
 
   constructor(options?: any) {
@@ -88,23 +92,30 @@ export default class Game extends BaseModel<IGame> {
         connected: () => {
           console.log("connected to the GAMMME", game_id);
         },
-        received: (mouvement: IMouvement) => {
-          console.log("received JSON" + JSON.stringify(mouvement));
-          // if (!this.currentUserId) {
-          //   this.currentUserId = parseInt(
-          //     $("#current-user-profile").data("id")
-          //   );
+        received: (mouv: IMouvement) => 
+        {
+          if (!this.currentUserId) {
+            this.currentUserId = parseInt(
+              $("#current-user-profile").data("id")
+            );
           }
-          // this.mouvements.add(
-          //   new Mouvement({
-          //     ...mouvement,
-          //    // sent: this.currentUserId === mouvement.user_id,
-          //   })
-          // );
-         },
-       //}
+           this.model.set(mouv);
+           if (this.currentUserId === this.model.get("user_id"))
+          {this.model.set({sent: true})}
+          else
+          {this.model.set({sent: false})}
+           
+
+        //       this.mouvements.add(
+        //         new Mouvement({
+        //      scale: this.model.get("scale"), user_id: this.model.get("user_id"),
+        //      game_id: this.model.get("game_id"),
+        //      sent: this.model.get("sent")}));
+        //  },
+       }
      );
   }
+}
 
 
   //  sync(method: string, model: Game, options: JQueryAjaxSettings): any {
@@ -148,7 +159,7 @@ export default class Game extends BaseModel<IGame> {
   //       );
   //    // success();
   // }
-}
+//}
 
 // type rec = Record<string, string>;
 

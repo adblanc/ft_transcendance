@@ -10,8 +10,8 @@ Rails.application.routes.draw do
  put '/games/:id/join', to: 'games#join', format:false
  put '/games/:id/finish', to: 'games#finish', format: false
 
- resources :game_mouv
-
+resources :game_mouvs
+post '/game_mouvs', to: 'game_mouvs#create'
   resources :guilds do
 	member do
 		put :quit

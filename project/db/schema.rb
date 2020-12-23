@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 2020_12_22_155752) do
   create_table "game_mouvs", force: :cascade do |t|
     t.bigint "user_id"
     t.integer "scale"
+    t.integer "game_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_game_mouvs_on_user_id"
