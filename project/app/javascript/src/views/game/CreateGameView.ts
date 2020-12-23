@@ -24,7 +24,7 @@ export default class CreateGameView extends ModalView<Game> {
   player_two: Player
   id: string;
   i: number;
-  
+  user: Profile;
   constructor(i: number, options?: Backbone.ViewOptions<Game>) {
     super(options);
     this.i = i;
@@ -32,6 +32,8 @@ export default class CreateGameView extends ModalView<Game> {
     this.player_two = new Player(new Rectangle(0, canvas.height / 2, 15, 100));
     this.collection = options.collection;
     this.collection.fetch();
+    this.user = new Profile();
+    this.user.fetch();
     this.listenTo(this.model, "add", this.render);
   }
 
@@ -48,11 +50,13 @@ export default class CreateGameView extends ModalView<Game> {
     if (!pts) {
       return;
     } else {
+      displaySuccess("first" + String(this.user.get("id")))
         const attrs = {
           level: this.$("#level").val() as string,
           points: this.$("#points").val() as number,
           id: String(this.i) as string,
           status: "waiting",
+          first: this.user.get("id"),
           user: [],
         };
         

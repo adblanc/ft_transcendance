@@ -42,7 +42,7 @@ export default class CanvaView extends ModalView<Rectangle> {
 		  paddle.render(ctx, 'rgb(2, 149, 212)');
 		 this.player_one = player_one; 
 		 this.player_two = player_two;
-		  this.ball =  new Ball(width /2 , height / 2, 5, this.level);
+		  this.ball =  new Ball(width /2 , height / 2, 5, this.level * 5);
 		  return canvas;
 		}
 
@@ -76,8 +76,8 @@ export default class CanvaView extends ModalView<Rectangle> {
 		reset()
 		{
 			const b = this.ball;
-        	b.velocity.x = 2;
-        	b.velocity.y = 2;
+        	b.velocity.x = 4;
+        	b.velocity.y = 4;
         	b.x = canvas.width / 2;
         	b.y = canvas.height / 2;
 		}

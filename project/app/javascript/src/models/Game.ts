@@ -16,13 +16,15 @@ interface IGame {
   points: number;
   status: string;
   user: Profile;
+  first: number;
 }
 
 type CreatableGameArgs = Partial<
-  Pick<IGame, "id" | "points" | "level" | "status">
+  Pick<IGame, "id" | "points" | "level" | "status" | "first">
 >;
 
 export default class Game extends BaseModel<IGame> {
+  //first: Number;
   channel: ActionCable.Channel;
   mouvements: Mouvements;
   model: Mouvement;
@@ -66,6 +68,13 @@ export default class Game extends BaseModel<IGame> {
   }
 
   createGame(attrs: CreatableGameArgs) {
+    // if (!this.currentUserId) {
+    //   this.currentUserId = parseInt(
+    //     $("#current-user-profile").data("id")
+    //   );
+    // }
+    //displaySuccess("creator" + String(this.first))
+    //this.first = this.currentUserId;
     return this.asyncSave(attrs, { url: this.urlRoot() });
   }
   join() {
