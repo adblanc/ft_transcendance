@@ -6,6 +6,7 @@ class CreateGames < ActiveRecord::Migration[6.0]
       t.integer :points
       t.string :status
       t.integer :first
+      t.boolean :second
       t.timestamps
     end
   end

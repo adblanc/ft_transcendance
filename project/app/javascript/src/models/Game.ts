@@ -25,6 +25,7 @@ type CreatableGameArgs = Partial<
 
 export default class Game extends BaseModel<IGame> {
   //first: Number;
+  second?: boolean;
   channel: ActionCable.Channel;
   mouvements: Mouvements;
   model: Mouvement;
@@ -41,6 +42,7 @@ export default class Game extends BaseModel<IGame> {
   }
 
   initialize() {
+    this.second = false;
     this.mouvements = new Mouvements();
     this.model = new Mouvement();
     this.channel = this.createConsumer();
@@ -57,6 +59,7 @@ export default class Game extends BaseModel<IGame> {
       points: 0,
       status: "waiting",
       user: [],
+      second: false,
     };
   }
 
@@ -79,7 +82,8 @@ export default class Game extends BaseModel<IGame> {
   }
   join() {
     displaySuccess("Here the game is");
-    return this.asyncSave({status: "playing"},{ url: `${this.baseGameRoot()}/join`,});
+    this.second = true;
+    return this.asyncSave({status: "playing", second: true},{ url: `${this.baseGameRoot()}/join`,});
   }
 
   finish()

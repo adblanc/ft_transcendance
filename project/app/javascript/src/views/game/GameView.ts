@@ -54,9 +54,10 @@ export default class GameView extends BaseView {
          this.player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
        this.player_two = new Player(new Rectangle(0, canvas.height / 2, 15, 100));
        
-       //this.listenTo(this.game.user, "update", this.render_finished);
+       //this.listenTo(this.game, "change:second", this.render_finished);
        this.listenTo(this.game.mouvements, "add", this.canva_render);
        this.listenTo(this.game, "change:status", this.render_playing);
+       //this.listenTo(this.game.model, "change", this.play);
        
        //var inter = setTimeout(this.keyBoardClicked,100);
        
@@ -70,11 +71,33 @@ export default class GameView extends BaseView {
 
       game_draw()
       {
-        canvaView.callback(10);
+        //displaySuccess("You won the game" + JSON.stringify(this.game));
+              var y: Number = 0;
+       // y = canvaView.callback(10);
+        if ( (y = canvaView.callback(10)) == 2)
+        {
+          displaySuccess("You won the game" + String(y) + JSON.stringify(this.game));
+          //var game_exist = this.collection.get(game_id) as Game;
+          //const success = await this.game.finish();
+          // if (success)
+          // {
+          //   displaySuccess("SUCCESS");
+             this.render_won();
+          // }
+          
+        } 
+      else if((y = canvaView.callback(10)) == 1)
+      {
+        //displaySuccess("You won the game" + String(y) + JSON.stringify(this.game));
+        //this.game.finish();
+        displaySuccess("You lost the game" + String(y));
+        this.render_lost();
+      } 
       }
 
       play()
       {
+        this.listenTo(this.game, "change:status", this.render_finished);
         var inter = setInterval(this.game_draw,100);
         //displaySuccess("length of users" + String(this.game.user.length))
         this.listenTo(this.game.model, "change", this.canva_render);
@@ -104,25 +127,34 @@ export default class GameView extends BaseView {
 
       canva_render()
       {
-        displaySuccess("first" + String(this.game.get("first"));
+        displaySuccess("first" + String(this.game.get("first")));
         console.log("received JSON render" + JSON.stringify(this.game.model.get("scale")));
-        if ((this.game.model.get("sent") && this.game.first == this.joueur_un.get("id")) || (!this.game.model.get("sent") && this.game.first != this.joueur_un.get("id")) && this.game.model.get("scale") > 0)
-        {canvaView.player_two.paddle.y += 10;
+        if ((this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (!this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") > 0)
+        {canvaView.player_one.paddle.y += 10;
           displaySuccess("me");
-          if (canvaView.player_two.paddle.y >= canvas.height)
-          {
-            canvaView.player_two.paddle.y = canvas.height
-          }
-        }
-        else if ((!this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") > 0)
-        {
-          canvaView.player_one.paddle.y += 10;
           if (canvaView.player_one.paddle.y >= canvas.height)
           {
             canvaView.player_one.paddle.y = canvas.height
           }
         }
-        else if (this.game.model.get("sent") && this.game.model.get("scale") < 0)
+        else if ((!this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") > 0)
+        {
+          canvaView.player_two.paddle.y += 10;
+          if (canvaView.player_two.paddle.y >= canvas.height)
+          {
+            canvaView.player_two.paddle.y = canvas.height
+          }
+        }
+        else if ((this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (!this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") < 0)
+        {
+          displaySuccess("me");
+          canvaView.player_one.paddle.y -= 10;
+          if (canvaView.player_one.paddle.y <= 0)
+          {
+            canvaView.player_one.paddle.y = 0;
+          }
+        }
+        else if ((!this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") < 0)
         {
           canvaView.player_two.paddle.y -= 10;
           if (canvaView.player_two.paddle.y <= 0)
@@ -130,26 +162,18 @@ export default class GameView extends BaseView {
             canvaView.player_two.paddle.y = 0;
           }
         }
-        else
-        {
-          canvaView.player_one.paddle.y -= 10;
-          if (canvaView.player_one.paddle.y <= 50)
-          {
-            canvaView.player_one.paddle.y = 50;
-          }
-        }
-        var y: Number = 0;
-        y = canvaView.callback(10);
-        if ( y == 2)
-        {
-          displaySuccess("You won the game" + String(y));
-          this.render_won();
-        } 
-      else if(y == 1)
-      {
-        displaySuccess("You lost the game" + String(y));
-        this.render_lost();
-      } 
+      //   var y: Number = 0;
+      //  // y = canvaView.callback(10);
+      //   if ( (y = canvaView.callback(10)) == 2)
+      //   {
+      //     displaySuccess("You won the game" + String(y));
+      //     this.render_won();
+      //   } 
+      // else if((y = canvaView.callback(10)) == 1)
+      // {
+      //   displaySuccess("You lost the game" + String(y));
+      //   this.render_lost();
+      // } 
       }
 
       keyBoardClicked(e) {
@@ -203,6 +227,7 @@ export default class GameView extends BaseView {
     render()
     {
       this.listenTo(this.game, "change:status", this.render_playing);
+  
     const template = $("#waiting").html();
     const html = Mustache.render(template, this.game.toJSON());
     this.$el.html(html);
@@ -233,6 +258,7 @@ export default class GameView extends BaseView {
 
   render_finished()
   {
+    displaySuccess("UPDATE")
     const template = $("#game_finished").html();
     const html = Mustache.render(template, this.game.toJSON());
     this.$el.html(html);

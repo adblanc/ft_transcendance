@@ -50,13 +50,16 @@ export default class CreateGameView extends ModalView<Game> {
     if (!pts) {
       return;
     } else {
-      displaySuccess("first" + String(this.user.get("id")))
+      displaySuccess("first" + String(this.user.get("id")));
+      
+      const user_id = this.user.get("id") as number;
+      displaySuccess("fuser_id" + user_id);
         const attrs = {
           level: this.$("#level").val() as string,
           points: this.$("#points").val() as number,
           id: String(this.i) as string,
           status: "waiting",
-          first: this.user.get("id"),
+          first: user_id,
           user: [],
         };
         
@@ -76,6 +79,7 @@ export default class CreateGameView extends ModalView<Game> {
           game_exist.set("status", "playing");
           displaySuccess("After joining" + success);
           if (success) {
+            displaySuccess("Success" + user_id);
             this.gameJoined(String(game_id), game_id);
           }
         }

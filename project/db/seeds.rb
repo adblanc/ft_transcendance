@@ -24,8 +24,8 @@ jeff = User.create(name: "jeff", login: "jeff", contribution: 1);
 john = User.create(name: "john", login: "john", contribution: 1);
 jack = User.create(name: "jack", login: "jack", contribution: 1);
 
-game1 = Game.create(id: "32", level: "hard", status: "waiting", points: 3);
-game1 = Game.create(id: "38", level: "easy", points: 5, status: "waiting");
+#game1 = Game.create(id: "32", level: "hard", status: "waiting", points: 3, first: 10);
+#game1 = Game.create(id: "38", level: "easy", points: 5, status: "waiting", first: 8);
 # coll1 = Games.create({});
 # coll1.game << game1;
 

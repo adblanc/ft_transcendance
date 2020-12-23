@@ -52,6 +52,6 @@ class GamesController < ApplicationController
     end
 private
     def game_params
-        params.permit(:id, :level, :points, :status)
+        params.permit(:id, :level, :points, :status, :first, :second)
     end
 end
