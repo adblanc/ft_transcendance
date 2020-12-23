@@ -23,6 +23,7 @@ var canvaView = new CanvaView({
 var canvas = document.createElement("canvas");
 var points: number = 2;
 
+
 export default class GameView extends BaseView {
   player_one: Player;
   player_two: Player;
@@ -54,6 +55,8 @@ export default class GameView extends BaseView {
        this.player_two = new Player(new Rectangle(0, canvas.height / 2, 15, 100));
        this.listenTo(this.game, "update", this.render_finished);
        this.listenTo(this.game.mouvements, "add", this.canva_render);
+       //var inter = setInterval(this.canvasClicked,100);
+       
       }
 
       events() {
@@ -64,6 +67,7 @@ export default class GameView extends BaseView {
 
       play()
       {
+        this.listenTo(this.game.model, "change", this.canva_render);
         this.joueurs = this.game.get("user");
         //var player = this.joueurs.findWhere({"name": String(this.joueur_un.get("name"))});
         var j_str = this.joueur_un.get("name") as string;
@@ -78,8 +82,10 @@ export default class GameView extends BaseView {
         //console.log("received JSON Play" + String(this.game.model.get("scale")));
        // this.listenTo(this.game.mouvements, "add", this.canva_render);
         canvas.addEventListener('click', this.canvasClicked, false);
-        canvas.addEventListener('mousemove', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
-        }
+        //canvas.addEventListener('mousemove', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
+        window.addEventListener('keydown', event => { const e = event as KeyboardEvent; this.keyBoardClicked(e);}, false);
+        //canvas.addEventListener('keydown',  this.keyBoardClicked());  
+      }
         else{
           displaySuccess("You watch the game");
         }
@@ -87,8 +93,8 @@ export default class GameView extends BaseView {
 
       canva_render()
       {
-        //console.log("received JSON render" + JSON.stringify(this.game.model));
-        if (this.game.model.sent)
+        console.log("received JSON render" + JSON.stringify(this.game.model));
+        if (this.game.model.get("sent"))
         {canvaView.player_two.paddle.y = canvas.height * this.game.model.get("scale");}
         else
         {
@@ -108,7 +114,27 @@ export default class GameView extends BaseView {
       } 
       }
 
+      keyBoardClicked(e) {
+        setTimeout(this.canvasClicked,1000);
+        displaySuccess("here key down");
+        //const scale: number = e.offsetY / 250;
+        s : String;
+        //var s = "Mouse down" + String(scale);
+        var g_id = this.game.get("id") as number;
+        var j_id = Number(this.joueur_un.get("id"));
+        var s_g_id = String("game_" + this.game.get("id"));
+        //ActionCable.server.broadcast(s_g_id, scale);
+        // const mouvement = new Mouvement({
+        //   scale: scale,
+        //   game_id: g_id,
+        //   user_id: j_id,
+        // });
+        // const success = mouvement.save();
+      }
+      
       canvasClicked(e) {
+        setTimeout(this.canvasClicked,1000);
+        displaySuccess("here");
         const scale: number = e.offsetY / 250;
         s : String;
         var s = "Mouse down" + String(scale);
@@ -123,6 +149,7 @@ export default class GameView extends BaseView {
         });
         const success = mouvement.save();
       }
+      
 
     render()
     {
@@ -134,6 +161,7 @@ export default class GameView extends BaseView {
 
   render_won()
   {
+    clearInterval();
           //    if (this.game.get("user")[1].get("name") == this.joueur_un.get("name"))
           // displaySuccess("Same joueurs");
     displaySuccess("Length is" + JSON.stringify(this.collection.toJSON()));

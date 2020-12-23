@@ -101,20 +101,21 @@ export default class Game extends BaseModel<IGame> {
           }
            this.model.set(mouv);
            if (this.currentUserId === this.model.get("user_id"))
-          {this.model.set({sent: true})}
+          {this.model.set({sent: true});}
           else
-          {this.model.set({sent: false})}
+          {this.model.set({sent: false});}
            
 
-        //       this.mouvements.add(
-        //         new Mouvement({
-        //      scale: this.model.get("scale"), user_id: this.model.get("user_id"),
-        //      game_id: this.model.get("game_id"),
-        //      sent: this.model.get("sent")}));
-        //  },
-       }
+          //     this.mouvements.add(this.model);
+            //     this.mouvements.add(new Mouvement({
+            //  scale: this.model.get("scale"), user_id: this.model.get("user_id"),
+            //  game_id: this.model.get("game_id"),
+            //  sent: this.model.get("sent")}));
+         },
+       //}
+      }
      );
-  }
+    }
 }
 
 
