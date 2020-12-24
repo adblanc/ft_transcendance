@@ -10,10 +10,12 @@ import GameView from "../views/game/GameView";
 import GameIndexView from "../views/game/GameIndexView";
 import { addAuthHeaders, isAuth } from "../utils";
 import AuthView from "../views/AuthView";
+import TfaView from "../views/TfaView";
 import Guild from "src/models/Guild";
 import Game from "src/models/Game";
 import UserView from "../views/user/UserView";
 import WarIndexView from "../views/wars/WarIndexView";
+import User from "src/models/User";
 import { BASE_ROOT } from "src/constants";
 
 const NO_AUTH_ROUTES = ["auth", "authCallBack"];
@@ -22,6 +24,8 @@ const shouldBeAuth = (routeName: string) =>
   !NO_AUTH_ROUTES.find((route) => route === routeName);
 
 export default class MainRouter extends Backbone.Router {
+	user: User;
+
   constructor() {
     super({
       routes: {
@@ -34,6 +38,7 @@ export default class MainRouter extends Backbone.Router {
         "guild/:id": "guildShow",
         "me/notifications": "notifShow",
 		"user/:id": "userShow",
+		tfa: "twoFactAuth",
 		warindex: "warIndex",
         "*path": "notFound",
       },
@@ -63,6 +68,12 @@ export default class MainRouter extends Backbone.Router {
       this.navigate("/auth", { trigger: true });
     }
     this.navigate("/", { trigger: true });
+  }
+
+  twoFactAuth() {
+    const tfaView = new TfaView({});
+
+    pagesHandler.showPage(tfaView, false, false, false);
   }
 
   auth() {
