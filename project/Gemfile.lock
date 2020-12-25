@@ -233,6 +233,7 @@ DEPENDENCIES
   jbuilder (~> 2.7)
   jwt
   listen (~> 3.2)
+  mail
   oauth2
   pg (>= 0.18, < 2.0)
   puma (~> 4.1)
@@ -253,4 +254,4 @@ RUBY VERSION
    ruby 2.7.0p0
 
 BUNDLED WITH
-   2.2.1
+   2.2.2

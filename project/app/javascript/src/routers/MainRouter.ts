@@ -15,7 +15,6 @@ import Guild from "src/models/Guild";
 import Game from "src/models/Game";
 import UserView from "../views/user/UserView";
 import WarIndexView from "../views/wars/WarIndexView";
-import User from "src/models/User";
 import { BASE_ROOT } from "src/constants";
 
 const NO_AUTH_ROUTES = ["auth", "authCallBack"];
@@ -24,7 +23,6 @@ const shouldBeAuth = (routeName: string) =>
   !NO_AUTH_ROUTES.find((route) => route === routeName);
 
 export default class MainRouter extends Backbone.Router {
-	user: User;
 
   constructor() {
     super({

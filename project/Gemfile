@@ -26,6 +26,9 @@ gem 'jwt'
 
 gem "rack-cors"
 
+# Mailing
+gem 'mail'
+
 # Active storage validation
 
 gem 'activestorage-validator'
