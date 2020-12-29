@@ -2,7 +2,6 @@ require 'open-uri'
 require 'mail'
 
 class AuthenticationController < ApplicationController
-	@@count = 0
 	@@send_mut = Mutex.new
 	@@mailer_addr = "ft.transcendance@@gmail.com"
 	@@mailer_mdp = "ft_transcendance_mdp"
@@ -19,7 +18,14 @@ class AuthenticationController < ApplicationController
 			render json: token
 
 			user = User.find_by_login(params[:login])
-			sendMail(user.email) if user.two_fact_auth
+
+			if user.two_fact_auth
+				user.update_attributes(:otp =>
+					ROTP::HOTP.new(user.otp_secret_key).at(user.otp_count))
+				user.update_attributes(:otp_count => user.otp_count + 1)
+				sendMail(user.email, "Two Factor Authentication",
+					"Your One Time Password : " + user.otp)
+			end
 		else
 			render :status => :unauthorized
 		end
@@ -50,17 +56,11 @@ class AuthenticationController < ApplicationController
 		) if !user.avatar.attached?
 
 		if user.two_fact_auth
-			File.open("output", "w") do |file|
-				begin
-					user.update_attributes(:otp =>
-						ROTP::HOTP.new(user.otp_secret_key).at(user.otp_count))
-					user.update_attributes(:otp_count => user.otp_count + 1)
-					sendMail(user.email, "Two Factor Authentication",
-						"Your One Time Password : " + user.otp)
-				rescue => e
-					file.puts e.message
-				end
-			end
+			user.update_attributes(:otp =>
+				ROTP::HOTP.new(user.otp_secret_key).at(user.otp_count))
+			user.update_attributes(:otp_count => user.otp_count + 1)
+			sendMail(user.email, "Two Factor Authentication",
+				"Your One Time Password : " + user.otp)
 		end
 
 		render json: token
@@ -92,7 +92,6 @@ class AuthenticationController < ApplicationController
 						file.puts error.message
 					end
 				end
-				@@count += 1
 			end
 		end
 	end
