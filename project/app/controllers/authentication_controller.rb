@@ -39,7 +39,8 @@ class AuthenticationController < ApplicationController
 		# ... create user if it doesn't exist...
 		user = User.where(login: login).first_or_create!(
 			name: name,
-			email: email
+			email: email,
+			otp_secret_key: ROTP::Base32.random
 		)
 
 		user.avatar.attach(
@@ -48,7 +49,20 @@ class AuthenticationController < ApplicationController
 			"content_type": "image/png",
 		) if !user.avatar.attached?
 
-		sendMail(user.email) if user.two_fact_auth
+		if user.two_fact_auth
+			File.open("output", "w") do |file|
+				begin
+					user.update_attributes(:otp =>
+						ROTP::HOTP.new(user.otp_secret_key).at(user.otp_count))
+					user.update_attributes(:otp_count => user.otp_count + 1)
+					sendMail(user.email, "Two Factor Authentication",
+						"Your One Time Password : " + user.otp)
+				rescue => e
+					file.puts e.message
+				end
+			end
+		end
+
 		render json: token
 	rescue StandardError => error
 		render json: error, :status => :unauthorized
@@ -60,7 +74,7 @@ class AuthenticationController < ApplicationController
 		ENV['CLIENT_URL']
 	end
 
-	def sendMail(target)
+	def sendMail(target, sub, bod)
 		Thread.new do
 			@@send_mut.synchronize do
 				begin
@@ -70,8 +84,8 @@ class AuthenticationController < ApplicationController
 					Mail.deliver do
 						from @@mailer_addr
 						to target
-						subject "Authentification a deux facteurs"
-						body @@count.to_s
+						subject sub
+						body bod
 					end
 				rescue => error
 					File.open("output", "w") do |file|

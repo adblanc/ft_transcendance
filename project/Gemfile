@@ -26,7 +26,8 @@ gem 'jwt'
 
 gem "rack-cors"
 
-# Mailing
+# Two factor authentication
+gem 'rotp'
 gem 'mail'
 
 # Active storage validation
