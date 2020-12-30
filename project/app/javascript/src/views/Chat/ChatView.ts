@@ -38,6 +38,14 @@ export default class ChatView extends BaseView {
     this.listenTo(this.myRooms, "remove", this.removeHeaderInput);
   }
 
+  onClose = () => {
+    this.myRoomsView.close();
+    this.createJoinChannelView.close();
+    this.publicRoomsView.close();
+    this.chatHeaderView?.close();
+    this.chatInputView?.close();
+  };
+
   hideChat() {
     if (!this.isVisible()) {
       return;
