@@ -3,7 +3,6 @@ import { eventBus } from "src/events/EventBus";
 import BaseView from "src/lib/BaseView";
 import Message from "src/models/Message";
 import Room from "src/models/Room";
-import { displayError } from "src/utils";
 import MessageView from "./MessageView";
 import RoomUserProfileView from "./RoomUserProfileView";
 
@@ -33,6 +32,8 @@ export default class RoomMessagesView extends BaseView<Room> {
       model: message,
       currentUser,
     });
+
+    console.log("render profileview", profileView);
 
     profileView.render();
   }

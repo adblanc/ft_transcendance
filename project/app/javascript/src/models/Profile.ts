@@ -127,8 +127,7 @@ export const currentUser = (fetch = false): Profile => {
   if (!memoizedUser) {
     memoizedUser = new Profile();
     fetchCurrentUser();
-  }
-  if (fetch) {
+  } else if (fetch) {
     fetchCurrentUser();
   }
 

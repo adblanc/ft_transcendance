@@ -12,7 +12,6 @@ export default class RoomUser extends BaseModel<IRoomUser> {
   updateRole(action: "promote" | "demote") {
     const room = (this.collection as any).parents[0] as Room;
 
-    console.log("room", room);
     return this.asyncSave(
       {
         update_action: action,
@@ -29,5 +28,14 @@ export default class RoomUser extends BaseModel<IRoomUser> {
 
   canBeDemote() {
     return this.get("roomRole") === "Administrator";
+  }
+
+  muteUser(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/mutes/${id}`,
+      }
+    );
   }
 }

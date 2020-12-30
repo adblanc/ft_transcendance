@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import Message from "src/models/Message";
 import RoomUser from "src/models/RoomUser";
+import { displaySuccess } from "src/utils";
 import ModalView from "../ModalView";
 
 type Options = Backbone.ViewOptions<Message> & {
@@ -42,8 +43,12 @@ export default class RoomUserProfileView extends ModalView<Message> {
     console.log("block user");
   }
 
-  muteUser() {
-    console.log("mute user");
+  async muteUser() {
+    const success = await this.currentUser.muteUser(this.model.get("user_id"));
+
+    if (success) {
+      displaySuccess(`You successfully muted ${this.model.get("user_login")}`);
+    }
   }
 
   banUser() {
@@ -51,13 +56,14 @@ export default class RoomUserProfileView extends ModalView<Message> {
   }
 
   render() {
+    console.log("render user profile");
     super.render(); // we render the modal
     const template = $("#room-user-profile-template").html();
 
     const html = Mustache.render(template, {
       ...this.model.toJSON(),
       isAdmin: this.currentUser.get("isRoomAdministrator"),
-      isCurrentUser: this.model.get("id") === this.currentUser.get("id"),
+      isCurrentUser: this.model.get("user_id") === this.currentUser.get("id"),
     });
     this.$content.html(html);
     return this;
