@@ -17,7 +17,7 @@ import UserView from "../views/user/UserView";
 import WarIndexView from "../views/wars/WarIndexView";
 import { BASE_ROOT } from "src/constants";
 
-const NO_AUTH_ROUTES = ["auth", "authCallBack"];
+const NO_AUTH_ROUTES = ["auth", "authCallBack", "twoFactAuth"];
 
 const shouldBeAuth = (routeName: string) =>
   !NO_AUTH_ROUTES.find((route) => route === routeName);
@@ -36,7 +36,7 @@ export default class MainRouter extends Backbone.Router {
         "guild/:id": "guildShow",
         "me/notifications": "notifShow",
 		"user/:id": "userShow",
-		tfa: "twoFactAuth",
+		"tfa/:user/:tfa": "twoFactAuth",
 		warindex: "warIndex",
         "*path": "notFound",
       },
@@ -57,10 +57,14 @@ export default class MainRouter extends Backbone.Router {
 
   async authCallBack(code: string) {
     try {
-      const { data: token } = await axios.get(
+      const { data: rsp } = await axios.get(
         `${BASE_ROOT}/auth/42?code=${code}`
       );
-      addAuthHeaders(token);
+	  if (!rsp.token) {
+		this.navigate(`/tfa/${rsp.user}/${rsp.tfa}`, { trigger: true });
+		return ;
+	  }
+      addAuthHeaders(rsp.token);
     } catch (ex) {
       console.error(ex);
       this.navigate("/auth", { trigger: true });
@@ -68,8 +72,8 @@ export default class MainRouter extends Backbone.Router {
     this.navigate("/", { trigger: true });
   }
 
-  twoFactAuth() {
-    const tfaView = new TfaView({});
+  twoFactAuth(user: string, tfa: string) {
+    const tfaView = new TfaView({ user: user, tfa: tfa});
 
     pagesHandler.showPage(tfaView, false, false, false);
   }

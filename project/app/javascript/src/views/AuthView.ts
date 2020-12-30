@@ -22,15 +22,17 @@ export default class AuthView extends BaseView {
         return;
       }
       try {
-        const { data: token } = await axios.get(
+        const { data: rsp } = await axios.get(
           `${BASE_ROOT}/auth/guest?login=${input}`
         );
-        addAuthHeaders(token);
+		if (!rsp.token) {
+			Backbone.history.navigate(`/tfa/${rsp.user}/${rsp.tfa}`, { trigger: true });
+			return ;
+		}
+        addAuthHeaders(rsp.token);
       } catch (ex) {
         displayError(`${input} n'est pas un guest valide.`);
-
         this.$("#input-guest").val("");
-
         return;
       }
 

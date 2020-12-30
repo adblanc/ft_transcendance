@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get '/auth/42', to: 'authentication#login42', format: false
   get '/auth/guest', to: 'authentication#loginGuest', format: false
+  get '/auth/tfa', to: 'authentication#loginTfa', format: false
   get '/profile/:id', to: 'users#show_other_user'
 
   resource :user, only: [:show, :update]

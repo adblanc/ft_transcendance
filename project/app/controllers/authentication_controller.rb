@@ -14,17 +14,16 @@ class AuthenticationController < ApplicationController
 
 	def loginGuest
 		if (User.exists?(login: params[:login]))
-			token = TokiToki.encode(params[:login])
-			render json: token
-
 			user = User.find_by_login(params[:login])
 
 			if user.two_fact_auth
-				user.update_attributes(:otp =>
+				user.update_attributes(:otp_count => user.otp_count + 1,
+					:tfa_id => ROTP::Base32.random.downcase)
+				sendMail(user.email, "Two Factor Authentication", "Your One Time Password : " +
 					ROTP::HOTP.new(user.otp_secret_key).at(user.otp_count))
-				user.update_attributes(:otp_count => user.otp_count + 1)
-				sendMail(user.email, "Two Factor Authentication",
-					"Your One Time Password : " + user.otp)
+				render json: { token: nil, user: user.login, tfa: user.tfa_id }
+			else
+				render json: { token: TokiToki.encode(user.login) }
 			end
 		else
 			render :status => :unauthorized
@@ -40,8 +39,6 @@ class AuthenticationController < ApplicationController
 		avatar_url = user_info[:avatar_url]
 		email = user_info[:email]
 
-		# Generate token...
-		token = TokiToki.encode(login)
 		# ... create user if it doesn't exist...
 		user = User.where(login: login).first_or_create!(
 			name: name,
@@ -56,14 +53,27 @@ class AuthenticationController < ApplicationController
 		) if !user.avatar.attached?
 
 		if user.two_fact_auth
-			user.update_attributes(:otp =>
+			user.update_attributes(:otp_count => user.otp_count + 1,
+				:tfa_id => ROTP::Base32.random.downcase)
+			sendMail(user.email, "Two Factor Authentication", "Your One Time Password : " +
 				ROTP::HOTP.new(user.otp_secret_key).at(user.otp_count))
-			user.update_attributes(:otp_count => user.otp_count + 1)
-			sendMail(user.email, "Two Factor Authentication",
-				"Your One Time Password : " + user.otp)
+			render json: { token: nil, user: user.login, tfa: user.tfa_id }
+		else
+			render json: { token: TokiToki.encode(user.login) }
 		end
+	rescue StandardError => error
+		render json: error, :status => :unauthorized
+	end
 
-		render json: token
+	def loginTfa
+		user = User.find_by_login(params[:user])
+		hotp = ROTP::HOTP.new(user.otp_secret_key)
+
+		if params[:tfa] == user.tfa_id && hotp.verify(params[:otp], user.otp_count)
+			render json: TokiToki.encode(user.login)
+		else
+			raise StandardError
+		end
 	rescue StandardError => error
 		render json: error, :status => :unauthorized
 	end
@@ -88,7 +98,7 @@ class AuthenticationController < ApplicationController
 						body bod
 					end
 				rescue => error
-					File.open("output", "w") do |file|
+					File.open("mail.log", "w") do |file|
 						file.puts error.message
 					end
 				end
