@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_30_134943) do
+ActiveRecord::Schema.define(version: 2020_12_31_055909) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -127,6 +127,8 @@ ActiveRecord::Schema.define(version: 2020_12_30_134943) do
     t.string "otp_secret_key", default: "", null: false
     t.integer "otp_count", default: 0, null: false
     t.string "tfa_id", default: "", null: false
+    t.integer "tfa_error_nb", default: 0, null: false
+    t.integer "tfa_time", default: 0, null: false
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["name"], name: "index_users_on_name", unique: true
   end

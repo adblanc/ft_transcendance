@@ -31,17 +31,18 @@ export default class TfaView extends BaseView {
 			e.preventDefault();
 			if (!this.otp) { return ; }
 
-			try {
-				const { data: token } = await axios.get(
-					`${BASE_ROOT}/auth/tfa?user=${this.user}&tfa=${this.tfa}&otp=${this.otp}`
-				);
-				addAuthHeaders(token);
-			} catch (ex) {
-				displayError("Echec de l'authentification");
-				this.$("#input-tfa").val("");
-				return ;
-			}
-			Backbone.history.navigate("/", { trigger: true });
+			await axios.get(
+				`${BASE_ROOT}/auth/tfa?user=${this.user}&tfa=${this.tfa}&otp=${this.otp}`
+			).then((resp) => {
+				addAuthHeaders(resp.data);
+				Backbone.history.navigate("/", { trigger: true });
+			}).catch((error) => {
+				displayError(error.response.data.msg);
+				if (error.response.data.typ == "att" || error.response.data.typ == "exp")
+					Backbone.history.navigate("/auth", { trigger: true });
+				else
+					this.$("#input-tfa").val("");
+			});
 		}
 	}
 

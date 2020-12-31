@@ -15,16 +15,7 @@ class AuthenticationController < ApplicationController
 	def loginGuest
 		if (User.exists?(login: params[:login]))
 			user = User.find_by_login(params[:login])
-
-			if user.two_fact_auth
-				user.update_attributes(:otp_count => user.otp_count + 1,
-					:tfa_id => ROTP::Base32.random.downcase)
-				sendMail(user.email, "Two Factor Authentication", "Your One Time Password : " +
-					ROTP::HOTP.new(user.otp_secret_key).at(user.otp_count))
-				render json: { token: nil, user: user.login, tfa: user.tfa_id }
-			else
-				render json: { token: TokiToki.encode(user.login) }
-			end
+			tfaTreatment(user)
 		else
 			render :status => :unauthorized
 		end
@@ -52,15 +43,7 @@ class AuthenticationController < ApplicationController
 			"content_type": "image/png",
 		) if !user.avatar.attached?
 
-		if user.two_fact_auth
-			user.update_attributes(:otp_count => user.otp_count + 1,
-				:tfa_id => ROTP::Base32.random.downcase)
-			sendMail(user.email, "Two Factor Authentication", "Your One Time Password : " +
-				ROTP::HOTP.new(user.otp_secret_key).at(user.otp_count))
-			render json: { token: nil, user: user.login, tfa: user.tfa_id }
-		else
-			render json: { token: TokiToki.encode(user.login) }
-		end
+		tfaTreatment(user)
 	rescue StandardError => error
 		render json: error, :status => :unauthorized
 	end
@@ -69,13 +52,27 @@ class AuthenticationController < ApplicationController
 		user = User.find_by_login(params[:user])
 		hotp = ROTP::HOTP.new(user.otp_secret_key)
 
+		raise "att" if user.tfa_error_nb >= 3
+		raise "exp" if Time.now.to_i - user.tfa_time > 30
 		if params[:tfa] == user.tfa_id && hotp.verify(params[:otp], user.otp_count)
 			render json: TokiToki.encode(user.login)
 		else
-			raise StandardError
+			user.update_attributes(:tfa_error_nb => user.tfa_error_nb + 1)
+			raise "pass"
 		end
-	rescue StandardError => error
-		render json: error, :status => :unauthorized
+	rescue => error
+		msg = ""
+		case error.to_s
+		when "pass"
+			msg = "Authentication failed"
+		when "exp"
+			msg = "Authentication session expired"
+		when "att"
+			msg = "To many attempts"
+		else
+			msg = "Error"
+		end
+		render :json => { msg: msg, typ: error.to_s }, :status => :unauthorized
 	end
 
 	private
@@ -103,6 +100,23 @@ class AuthenticationController < ApplicationController
 					end
 				end
 			end
+		end
+	end
+
+	def tfaTreatment(user)
+		if user.two_fact_auth
+			File.open("output", "w") do |file|
+				file.puts Time.now.to_i
+			end
+			user.update_attributes(:otp_count => user.otp_count + 1,
+				:tfa_id => ROTP::Base32.random.downcase,
+				:tfa_error_nb => 0,
+				:tfa_time => Time.now.to_i)
+			sendMail(user.email, "Two Factor Authentication", "Your One Time Password : " +
+				ROTP::HOTP.new(user.otp_secret_key).at(user.otp_count))
+			render json: { token: nil, user: user.login, tfa: user.tfa_id }
+		else
+			render json: { token: TokiToki.encode(user.login) }
 		end
 	end
   end
