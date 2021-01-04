@@ -8,6 +8,12 @@ import { clearAuthHeaders, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 
+export interface IBlockedUser {
+  login: string;
+  avatar_url: string;
+  id: number;
+}
+
 export interface IProfile {
   login: string;
   name: string;
@@ -21,6 +27,7 @@ export interface IProfile {
   pending_guild?: Guild;
   guild?: Guild;
   notifications?: Notifications;
+  blocked_users: IBlockedUser[];
 }
 
 type ModifiableProfileArgs = {
