@@ -1,16 +1,17 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import Message from "src/models/Message";
+import { currentUser } from "src/models/Profile";
 import RoomUser from "src/models/RoomUser";
 import { displaySuccess } from "src/utils";
 import ModalView from "../ModalView";
 
 type Options = Backbone.ViewOptions<Message> & {
-  currentUser: RoomUser;
+  isRoomAdministrator?: boolean;
 };
 
 export default class RoomUserProfileView extends ModalView<Message> {
-  currentUser: RoomUser;
+  isRoomAdministrator?: boolean;
 
   constructor(options?: Options) {
     super(options);
@@ -19,10 +20,7 @@ export default class RoomUserProfileView extends ModalView<Message> {
       throw Error("Please provide a Message model to this view.");
     }
 
-    if (!options.currentUser)
-      throw Error("Please provide a current user to RoomUserProfileView");
-
-    this.currentUser = options.currentUser;
+    this.isRoomAdministrator = options.isRoomAdministrator;
   }
 
   events() {
@@ -40,7 +38,7 @@ export default class RoomUserProfileView extends ModalView<Message> {
   }
 
   async blockUser() {
-    const success = await this.currentUser.blockUser(this.model.get("user_id"));
+    const success = await currentUser().blockUser(this.model.get("user_id"));
 
     if (success) {
       displaySuccess(
@@ -64,8 +62,8 @@ export default class RoomUserProfileView extends ModalView<Message> {
 
     const html = Mustache.render(template, {
       ...this.model.toJSON(),
-      isAdmin: this.currentUser.get("isRoomAdministrator"),
-      isCurrentUser: this.model.get("user_id") === this.currentUser.get("id"),
+      isAdmin: this.isRoomAdministrator,
+      isCurrentUser: this.model.get("user_id") === currentUser().get("id"),
     });
     this.$content.html(html);
     return this;

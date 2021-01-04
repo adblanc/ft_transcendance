@@ -30,7 +30,7 @@ export default class RoomMessagesView extends BaseView<Room> {
 
     const profileView = new RoomUserProfileView({
       model: message,
-      currentUser,
+      isRoomAdministrator: currentUser.get("isRoomAdministrator"),
     });
 
     console.log("render profileview", profileView);

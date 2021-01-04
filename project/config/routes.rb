@@ -9,7 +9,8 @@ Rails.application.routes.draw do
   get '/games', to: 'game#index', format:false
   put '/games', to: 'game#create', format: false
 
-  resources :blocks, only: [:update, :destroy]
+  put "/block/:id", to: "blocks#block";
+  put "/unblock/:id", to: "blocks#unblock";
 
   resources :guilds do
 	member do

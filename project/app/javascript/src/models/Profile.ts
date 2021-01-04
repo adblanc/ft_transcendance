@@ -118,6 +118,24 @@ export default class Profile extends BaseModel<IProfile> {
       url: this.urlRoot(),
     });
   }
+
+  blockUser(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/block/${id}`,
+      }
+    );
+  }
+
+  unBlockUser(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/unblock/${id}`,
+      }
+    );
+  }
 }
 
 let memoizedUser: Profile = undefined;
