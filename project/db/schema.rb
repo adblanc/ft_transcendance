@@ -63,9 +63,9 @@ ActiveRecord::Schema.define(version: 2020_12_22_143328) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "mutes", force: :cascade do |t|
+  create_table "blocks", force: :cascade do |t|
     t.integer "user_id"
-    t.integer "muted_user_id"
+    t.integer "blocked_user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

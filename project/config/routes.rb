@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get '/games', to: 'game#index', format:false
   put '/games', to: 'game#create', format: false
 
-  resources :mutes, only: [:update, :destroy]
+  resources :blocks, only: [:update, :destroy]
 
   resources :guilds do
 	member do

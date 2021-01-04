@@ -39,16 +39,18 @@ export default class RoomUserProfileView extends ModalView<Message> {
     console.log("invite to play");
   }
 
-  blockUser() {
-    console.log("block user");
+  async blockUser() {
+    const success = await this.currentUser.blockUser(this.model.get("user_id"));
+
+    if (success) {
+      displaySuccess(
+        `You successfully blocked ${this.model.get("user_login")}`
+      );
+    }
   }
 
   async muteUser() {
-    const success = await this.currentUser.muteUser(this.model.get("user_id"));
-
-    if (success) {
-      displaySuccess(`You successfully muted ${this.model.get("user_login")}`);
-    }
+    console.log("mute user");
   }
 
   banUser() {

@@ -30,11 +30,11 @@ export default class RoomUser extends BaseModel<IRoomUser> {
     return this.get("roomRole") === "Administrator";
   }
 
-  muteUser(id: number) {
+  blockUser(id: number) {
     return this.asyncSave(
       {},
       {
-        url: `${BASE_ROOT}/mutes/${id}`,
+        url: `${BASE_ROOT}/blocks/${id}`,
       }
     );
   }

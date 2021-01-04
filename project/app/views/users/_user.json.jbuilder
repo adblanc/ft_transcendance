@@ -11,8 +11,9 @@ end
 
 
 
-json.muted_users do
-  json.array! user.mutes do |mute|
-  json.extract! mute, :muted_user_id
+json.blocked_users do
+  json.array! user.blocked_users do |blocked_user|
+  json.extract! blocked_user, :id, :login
+  json.avatar_url url_for(blocked_user.avatar) if blocked_user.avatar.attached?
   end
   end

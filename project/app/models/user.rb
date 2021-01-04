@@ -12,8 +12,8 @@ class User < ApplicationRecord
 
 	has_and_belongs_to_many :rooms
 
-	has_many :mutes
-	has_many :muted_users, :through => :mutes
+	has_many :blocks
+	has_many :blocked_users, :through => :blocks
 
 	validates :avatar, blob: { content_type: :image, size_range: 1..5.megabytes }
 	validates :name, presence: true
