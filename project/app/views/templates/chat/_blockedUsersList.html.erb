@@ -1,0 +1,18 @@
+<script type="text/html" id="blocked-users-list-template">
+<div class="mt-6">
+	<span class="ml-2 underline text-lg text-gray-800 font-semibold">Blocked users</span>
+	<ul class="overflow-y-auto max-h-64">
+		{{#blocked_users}}
+			<div class="flex flex-row items-center p-2">
+				<img
+					class="w-12 h-12 rounded-full p-2"
+					src="{{ avatar_url }}"
+				/>
+				<div class="w-48">
+					{{login}}
+				</div>
+			</div>
+		{{/blocked_users}}
+	</ul>
+</div>
+</script>
