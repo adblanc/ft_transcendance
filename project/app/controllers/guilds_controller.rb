@@ -16,9 +16,9 @@ class GuildsController < ApplicationController
 	return head :unauthorized if current_user.guild.present? || current_user.pending_guild.present?
 
 	@guild = Guild.create(guild_params)
-	@guild.members.push(current_user)
-	current_user.add_role :owner, @guild
 	if @guild.save
+		@guild.members.push(current_user)
+		current_user.add_role :owner, @guild
 		@guild
 	else
 		render json: @guild.errors, status: :unprocessable_entity
