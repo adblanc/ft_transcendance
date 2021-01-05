@@ -10,6 +10,9 @@ class Room < ApplicationRecord
 						 inverse_of: :room
 	has_and_belongs_to_many :users
 
+	has_many :mutes
+	has_many :muted_users, :through => :mutes
+
 
 	def update_user_role(user, action)
 		case action

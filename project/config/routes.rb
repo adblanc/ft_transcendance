@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   put "/block/:id", to: "blocks#block";
   put "/unblock/:id", to: "blocks#unblock";
 
+  put "/mute/:room_id", to: "mutes#mute";
+
   resources :guilds do
 	member do
 		put :quit

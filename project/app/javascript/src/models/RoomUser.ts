@@ -29,4 +29,13 @@ export default class RoomUser extends BaseModel<IRoomUser> {
   canBeDemote() {
     return this.get("roomRole") === "Administrator";
   }
+
+  mute(room_id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/mute/${room_id}`,
+      }
+    );
+  }
 }

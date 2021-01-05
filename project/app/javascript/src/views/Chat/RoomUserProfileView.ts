@@ -3,15 +3,17 @@ import Mustache from "mustache";
 import Message from "src/models/Message";
 import { currentUser } from "src/models/Profile";
 import RoomUser from "src/models/RoomUser";
-import { displaySuccess } from "src/utils";
+import { displayError, displaySuccess } from "src/utils";
 import ModalView from "../ModalView";
 
 type Options = Backbone.ViewOptions<Message> & {
   isRoomAdministrator?: boolean;
+  sender?: RoomUser;
 };
 
 export default class RoomUserProfileView extends ModalView<Message> {
   isRoomAdministrator?: boolean;
+  sender?: RoomUser;
 
   constructor(options?: Options) {
     super(options);
@@ -21,6 +23,7 @@ export default class RoomUserProfileView extends ModalView<Message> {
     }
 
     this.isRoomAdministrator = options.isRoomAdministrator;
+    this.sender = options.sender;
   }
 
   events() {
@@ -48,7 +51,15 @@ export default class RoomUserProfileView extends ModalView<Message> {
   }
 
   async muteUser() {
-    console.log("mute user");
+    if (!this.sender) {
+      return displayError("This user is no longer in the room.");
+    }
+
+    const success = await this.sender.mute(this.model.get("room_id"));
+
+    if (success) {
+      displaySuccess(`You successfully muted ${this.model.get("user_login")}`);
+    }
   }
 
   banUser() {
@@ -56,7 +67,6 @@ export default class RoomUserProfileView extends ModalView<Message> {
   }
 
   render() {
-    console.log("render user profile");
     super.render(); // we render the modal
     const template = $("#room-user-profile-template").html();
 
