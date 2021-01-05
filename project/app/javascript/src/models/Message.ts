@@ -1,5 +1,6 @@
 import Backbone from "backbone";
 import { BASE_ROOT } from "src/constants";
+import BaseModel from "src/lib/BaseModel";
 
 export interface IMessage {
   content: string;
@@ -12,6 +13,6 @@ export interface IMessage {
   updated_at?: string;
 }
 
-export default class Message extends Backbone.Model<IMessage> {
+export default class Message extends BaseModel<IMessage> {
   url = () => `${BASE_ROOT}/room_messages`;
 }

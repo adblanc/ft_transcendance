@@ -5,7 +5,7 @@ import Message from "src/models/Message";
 import _ from "underscore";
 
 export default class MessageView extends Backbone.View<Message> {
-  constructor(options?: Backbone.ViewOptions) {
+  constructor(options?: Backbone.ViewOptions<Message>) {
     super(options);
 
     if (!this.model) {
