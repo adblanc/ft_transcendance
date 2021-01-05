@@ -8,4 +8,7 @@ class GuildWar < ApplicationRecord
 		:accepted,
 	]
 
+	def score(points)
+		increment!(:points, points)
+	end
 end
