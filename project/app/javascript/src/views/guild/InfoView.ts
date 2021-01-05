@@ -26,7 +26,8 @@ export default class InfoView extends BaseView {
     });
 
     this.listenTo(this.guild, "change", this.render);
-    this.listenTo(this.profile, "change", this.render);
+	this.listenTo(this.profile, "change", this.render);
+	this.listenTo(this.guild.get("members"), "update", this.render);
   }
 
   events() {
@@ -117,6 +118,7 @@ export default class InfoView extends BaseView {
   }
 
   render() {
+
     const template = $("#infoTemplate").html();
     const html = Mustache.render(template, this.guild.toJSON());
     this.$el.html(html);

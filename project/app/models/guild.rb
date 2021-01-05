@@ -36,6 +36,14 @@ class Guild < ApplicationRecord
 		end
 	end
 
+	def owner
+		User.with_role(:owner, self).first
+	end
+
+	def officers
+		User.with_role(:officer, self)
+	end
+
 	def atWar?
 		self.wars.started.present? || self.wars.confirmed.present?
 	end
@@ -74,14 +82,20 @@ class Guild < ApplicationRecord
 		wars.pending.where.not(id: war_request)
 	end
 
-
-	def owner
-		User.with_role(:owner, self).first
+	def war_points(war)
+		GuildWar.where(guild: self, war: war).first.points
 	end
 
-	def officers
-		User.with_role(:officer, self)
+	/will be used for scoring after war game/
+	def war_score(points)
+		war = wars.find_by(status: :started)
+		if war.present?
+			guild_wars.find_by(war: war).score(points)
+		end
 	end
 
+	def win_score(points)
+		increment!(:points, points)
+	end
 
 end

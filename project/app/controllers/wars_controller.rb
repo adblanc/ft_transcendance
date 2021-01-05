@@ -93,9 +93,9 @@ class WarsController < ApplicationController
 					end
 					war.destroy
 				end
-				@opponent.members.each do |member|
-					member.send_notification("#{@guild.name} has negotiated the terms of your guild's war declaration", "/warindex")
-				end
+			end
+			@opponent.members.each do |member|
+				member.send_notification("#{@guild.name} has negotiated the terms of your guild's war declaration", "/warindex")
 			end
 			@war
 		else
