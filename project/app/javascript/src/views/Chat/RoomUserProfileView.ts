@@ -62,8 +62,16 @@ export default class RoomUserProfileView extends ModalView<Message> {
     }
   }
 
-  banUser() {
-    console.log("ban user");
+  async banUser() {
+    if (!this.sender) {
+      return displayError("This user is no longer in the room.");
+    }
+
+    const success = await this.sender.ban(this.model.get("room_id"));
+
+    if (success) {
+      displaySuccess(`You successfully banned ${this.model.get("user_login")}`);
+    }
   }
 
   render() {

@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   put "/unblock/:id", to: "blocks#unblock";
 
   put "/mute/:room_id", to: "mutes#mute";
+  put "/ban/:room_id", to: "bans#ban";
 
   resources :guilds do
 	member do

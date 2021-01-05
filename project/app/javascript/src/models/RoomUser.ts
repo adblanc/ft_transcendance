@@ -38,4 +38,13 @@ export default class RoomUser extends BaseModel<IRoomUser> {
       }
     );
   }
+
+  ban(room_id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/ban/${room_id}`,
+      }
+    );
+  }
 }

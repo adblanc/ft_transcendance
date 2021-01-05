@@ -13,6 +13,9 @@ class Room < ApplicationRecord
 	has_many :mutes
 	has_many :muted_users, :through => :mutes
 
+	has_many :bans
+	has_many :banned_users, :through => :bans
+
 
 	def update_user_role(user, action)
 		case action
