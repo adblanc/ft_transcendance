@@ -20,6 +20,9 @@ const NO_AUTH_ROUTES = ["auth", "authCallBack"];
 const shouldBeAuth = (routeName: string) =>
   !NO_AUTH_ROUTES.find((route) => route === routeName);
 
+const shouldNotBeAuth = (routeName: string) =>
+  NO_AUTH_ROUTES.find((route) => route === routeName);
+
 export default class MainRouter extends Backbone.Router {
   constructor() {
     super({
@@ -41,6 +44,9 @@ export default class MainRouter extends Backbone.Router {
   execute(callback: (...args: any[]) => void, args: any[], name: string) {
     if (shouldBeAuth(name) && !isAuth()) {
       this.navigate("/auth", { trigger: true });
+      return false;
+    } else if (shouldNotBeAuth(name) && isAuth()) {
+      this.navigate("/", { trigger: true });
       return false;
     }
 
