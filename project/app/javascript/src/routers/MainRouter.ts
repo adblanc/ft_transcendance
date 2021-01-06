@@ -66,7 +66,7 @@ export default class MainRouter extends Backbone.Router {
   auth() {
     const authView = new AuthView({});
 
-    pagesHandler.showPage(authView, false, false, false);
+    pagesHandler.showPage(authView, false, false);
   }
 
   index() {
