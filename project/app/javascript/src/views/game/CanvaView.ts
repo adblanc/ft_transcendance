@@ -102,12 +102,12 @@ export default class CanvaView extends ModalView<Rectangle> {
 			}
 			if (this.player_one.score >= this.points)
 				{
-					document.body.removeChild(canvas);
+					//document.body.removeChild(canvas);
 					return 1;
 				}
 			else if (this.player_two.score >= this.points)
 				{
-					document.body.removeChild(canvas);
+					//document.body.removeChild(canvas);
 					return 2;
 				}
 			if (this.ball.left() < this.player_two.paddle.x + 15 || this.ball.right() > this.player_one.paddle.x)
@@ -133,6 +133,12 @@ export default class CanvaView extends ModalView<Rectangle> {
 			return 0;
 		}
 
+		stop()
+		{
+			this.ball.velocity.x = 0;
+			this.ball.velocity.y = 0;
+			document.body.removeChild(canvas);
+		}
 // 		 stop(i: Number)
 //   {
 //     const template = $("#game_win").html();

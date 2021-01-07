@@ -17,6 +17,7 @@ interface IGame {
   status: string;
   user: Profile;
   first: number;
+  //player_points: number;
 }
 
 type CreatableGameArgs = Partial<
@@ -60,6 +61,7 @@ export default class Game extends BaseModel<IGame> {
       status: "waiting",
       user: [],
       second: false,
+      //player_points: 0,
     };
   }
 
@@ -86,10 +88,10 @@ export default class Game extends BaseModel<IGame> {
     return this.asyncSave({status: "playing", second: true},{ url: `${this.baseGameRoot()}/join`,});
   }
 
-  finish()
+  finish(g_points: number)
   {
     displaySuccess("The game is finished");
-    return this.asyncSave({status: "finished"},{ url: `${this.baseGameRoot()}/finish`,});
+    return this.asyncSave({status: "finished", points: g_points},{ url: `${this.baseGameRoot()}/finish`,});
   }
 
   createConsumer() {

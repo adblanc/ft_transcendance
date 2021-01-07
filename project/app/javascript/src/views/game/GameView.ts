@@ -32,7 +32,8 @@ export default class GameView extends BaseView {
   joueurs: Profiles;
   joueur_un: Profile;
     joueur_deux: Profile;
-   // mouvements: Mouvements;
+    inter: any = null;
+    g_points: number;
     constructor(options?: Options) {
         super(options);
         this.game = options.game;
@@ -50,17 +51,21 @@ export default class GameView extends BaseView {
         // this.mouvements.fetch();
         // this.joueurs.fetch();
         // this.joueur_un = this.joueurs.get(1);
-        // displaySuccess("Joueur 1: " + JSON.stringify(this.joueur_un));
+        // displaySuccess("You won the game" + JSON.stringify(this.game));
+        // if (this.game.status == "finished")
+        // {
+        //   displaySuccess("finished");
+        //   this.render_finished();
+        // }
+        // else {
          this.player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
        this.player_two = new Player(new Rectangle(0, canvas.height / 2, 15, 100));
-       
        //this.listenTo(this.game, "change:second", this.render_finished);
        this.listenTo(this.game.mouvements, "add", this.canva_render);
        this.listenTo(this.game, "change:status", this.render_playing);
        //this.listenTo(this.game.model, "change", this.play);
-       
        //var inter = setTimeout(this.keyBoardClicked,100);
-       
+      //  }
       }
 
       events() {
@@ -69,38 +74,69 @@ export default class GameView extends BaseView {
         };
       }
 
-      game_draw()
+      game_draw(game, joueur_un)
       {
+        // this.game.fetch({
+        //   error: () => {
+        //     Backbone.history.navigate("/not-found", { trigger: true });
+        //   },
+        // });
         //displaySuccess("You won the game" + JSON.stringify(this.game));
               var y: Number = 0;
-       // y = canvaView.callback(10);
-        if ( (y = canvaView.callback(10)) == 2)
+        // displaySuccess("joueur un" + String(joueur_un.get("id")));
+        // displaySuccess("game first " + game.get("first"));
+        if ((y = canvaView.callback(10)) == 2)
         {
-          displaySuccess("You won the game" + String(y) + JSON.stringify(this.game));
-          //var game_exist = this.collection.get(game_id) as Game;
-          //const success = await this.game.finish();
-          // if (success)
-          // {
-          //   displaySuccess("SUCCESS");
-             this.render_won();
-          // }
-          
+          if (game.get("first") == joueur_un.get("id"))
+          { this.g_points = canvaView.player_one.score;
+            displaySuccess("this joueur" + String(this.g_points));
+          }
+          else
+          {
+            this.g_points = canvaView.player_two.score;
+            displaySuccess("this joueur" + String(this.g_points));
+          }
+          canvaView.stop();
+          game.finish(this.g_points);
+            displaySuccess("You won the game ok");
+            window.location.reload();
+          //this.render_lost();
         } 
       else if((y = canvaView.callback(10)) == 1)
       {
         //displaySuccess("You won the game" + String(y) + JSON.stringify(this.game));
-        //this.game.finish();
-        displaySuccess("You lost the game" + String(y));
-        this.render_lost();
+        //supprimer le canva
+        //arreter le streaming
+        canvaView.stop();
+        displaySuccess("You lost the game" + JSON.stringify(game));
+        if (game.get("first") == joueur_un.get("id"))
+        { this.g_points = canvaView.player_one.score;
+          displaySuccess("this joueur" + String(this.g_points));
+        }
+        else
+        {
+          this.g_points = canvaView.player_two.score;
+          displaySuccess("this joueur" + String(this.g_points));
+        }
+        game.finish(this.g_points);
+        displaySuccess("You lost the game ok");
+        window.location.reload();
+        //this.render_lost();
       } 
+      else
+      {
+        //displaySuccess("Nothing");
+      }
       }
 
       play()
       {
-        this.listenTo(this.game, "change:status", this.render_finished);
-        var inter = setInterval(this.game_draw,100);
+        //this.listenTo(this.game, "change:status", this.render_finished);
+        var inter_game = setInterval(this.game_draw,100, this.game, this.joueur_un); //arreter au bout d'un moment
         //displaySuccess("length of users" + String(this.game.user.length))
+        //var inter_fetch = setInterval(this.game.asyncFetch, 100);
         this.listenTo(this.game.model, "change", this.canva_render);
+       // this.game.on("change:status", function(inter) {displaySuccess("STOPPING"); clearInterval(inter);});
         this.joueurs = this.game.get("user");
         //var player = this.joueurs.findWhere({"name": String(this.joueur_un.get("name"))});
         var j_str = this.joueur_un.get("name") as string;
@@ -127,7 +163,7 @@ export default class GameView extends BaseView {
 
       canva_render()
       {
-        displaySuccess("first" + String(this.game.get("first")));
+        //displaySuccess("first" + String(this.game.get("first")));
         console.log("received JSON render" + JSON.stringify(this.game.model.get("scale")));
         if ((this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (!this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") > 0)
         {canvaView.player_one.paddle.y += 10;
@@ -162,18 +198,20 @@ export default class GameView extends BaseView {
             canvaView.player_two.paddle.y = 0;
           }
         }
-      //   var y: Number = 0;
+         var y: Number = 0;
       //  // y = canvaView.callback(10);
-      //   if ( (y = canvaView.callback(10)) == 2)
-      //   {
-      //     displaySuccess("You won the game" + String(y));
-      //     this.render_won();
-      //   } 
-      // else if((y = canvaView.callback(10)) == 1)
-      // {
-      //   displaySuccess("You lost the game" + String(y));
-      //   this.render_lost();
-      // } 
+      //    if ( (y = canvaView.callback(10)) == 2)
+      //    {
+      //     displaySuccess("You won the game" + JSON.stringify(this.game));
+      //      this.game.finish();
+      //      displaySuccess("You won the game ok" + JSON.stringify(this.game));
+      //      this.render_won();
+      //    } 
+      //  else if((y = canvaView.callback(10)) == 1)
+      //  {
+      //    displaySuccess("You lost the game" + String(y));
+      //    this.render_lost();
+      //  } 
       }
 
       keyBoardClicked(e) {
@@ -226,17 +264,23 @@ export default class GameView extends BaseView {
 
     render()
     {
-      this.listenTo(this.game, "change:status", this.render_playing);
-  
-    const template = $("#waiting").html();
-    const html = Mustache.render(template, this.game.toJSON());
-    this.$el.html(html);
-    return this;
+      displaySuccess(JSON.stringify(this.game));
+      this.inter = setInterval(this.page_reload, 1000);
+      const template = $("#waiting").html();
+      const html = Mustache.render(template, this.game.toJSON());
+      this.$el.html(html);
+      return this;
+  }
+
+  page_reload()
+  {
+    window.location.reload();
+    displaySuccess("reloading");
   }
 
   render_won()
   {
-    clearInterval();
+    //clearInterval();
           //    if (this.game.get("user")[1].get("name") == this.joueur_un.get("name"))
           // displaySuccess("Same joueurs");
     displaySuccess("Length is" + JSON.stringify(this.collection.toJSON()));
@@ -249,27 +293,44 @@ export default class GameView extends BaseView {
   {
     // displaySuccess("This game" + JSON.stringify(this.game.get("user").get("name")));
     // displaySuccess("This user name" + this.joueur_un.get("name"));
-    this.game.finish();
+   //this.game.finish();
+   displaySuccess("RENDER LOST");
     const template = $("#game_lost").html();
     const html = Mustache.render(template, this.game.toJSON());
     this.$el.html(html);
     return this;
   }
 
-  render_finished()
-  {
-    displaySuccess("UPDATE")
-    const template = $("#game_finished").html();
-    const html = Mustache.render(template, this.game.toJSON());
-    this.$el.html(html);
-    return this;
-  }
+  // render_finished()
+  // {
+  //   displaySuccess("UPDATE");
+  //   const template = $("#game_finished").html();
+  //   const html = Mustache.render(template, this.game.toJSON());
+  //   this.$el.html(html);
+  //   return this;
+  // }
   render_playing()
   {
-    const template = $("#playing").html();
-    const html = Mustache.render(template, this.game.toJSON());
-    this.$el.html(html);
-    return this;
+    clearInterval(this.inter);
+    displaySuccess(JSON.stringify(this.game));
+    displaySuccess(this.game.get("status"));
+    if (this.game.get("status") == "finished")
+    {
+      displaySuccess("here finish");
+      const template = $("#game_finished").html();
+      const html = Mustache.render(template, this.game.toJSON());
+      this.$el.html(html);
+      return this;
+    }
+    else if (this.game.get("status") == "playing")
+    {
+      const template = $("#playing").html();
+      const html = Mustache.render(template, this.game.toJSON());
+      this.$el.html(html);
+      return this;
+    }
+    //this.listenTo(this.game, "change:status", this.render_finished); // fonctionne pas
+
   }
 
 }
