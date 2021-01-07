@@ -33,10 +33,15 @@ class GamesController < ApplicationController
         @game.update_attribute(:status, "finished")
         if @game.save
             @gameuserone = GameUser.where(game: @game, user: current_user).first
-            @gameuserone.update_attribute(:points, 3)
-            #same avec le  deuxieme
+            #@gameuserone.update_attribute(:points, 2)
+           # if @gameuserone.update_attribute(:points, params[:points])
+           #     @gameuserone
+          #  else
+         #       render json: @game.errors, status: :unprocessable_entity
+          #  #same avec le  deuxieme
+            #@gameuserone.update_attribute(:points, game_params[:points])
             @game
-            @gameuserone
+            
         else
             render json: @game.errors, status: :unprocessable_entity
         end
@@ -59,7 +64,7 @@ class GamesController < ApplicationController
     end
 private
     def game_params
-        params.permit(:id, :level, :points, :status, :first, :second, :player_points)
+        params.permit(:id, :level, :points, :status, :first, :second)
     end
     def game_user_params
         params.permit(:game, :user, :player_points)

@@ -76,15 +76,7 @@ export default class GameView extends BaseView {
 
       game_draw(game, joueur_un)
       {
-        // this.game.fetch({
-        //   error: () => {
-        //     Backbone.history.navigate("/not-found", { trigger: true });
-        //   },
-        // });
-        //displaySuccess("You won the game" + JSON.stringify(this.game));
               var y: Number = 0;
-        // displaySuccess("joueur un" + String(joueur_un.get("id")));
-        // displaySuccess("game first " + game.get("first"));
         if ((y = canvaView.callback(10)) == 2)
         {
           if (game.get("first") == joueur_un.get("id"))
@@ -104,28 +96,23 @@ export default class GameView extends BaseView {
         } 
       else if((y = canvaView.callback(10)) == 1)
       {
-        //displaySuccess("You won the game" + String(y) + JSON.stringify(this.game));
         //supprimer le canva
         //arreter le streaming
         canvaView.stop();
         displaySuccess("You lost the game" + JSON.stringify(game));
         if (game.get("first") == joueur_un.get("id"))
         { this.g_points = canvaView.player_one.score;
-          displaySuccess("this joueur" + String(this.g_points));
         }
         else
         {
           this.g_points = canvaView.player_two.score;
-          displaySuccess("this joueur" + String(this.g_points));
         }
         game.finish(this.g_points);
-        displaySuccess("You lost the game ok");
         window.location.reload();
         //this.render_lost();
       } 
       else
       {
-        //displaySuccess("Nothing");
       }
       }
 
@@ -141,9 +128,6 @@ export default class GameView extends BaseView {
         //var player = this.joueurs.findWhere({"name": String(this.joueur_un.get("name"))});
         var j_str = this.joueur_un.get("name") as string;
         var player = this.joueurs.findWhere({"name": j_str})
-        // displaySuccess("Game players" + JSON.stringify(this.joueurs));
-        // displaySuccess("User: " + String(this.joueur_un.get("name")));
-        // displaySuccess("User found" + JSON.stringify(player));
         if (player != undefined)
         {
             displaySuccess("You can play");
@@ -158,6 +142,7 @@ export default class GameView extends BaseView {
       }
         else{
           displaySuccess("You watch the game");
+          var canvas = canvaView.init(500, 250, '#EEE', this.player_one, this.game.get("points"), this.game.get("level"), this.player_two);
         }
       }
 
@@ -167,7 +152,7 @@ export default class GameView extends BaseView {
         console.log("received JSON render" + JSON.stringify(this.game.model.get("scale")));
         if ((this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (!this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") > 0)
         {canvaView.player_one.paddle.y += 10;
-          displaySuccess("me");
+          displaySuccess("me up");
           if (canvaView.player_one.paddle.y >= canvas.height)
           {
             canvaView.player_one.paddle.y = canvas.height
@@ -175,6 +160,7 @@ export default class GameView extends BaseView {
         }
         else if ((!this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") > 0)
         {
+          displaySuccess("them up");
           canvaView.player_two.paddle.y += 10;
           if (canvaView.player_two.paddle.y >= canvas.height)
           {
@@ -183,7 +169,7 @@ export default class GameView extends BaseView {
         }
         else if ((this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (!this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") < 0)
         {
-          displaySuccess("me");
+          displaySuccess("me down");
           canvaView.player_one.paddle.y -= 10;
           if (canvaView.player_one.paddle.y <= 0)
           {
@@ -192,6 +178,7 @@ export default class GameView extends BaseView {
         }
         else if ((!this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") < 0)
         {
+          displaySuccess("them down");
           canvaView.player_two.paddle.y -= 10;
           if (canvaView.player_two.paddle.y <= 0)
           {
