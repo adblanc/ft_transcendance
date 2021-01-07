@@ -12,6 +12,9 @@ class WarsController < ApplicationController
 	def create
 		@initiator = Guild.find(params[:initiator_id])
 		@recipient = Guild.find(params[:recipient_id])
+	
+		return head :unauthorized unless current_user.guild_owner?(@initiator)
+		return head :unauthorized if @initiator.atWar? || @initiator.warInitiator? || @recipient.atWar?
 
 		@war = War.create(war_params)
 
@@ -44,6 +47,9 @@ class WarsController < ApplicationController
 		@opponent = @war.opponent(@guild)
 		@guild_war = GuildWar.where(war: @war, guild: @guild).first
 
+		return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
+		return head :unauthorized if @guild.atWar? || @guild.warInitiator? || @opponent.atWar?
+
 		@guild_war.update(status: :accepted)
 		@war.update(status: :confirmed)
 
@@ -69,6 +75,10 @@ class WarsController < ApplicationController
 	def reject
 		@war = War.find_by_id(params[:id])
 		@guild = Guild.find_by_id(current_user.guild.id)
+
+		return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
+		return head :unauthorized if @guild.atWar? || @guild.warInitiator?
+
 		@war.opponent(@guild).members do |member|
 			member.send_notification("#{@guild.name} rejected your guild's war declaration", "/warindex")
 		end
@@ -81,6 +91,9 @@ class WarsController < ApplicationController
 		@opponent = @war.opponent(@guild)
 		@gw_initiator = GuildWar.where(war: @war, guild: @guild).first
 		@gw_recipient = GuildWar.where(war: @war).where.not(guild: @guild).first
+
+		return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
+		return head :unauthorized if @guild.atWar? || @guild.warInitiator? || @opponent.atWar?
 
 		@war.update(war_params)
 		if @war.save

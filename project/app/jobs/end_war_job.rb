@@ -6,9 +6,11 @@ class EndWarJob < ApplicationJob
 	  war.update(status: :ended)
 	  if war.guilds.first.war_points(war) > war.guilds.second.war_points(war)
 		war.guilds.first.win_score(war.prize)
+		war.guilds.second.lose_score(war.prize)
 		@winner = war.guilds.first
       elsif war.guilds.first.war_points(war) < war.guilds.second.war_points(war)
 		war.guilds.second.win_score(war.prize)
+		war.guilds.first.lose_score(war.prize)
 		@winner = war.guilds.second
       end
 	  war.guilds.each do |guild|
