@@ -54,7 +54,9 @@ class WarsController < ApplicationController
 		@war.update(status: :confirmed)
 
 		@guild.wars.where(status: :pending).each do |war|
-			war.opponent(@guild).members do |member|
+			opponent = war.opponent(@guild)
+			logger.debug "opponent: #{opponent.name}"
+			opponent.members do |member|
 				member.send_notification("#{@guild.name} rejected your guild's war declaration", "/warindex")
 			end
 			war.destroy

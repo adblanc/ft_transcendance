@@ -15,7 +15,7 @@ class War < ApplicationRecord
 	validates :start, presence: true
 	validates :end, presence: true
 	validates :prize, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
-	validates_with WarDateValidator	
+	validates_with WarDateValidator
 
 	def opponent(guild)
 		self.guilds.where.not(id: guild.id).first
