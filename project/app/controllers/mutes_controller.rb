@@ -1,20 +1,12 @@
-# TODO
-
-# Verifier que l'user qu'on veut mute fait bien parti du room
-
 class MutesController < ApplicationController
 	before_action :authenticate_user!
 	before_action :load_entities
 
 	def mute
-		if (!@muted_user)
-			render json: {"user" => ["does not exist"]}, status: :unprocessable_entity
-		elsif (!@room)
-			render json: {"room" => ["does not exist"]}, status: :unprocessable_entity
-		else
+		unless correct_req
 			if (!@current_user.is_room_owner?(@room))
 				render json: {"you" => ["must be owner of this room"]}, status: :unprocessable_entity
-			elsif (@room.mutes.where(muted_user_id: params[:id]).take)
+			elsif (@room.mutes.exist?(muted_user_id: params[:id]))
 				render json: {"User" => ["is already muted"]}, status: :unprocessable_entity
 			else
 				@mute = @room.mutes.build(:muted_user_id => params[:id])
@@ -26,15 +18,10 @@ class MutesController < ApplicationController
 				end
 			end
 		end
-
 	end
 
 	def unmute
-		if (!@muted_user)
-			render json: {"user" => ["does not exist"]}, status: :unprocessable_entity
-		elsif (!@room)
-			render json: {"room" => ["does not exist"]}, status: :unprocessable_entity
-		else
+		unless correct_req
 			if (!@current_user.is_room_owner?(@room))
 				render json: {"you" => ["must be owner of this room"]}, status: :unprocessable_entity
 			elsif !(@mute = @room.mutes.where(muted_user_id: params[:id]).take)
@@ -47,6 +34,20 @@ class MutesController < ApplicationController
 	end
 
 	private
+
+	def correct_req
+		if (!@muted_user)
+			render json: {"user" => ["does not exist"]}, status: :unprocessable_entity
+			false
+		elsif (!@room)
+			render json: {"room" => ["does not exist"]}, status: :unprocessable_entity
+			false
+		elsif (!@room.users.exists?(params[:id]))
+			render json: {"user" => ["is not in this room"]}, status: :unprocessable_entity
+			false
+		end
+		true
+	end
 
 
 	def load_entities

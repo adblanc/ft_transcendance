@@ -1,17 +1,9 @@
-# TODO
-
-# Verifier que l'user qu'on veut mute fait bien parti du room
-
 class BansController < ApplicationController
 	before_action :authenticate_user!
 	before_action :load_entities
 
 	def ban
-		if (!@banned_user)
-			render json: {"user" => ["does not exist"]}, status: :unprocessable_entity
-		elsif (!@room)
-			render json: {"room" => ["does not exist"]}, status: :unprocessable_entity
-		else
+		unless correct_req
 			if (!@current_user.is_room_owner?(@room))
 				render json: {"you" => ["must be owner of this room"]}, status: :unprocessable_entity
 			elsif (@room.bans.where(banned_user_id: params[:id]).take)
@@ -30,11 +22,7 @@ class BansController < ApplicationController
 	end
 
 	def unban
-		if (!@banned_user)
-			render json: {"user" => ["does not exist"]}, status: :unprocessable_entity
-		elsif (!@room)
-			render json: {"room" => ["does not exist"]}, status: :unprocessable_entity
-		else
+		unless correct_req
 			if (!@current_user.is_room_owner?(@room))
 				render json: {"you" => ["must be owner of this room"]}, status: :unprocessable_entity
 			elsif !(@ban = @room.bans.where(banned_user_id: params[:id]).take)
@@ -47,6 +35,21 @@ class BansController < ApplicationController
 	end
 
 	private
+
+	def correct_req
+		if (!@banned_user)
+			render json: {"user" => ["does not exist"]}, status: :unprocessable_entity
+			false
+		elsif (!@room)
+			render json: {"room" => ["does not exist"]}, status: :unprocessable_entity
+			false
+		elsif (!@room.users.exists?(params[:id]))
+			render json: {"user" => ["is not in this room"]}, status: :unprocessable_entity
+			false
+		end
+		true
+	end
+
 
 	def load_entities
 		@room = Room.find_by_id(params[:room_id]);
