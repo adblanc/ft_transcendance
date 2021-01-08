@@ -5,13 +5,21 @@ import RoomUser from "src/models/RoomUser";
 import { displaySuccess } from "src/utils";
 import ModalView from "../ModalView";
 
+type Options = Backbone.ViewOptions<RoomUser> & {
+  currentRoomUser: RoomUser;
+};
+
 export default class RoomUserProfileView extends ModalView<RoomUser> {
-  constructor(options?: Backbone.ViewOptions<RoomUser>) {
+  currentRoomUser?: RoomUser;
+
+  constructor(options?: Options) {
     super(options);
 
     if (!this.model) {
       throw Error("Please provide a RoomUser model to this view.");
     }
+
+    this.currentRoomUser = options.currentRoomUser;
   }
 
   events() {
@@ -77,6 +85,7 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
     const html = Mustache.render(template, {
       ...this.model?.toJSON(),
       isCurrentUser: this.model.get("id") === currentUser().get("id"),
+      isAdmin: this.currentRoomUser.get("isRoomAdministrator"),
     });
     this.$content.html(html);
     return this;

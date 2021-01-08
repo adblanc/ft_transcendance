@@ -16,9 +16,9 @@ export interface IBlockedUser {
 
 export interface IProfile {
   login: string;
-  name: string;
-  email: string;
-  two_fact_auth: boolean;
+  name?: string;
+  email?: string;
+  two_fact_auth?: boolean;
   id?: number;
   avatar_url?: string;
   created_at?: string;
@@ -27,7 +27,7 @@ export interface IProfile {
   pending_guild?: Guild;
   guild?: Guild;
   notifications?: Notifications;
-  blocked_users: IBlockedUser[];
+  blocked_users?: IBlockedUser[];
 }
 
 type ModifiableProfileArgs = {

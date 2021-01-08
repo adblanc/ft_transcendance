@@ -17,15 +17,13 @@ export default class BlockedUsersView extends BaseView {
     };
   }
 
-  async unBlockUser({ target }: JQuery.ClickEvent) {
-    const id = $(target).data("user_id");
-
-    console.log("id", id);
+  async unBlockUser({ currentTarget }: JQuery.ClickEvent) {
+    const id = $(currentTarget).data("user_id");
 
     const success = await currentUser().unBlockUser(id);
 
     if (success) {
-      const login = $(target).data("user_login");
+      const login = $(currentTarget).data("user_login");
       displaySuccess(`Successfully unblocked ${login}.`);
     }
   }
