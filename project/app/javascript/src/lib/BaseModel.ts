@@ -45,9 +45,13 @@ export default class BaseModel<
           wait: true,
           ...options,
           success: () => res(true),
-          error: (_, jqxhr) => rej(mapServerErrors(jqxhr.responseJSON)),
+          error: (_, jqxhr) => {
+            console.log("error fetching", jqxhr);
+            return rej(mapServerErrors(jqxhr.responseJSON));
+          },
         });
         if (!valid) {
+          console.log("not navalid", this.validationError);
           rej([this.validationError]);
         }
       })

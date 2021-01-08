@@ -1,15 +1,19 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import Message from "src/models/Message";
+import { currentUser } from "src/models/Profile";
 import RoomUser from "src/models/RoomUser";
+import { displayError, displaySuccess } from "src/utils";
 import ModalView from "../ModalView";
 
 type Options = Backbone.ViewOptions<Message> & {
-  currentUser: RoomUser;
+  isRoomAdministrator?: boolean;
+  sender?: RoomUser;
 };
 
 export default class RoomUserProfileView extends ModalView<Message> {
-  currentUser: RoomUser;
+  isRoomAdministrator?: boolean;
+  sender?: RoomUser;
 
   constructor(options?: Options) {
     super(options);
@@ -18,10 +22,8 @@ export default class RoomUserProfileView extends ModalView<Message> {
       throw Error("Please provide a Message model to this view.");
     }
 
-    if (!options.currentUser)
-      throw Error("Please provide a current user to RoomUserProfileView");
-
-    this.currentUser = options.currentUser;
+    this.isRoomAdministrator = options.isRoomAdministrator;
+    this.sender = options.sender;
   }
 
   events() {
@@ -30,7 +32,9 @@ export default class RoomUserProfileView extends ModalView<Message> {
       "click #invite-to-play-user": this.inviteToPlay,
       "click #block-user": this.blockUser,
       "click #mute-user": this.muteUser,
+      "click #unmute-user": this.unMuteUser,
       "click #ban-user": this.banUser,
+      "click #unban-user": this.unBanUser,
     };
   }
 
@@ -38,16 +42,66 @@ export default class RoomUserProfileView extends ModalView<Message> {
     console.log("invite to play");
   }
 
-  blockUser() {
-    console.log("block user");
+  async blockUser() {
+    const success = await currentUser().blockUser(this.model.get("user_id"));
+
+    if (success) {
+      displaySuccess(
+        `You successfully blocked ${this.model.get("user_login")}`
+      );
+    }
   }
 
-  muteUser() {
-    console.log("mute user");
+  async muteUser() {
+    if (!this.sender) {
+      return displayError("This user is no longer in the room.");
+    }
+
+    const success = await this.sender.mute(this.model.get("room_id"));
+
+    if (success) {
+      displaySuccess(`You successfully muted ${this.model.get("user_login")}`);
+    }
   }
 
-  banUser() {
-    console.log("ban user");
+  async unMuteUser() {
+    if (!this.sender) {
+      return displayError("This user is no longer in the room.");
+    }
+
+    const success = await this.sender.unMute(this.model.get("room_id"));
+
+    if (success) {
+      displaySuccess(
+        `You successfully unmuted ${this.model.get("user_login")}`
+      );
+    }
+  }
+
+  async banUser() {
+    if (!this.sender) {
+      return displayError("This user is no longer in the room.");
+    }
+
+    const success = await this.sender.ban(this.model.get("room_id"));
+
+    if (success) {
+      displaySuccess(`You successfully banned ${this.model.get("user_login")}`);
+    }
+  }
+
+  async unBanUser() {
+    if (!this.sender) {
+      return displayError("This user is no longer in the room.");
+    }
+
+    const success = await this.sender.unBan(this.model.get("room_id"));
+
+    if (success) {
+      displaySuccess(
+        `You successfully unbanned ${this.model.get("user_login")}`
+      );
+    }
   }
 
   render() {
@@ -56,8 +110,9 @@ export default class RoomUserProfileView extends ModalView<Message> {
 
     const html = Mustache.render(template, {
       ...this.model.toJSON(),
-      isAdmin: this.currentUser.get("isRoomAdministrator"),
-      isCurrentUser: this.model.get("id") === this.currentUser.get("id"),
+      isAdmin: this.isRoomAdministrator,
+      isCurrentUser: this.model.get("user_id") === currentUser().get("id"),
+      ...(this?.sender.toJSON() || {}),
     });
     this.$content.html(html);
     return this;

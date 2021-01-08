@@ -8,7 +8,7 @@ class RoomsController < ApplicationController
 	end
 
 	def my_rooms
-		@rooms = current_user.rooms
+		@rooms =  @current_user.rooms.select { |room| !@current_user.is_room_ban?(room) }
 	end
 
 	def create
@@ -24,10 +24,10 @@ class RoomsController < ApplicationController
 	  end
 
 	  def update
-		@room = Room.find(params[:id])
+		@room = Room.find_by_id(params[:id])
 
 		if @room && !@current_user.is_room_owner?(@room)
-			render json: {"you" => ["must be owner of this room."]}, status: :unauthorized
+			render json: {"you" => ["must be owner of this room."]}, status: :unprocessable_entity
 		elsif @room
 			@room.password = room_password;
 			if (@room.save)
@@ -43,10 +43,14 @@ class RoomsController < ApplicationController
 	  def join
 		@room = Room.find_by(name: room_params[:name])
 
-		if (@room && current_user.rooms.exists?(@room.id))
-			render json: {"you" => ["already joined this room."]}, status: :unprocessable_entity
+
+
+		if (@room && @current_user.is_room_ban?(@room))
+			render json: {"you" => ["are banned from this room."]}, status: :unprocessable_entity
 		elsif (@room && (!BCrypt::Password.valid_hash?(@room.password_digest) || @room.try(:authenticate, room_password)))
-			@room.users.push(current_user)
+			if (!current_user.rooms.exists?(@room.id))
+				@room.users.push(current_user)
+			end
 			@room
 		else
 			render json: {"name or password" => ["is incorrect."]}, status: :unprocessable_entity
@@ -60,8 +64,9 @@ class RoomsController < ApplicationController
 			render json: {"you" => ["are not in this room."]}, status: :unprocessable_entity
 		elsif (!@room)
 			render json: {"name" => ["is incorrect"]}, status: :unprocessable_entity
+		elsif (@current_user.is_room_ban?(@room));
+			render json: {"action" => ["left"]}, status: :ok
 		else
-
 			if (@room.remove_user(current_user) === "left")
 				render json: {"action" => ["left"]}, status: :ok
 			else

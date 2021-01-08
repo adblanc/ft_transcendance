@@ -3,7 +3,6 @@ import { eventBus } from "src/events/EventBus";
 import BaseView from "src/lib/BaseView";
 import Message from "src/models/Message";
 import Room from "src/models/Room";
-import { displayError } from "src/utils";
 import MessageView from "./MessageView";
 import RoomUserProfileView from "./RoomUserProfileView";
 
@@ -29,9 +28,14 @@ export default class RoomMessagesView extends BaseView<Room> {
       .get("users")
       .find((u) => u.get("login") === $("#current-user-profile").data("login"));
 
+    const sender = this.model
+      .get("users")
+      .find((u) => u.get("id") === message.get("user_id"));
+
     const profileView = new RoomUserProfileView({
       model: message,
-      currentUser,
+      sender,
+      isRoomAdministrator: currentUser.get("isRoomAdministrator"),
     });
 
     profileView.render();

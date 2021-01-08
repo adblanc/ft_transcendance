@@ -17,10 +17,12 @@ const MY_ROOMS_VIEW_INFOS = {
 
 export default class MyRoomsView extends BaseView {
   myRooms: MyRooms;
+  myRoomViews: MyRoomView[];
 
   constructor(options?: Options) {
     super(options);
 
+    this.myRoomViews = [];
     this.myRooms = options.myRooms;
     this.myRooms.fetch();
 
@@ -28,16 +30,18 @@ export default class MyRoomsView extends BaseView {
     this.listenTo(this.myRooms, "remove", this.removeMyRoom);
   }
 
+  onClose = () => {
+    this.myRooms.forEach((room) => this.removeMyRoom(room));
+  };
+
   renderMyRoom(room: Room) {
-    this.$("#my-rooms-list").append(
-      new MyRoomView({ model: room }).render().el
-    );
+    const myRoomView = new MyRoomView({ model: room });
+    this.myRoomViews.push(myRoomView);
+    this.$("#my-rooms-list").append(myRoomView.render().el);
   }
 
   removeMyRoom(room: PublicRoom) {
-    this.$(`#room-${room.get("id")}`)
-      .parent()
-      .remove();
+    this.myRoomViews.forEach((room) => room.close());
   }
 
   render() {

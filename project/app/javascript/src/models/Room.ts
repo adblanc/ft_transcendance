@@ -6,12 +6,12 @@ import { BASE_ROOT } from "src/constants";
 import { eventBus } from "src/events/EventBus";
 import BaseRoom from "./BaseRoom";
 import Message, { IMessage } from "./Message";
+import { currentUser } from "./Profile";
 import RoomUser from "./RoomUser";
 
 export default class Room extends BaseRoom {
   channel: ActionCable.Channel;
   messages: Messages;
-  currentUserId?: number;
 
   preinitialize() {
     this.relations = [
@@ -27,7 +27,6 @@ export default class Room extends BaseRoom {
   initialize() {
     this.messages = new Messages();
     this.channel = this.createConsumer();
-    this.currentUserId = undefined;
 
     this.listenTo(this, "change:id", this.updateChannel);
     this.listenTo(eventBus, "global:logout", this.onLogout);
@@ -53,17 +52,17 @@ export default class Room extends BaseRoom {
           console.log("connected to", room_id);
         },
         received: (message: IMessage) => {
-          if (!this.currentUserId) {
-            this.currentUserId = parseInt(
-              $("#current-user-profile").data("id")
+          const blocked = currentUser()
+            .get("blocked_users")
+            .find((u) => u.id === message.user_id);
+          if (!blocked) {
+            this.messages.add(
+              new Message({
+                ...message,
+                sent: currentUser().get("id") === message.user_id,
+              })
             );
           }
-          this.messages.add(
-            new Message({
-              ...message,
-              sent: this.currentUserId === message.user_id,
-            })
-          );
         },
       }
     );

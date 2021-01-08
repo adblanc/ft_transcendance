@@ -19,8 +19,23 @@
 		<a id="invite-to-play-user" class="link-primary block">Invite to play</a>
 		<a id="block-user" class="link-primary block">Block</a>
 		{{#isAdmin}}
-			<a id="mute-user" class="link-primary block">Mute</a>
-			<a id="ban-user" class="link-primary block">Ban</a>
+		{{#isMute}}
+				<a id="unmute-user" class="link-primary block">Unmute</a>
+		{{/isMute}}
+
+		{{^isMute}}
+			<a id="mute-user" class="link-primary block">Mute for 30 minutes</a>
+		{{/isMute}}
+
+		{{#isBan}}
+				<a id="unban-user" class="link-primary block">Unban</a>
+		{{/isBan}}
+
+		{{^isBan}}
+			<a id="ban-user" class="link-primary block">Ban for 30 minutes</a>
+		{{/isBan}}
+
+
 		{{/isAdmin}}
 		{{/isCurrentUser}}
 	</div>

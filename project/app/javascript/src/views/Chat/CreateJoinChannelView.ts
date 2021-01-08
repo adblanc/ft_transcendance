@@ -1,7 +1,7 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import Rooms from "src/collections/MyRooms";
-import { BASE_ROOT } from "src/constants";
+import BaseView from "src/lib/BaseView";
 import Room from "src/models/Room";
 import { displaySuccess } from "src/utils";
 
@@ -9,7 +9,7 @@ type Options = Backbone.ViewOptions & {
   rooms: Rooms;
 };
 
-export default class CreateJoinChannelView extends Backbone.View {
+export default class CreateJoinChannelView extends BaseView {
   isJoin: boolean;
   rooms: Rooms;
   isPrivate: boolean;

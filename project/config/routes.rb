@@ -10,6 +10,14 @@ Rails.application.routes.draw do
   get '/games', to: 'game#index', format:false
   put '/games', to: 'game#create', format: false
 
+  put "/block/:id", to: "blocks#block";
+  put "/unblock/:id", to: "blocks#unblock";
+
+  put "/mute/:room_id", to: "mutes#mute";
+  put "/unmute/:room_id", to: "mutes#unmute";
+  put "/ban/:room_id", to: "bans#ban";
+  put "/unban/:room_id", to: "bans#unban";
+
   resources :guilds do
 	member do
 		put :quit
