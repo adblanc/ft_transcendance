@@ -1,7 +1,7 @@
 class CreateWarTimes < ActiveRecord::Migration[6.0]
   def change
     create_table :war_times do |t|
-		t.belongs_to :war, index: true, foreign_key: true
+		t.belongs_to :war, index: true
 		t.datetime :start
 		t.datetime :end
 		t.integer :status, default: 0

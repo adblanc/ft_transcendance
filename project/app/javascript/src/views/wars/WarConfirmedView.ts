@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import ActivateView from "./ActivateView";
+import TimetableView from "./TimetableView";
 import War from "src/models/War";
 import Guild from "src/models/Guild";
 import { displaySuccess } from "src/utils";
@@ -25,7 +26,7 @@ export default class WarConfirmedView extends BaseView {
   events() {
     return {
 	  "click #wartime-btn": "onActivateClicked",
-	  //"click #timetable-btn": "onTimetableClicked",
+	  "click #timetable-btn": "onTimetableClicked",
     };
   }
 
@@ -37,6 +38,13 @@ export default class WarConfirmedView extends BaseView {
 	  activateView.render();
   }
 
+  onTimetableClicked() {
+	const timetableView = new TimetableView({
+		model: this.war,
+	  });
+  
+	  timetableView.render();
+  }
 
   render() {
 	const war = {

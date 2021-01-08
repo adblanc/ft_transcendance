@@ -11,7 +11,7 @@ class WarTime < ApplicationRecord
 
 	def date_check
 		if self.end < war.start || self.end > war.end
-			errors.add(:end, 'must be set within the time frame of the war')
+			errors.add :end, 'must be set within the time frame of the war'
 		end
 	end
 end

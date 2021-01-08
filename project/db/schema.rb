@@ -171,5 +171,4 @@ ActiveRecord::Schema.define(version: 2020_12_31_055909) do
   add_foreign_key "guild_wars", "wars"
   add_foreign_key "room_messages", "rooms"
   add_foreign_key "room_messages", "users"
-  add_foreign_key "war_times", "wars"
 end
