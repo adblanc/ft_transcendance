@@ -14,14 +14,18 @@ RUN mkdir -p /app
 #sets up the working directory for any instructions that follow
 WORKDIR /app
 
-#copy over our entire current directory and place the files in the docker image's work dictory
-COPY ./project ./
-
-#needed by yarn to create lockfile with dependencies
-RUN yarn install --check-files
+#copy our Gemfiles from our host's current directory to the working directory of the container
+COPY ./project/Gemfile ./project/Gemfile.lock ./
 
 #install bundler and all our gems
 RUN gem install bundler -v 2.1.2 && bundle _2.1.2_ install --jobs 20 --retry 5
+
+#needed by yarn to create lockfile with dependencies
+COPY ./project/package.json ./
+RUN yarn install --check-files
+
+#copy over our entire current directory and place the files in the docker image's work dictory
+COPY ./project ./
 
 EXPOSE 3000
 
