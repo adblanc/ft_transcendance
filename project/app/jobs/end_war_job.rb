@@ -7,13 +7,12 @@ class EndWarJob < ApplicationJob
 		war.guilds.first.win_score(war.prize)
 		war.guilds.second.lose_score(war.prize)
 		@winner = war.guilds.first
-		self.send_winner(war, winner)
+		self.send_winner(war, @winner)
       elsif war.guilds.first.war_points(war) < war.guilds.second.war_points(war)
 		war.guilds.second.win_score(war.prize)
 		war.guilds.first.lose_score(war.prize)
 		@winner = war.guilds.second
-		self.send_winner(war, winner)
-	  end
+		self.send_winner(war, @winner)
 	  else
 		war.guilds.first.win_score(war.prize / 2)
 		war.guilds.second.win_score(war.prize / 2)

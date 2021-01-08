@@ -33,7 +33,7 @@ export default class DeclareWarView extends ModalView<War> {
 
   async onSubmit(e: JQuery.Event) {
 	e.preventDefault();
-
+	
 	const dateTimeStart = this.fp_start.selectedDates[0];
     const dateTimeEnd = this.fp_end.selectedDates[0];
 	const start = dateTimeStart; 
