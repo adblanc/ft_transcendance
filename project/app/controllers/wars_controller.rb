@@ -23,7 +23,7 @@ class WarsController < ApplicationController
 			GuildWar.create!(guild: @recipient, war: @war, status: :pending)
 			@initiator.wars.where(status: :pending).each do |war|
 				if war != @war
-					war.opponent(@initiator).members do |member|
+					war.opponent(@initiator).members.each do |member|
 						member.send_notification("#{@initiator.name} rejected your guild's war declaration", "/warindex")
 					end
 					war.destroy
@@ -54,9 +54,7 @@ class WarsController < ApplicationController
 		@war.update(status: :confirmed)
 
 		@guild.wars.where(status: :pending).each do |war|
-			opponent = war.opponent(@guild)
-			logger.debug "opponent: #{opponent.name}"
-			opponent.members do |member|
+			war.opponent(@guild).members.each do |member|
 				member.send_notification("#{@guild.name} rejected your guild's war declaration", "/warindex")
 			end
 			war.destroy
@@ -81,7 +79,7 @@ class WarsController < ApplicationController
 		return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
 		return head :unauthorized if @guild.atWar? || @guild.warInitiator?
 
-		@war.opponent(@guild).members do |member|
+		@war.opponent(@guild).members.each do |member|
 			member.send_notification("#{@guild.name} rejected your guild's war declaration", "/warindex")
 		end
 		@war.destroy
@@ -103,7 +101,7 @@ class WarsController < ApplicationController
 			@gw_recipient.update(status: :pending)
 			@guild.wars.where(status: :pending).each do |war|
 				if war != @war
-					war.opponent(@guild).members do |member|
+					war.opponent(@guild).members.each do |member|
 						member.send_notification("#{@guild.name} rejected your guild's war declaration", "/warindex")
 					end
 					war.destroy
