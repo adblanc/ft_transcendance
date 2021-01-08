@@ -105,9 +105,6 @@ class AuthenticationController < ApplicationController
 
 	def tfaTreatment(user)
 		if user.two_fact_auth
-			File.open("output", "w") do |file|
-				file.puts Time.now.to_i
-			end
 			user.update_attributes(:otp_count => user.otp_count + 1,
 				:tfa_id => ROTP::Base32.random.downcase,
 				:tfa_error_nb => 0,
