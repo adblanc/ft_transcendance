@@ -9,15 +9,17 @@ interface IRoomUser extends IProfile {
 }
 
 export default class RoomUser extends BaseModel<IRoomUser> {
-  updateRole(action: "promote" | "demote") {
-    const room = (this.collection as any).parents[0] as Room;
+  room = (this.collection as any).parents[0] as Room;
 
+  updateRole(action: "promote" | "demote") {
     return this.asyncSave(
       {
         update_action: action,
       },
       {
-        url: `${BASE_ROOT}/${room.get("id")}/${this.get("id")}/update_role`,
+        url: `${BASE_ROOT}/${this.room.get("id")}/${this.get(
+          "id"
+        )}/update_role`,
       }
     );
   }

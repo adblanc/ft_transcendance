@@ -24,18 +24,16 @@ export default class RoomMessagesView extends BaseView<Room> {
       return;
     }
 
-    const currentUser = this.model
-      .get("users")
-      .find((u) => u.get("login") === $("#current-user-profile").data("login"));
+    // const currentUser = this.model
+    //   .get("users")
+    //   .find((u) => u.get("login") === $("#current-user-profile").data("login"));
 
     const sender = this.model
       .get("users")
       .find((u) => u.get("id") === message.get("user_id"));
 
     const profileView = new RoomUserProfileView({
-      model: message,
-      sender,
-      isRoomAdministrator: currentUser.get("isRoomAdministrator"),
+      model: sender,
     });
 
     profileView.render();
