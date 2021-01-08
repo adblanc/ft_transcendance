@@ -4,11 +4,9 @@
 
 class BansController < ApplicationController
 	before_action :authenticate_user!
+	before_action :load_entities
 
 	def ban
-		@room = Room.find_by_id(params[:room_id])
-		@banned_user = User.find_by_id(params[:id]);
-
 		if (!@banned_user)
 			render json: {"user" => ["does not exist"]}, status: :unprocessable_entity
 		elsif (!@room)
@@ -32,7 +30,27 @@ class BansController < ApplicationController
 	end
 
 	def unban
+		if (!@banned_user)
+			render json: {"user" => ["does not exist"]}, status: :unprocessable_entity
+		elsif (!@room)
+			render json: {"room" => ["does not exist"]}, status: :unprocessable_entity
+		else
+			if (!@current_user.is_room_owner?(@room))
+				render json: {"you" => ["must be owner of this room"]}, status: :unprocessable_entity
+			elsif !(@ban = @room.bans.where(banned_user_id: params[:id]).take)
+				render json: {"User" => ["is not banned"]}, status: :unprocessable_entity
+			else
+				UnbanRoomUserJob.perform_now(@ban)
+				@banned_user
+			end
+		end
+	end
 
+	private
+
+	def load_entities
+		@room = Room.find_by_id(params[:room_id]);
+		@banned_user = User.find_by_id(params[:id]);
 	end
 
   end

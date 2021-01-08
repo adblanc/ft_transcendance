@@ -26,7 +26,16 @@
 		{{^isMute}}
 			<a id="mute-user" class="link-primary block">Mute for 30 minutes</a>
 		{{/isMute}}
+
+		{{#isBan}}
+				<a id="unban-user" class="link-primary block">Unban</a>
+		{{/isBan}}
+
+		{{^isBan}}
 			<a id="ban-user" class="link-primary block">Ban for 30 minutes</a>
+		{{/isBan}}
+
+
 		{{/isAdmin}}
 		{{/isCurrentUser}}
 	</div>

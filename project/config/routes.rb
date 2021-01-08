@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   put "/mute/:room_id", to: "mutes#mute";
   put "/unmute/:room_id", to: "mutes#unmute";
   put "/ban/:room_id", to: "bans#ban";
+  put "/unban/:room_id", to: "bans#unban";
 
   resources :guilds do
 	member do

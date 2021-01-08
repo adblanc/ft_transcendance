@@ -34,6 +34,7 @@ export default class RoomUserProfileView extends ModalView<Message> {
       "click #mute-user": this.muteUser,
       "click #unmute-user": this.unMuteUser,
       "click #ban-user": this.banUser,
+      "click #unban-user": this.unBanUser,
     };
   }
 
@@ -86,6 +87,20 @@ export default class RoomUserProfileView extends ModalView<Message> {
 
     if (success) {
       displaySuccess(`You successfully banned ${this.model.get("user_login")}`);
+    }
+  }
+
+  async unBanUser() {
+    if (!this.sender) {
+      return displayError("This user is no longer in the room.");
+    }
+
+    const success = await this.sender.unBan(this.model.get("room_id"));
+
+    if (success) {
+      displaySuccess(
+        `You successfully unbanned ${this.model.get("user_login")}`
+      );
     }
   }
 

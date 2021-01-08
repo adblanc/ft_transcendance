@@ -56,4 +56,13 @@ export default class RoomUser extends BaseModel<IRoomUser> {
       }
     );
   }
+
+  unBan(room_id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/unban/${room_id}`,
+      }
+    );
+  }
 }
