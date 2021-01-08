@@ -154,6 +154,8 @@ ActiveRecord::Schema.define(version: 2020_12_31_055909) do
     t.datetime "end"
     t.integer "prize"
     t.integer "status", default: 0
+    t.integer "time_to_answer"
+    t.integer "max_unanswered_calls"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

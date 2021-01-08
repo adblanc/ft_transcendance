@@ -29,6 +29,26 @@
                         id="input-prize"
                     />
 				</label>
+				<label class="block" for="answer-time">
+					<p class="text-gray-700">Time to answer a War Time game call (in minutes)?*</p>
+					<p style="font-size:10px" class="text-gray-700">The game will be automatically won after that time</p>
+                    <input
+                        class="form-input mt-1 block w-full"
+                        type="text"
+                        name="answer-time"
+                        id="answer-time"
+					/>
+				</label>
+				<label class="block" for="max-calls">
+					<p class="text-gray-700">Maximum unanswered calls tolerable during War Time?*</p>
+					<p style="font-size:10px" class="text-gray-700">If reached, War Time will be over and the guilty guild will lose 10 war points.</p>
+                    <input
+                        class="form-input mt-1 block w-full"
+                        type="text"
+                        name="max-calls"
+                        id="max-calls"
+                    />
+				</label>
                 <div class="flex justify-center items-center">
                     <button
                         class="btn-primary mt-8"

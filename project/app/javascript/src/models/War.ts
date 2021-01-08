@@ -11,6 +11,8 @@ interface IWar {
   end: Date;
   status: string;
   prize: string;
+  time_to_answer: string;
+  max_unanswered_calls: string;
   guilds: Guilds;
   warOpponent: Guild;
   created_at: string;
@@ -47,12 +49,14 @@ export default class War extends BaseModel<IWar> {
     return syncWithFormData(method, model, options);
   }
 
-  createWar(start: Date, end:Date, prize: string, initiator_id: string, recipient_id: string) {
+  createWar(start: Date, end:Date, prize: string, answer_time: string, max_calls: string, initiator_id: string, recipient_id: string) {
     return this.asyncSave( 
 		{
 			'start': start,
 			'end': end,
 			'prize': prize,
+			'time_to_answer': answer_time,
+  			'max_unanswered_calls': max_calls,
 			'initiator_id': initiator_id,
 			'recipient_id': recipient_id,
 		}, 
@@ -61,12 +65,14 @@ export default class War extends BaseModel<IWar> {
 		});
 	}
 
-	modifyWar(start: Date, end:Date, prize: string) {
+	modifyWar(start: Date, end:Date, prize: string, answer_time: string, max_calls: string) {
 		return this.asyncSave( 
 		{
 			'start': start,
 			'end': end,
 			'prize': prize,
+			'time_to_answer': answer_time,
+  			'max_unanswered_calls': max_calls,
 		}, 
 		{ 
 			url: this.baseWarRoot(),
