@@ -78,6 +78,10 @@ class User < ApplicationRecord
 		room.mutes.exists?(muted_user_id: self.id)
 	end
 
+	def is_room_ban?(room)
+		room.bans.exists?(banned_user_id: self.id)
+	end
+
 	def pending_guild?
 		if self.pending_guild
 			return true

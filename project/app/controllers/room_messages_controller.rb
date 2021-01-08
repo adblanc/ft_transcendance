@@ -3,9 +3,10 @@ class RoomMessagesController < ApplicationController
 	before_action :load_entities
 
 	def create
-		isMute = @room.mutes.find_by(:muted_user_id => @current_user.id);
-		if (isMute)
+		if (@current_user.is_room_mute?(@room))
 			render json: {"you" => ["are mute in this room"]}, status: :unprocessable_entity
+		elsif (@current_user.is_room_ban?(@room))
+			render json: {"you" => ["are ban in this room"]}, status: :unprocessable_entity
 			else
 				@room_message = RoomMessage.create(user: current_user, room: @room, content: params[:content])
 
