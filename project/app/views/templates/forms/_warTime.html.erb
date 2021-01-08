@@ -1,0 +1,25 @@
+<script type="text/html" id="warTimeFormTemplate">
+            <form action="">
+				<label style="text-align: center;" class="block" for="war-end">
+					<p class="text-gray-700">You are about to activate a War Time for your current war.</p>
+					<p class="text-gray-700">It will start now and members of the opponent guilds will be able to sollicitate fights with each other.</p>
+					<p class="text-gray-700">Please select an end date for this War Time.</p>
+                    <input
+                        class="form-input mt-1 block w-full"
+						type="datetime-local"
+						placeholder="Click to select date"
+                        name="end-date"
+                        id="input-end-date"
+					/>
+				</label>
+                <div class="flex justify-center items-center">
+                    <button
+                        class="btn-primary mt-8"
+                        id="input-wartime-submit"
+                        type="submit"
+                    >
+                        Activate War Time!
+                    </button>
+                </div>
+            </form>
+</script>

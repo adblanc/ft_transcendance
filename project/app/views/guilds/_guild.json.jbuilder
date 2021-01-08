@@ -3,7 +3,18 @@ json.img_url url_for(guild.img) if guild.img.attached?
 json.atWar guild.atWar?
 json.pendingWar guild.pendingWar?
 json.warInitiator guild.warInitiator?
-json.activeWar guild.activeWar
+if guild.activeWar
+	json.activeWar do
+			json.id guild.activeWar.id
+			json.prize guild.activeWar.prize
+			json.start guild.activeWar.start
+			json.end guild.activeWar.end
+			json.status guild.activeWar.status
+			json.time_to_answer guild.activeWar.time_to_answer
+			json.max_unanswered_calls guild.activeWar.max_unanswered_calls
+			json.atWarTime guild.activeWar.atWarTime?
+	end
+end
 json.waitingWar guild.waitingWar
 if guild.activeWar
 	json.warOpponent do 

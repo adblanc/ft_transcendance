@@ -6,7 +6,7 @@
 	<a style="margin-top:10px; text-decoration: underline;" href="{{url}}" class="justify-center flex flex-row text-white">{{name}} </a>
 	<h1 style="margin-top:10px; font-size: 15px;" class="flex flex-row text-white ml-5"> Prize : {{war.prize}} points </h1>
 	<h1 style="margin-top:10px; margin-down:10px; font-size: 15px;" class="flex flex-row text-white ml-5"> Time to answer War Time Calls: {{war.time_to_answer}} </h1>
-	<h1 style="margin-top:10px; margin-down:10px; font-size: 15px;" class="flex flex-row text-white ml-5 mb-5"> Max tolerable unanswered war time calls: {{war.max_unanswered_calls}} </h1>
+	<h1 style="margin-top:10px; margin-down:10px; font-size: 15px;" class="flex flex-row text-white ml-5 mb-5"> Max tolerable unanswered War Time calls: {{war.max_unanswered_calls}} </h1>
 	<div id="confirmed" style="display:none">
 		<h1 style="margin-top:10px; margin-down:10px; font-size: 15px;" class="flex flex-row text-white ml-5"> Starts {{war.countStart}} </h1>
 		<h1 style="margin-top:10px; margin-down:10px; font-size: 15px;" class="flex flex-row text-white ml-5 mb-5"> End: {{war.end}} </h1>
@@ -14,6 +14,10 @@
 	<div id="started" style="display:none">
 		<h1 style="margin-top:10px; margin-down:10px; font-size: 15px;" class="flex flex-row text-white ml-5"> Ends {{war.countEnd}} </h1>
 		<h1 style="margin-top:10px; margin-down:10px; font-size: 15px;" class="flex flex-row text-white ml-5 mb-5"> Started on: {{war.start}} </h1>
-		<button id="wartime-btn" style="margin-left:140px;" class="btn-primary mt-3 mb-10" type="button">Start war time!</button>
+		<button id="wartime-btn" style="margin-left:140px; display:none" class="btn-primary mt-3 mb-10" type="button">Activate War time!</button>
+		<div id="wartimetable" style="display:none;"> 
+			<h1 style="margin-top:10px; margin-down:10px; font-size: 15px;" class="flex flex-row text-white ml-5"> War time is activated ! Look for a fight : </h1>
+			<button id="timetable-btn" style="margin-left:140px;" class="btn-primary mt-3 mb-10" type="button">See Timetable</button>
+		</div>
 	</div>
 </script>

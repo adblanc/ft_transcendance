@@ -26,6 +26,7 @@ json.wars do
 		json.end war.end
 		json.time_to_answer war.time_to_answer
 		json.max_unanswered_calls war.max_unanswered_calls
+		json.atWarTime war.atWarTime?
 		json.warOpponent do 
 			json.id  @guild.warOpponent(war).id
 			json.points  @guild.warOpponent(war).points

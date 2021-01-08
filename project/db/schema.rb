@@ -142,11 +142,15 @@ ActiveRecord::Schema.define(version: 2020_12_31_055909) do
   end
 
   create_table "war_times", force: :cascade do |t|
-    t.integer "war_id"
+    t.bigint "war_id"
     t.datetime "start"
     t.datetime "end"
+    t.integer "status", default: 0
+    t.integer "time_to_answer"
+    t.integer "max_unanswered_calls"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["war_id"], name: "index_war_times_on_war_id"
   end
 
   create_table "wars", force: :cascade do |t|
@@ -167,4 +171,5 @@ ActiveRecord::Schema.define(version: 2020_12_31_055909) do
   add_foreign_key "guild_wars", "wars"
   add_foreign_key "room_messages", "rooms"
   add_foreign_key "room_messages", "users"
+  add_foreign_key "war_times", "wars"
 end

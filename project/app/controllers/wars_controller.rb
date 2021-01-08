@@ -114,7 +114,25 @@ class WarsController < ApplicationController
 		else
 			render json: @war.errors, status: :unprocessable_entity
 		end
+	end
 
+	def activateWarTime
+		@war = War.find_by_id(params[:id])
+		@guild = Guild.find_by_id(current_user.guild.id)
+		@opponent = @war.opponent(@guild)
+
+		return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
+		return head :unauthorized if not @guild.atWar? && @opponent.atWar?
+
+		@war_time = WarTime.create!(war: @war, start: DateTime.now, end: params[:end], time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
+		@guild.members.each do |member|
+			member.send_notification("War time has just started with #{@opponent.name}! Take your slots!", "/warindex")
+		end
+		@opponent.members.each do |member|
+			member.send_notification("War time has just started with #{@guild.name}! Take your slots!", "/warindex")
+		end
+
+		EndWarTimeJob.set(wait_until: @war_time.end).perform_later(@war_time, @war)
 	end
 
 	private

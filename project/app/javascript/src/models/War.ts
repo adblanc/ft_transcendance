@@ -13,6 +13,7 @@ interface IWar {
   prize: string;
   time_to_answer: string;
   max_unanswered_calls: string;
+  atWarTime: boolean;
   guilds: Guilds;
   warOpponent: Guild;
   created_at: string;
@@ -87,7 +88,7 @@ export default class War extends BaseModel<IWar> {
 		);
 	  }
 	
-	  accept() {
+	  /*accept() {
 		return this.asyncSave({},
 		  {
 			url: `${this.baseWarRoot()}/accept`,
@@ -99,6 +100,17 @@ export default class War extends BaseModel<IWar> {
 		return this.asyncSave({},
 		  {
 			url: `${this.baseWarRoot()}/reject`,
+		  }
+		);
+	  }*/
+
+	  activateWarTime(end:Date) {
+		return this.asyncSave( 
+			{
+				'end': end,
+			}, 
+		  {
+			url: `${this.baseWarRoot()}/activateWarTime`,
 		  }
 		);
 	  }

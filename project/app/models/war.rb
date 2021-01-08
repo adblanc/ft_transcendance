@@ -29,6 +29,10 @@ class War < ApplicationRecord
 		end
 	end
 
+	def atWarTime?
+		self.war_times.active.present?
+	end
+
 	def war_points(guild)
 		GuildWar.where(war: self, guild: guild).first.points
 	end
