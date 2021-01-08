@@ -32,6 +32,7 @@ export default class RoomUserProfileView extends ModalView<Message> {
       "click #invite-to-play-user": this.inviteToPlay,
       "click #block-user": this.blockUser,
       "click #mute-user": this.muteUser,
+      "click #unmute-user": this.unMuteUser,
       "click #ban-user": this.banUser,
     };
   }
@@ -62,6 +63,20 @@ export default class RoomUserProfileView extends ModalView<Message> {
     }
   }
 
+  async unMuteUser() {
+    if (!this.sender) {
+      return displayError("This user is no longer in the room.");
+    }
+
+    const success = await this.sender.unMute(this.model.get("room_id"));
+
+    if (success) {
+      displaySuccess(
+        `You successfully unmuted ${this.model.get("user_login")}`
+      );
+    }
+  }
+
   async banUser() {
     if (!this.sender) {
       return displayError("This user is no longer in the room.");
@@ -82,6 +97,7 @@ export default class RoomUserProfileView extends ModalView<Message> {
       ...this.model.toJSON(),
       isAdmin: this.isRoomAdministrator,
       isCurrentUser: this.model.get("user_id") === currentUser().get("id"),
+      ...(this?.sender.toJSON() || {}),
     });
     this.$content.html(html);
     return this;

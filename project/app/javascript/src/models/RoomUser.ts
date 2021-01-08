@@ -39,6 +39,15 @@ export default class RoomUser extends BaseModel<IRoomUser> {
     );
   }
 
+  unMute(room_id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/unmute/${room_id}`,
+      }
+    );
+  }
+
   ban(room_id: number) {
     return this.asyncSave(
       {},

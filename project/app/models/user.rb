@@ -74,6 +74,10 @@ class User < ApplicationRecord
 		!is_room_administrator?(room)
 	end
 
+	def is_room_mute?(room)
+		room.mutes.exists?(muted_user_id: self.id)
+	end
+
 	def pending_guild?
 		if self.pending_guild
 			return true
