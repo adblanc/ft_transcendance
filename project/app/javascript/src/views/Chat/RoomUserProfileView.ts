@@ -47,7 +47,7 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
   }
 
   async muteUser() {
-    const success = await this.model.mute(this.model.room.get("id"));
+    const success = await this.model.mute(this.model.room.get("id"), "30mn");
 
     if (success) {
       displaySuccess(`You successfully muted ${this.model.get("login")}`);
@@ -63,7 +63,7 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
   }
 
   async banUser() {
-    const success = await this.model.ban(this.model.room.get("id"));
+    const success = await this.model.ban(this.model.room.get("id"), "30mn");
 
     if (success) {
       displaySuccess(`You successfully banned ${this.model.get("login")}`);

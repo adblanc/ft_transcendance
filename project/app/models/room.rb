@@ -54,14 +54,28 @@ class Room < ApplicationRecord
 	end
 
 	def send_room_notification(content, issuer, target)
-		my_content = "#{target.login} #{content}";
-		room_msg = RoomMessage.create(user: issuer, room: self, content: my_content, is_notification: true);
-
-		logger = Logger.new(STDOUT);
-		logger.debug("SEND_NOTIFICATION_ROOM")
-		logger.debug("======= #{my_content} =====")
-
+		room_msg = RoomMessage.create(user: issuer, room: self, content: "#{target.login} #{content}", is_notification: true);
 		ActionCable.server.broadcast("room_#{self.id}", room_msg);
 	end
 
+	def correct_mute_or_ban_time(time)
+		case time
+		when "10mn"
+			return 10.minutes;
+		when "30mn"
+			return 30.minutes;
+		when "1h"
+			return 1.hours;
+		when "24h"
+			return 24.hours;
+		when "indefinitely"
+			return "indefinitely";
+		else
+			return false;
+		end
+	end
+
+	def expected_mute_or_bantime
+		return "Expected: 10mn | 30mn | 1h | 24h | indefinitely";
+	end
 end

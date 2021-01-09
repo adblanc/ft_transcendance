@@ -8,6 +8,8 @@ interface IRoomUser extends IProfile {
   isRoomAdministrator?: boolean;
 }
 
+type MuteBanTime = "10mn" | "30mn" | "1h" | "24h" | "indefinitely";
+
 export default class RoomUser extends BaseModel<IRoomUser> {
   room = (this.collection as any).parents[0] as Room;
 
@@ -32,9 +34,11 @@ export default class RoomUser extends BaseModel<IRoomUser> {
     return this.get("roomRole") === "Administrator";
   }
 
-  mute(room_id: number) {
+  mute(room_id: number, time: MuteBanTime) {
     return this.asyncSave(
-      {},
+      {
+        mute_time: time,
+      },
       {
         url: `${BASE_ROOT}/mute/${room_id}`,
       }
@@ -50,9 +54,11 @@ export default class RoomUser extends BaseModel<IRoomUser> {
     );
   }
 
-  ban(room_id: number) {
+  ban(room_id: number, time: MuteBanTime) {
     return this.asyncSave(
-      {},
+      {
+        ban_time: time,
+      },
       {
         url: `${BASE_ROOT}/ban/${room_id}`,
       }
