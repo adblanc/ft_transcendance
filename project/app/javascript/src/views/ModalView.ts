@@ -1,5 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
+import { eventBus } from "src/events/EventBus";
 import BaseView from "src/lib/BaseView";
 import { navigate } from "src/utils";
 
@@ -30,7 +31,8 @@ export default class ModalView<
   }
 
   onLinkOpen(e: JQuery.ClickEvent) {
-    this.close();
+    this.closeAllModal();
+    eventBus.trigger("chat:close");
 
     navigate(e);
   }
@@ -41,6 +43,11 @@ export default class ModalView<
 
   closeModal() {
     this.close();
+  }
+
+  closeAllModal() {
+    $(".modal-backdrop").parent().off();
+    $(".modal-backdrop").parent().remove();
   }
 
   render() {
