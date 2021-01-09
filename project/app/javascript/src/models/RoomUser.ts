@@ -6,6 +6,7 @@ import Room from "./Room";
 interface IRoomUser extends IProfile {
   roomRole: "Owner" | "Administrator" | "Member";
   isRoomAdministrator?: boolean;
+  isBlocked?: boolean;
 }
 
 export type MuteBanTime = "10mn" | "30mn" | "1h" | "24h" | "indefinitely";

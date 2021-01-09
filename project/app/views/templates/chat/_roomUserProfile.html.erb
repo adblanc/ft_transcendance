@@ -17,7 +17,12 @@
 		<a class="link-primary block" href="/user/{{id}}">Go to profile</a>
 		{{^isCurrentUser}}
 		<a id="invite-to-play-user" class="link-primary block">Invite to play</a>
-		<a id="block-user" class="link-primary block">Block</a>
+		{{#isBlocked}}
+			<a id="unblock-user" class="link-primary block">Unblock</a>
+		{{/isBlocked}}
+		{{^isBlocked}}
+			<a id="block-user" class="link-primary block">Block</a>
+		{{/isBlocked}}
 		{{#isAdmin}}
 		{{#isMute}}
 				<span id="unmute-user" class="link-primary block">Unmute</span>

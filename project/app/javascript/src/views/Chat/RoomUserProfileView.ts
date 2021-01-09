@@ -9,7 +9,13 @@ type Options = Backbone.ViewOptions<RoomUser> & {
   currentRoomUser: RoomUser;
 };
 
-type Action = "muted" | "banned" | "blocked" | "unmuted" | "unbanned";
+type Action =
+  | "muted"
+  | "banned"
+  | "blocked"
+  | "unblocked"
+  | "unmuted"
+  | "unbanned";
 
 export default class RoomUserProfileView extends ModalView<RoomUser> {
   currentRoomUser?: RoomUser;
@@ -31,6 +37,7 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
       "click #mute-list > option": (e) => this.performAction(e, "muted"),
       "click #ban-list > option": (e) => this.performAction(e, "banned"),
       "click #block-user": (e) => this.performAction(e, "blocked"),
+      "click #unblock-user": (e) => this.performAction(e, "unblocked"),
       "click #unmute-user": (e) => this.performAction(e, "unmuted"),
       "click #unban-user": (e) => this.performAction(e, "unbanned"),
     };
@@ -59,6 +66,13 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
         break;
       case "blocked":
         success = await currentUser().blockUser(this.model.get("id"));
+        if (success) {
+          this.model.set({ isBlocked: true });
+        }
+        break;
+      case "unblocked":
+        success = await currentUser().unBlockUser(this.model.get("id"));
+        this.model.set({ isBlocked: false });
         break;
       case "unbanned":
         success = await this.model.unBan(this.model.room.get("id"));
