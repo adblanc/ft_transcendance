@@ -58,7 +58,7 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
     const success = await this.model.unMute(this.model.room.get("id"));
 
     if (success) {
-      displaySuccess(`You successfully unmuted ${this.model.get("login")}}`);
+      displaySuccess(`You successfully unmuted ${this.model.get("login")}`);
     }
   }
 
@@ -66,7 +66,7 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
     const success = await this.model.ban(this.model.room.get("id"));
 
     if (success) {
-      displaySuccess(`You successfully banned ${this.model.get("login")}}`);
+      displaySuccess(`You successfully banned ${this.model.get("login")}`);
     }
   }
 
@@ -74,7 +74,7 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
     const success = await this.model.unBan(this.model.room.get("id"));
 
     if (success) {
-      displaySuccess(`You successfully unbanned ${this.model.get("login")}}`);
+      displaySuccess(`You successfully unbanned ${this.model.get("login")}`);
     }
   }
 
