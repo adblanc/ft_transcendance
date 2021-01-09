@@ -8,7 +8,7 @@ interface IRoomUser extends IProfile {
   isRoomAdministrator?: boolean;
 }
 
-type MuteBanTime = "10mn" | "30mn" | "1h" | "24h" | "indefinitely";
+export type MuteBanTime = "10mn" | "30mn" | "1h" | "24h" | "indefinitely";
 
 export default class RoomUser extends BaseModel<IRoomUser> {
   room = (this.collection as any).parents[0] as Room;
