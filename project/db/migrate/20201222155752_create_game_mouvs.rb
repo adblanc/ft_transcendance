@@ -4,6 +4,8 @@ class CreateGameMouvs < ActiveRecord::Migration[6.0]
       t.references :user
       t.integer :scale
       t.integer :game_id
+      t.integer :ball_x
+      t.integer :ball_y
       t.timestamps
     end
   end

@@ -61,7 +61,7 @@ export default class GameView extends BaseView {
          this.player_one = new Player(new Rectangle(485, canvas.height / 2 - 25, 15, 100));
        this.player_two = new Player(new Rectangle(0, canvas.height / 2, 15, 100));
        //this.listenTo(this.game, "change:second", this.render_finished);
-       this.listenTo(this.game.mouvements, "add", this.canva_render);
+       this.listenTo(this.game.mouvements, "add", this.canva_render_scale);
        this.listenTo(this.game, "change:status", this.render_playing);
        //this.listenTo(this.game.model, "change", this.play);
        //var inter = setTimeout(this.keyBoardClicked,100);
@@ -76,30 +76,27 @@ export default class GameView extends BaseView {
 
       game_draw(game, joueur_un)
       {
-              var y: Number = 0;
+        //displaySuccess("here");
+        var y: Number = 0;
         if ((y = canvaView.callback(10)) == 2)
         {
           if (game.get("first") == joueur_un.get("id"))
           { this.g_points = canvaView.player_one.score;
-            displaySuccess("this joueur" + String(this.g_points));
+           // displaySuccess("this joueur" + String(this.g_points));
           }
           else
           {
             this.g_points = canvaView.player_two.score;
-            displaySuccess("this joueur" + String(this.g_points));
           }
           canvaView.stop();
           game.finish(this.g_points);
-            displaySuccess("You won the game ok");
             window.location.reload();
-          //this.render_lost();
         } 
       else if((y = canvaView.callback(10)) == 1)
       {
         //supprimer le canva
         //arreter le streaming
         canvaView.stop();
-        displaySuccess("You lost the game" + JSON.stringify(game));
         if (game.get("first") == joueur_un.get("id"))
         { this.g_points = canvaView.player_one.score;
         }
@@ -111,8 +108,20 @@ export default class GameView extends BaseView {
         window.location.reload();
         //this.render_lost();
       } 
-      else
-      {
+      else{
+        if (game.get("first") != joueur_un.get("id"))
+        {
+          canvaView.ball.update();
+          //displaySuccess("ball x" + String(canvaView.ball.x));
+          var g_id = game.get("id") as number;
+          const mouvement = new Mouvement({
+          ball_x: canvaView.ball.x,
+          ball_y: canvaView.ball.y,
+          game_id: g_id,
+          scale: 0,
+          });
+          const success = mouvement.save();
+        }
       }
       }
 
@@ -121,8 +130,9 @@ export default class GameView extends BaseView {
         //this.listenTo(this.game, "change:status", this.render_finished);
         var inter_game = setInterval(this.game_draw,100, this.game, this.joueur_un); //arreter au bout d'un moment
         //displaySuccess("length of users" + String(this.game.user.length))
-        //var inter_fetch = setInterval(this.game.asyncFetch, 100);
-        this.listenTo(this.game.model, "change", this.canva_render);
+        this.listenTo(this.game.model, "change", this.canva_render_scale);
+        //this.listenTo(this.game.model, "change:scale", this.canva_render_scale);
+       // this.listenTo(this.game.model, "change:ball_x", this.canva_render_ball);
        // this.game.on("change:status", function(inter) {displaySuccess("STOPPING"); clearInterval(inter);});
         this.joueurs = this.game.get("user");
         //var player = this.joueurs.findWhere({"name": String(this.joueur_un.get("name"))});
@@ -132,9 +142,8 @@ export default class GameView extends BaseView {
         {
             displaySuccess("You can play");
         var canvas = canvaView.init(500, 250, '#EEE', this.player_one, this.game.get("points"), this.game.get("level"), this.player_two);
-        //console.log("received JSON Play" + String(this.game.model.get("scale")));
        // this.listenTo(this.game.mouvements, "add", this.canva_render);
-        canvas.addEventListener('click', this.canvasClicked, false);
+       // canvas.addEventListener('click', this.canvasClicked, false);
         //canvas.addEventListener('mousemove', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
        // window.addEventListener('keydown', event => { const e = event as KeyboardEvent; this.keyBoardClicked(-1);}, false);
         window.addEventListener('keydown', event => { const e = event as KeyboardEvent; this.keyBoardClicked(e);}, false);
@@ -146,13 +155,23 @@ export default class GameView extends BaseView {
         }
       }
 
-      canva_render()
+      canva_render_ball()
+      {
+        canvaView.ball.x = this.game.model.get("ball_x");
+        canvaView.ball.y = this.game.model.get("ball_y");
+        //canvaView.ball.render();
+      }
+
+      canva_render_scale()
       {
         //displaySuccess("first" + String(this.game.get("first")));
-        console.log("received JSON render" + JSON.stringify(this.game.model.get("scale")));
-        if ((this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (!this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") > 0)
-        {canvaView.player_one.paddle.y += 10;
-          displaySuccess("me up");
+        console.log("received JSON render" + JSON.stringify(this.game.model));
+        if (this.game.model.get("scale") != 0)
+        {
+        if ((this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (!this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") < 0)
+        {
+          canvaView.player_one.paddle.y += 10;
+          //displaySuccess("me up");
           if (canvaView.player_one.paddle.y >= canvas.height)
           {
             canvaView.player_one.paddle.y = canvas.height
@@ -160,16 +179,16 @@ export default class GameView extends BaseView {
         }
         else if ((!this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") > 0)
         {
-          displaySuccess("them up");
+          //displaySuccess("them up");
           canvaView.player_two.paddle.y += 10;
           if (canvaView.player_two.paddle.y >= canvas.height)
           {
             canvaView.player_two.paddle.y = canvas.height
           }
         }
-        else if ((this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (!this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") < 0)
+        else if ((this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (!this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") > 0)
         {
-          displaySuccess("me down");
+          //displaySuccess("me down");
           canvaView.player_one.paddle.y -= 10;
           if (canvaView.player_one.paddle.y <= 0)
           {
@@ -178,64 +197,34 @@ export default class GameView extends BaseView {
         }
         else if ((!this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")) && this.game.model.get("scale") < 0)
         {
-          displaySuccess("them down");
+         // displaySuccess("them down");
           canvaView.player_two.paddle.y -= 10;
           if (canvaView.player_two.paddle.y <= 0)
           {
             canvaView.player_two.paddle.y = 0;
           }
         }
-         var y: Number = 0;
-      //  // y = canvaView.callback(10);
-      //    if ( (y = canvaView.callback(10)) == 2)
-      //    {
-      //     displaySuccess("You won the game" + JSON.stringify(this.game));
-      //      this.game.finish();
-      //      displaySuccess("You won the game ok" + JSON.stringify(this.game));
-      //      this.render_won();
-      //    } 
-      //  else if((y = canvaView.callback(10)) == 1)
-      //  {
-      //    displaySuccess("You lost the game" + String(y));
-      //    this.render_lost();
-      //  } 
+      }
+      else
+      {
+        canvaView.ball.x = this.game.model.get("ball_x");
+        canvaView.ball.y = this.game.model.get("ball_y");
+      } 
       }
 
       keyBoardClicked(e) {
         var scale = 0;
         if (String(e.key) == "ArrowDown")
         {
-          scale = Math.random() * 1;
+          scale = Math.random() * -1;
         }
         else if (String(e.key) == "ArrowUp")
         {
-          scale = Math.random() * -1;
+          scale = Math.random() * 1;
         }
         else
-        {
-          return;
-        }
-        //const scale: number = e.offsetY / 250;
+        { return;}
         s : String;
-        //var s = "Mouse down" + String(scale);
-        var g_id = this.game.get("id") as number;
-        var j_id = Number(this.joueur_un.get("id"));
-        var s_g_id = String("game_" + this.game.get("id"));
-        //ActionCable.server.broadcast(s_g_id, scale);
-        const mouvement = new Mouvement({
-          scale: scale,
-          game_id: g_id,
-          user_id: j_id,
-        });
-        const success = mouvement.save();
-       // displaySuccess("here key down" + JSON.stringify(e));
-      }
-      
-      canvasClicked(e) {
-        //setTimeout(this.canvasClicked,1000);
-        const scale: number = e.offsetY / 250;
-        s : String;
-        var s = "Mouse down" + String(scale);
         var g_id = this.game.get("id") as number;
         var j_id = Number(this.joueur_un.get("id"));
         var s_g_id = String("game_" + this.game.get("id"));
@@ -247,11 +236,10 @@ export default class GameView extends BaseView {
         });
         const success = mouvement.save();
       }
-      
+    
 
     render()
     {
-      displaySuccess(JSON.stringify(this.game));
       this.inter = setInterval(this.page_reload, 1000);
       const template = $("#waiting").html();
       const html = Mustache.render(template, this.game.toJSON());
@@ -262,14 +250,10 @@ export default class GameView extends BaseView {
   page_reload()
   {
     window.location.reload();
-    displaySuccess("reloading");
   }
 
   render_won()
   {
-    //clearInterval();
-          //    if (this.game.get("user")[1].get("name") == this.joueur_un.get("name"))
-          // displaySuccess("Same joueurs");
     displaySuccess("Length is" + JSON.stringify(this.collection.toJSON()));
     const template = $("#game_win").html();
     const html = Mustache.render(template, this.game.toJSON());
@@ -278,9 +262,6 @@ export default class GameView extends BaseView {
   }
   render_lost()
   {
-    // displaySuccess("This game" + JSON.stringify(this.game.get("user").get("name")));
-    // displaySuccess("This user name" + this.joueur_un.get("name"));
-   //this.game.finish();
    displaySuccess("RENDER LOST");
     const template = $("#game_lost").html();
     const html = Mustache.render(template, this.game.toJSON());
@@ -299,11 +280,8 @@ export default class GameView extends BaseView {
   render_playing()
   {
     clearInterval(this.inter);
-    displaySuccess(JSON.stringify(this.game));
-    displaySuccess(this.game.get("status"));
     if (this.game.get("status") == "finished")
     {
-      displaySuccess("here finish");
       const template = $("#game_finished").html();
       const html = Mustache.render(template, this.game.toJSON());
       this.$el.html(html);
@@ -316,8 +294,23 @@ export default class GameView extends BaseView {
       this.$el.html(html);
       return this;
     }
-    //this.listenTo(this.game, "change:status", this.render_finished); // fonctionne pas
 
   }
+        // canvasClicked(e) {
+      //   //setTimeout(this.canvasClicked,1000);
+      //   const scale: number = e.offsetY / 250;
+      //   s : String;
+      //   var s = "Mouse down" + String(scale);
+      //   var g_id = this.game.get("id") as number;
+      //   var j_id = Number(this.joueur_un.get("id"));
+      //   var s_g_id = String("game_" + this.game.get("id"));
+      //   //ActionCable.server.broadcast(s_g_id, scale);
+      //   const mouvement = new Mouvement({
+      //     scale: scale,
+      //     game_id: g_id,
+      //     user_id: j_id,
+      //   });
+      //   const success = mouvement.save();
+      // }
 
 }

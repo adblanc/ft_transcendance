@@ -12,6 +12,6 @@ class GameMouvsController < ApplicationController
     end
     private
     def game_mouvs_params
-        params.permit(:user_id, :game_id, :scale)
+        params.permit(:user_id, :game_id, :scale, :ball_x, :ball_y)
     end
 end

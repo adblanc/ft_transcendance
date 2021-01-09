@@ -4,6 +4,8 @@ class GameMouv < ApplicationRecord
     validates :scale, presence: true 
     validates :game_id, presence: true 
     validates :user_id, presence: true 
+    validates :ball_x, presence: true
+    validates :ball_y, presence: true
     #belongs_to :game, inverse_of: :room_messages
   
     # def as_json(options)

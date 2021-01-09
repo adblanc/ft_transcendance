@@ -3,8 +3,10 @@ import _ from "underscore";
 import { BASE_ROOT } from "src/constants";
 
 export interface IMouvement {
-  scale: number;
+  scale?: number;
   game_id: number;
+  ball_x?: number;
+  ball_y?: number;
   sent?: boolean;
   id?: number;
   user_id?: number;

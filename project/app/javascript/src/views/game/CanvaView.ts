@@ -86,7 +86,7 @@ export default class CanvaView extends ModalView<Rectangle> {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			document.querySelector('#computer-score').textContent = String(this.player_one.score);
 			document.querySelector('#player-score').textContent = String(this.player_two.score);
-			this.ball.update();
+			//this.ball.update();
 			this.player_one.update(dt);
 			if (this.ball.left() < 0)
 			{

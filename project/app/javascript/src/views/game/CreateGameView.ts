@@ -72,14 +72,10 @@ export default class CreateGameView extends ModalView<Game> {
         if (waiting != undefined)
         {
           var game_id = waiting.get("id");
-          displaySuccess("length is not null" + String(game_id));
           var game_exist = this.collection.get(game_id) as Game;
-          displaySuccess("Game is: " + JSON.stringify(game_exist));
           const success = await game_exist.join();
           game_exist.set("status", "playing");
-          displaySuccess("After joining" + success);
           if (success) {
-            displaySuccess("Success" + user_id);
             this.gameJoined(String(game_id), game_id);
           }
         }

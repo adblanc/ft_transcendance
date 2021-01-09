@@ -17,15 +17,16 @@ interface IGame {
   status: string;
   user: Profile;
   first: number;
+  button: number;
   //player_points: number;
 }
 
 type CreatableGameArgs = Partial<
-  Pick<IGame, "id" | "points" | "level" | "status" | "first">
+  Pick<IGame, "id" | "points" | "level" | "status" | "first" | "button">
 >;
 
 export default class Game extends BaseModel<IGame> {
-  //first: Number;
+  first: Number;
   second?: boolean;
   channel: ActionCable.Channel;
   mouvements: Mouvements;
@@ -61,6 +62,7 @@ export default class Game extends BaseModel<IGame> {
       status: "waiting",
       user: [],
       second: false,
+      button: 0,
       //player_points: 0,
     };
   }
@@ -73,24 +75,28 @@ export default class Game extends BaseModel<IGame> {
   }
 
   createGame(attrs: CreatableGameArgs) {
-    // if (!this.currentUserId) {
-    //   this.currentUserId = parseInt(
-    //     $("#current-user-profile").data("id")
-    //   );
-    // }
-    //displaySuccess("creator" + String(this.first))
-    //this.first = this.currentUserId;
+    if (!this.currentUserId) {
+      this.currentUserId = parseInt($("#current-user-profile").data("id"));
+    }
+    this.first = this.currentUserId;
     return this.asyncSave(attrs, { url: this.urlRoot() });
   }
   join() {
-    displaySuccess("Here the game is");
+    
+    if (!this.currentUserId) {
+      this.currentUserId = parseInt($("#current-user-profile").data("id"));
+    }
+     if (this.currentUserId == this.get("first"))
+     {
+       displaySuccess("You already create this game");
+       return 0;
+     }
     this.second = true;
     return this.asyncSave({status: "playing", second: true},{ url: `${this.baseGameRoot()}/join`,});
   }
 
   finish(g_points: number)
   {
-    displaySuccess("The game is finished");
     return this.asyncSave({status: "finished", points: g_points},{ url: `${this.baseGameRoot()}/finish`,});
   }
 
@@ -119,15 +125,7 @@ export default class Game extends BaseModel<IGame> {
           {this.model.set({sent: true});}
           else
           {this.model.set({sent: false});}
-           
-
-          //     this.mouvements.add(this.model);
-            //     this.mouvements.add(new Mouvement({
-            //  scale: this.model.get("scale"), user_id: this.model.get("user_id"),
-            //  game_id: this.model.get("game_id"),
-            //  sent: this.model.get("sent")}));
          },
-       //}
       }
      );
     }

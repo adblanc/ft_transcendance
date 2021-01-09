@@ -40,6 +40,8 @@ ActiveRecord::Schema.define(version: 2021_01_07_135447) do
     t.bigint "user_id"
     t.integer "scale"
     t.integer "game_id"
+    t.integer "ball_x"
+    t.integer "ball_y"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_game_mouvs_on_user_id"
