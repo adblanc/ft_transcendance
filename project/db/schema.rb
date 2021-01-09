@@ -163,11 +163,15 @@ ActiveRecord::Schema.define(version: 2021_01_05_151014) do
   end
 
   create_table "war_times", force: :cascade do |t|
-    t.integer "war_id"
+    t.bigint "war_id"
     t.datetime "start"
     t.datetime "end"
+    t.integer "status", default: 0
+    t.integer "time_to_answer"
+    t.integer "max_unanswered_calls"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["war_id"], name: "index_war_times_on_war_id"
   end
 
   create_table "wars", force: :cascade do |t|
@@ -175,6 +179,8 @@ ActiveRecord::Schema.define(version: 2021_01_05_151014) do
     t.datetime "end"
     t.integer "prize"
     t.integer "status", default: 0
+    t.integer "time_to_answer"
+    t.integer "max_unanswered_calls"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

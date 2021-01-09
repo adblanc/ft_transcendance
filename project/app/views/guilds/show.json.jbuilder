@@ -24,6 +24,9 @@ json.wars do
 		json.status war.status
 		json.start war.start
 		json.end war.end
+		json.time_to_answer war.time_to_answer
+		json.max_unanswered_calls war.max_unanswered_calls
+		json.atWarTime war.atWarTime?
 		json.warOpponent do 
 			json.id  @guild.warOpponent(war).id
 			json.points  @guild.warOpponent(war).points
@@ -39,6 +42,8 @@ json.pendingWars do
 		json.status pendingWar.status
 		json.start pendingWar.start
 		json.end pendingWar.end
+		json.time_to_answer pendingWar.time_to_answer
+		json.max_unanswered_calls pendingWar.max_unanswered_calls
 		json.warOpponent do 
 			json.id  @guild.warOpponent(pendingWar).id
 			json.points  @guild.warOpponent(pendingWar).points

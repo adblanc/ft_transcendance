@@ -15,7 +15,9 @@ class War < ApplicationRecord
 	validates :start, presence: true
 	validates :end, presence: true
 	validates :prize, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
-	validates_with WarDateValidator	
+	validates :time_to_answer, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 60 }
+	validates :max_unanswered_calls, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
+	validates_with WarDateValidator
 
 	def opponent(guild)
 		self.guilds.where.not(id: guild.id).first
@@ -25,6 +27,10 @@ class War < ApplicationRecord
 		if self.pending?
 			self.guild_wars.accepted.first.guild
 		end
+	end
+
+	def atWarTime?
+		self.war_times.active.present?
 	end
 
 	def war_points(guild)

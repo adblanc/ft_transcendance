@@ -1,7 +1,7 @@
 <script type="text/html" id="warFormTemplate">
             <form action="">
-                <label class="block" for="war-start">
-                    <span class="text-gray-700">When do you want the war to start?*</span>
+                <label style="text-align: center;" class="block" for="war-start">
+                    <p class="text-gray-700">When do you want the war to start?*</p>
                     <input
                         class="form-input mt-1 block w-full"
                         type="datetime-local"
@@ -10,8 +10,8 @@
                         id="input-start-date"
 					/>
 				</label>
-				<label class="block" for="war-end">
-                    <span class="text-gray-700">When do you want it to end?*</span>
+				<label style="text-align: center;" class="block" for="war-end">
+                    <p class="text-gray-700">When do you want it to end?*</p>
                     <input
                         class="form-input mt-1 block w-full"
 						type="datetime-local"
@@ -20,13 +20,33 @@
                         id="input-end-date"
 					/>
 				</label>
-				<label class="block" for="points">
-                    <span class="text-gray-700">How many points will be awarded to the winner?*</span>
+				<label style="text-align: center;" class="block" for="points">
+                    <p class="text-gray-700">How many points will be awarded to the winner?*</p>
                     <input
                         class="form-input mt-1 block w-full"
                         type="text"
                         name="war-prize"
                         id="input-prize"
+                    />
+				</label>
+				<label style="text-align: center;" class="block" for="answer-time">
+					<p class="text-gray-700">Time to answer a War Time game call (in minutes)?*</p>
+					<p style="font-size:10px" class="text-gray-700">The game will be automatically won after that time</p>
+                    <input
+                        class="form-input mt-1 block w-full"
+                        type="text"
+                        name="answer-time"
+                        id="answer-time"
+					/>
+				</label>
+				<label style="text-align: center;" class="block" for="max-calls">
+					<p class="text-gray-700">Maximum unanswered calls tolerable during War Time?*</p>
+					<p style="font-size:10px" class="text-gray-700">If reached, War Time will be over and the guilty guild will lose 10 war points.</p>
+                    <input
+                        class="form-input mt-1 block w-full"
+                        type="text"
+                        name="max-calls"
+                        id="max-calls"
                     />
 				</label>
                 <div class="flex justify-center items-center">

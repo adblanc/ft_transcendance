@@ -5,41 +5,63 @@
 			</div>
 			<a style="margin-top:10px; text-decoration: underline;" href="{{url}}" class="justify-center flex flex-row mb-4"><b>{{name}}</b></a>
             <form action="">
-                <label class="block mb-2" for="war-start">
-                    <span class="text-gray-700">Start date : </span>
+                <label style="text-align: center;" class="block mb-2" for="war-start">
+                    <p class="text-gray-700">Start date : {{war.start}} </p>
                     <input
                         class="form-input mt-1 block w-full"
                         type="datetime-local"
 						name="start-date"
-						value="{{war.start}}"
+						placeholder="Click here to change"
                         id="input-start-date"
 					/>
 				</label>
-				<label class="block mb-2" for="war end">
-                    <span class="text-gray-700">End date : </span>
+				<label style="text-align: center;" class="block mb-2" for="war end">
+                    <p class="text-gray-700">End date : {{war.end}} </p>
                     <input
                         class="form-input mt-1 block w-full"
                         type="datetime-local"
 						name="end-date"
-						value="{{war.end}}"
+						placeholder="Click here to change"
                         id="input-end-date"
 					/>
 				</label>
-				<label class="block mb-2" for="guild-start">
-                    <span class="text-gray-700">Prize wagered :</span>
+				<label style="text-align: center;" class="block mb-2" for="guild-start">
+                    <p class="text-gray-700">Prize wagered :</p>
                     <input
-                        class="form-input mt-1 block"
+                        class="form-input mt-1 block w-full"
                         type="text"
 						name="war-prize"
 						value="{{war.prize}}"
                         id="input-prize"
                     />
 				</label>
-				<div id="ranked" style="display:none">
-					<button style="margin-left:70px" class="floated mt-6 bg-teal-500 text-white rounded-lg shadow-lg py-1 px-2" id="accept" type="button">Accept</button>
+				<label style="text-align: center;" class="block" for="answer-time">
+				<p class="text-gray-700">Time to answer a War Time game call (in minutes) : </p>
+				<p style="font-size:10px" class="text-gray-700">The game will be automatically won after that time</p>
+				<input
+					class="form-input mt-1 block w-full"
+					type="text"
+					name="answer-time"
+					value="{{war.time_to_answer}}"
+					id="answer-time"
+				/>
+				</label>
+				<label style="text-align: center;" class="block" for="max-calls">
+					<p class="text-gray-700">Maximum unanswered calls tolerable during War Time : </p>
+					<p style="font-size:10px" class="text-gray-700">If reached, War Time will be over and the guilty guild will lose 10 war points.</p>
+					<input
+						class="form-input mt-1 block w-full"
+						type="text"
+						id="max-calls"
+						value="{{war.max_unanswered_calls}}"
+						id="max-calls"
+					/>
+				</label>
+				<div id="ranked" style="display:none;">
+					<button style="margin-left:130px" class="floated mt-6 bg-teal-500 text-white rounded-lg shadow-lg py-1 px-2" id="accept" type="button">Accept</button>
 					<button class="floated mt-6 bg-red-400 text-white rounded-lg shadow-lg py-1 px-2" id="reject" type="button">Reject</button>
 					<div>
-						<button class="btn-nego-disabled mt-4 ml-9 bg-teal-500 text-white rounded-lg shadow-lg py-1 px-2" id="negotiate" type="button">Send back your proposed changes</button>
+						<button style="margin-left:60px" class="btn-nego-disabled mt-4 bg-teal-500 text-white rounded-lg shadow-lg py-1 px-2" id="negotiate" type="button">Send back your proposed changes</button>
 					</div>
 				</div>
 				<div id="member" class="mt-4 ml-3" style="display:none">
