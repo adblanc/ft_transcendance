@@ -51,7 +51,7 @@ class RoomsController < ApplicationController
 			if (!current_user.rooms.exists?(@room.id))
 				@room.users.push(current_user)
 			end
-			send_room_notification("#{@current_user.login} joined the room")
+			@room.send_room_notification("joined the room", @current_user, @current_user)
 			@room
 		else
 			render json: {"name or password" => ["is incorrect."]}, status: :unprocessable_entity
@@ -69,7 +69,7 @@ class RoomsController < ApplicationController
 			render json: {"action" => ["left"]}, status: :ok
 		else
 			if (@room.remove_user(current_user) === "left")
-				send_room_notification("#{@current_user.login} left the room")
+				@room.send_room_notification("left the room", @current_user, @current_user)
 				render json: {"action" => ["left"]}, status: :ok
 			else
 				render json: {"action" => ["deleted"]}, status: :ok
@@ -78,12 +78,6 @@ class RoomsController < ApplicationController
 	end
 
 	private
-
-	def send_room_notification(content)
-		room_msg = RoomMessage.create(user: current_user, room: @room, content: content, is_notification: true);
-
-		ActionCable.server.broadcast("room_#{params[:room_id]}", room_msg);
-	end
 
 	def room_password
 		params[:password].blank? ? EMPTY_PASSWORD : params[:password];

@@ -14,6 +14,7 @@ class MutesController < ApplicationController
 		else
 			@mute = @room.mutes.build(:muted_user_id => params[:id])
 			if (@mute.save)
+				@room.send_room_notification("has been muted by #{@current_user.login}", @current_user, @muted_user)
 				UnmuteRoomUserJob.set(wait: 30.minutes).perform_later(@mute)
 				@muted_user
 			else
@@ -31,6 +32,7 @@ class MutesController < ApplicationController
 		elsif !(@mute = @room.mutes.where(muted_user_id: params[:id]).take)
 			render json: {"User" => ["is not muted"]}, status: :unprocessable_entity
 		else
+			@room.send_room_notification("has been unmuted by #{@current_user.login}", @current_user, @muted_user)
 			UnmuteRoomUserJob.perform_now(@mute)
 			@muted_user
 		end

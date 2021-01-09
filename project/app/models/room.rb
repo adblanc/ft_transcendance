@@ -53,4 +53,15 @@ class Room < ApplicationRecord
 		return "left";
 	end
 
+	def send_room_notification(content, issuer, target)
+		my_content = "#{target.login} #{content}";
+		room_msg = RoomMessage.create(user: issuer, room: self, content: my_content, is_notification: true);
+
+		logger = Logger.new(STDOUT);
+		logger.debug("SEND_NOTIFICATION_ROOM")
+		logger.debug("======= #{my_content} =====")
+
+		ActionCable.server.broadcast("room_#{self.id}", room_msg);
+	end
+
 end
