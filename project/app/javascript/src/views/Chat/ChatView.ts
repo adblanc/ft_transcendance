@@ -7,13 +7,11 @@ import ChatInputView from "./ChatInputView";
 import CreateJoinChannelView from "./CreateJoinChannelView";
 import PublicRoomsView from "./PublicRoomsView";
 import MyRoomsView from "./MyRoomsView";
-import BlockedUsersView from "./BlockedUsersView";
 
 export default class ChatView extends BaseView {
   myRooms: MyRooms;
   publicRoomsView: PublicRoomsView;
   myRoomsView: MyRoomsView;
-  blockedUsersView: BlockedUsersView;
   createJoinChannelView: CreateJoinChannelView;
   chatHeaderView?: ChatHeaderView;
   chatInputView?: ChatInputView;
@@ -29,8 +27,6 @@ export default class ChatView extends BaseView {
     this.createJoinChannelView = new CreateJoinChannelView({
       rooms: this.myRooms,
     });
-
-    this.blockedUsersView = new BlockedUsersView();
 
     this.publicRoomsView = new PublicRoomsView();
 
@@ -115,8 +111,6 @@ export default class ChatView extends BaseView {
     const template = $("#chat-container-template").html();
     const html = Mustache.render(template, {});
     this.$el.html(html);
-
-    this.preprendNested(this.blockedUsersView, "#left-container-chat");
 
     this.preprendNested(this.createJoinChannelView, "#left-container-chat");
 
