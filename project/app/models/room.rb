@@ -16,14 +16,17 @@ class Room < ApplicationRecord
 	has_many :bans
 	has_many :banned_users, :through => :bans
 
+	def valid_update_role_action(action)
+		!action.blank? && (action === "promoted" || action === "demoted");
+	end
 
 	def update_user_role(user, action)
 		case action
-		when "promote"
+		when "promoted"
 			if (user.is_member?(self))
 				user.add_role :administrator, self
 			end
-		when "demote"
+		when "demoted"
 			if (user.is_room_administrator?(self))
 				user.remove_role :administrator, self
 			end

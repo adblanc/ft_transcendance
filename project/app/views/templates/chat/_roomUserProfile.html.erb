@@ -16,6 +16,9 @@
 	<div class="space-y-4 flex flex-col justify-center items-center">
 		<a class="link-primary block" href="/user/{{id}}">Go to profile</a>
 		{{^isCurrentUser}}
+
+
+
 		<a id="invite-to-play-user" class="link-primary block">Invite to play</a>
 		{{#isBlocked}}
 			<a id="unblock-user" class="link-primary block">Unblock</a>
@@ -24,6 +27,18 @@
 			<a id="block-user" class="link-primary block">Block</a>
 		{{/isBlocked}}
 		{{#isAdmin}}
+
+			{{#isOwner}}
+				<div class="flex flex-col ml-4">
+					<button {{^canPromote}}disabled{{/canPromote}} id="promote-user" class="btn-primary{{^canPromote}}--disabled{{/canPromote}} my-2">
+						Promote
+					</button>
+						<button {{^canDemote}}disabled{{/canDemote}} id="demote-user" class="btn-primary{{^canDemote}}--disabled{{/canDemote}} my-2">
+						Demote
+					</button>
+				</div>
+			{{/isOwner}}
+
 		{{#isMute}}
 				<span id="unmute-user" class="link-primary block">Unmute</span>
 		{{/isMute}}

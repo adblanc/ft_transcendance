@@ -15,7 +15,9 @@ type Action =
   | "blocked"
   | "unblocked"
   | "unmuted"
-  | "unbanned";
+  | "unbanned"
+  | "promoted"
+  | "demoted";
 
 export default class RoomUserProfileView extends ModalView<RoomUser> {
   currentRoomUser?: RoomUser;
@@ -40,6 +42,8 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
       "click #unblock-user": (e) => this.performAction(e, "unblocked"),
       "click #unmute-user": (e) => this.performAction(e, "unmuted"),
       "click #unban-user": (e) => this.performAction(e, "unbanned"),
+      "click #promote-user": (e) => this.performAction(e, "promoted"),
+      "click #demote-user": (e) => this.performAction(e, "demoted"),
     };
   }
 
@@ -80,6 +84,12 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
       case "unmuted":
         success = await this.model.unMute(this.model.room.get("id"));
         break;
+      case "promoted":
+        success = await this.model.updateRole(action);
+        break;
+      case "demoted":
+        success = await this.model.updateRole(action);
+        break;
       default:
         throw new Error("Please provide a valid action");
     }
@@ -104,6 +114,9 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
       ...this.model?.toJSON(),
       isCurrentUser: this.model.get("id") === currentUser().get("id"),
       isAdmin: this.currentRoomUser.get("isRoomAdministrator"),
+      isOwner: this.currentRoomUser.room.get("isOwner"),
+      canPromote: this.model.canBePromote(),
+      canDemote: this.model.canBeDemote(),
     });
     this.$content.html(html);
     return this;
