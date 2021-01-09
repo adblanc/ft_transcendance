@@ -5,8 +5,10 @@ import BaseModel from "src/lib/BaseModel";
 export interface IMessage {
   content: string;
   room_id: number;
+  is_notification?: boolean;
   sent?: boolean;
   id?: number;
+  avatar_url?: string;
   user_id?: number;
   user_login?: string;
   created_at?: string;

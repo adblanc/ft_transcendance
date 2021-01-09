@@ -36,7 +36,7 @@ class UsersController < ApplicationController
 
 		if !@user_to_update
       render json: {"member" => ["not found in this room."]}, status: :not_found and return;
-		elsif !valid_update_role_action(action)
+		elsif !(@room.valid_update_role_action(action))
 			render json: {"you" => ["must provide a valid action"]}, status: :unprocessable_entity and return;
 		end
 
@@ -46,12 +46,6 @@ class UsersController < ApplicationController
 	end
 
   private
-
-  def valid_update_role_action(action)
-    logger = Logger.new(STDOUT)
-    logger.info("action : #{action}")
-		!action.blank? && (action === "promote" || action === "demote");
-	end
 
   def user_params
     params.permit(:name, :avatar, :email, :two_fact_auth)

@@ -2,7 +2,9 @@ import Backbone from "backbone";
 import { eventBus } from "src/events/EventBus";
 import BaseView from "src/lib/BaseView";
 import Message from "src/models/Message";
+import { currentUser } from "src/models/Profile";
 import Room from "src/models/Room";
+import RoomUser from "src/models/RoomUser";
 import MessageView from "./MessageView";
 import RoomUserProfileView from "./RoomUserProfileView";
 
@@ -24,18 +26,27 @@ export default class RoomMessagesView extends BaseView<Room> {
       return;
     }
 
-    const currentUser = this.model
+    const currentRoomUser = this.model
       .get("users")
-      .find((u) => u.get("login") === $("#current-user-profile").data("login"));
+      .find((u) => u.get("login") === currentUser().get("login"));
 
-    const sender = this.model
-      .get("users")
-      .find((u) => u.get("id") === message.get("user_id"));
+    const sender =
+      this.model
+        .get("users")
+        .find((u) => u.get("id") === message.get("user_id")) ||
+      new RoomUser(
+        {
+          login: message.get("user_login"),
+          id: message.get("user_id"),
+          roomRole: "Member",
+          avatar_url: message.get("avatar_url"),
+        },
+        { collection: this.model.get("users") }
+      );
 
     const profileView = new RoomUserProfileView({
-      model: message,
-      sender,
-      isRoomAdministrator: currentUser.get("isRoomAdministrator"),
+      model: sender,
+      currentRoomUser,
     });
 
     profileView.render();

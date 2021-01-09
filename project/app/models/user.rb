@@ -82,6 +82,13 @@ class User < ApplicationRecord
 		room.bans.exists?(banned_user_id: self.id)
 	end
 
+	def is_blocked?(user)
+		if (user == self)
+			return false;
+		end
+		return self.blocks.exists?(blocked_user_id: user.id);
+	end
+
 	def pending_guild?
 		if self.pending_guild
 			return true

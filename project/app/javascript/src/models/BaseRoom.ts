@@ -5,6 +5,7 @@ import BaseModel from "src/lib/BaseModel";
 export interface IRoom {
   name: string;
   password?: string;
+  isOwner?: boolean;
   is_private?: boolean;
   id?: number;
   selected?: boolean;

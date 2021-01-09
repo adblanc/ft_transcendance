@@ -1,48 +1,43 @@
 import Mustache from "mustache";
 import BaseView from "src/lib/BaseView";
 import RoomUser from "src/models/RoomUser";
-import { displaySuccess } from "src/utils";
+import RoomUserProfileView from "../RoomUserProfileView";
 
 type Options = Backbone.ViewOptions<RoomUser> & {
-  isCurrentUserOwner: boolean;
+  currentRoomUser: RoomUser;
 };
 
 export default class RoomUserView extends BaseView<RoomUser> {
-  isCurrentUserOwner: boolean;
+  currentRoomUser: RoomUser;
+
   constructor(options?: Options) {
     super(options);
 
     this.listenTo(this.model, "change", this.render);
 
-    this.isCurrentUserOwner = options.isCurrentUserOwner;
+    this.currentRoomUser = options.currentRoomUser;
   }
 
   events() {
     return {
-      "click #promote": () => this.updateRole("promote"),
-      "click #demote": () => this.updateRole("demote"),
+      "click #manage-user": this.manageUser,
     };
   }
 
-  updateRole(action: "promote" | "demote") {
-    const success = this.model.updateRole(action);
+  manageUser() {
+    const profileView = new RoomUserProfileView({
+      model: this.model,
+      currentRoomUser: this.currentRoomUser,
+    });
 
-    if (success) {
-      displaySuccess(`${this.model.get("login")} has been ${action}d`);
-    }
+    profileView.render();
   }
 
   render() {
     const template = $("#room-user-template").html();
 
-    const isCurrentUser =
-      $("#current-user-profile").data("login") === this.model.get("login");
-
     const html = Mustache.render(template, {
       ...this.model.toJSON(),
-      showButtons: !isCurrentUser && this.isCurrentUserOwner,
-      canPromote: this.model.canBePromote(),
-      canDemote: this.model.canBeDemote(),
     });
     this.$el.html(html);
 

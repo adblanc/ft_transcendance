@@ -1,6 +1,7 @@
 <script type="text/html" id="manage-room-template">
  <div id="room-users-list" class="overflow-y-auto h-64">
     </div>
+    {{#isOwner}}
   <form action="">
     <label class="block" for="room-password">
       <span class="text-gray-700">Change room's password</span>
@@ -18,4 +19,5 @@
       </button>
     </div>
   </form>
+   {{/isOwner}}
 </script>

@@ -7,13 +7,11 @@ import ChatInputView from "./ChatInputView";
 import CreateJoinChannelView from "./CreateJoinChannelView";
 import PublicRoomsView from "./PublicRoomsView";
 import MyRoomsView from "./MyRoomsView";
-import BlockedUsersView from "./BlockedUsersView";
 
 export default class ChatView extends BaseView {
   myRooms: MyRooms;
   publicRoomsView: PublicRoomsView;
   myRoomsView: MyRoomsView;
-  blockedUsersView: BlockedUsersView;
   createJoinChannelView: CreateJoinChannelView;
   chatHeaderView?: ChatHeaderView;
   chatInputView?: ChatInputView;
@@ -30,14 +28,13 @@ export default class ChatView extends BaseView {
       rooms: this.myRooms,
     });
 
-    this.blockedUsersView = new BlockedUsersView();
-
     this.publicRoomsView = new PublicRoomsView();
 
     this.chatHeaderView = undefined;
     this.chatInputView = undefined;
 
-    this.listenTo(eventBus, "chat:open", this.toggleChat);
+    this.listenTo(eventBus, "chat:toggle", this.toggleChat);
+    this.listenTo(eventBus, "chat:close", this.closeChat);
     this.listenTo(this.myRooms, "add", this.refreshHeaderInput);
     this.listenTo(this.myRooms, "remove", this.removeHeaderInput);
   }
@@ -70,6 +67,12 @@ export default class ChatView extends BaseView {
 
   toggleChat() {
     this.$el.toggleClass("invisible");
+  }
+
+  closeChat() {
+    if (!this.$el.hasClass("invisible")) {
+      this.$el.addClass("invisible");
+    }
   }
 
   refreshHeaderInput() {
@@ -108,8 +111,6 @@ export default class ChatView extends BaseView {
     const template = $("#chat-container-template").html();
     const html = Mustache.render(template, {});
     this.$el.html(html);
-
-    this.preprendNested(this.blockedUsersView, "#left-container-chat");
 
     this.preprendNested(this.createJoinChannelView, "#left-container-chat");
 

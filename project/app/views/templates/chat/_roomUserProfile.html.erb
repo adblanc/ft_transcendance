@@ -7,34 +7,75 @@
 		src="{{ avatar_url }}"
 		/>
 		<div class="ml-4">
-		<span class="text-xl text-gray-900 font-semibold">{{user_login}}</span>
+		<span class="text-xl text-gray-900 font-semibold">{{login}}</span>
 		<div class="text-gray-600 text-xs font-semibold">
 			{{roomRole}}
 		</div>
 		</div>
 		</div>
 	<div class="space-y-4 flex flex-col justify-center items-center">
-		<a class="link-primary block" href="/user/{{user_id}}">Go to profile</a>
+		<a class="link-primary block" href="/user/{{id}}">Go to profile</a>
 		{{^isCurrentUser}}
-		<a id="invite-to-play-user" class="link-primary block">Invite to play</a>
-		<a id="block-user" class="link-primary block">Block</a>
+
+
+
+		<span id="invite-to-play-user" class="link-primary block">Invite to play</span>
+		{{#isBlocked}}
+			<span id="unblock-user" class="link-primary block">Unblock</span>
+		{{/isBlocked}}
+		{{^isBlocked}}
+			<span id="block-user" class="link-primary block">Block</span>
+		{{/isBlocked}}
 		{{#isAdmin}}
+
+			{{#isOwner}}
+				<div class="flex flex-col ml-4">
+					<button {{^canPromote}}disabled{{/canPromote}} id="promote-user" class="btn-primary{{^canPromote}}--disabled{{/canPromote}} my-2">
+						Promote
+					</button>
+						<button {{^canDemote}}disabled{{/canDemote}} id="demote-user" class="btn-primary{{^canDemote}}--disabled{{/canDemote}} my-2">
+						Demote
+					</button>
+				</div>
+			{{/isOwner}}
+
 		{{#isMute}}
-				<a id="unmute-user" class="link-primary block">Unmute</a>
+				<span id="unmute-user" class="link-primary block">Unmute</span>
 		{{/isMute}}
 
 		{{^isMute}}
-			<a id="mute-user" class="link-primary block">Mute for 30 minutes</a>
+			{{^isBan}}
+				<label class="block">
+					<span class="text-gray-800 font-semibold underline">Mute</span>
+					<select class="form-select block w-full mt-1" id="mute-list">
+						<option selected disabled>Select time</option>
+						<option value="10mn">10 minutes</option>
+						<option value="30mn">30 minutes</option>
+						<option value="1h">1 hour</option>
+						<option value="24h">24 hours</option>
+						<option value="indefinitely">Indefinitely</option>
+					</select>
+				</label>
+			{{/isBan}}
 		{{/isMute}}
 
 		{{#isBan}}
-				<a id="unban-user" class="link-primary block">Unban</a>
+				<span id="unban-user" class="link-primary block">Unban</span>
 		{{/isBan}}
 
 		{{^isBan}}
-			<a id="ban-user" class="link-primary block">Ban for 30 minutes</a>
+				<label class="block">
+					<span class="text-gray-800 font-semibold underline">Ban</span>
+					<select class="form-select block w-full mt-1" id="ban-list">
+						<option selected disabled>Select time</option>
+						<option value="10mn">10 minutes</option>
+						<option value="30mn">30 minutes</option>
+						<option value="1h">1 hour</option>
+						<option value="24h">24 hours</option>
+						<option value="indefinitely">Indefinitely</option>
+					</select>
+				</label>
 		{{/isBan}}
-
 
 		{{/isAdmin}}
 		{{/isCurrentUser}}

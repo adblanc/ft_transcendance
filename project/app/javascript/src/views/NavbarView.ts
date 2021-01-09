@@ -51,7 +51,7 @@ export default class NavbarView extends BaseView {
   }
 
   onClickMessage() {
-    eventBus.trigger("chat:open");
+    eventBus.trigger("chat:toggle");
   }
 
   onClickNotification(e: JQuery.Event) {

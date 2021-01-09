@@ -1,11 +1,9 @@
 <script type="text/html" id="modalTemplate">
   <div
-    id="modal-backdrop"
-    class="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-25 z-50"
+    class="modal-backdrop absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-25 z-50"
   >
     <div
-      id="modal-container"
-      class="bg-white text-gray-900 relative p-8 rounded-lg"
+      class="modal-container bg-white text-gray-900 relative p-8 rounded-lg"
     >
       <svg
         id="close-modal"
@@ -22,7 +20,7 @@
           d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
         ></path>
       </svg>
-      <div id="modal-content"></div>
+      <div id="modal-content-{{id}}"></div>
     </div>
   </div>
 </script>
