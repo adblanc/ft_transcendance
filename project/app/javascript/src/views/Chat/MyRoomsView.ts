@@ -40,8 +40,12 @@ export default class MyRoomsView extends BaseView {
     this.$("#my-rooms-list").append(myRoomView.render().el);
   }
 
-  removeMyRoom(room: PublicRoom) {
-    this.myRoomViews.forEach((room) => room.close());
+  removeMyRoom(room: Room) {
+    this.myRoomViews.forEach((r) => {
+      if (r.model.get("id") === room.get("id")) {
+        r.close();
+      }
+    });
   }
 
   render() {
