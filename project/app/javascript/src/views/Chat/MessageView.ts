@@ -32,9 +32,12 @@ export default class MessageView extends Backbone.View<Message> {
       isNotification ? MSG_NOTIFICATION_TEMPLATE_ID : MSG_TEMPLATE_ID
     ).html();
 
+    const { day, time } = formatMessageDate(this.model.get("created_at"));
+
     const html = Mustache.render(template, {
       ...this.model.toJSON(),
-      date: formatMessageDate(this.model.get("created_at")),
+      day,
+      time,
     });
     this.$el.html(html);
 

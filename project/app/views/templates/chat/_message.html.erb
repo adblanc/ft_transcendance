@@ -4,7 +4,12 @@
     class="flex w-full items-center {{#sent}}flex-row-reverse{{/sent}}"
   >
   <div class="text-gray-600 text-sm">
-  {{date}}
+    <div>
+    {{day}}
+    </div>
+    <div>
+    {{time}}
+    </div>
   </div>
     <img  class="user-avatar w-12 h-12 rounded-full m-2 cursor-pointer" src="{{ avatar_url }}" />
     <div
