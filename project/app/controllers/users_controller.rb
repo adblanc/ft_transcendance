@@ -41,7 +41,7 @@ class UsersController < ApplicationController
 		end
 
 		@room.update_user_role(@user_to_update, action)
-		@room.send_room_notification("has been #{action} by #{@current_user.login}", @current_user, @user_to_update)
+		@room.send_room_notification(action, @current_user, @user_to_update, nil)
 
 		@user_to_update;
 	end

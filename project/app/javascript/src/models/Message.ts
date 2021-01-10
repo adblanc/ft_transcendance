@@ -1,4 +1,3 @@
-import Backbone from "backbone";
 import { BASE_ROOT } from "src/constants";
 import BaseModel from "src/lib/BaseModel";
 

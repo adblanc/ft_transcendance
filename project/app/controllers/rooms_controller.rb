@@ -51,7 +51,7 @@ class RoomsController < ApplicationController
 			if (!current_user.rooms.exists?(@room.id))
 				@room.users.push(current_user)
 			end
-			@room.send_room_notification("joined the room", @current_user, @current_user)
+			@room.send_room_notification("join", @current_user, @current_user, nil)
 			@room
 		else
 			render json: {"name or password" => ["is incorrect."]}, status: :unprocessable_entity
@@ -69,7 +69,7 @@ class RoomsController < ApplicationController
 			render json: {"action" => ["left"]}, status: :ok
 		else
 			if (@room.remove_user(current_user) === "left")
-				@room.send_room_notification("left the room", @current_user, @current_user)
+				@room.send_room_notification("left", @current_user, @current_user, nil)
 				render json: {"action" => ["left"]}, status: :ok
 			else
 				render json: {"action" => ["deleted"]}, status: :ok

@@ -55,6 +55,7 @@ export default class Room extends BaseRoom {
           const blocked = currentUser()
             .get("blocked_users")
             .find((u) => u.id === message.user_id);
+
           if (!blocked) {
             this.messages.add(
               new Message({

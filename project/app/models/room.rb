@@ -56,9 +56,62 @@ class Room < ApplicationRecord
 		return "left";
 	end
 
-	def send_room_notification(content, issuer, target)
-		room_msg = RoomMessage.create(user: issuer, room: self, content: "#{target.login} #{content}", is_notification: true);
-		ActionCable.server.broadcast("room_#{self.id}", room_msg);
+	def send_room_notification(type, issuer, target, time)
+
+		room_content = room_notification_content(type,issuer, target,time);
+
+		if (room_content)
+			room_msg = RoomMessage.create(user: issuer, room: self, content: room_content, is_notification: true);
+			ActionCable.server.broadcast("room_#{self.id}", room_msg);
+		end
+
+		target_content = target_notification_content(type, issuer, time);
+
+		if (target_content)
+			target.send_notification(target_content, "");
+		end
+	end
+
+	def room_notification_content(type, issuer, target, time)
+		case type
+		when "ban"
+			return "#{target.login} has been banned #{time} by #{issuer.login}"
+		when "mute"
+			return "#{target.login} has been muted #{time} by #{issuer.login}"
+		when "unban"
+			return "#{target.login} has been unbanned by #{issuer.login}"
+		when "unmute"
+			return "#{target.login} has been unmuted by #{issuer.login}"
+		when "promoted"
+			return "#{target.login} has been promoted by #{issuer.login}"
+		when "demoted"
+			return "#{target.login} has been demoted by #{issuer.login}"
+		when "join"
+			return "#{target.login} has joined"
+		when "left"
+			return "#{target.login} has left"
+		else
+			return nil;
+		end
+	end
+
+	def target_notification_content(type, issuer, time)
+		case type
+		when "ban"
+			return "you have been banned #{time} from #{self.name} by #{issuer.login}"
+		when "mute"
+			return nil;
+		when "unban"
+			return "you have been unbanned from #{self.name} by #{issuer.login}"
+		when "unmute"
+			return "you have been unmuted from #{self.name} by #{issuer.login}"
+		when "promoted"
+			return "you have been promoted in #{self.name} by #{issuer.login}"
+		when "demoted"
+			return "you have been demoted in #{self.name} by #{issuer.login}"
+		else
+			return nil;
+		end
 	end
 
 	def correct_mute_or_ban_time(time)
