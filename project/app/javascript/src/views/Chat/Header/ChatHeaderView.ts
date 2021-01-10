@@ -4,6 +4,7 @@ import Rooms from "src/collections/MyRooms";
 import { eventBus } from "src/events/EventBus";
 import BaseView from "src/lib/BaseView";
 import { displaySuccess } from "src/utils";
+import ConfirmationModalView from "src/views/ConfirmationModalView";
 import _ from "underscore";
 import ManageRoomView from "./ManageRoomView";
 
@@ -29,12 +30,23 @@ export default class ChatHeaderView extends BaseView {
   events() {
     return {
       "click #manage-room": this.manageRoom,
-      "click #quit-room": this.quitRoom,
+      "click #quit-room": this.askConfirmationQuit,
     };
   }
 
-  async quitRoom() {
-    const selectedRoom = this.rooms.selectedRoom;
+  askConfirmationQuit() {
+    const { selectedRoom } = this.rooms;
+
+    const confirmationView = new ConfirmationModalView({
+      question: `Are you sure you want to quit ${selectedRoom.get("name")} ?`,
+      onYes: this.quitRoom,
+    });
+
+    confirmationView.render();
+  }
+
+  quitRoom = async () => {
+    const { selectedRoom } = this.rooms;
 
     const success = await selectedRoom.quit();
 
@@ -46,7 +58,7 @@ export default class ChatHeaderView extends BaseView {
       }
       displaySuccess(`Room ${selectedRoom.get("name")} successfully ${action}`);
     }
-  }
+  };
 
   async manageRoom() {
     new ManageRoomView({ model: this.rooms.selectedRoom }).render();
