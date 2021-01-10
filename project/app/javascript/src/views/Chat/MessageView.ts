@@ -1,6 +1,5 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import moment from "moment";
 import { eventBus } from "src/events/EventBus";
 import Message from "src/models/Message";
 import _ from "underscore";
