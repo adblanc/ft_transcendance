@@ -12,6 +12,7 @@ if guild.activeWar
 		json.status guild.activeWar.status
 		json.time_to_answer guild.activeWar.time_to_answer
 		json.max_unanswered_calls guild.activeWar.max_unanswered_calls
+		json.warPoints guild.activeWar.war_points(guild)
 		json.atWarTime guild.activeWar.atWarTime?
 		if guild.activeWar.activeWarTime
 			json.activeWarTime do
@@ -24,15 +25,16 @@ if guild.activeWar
 		end
 	end
 end
-json.waitingWar guild.waitingWar
 if guild.activeWar
 	json.warOpponent do 
 		json.id  guild.warOpponent(guild.activeWar).id
 		json.name  guild.warOpponent(guild.activeWar).name
 		json.img_url url_for(guild.warOpponent(guild.activeWar).img) if guild.warOpponent(guild.activeWar).img.attached?
+		json.warPoints guild.activeWar.war_points(guild.warOpponent(guild.activeWar))
 	end
 end 
 if guild.waitingWar
+	json.waitingWar guild.waitingWar
 	json.warOpponent do 
 		json.id  guild.warOpponent(guild.waitingWar).id
 		json.name  guild.warOpponent(guild.waitingWar).name

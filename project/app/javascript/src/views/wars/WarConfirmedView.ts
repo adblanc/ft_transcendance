@@ -40,6 +40,7 @@ export default class WarConfirmedView extends BaseView {
 		war: war,
 		img: this.guild.get("warOpponent").get("img_url"),
 		name: this.guild.get("warOpponent").get("name"),
+		op_points: this.guild.get("warOpponent").get("warPoints"),
 		url: `/guild/${this.guild.get("warOpponent").get("id")}`,
 	});
 	this.$el.html(html);
