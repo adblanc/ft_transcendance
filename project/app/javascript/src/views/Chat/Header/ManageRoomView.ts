@@ -44,7 +44,7 @@ export default class ManageRoomView extends ModalView<Room> {
 
     this.renderNested(
       new RoomUsersView({
-        roomUsers: this.model.get("users"),
+        model: this.model,
       }),
       "#room-users-list"
     );

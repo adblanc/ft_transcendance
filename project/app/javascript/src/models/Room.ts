@@ -65,6 +65,13 @@ export default class Room extends BaseRoom {
             return this.quit();
           }
 
+          if (
+            !message.ancient &&
+            !this.get("users").find((u) => u.get("id") === message.user_id)
+          ) {
+            this.fetch();
+          }
+
           if (!blocked) {
             this.messages.add(
               new Message({

@@ -37,7 +37,7 @@ Rails.application.routes.draw do
 	end
   end
   resources :room_messages
-  resources :rooms
+  resources :rooms, only: [:show, :index, :create, :update]
   get 'my-rooms', to: 'rooms#my_rooms'
   get '/join-room', to: 'rooms#join'
   delete "/quit-room", to: 'rooms#quit'

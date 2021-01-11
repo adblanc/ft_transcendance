@@ -7,6 +7,16 @@ class RoomsController < ApplicationController
 		@rooms = @current_user.rooms.empty? ? Room.where(is_private: false) : Room.where('id NOT IN (?) AND is_private = false', @current_user.rooms.ids);
 	end
 
+	def show
+		@room = Room.find_by_id(params[:id]);
+
+		if (@room)
+			@room
+		else
+			render json: {"room" => ["not found."]}, status: :not_found
+		end
+	end
+
 	def my_rooms
 		@rooms =  @current_user.rooms.select { |room| !@current_user.is_room_ban?(room) }
 	end
