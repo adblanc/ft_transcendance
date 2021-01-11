@@ -15,23 +15,19 @@ import Mouvement from "src/models/Mouvement";
 let lastTime = null;
 
 export default class CanvaView extends ModalView<Rectangle> {
+	canvas: HTMLCanvasElement;
+	player_one: Player;
+	ball: Ball;
+	player_two: Player;
+	points: Number;
+	level: Number;
+	ctx: CanvasRenderingContext2d;
+	game_id: number;
 	constructor(options?: Backbone.ViewOptions<Rectangle>) {
 		super(options);
-		//this.init();
-		//this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
-		//this.ctx = this.canvas.getContext('2d');
+		this.canvas = document.getElementById("canvas_yes") as HTMLCanvasElement;
 	  }
-		player_one: Player;
-		ball: Ball;
-		player_two: Player;
-		points: Number;
-		level: Number;
-		canvas: HTMLCanvasElement;
-		ctx: CanvasRenderingContext2D;
-		//mouv: Mouvement;
-		game_id: number;
-
-		init(canvas, ctx, bg, player_one, points, level, player_two, game_id) {
+		init(bg, player_one, points, level, player_two, game_id) {
 		this.points = points;
 		this.game_id = game_id;
 		 if (level == "easy")
@@ -44,13 +40,11 @@ export default class CanvaView extends ModalView<Rectangle> {
 		 {
 			 this.level = 1;
 		 }
-		 this.canvas = canvas;
+		 this.canvas = document.getElementById("canvas_yes") as HTMLCanvasElement;
 		 this.ctx = this.canvas.getContext('2d');
-		  //this.canvas.style.backgroundColor = 'red';
-		  //canvas.id = "canvas-id";
-		  var el_playing = document.getElementById("playing");
-		  displaySuccess(String(el_playing.id));
-		  //document.body.appendChild(this.canvas);
+		this.canvas.style.backgroundColor = '#DDD';
+		 // var el_playing = document.getElementById("playing");
+		 // displaySuccess(String(el_playing.id));
 		  //el_playing.appendChild(this.canvas);
 		  //document.getElementById("#canvas").appendChild(canvas);
 		 // canvas.addEventListener('mouse', update); 
@@ -171,13 +165,13 @@ export default class CanvaView extends ModalView<Rectangle> {
 			//document.body.removeChild(this.canvas);
 		}
 
-		// render()
-		// {
-		// 	const template = $(this.canvas).html();
-		// 	const html = Mustache.render(template, {});
-		// 	this.$el.html(html);
-		// 	return this;
-		// }
+		 render()
+		 {
+		 	const template = $("#canvas").html();
+		 	const html = Mustache.render(template, {});
+		 	this.$el.html(html);
+		 	return this;
+		 }
 // 		 stop(i: Number)
 //   {
 //     const template = $("#game_win").html();

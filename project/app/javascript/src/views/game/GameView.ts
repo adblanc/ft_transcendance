@@ -19,13 +19,7 @@ type Options = Backbone.ViewOptions & { game: Game };
 var canvaView = new CanvaView({
    model: rectangle,});
   var rectangle = new Rectangle(0, 0, 480, 480);
-//var canvas = document.createElement("canvas");
-
-//var canvas = document.getElementById("canvas") as HTMLCanvasElement;
-//var ctx = canvas.getContext('2d');
 var points: number = 2;
-//ctx.fillStyle = 'green';
-//ctx.fillRect(10, 10, 100, 100);
 
 export default class GameView extends BaseView {
   canvaView: CanvaView;
@@ -42,9 +36,6 @@ export default class GameView extends BaseView {
     ctx: RenderingContext;
     constructor(options?: Options) {
         super(options);
-    //     this.canvaView = new CanvaView({
-    // model: rectangle,
-    // });
     this.canvaView = canvaView;
         this.game = options.game;
         this.game.fetch({
@@ -57,14 +48,8 @@ export default class GameView extends BaseView {
          this.joueur_un = new Profile();
          this.joueur_un.fetch();
          this.joueurs = new Profiles();
-         this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
-         //this.canvas.style.backgroundColor = '#DDD';
-         this.ctx = this.canvas.getContext('2d');
-         this.ctx.fillStyle = 'green';
-         this.player_one = new Player(new Rectangle(485, this.canvas.height / 2 - 50, 15, 100));
-       this.player_two = new Player(new Rectangle(0, this.canvas.height / 2 - 50, 15, 100));
-       
-       //this.listenTo(this.game, "change:second", this.render_finished);
+         this.player_one = new Player(new Rectangle(485, 250 / 2 - 50, 15, 100));
+       this.player_two = new Player(new Rectangle(0, 250 / 2 - 50, 15, 100));
        this.listenTo(this.game.mouvements, "add", this.canva_render_scale);
        this.listenTo(this.game, "change:status", this.render_playing);
       }
@@ -89,10 +74,6 @@ export default class GameView extends BaseView {
 
       play()
       {
-        if (this.game.get("first") != this.joueur_un.get("id"))
-        {
-          var inter_game = setInterval(this.game_draw,150, this.game, this.joueur_un); //arreter au bout d'un moment
-        }
         this.listenTo(this.game.model, "change:scale", this.canva_render_scale);
         this.listenTo(this.game.model, "change:score_one", this.change_score_one);
         this.listenTo(this.game.model, "change:score_two", this.change_score_two);
@@ -100,19 +81,18 @@ export default class GameView extends BaseView {
         this.joueurs = this.game.get("user");
         var j_str = this.joueur_un.get("name") as string;
         var player = this.joueurs.findWhere({"name": j_str})
-        if (player != undefined)
-        {
-            displaySuccess("You can play");
-        this.canvas = canvaView.init(this.canvas, this.ctx, '#AAA', this.player_one, this.game.get("points"), this.game.get("level"), this.player_two, this.game.get("id"));
+        this.canvas = canvaView.init('#AAA', this.player_one, this.game.get("points"), this.game.get("level"), this.player_two, this.game.get("id"));
         //var canvas = canvaView.init(this.canvas.height, this.canvas.width, '#EEE', this.player_one, this.game.get("points"), this.game.get("level"), this.player_two);
         //canvas.addEventListener('mousemove', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
        // window.addEventListener('keydown', event => { const e = event as KeyboardEvent; this.keyBoardClicked(-1);}, false);
-        window.addEventListener('keydown', event => { const e = event as KeyboardEvent; this.keyBoardClicked(e);}, false);
-        //canvas.addEventListener('keydown',  this.keyBoardClicked());  
-      }
-        else{
-          displaySuccess("You watch the game");
-          var canvas = canvaView.init(500, 250, '#EEE', this.player_one, this.game.get("points"), this.game.get("level"), this.player_two, this.game.get("id"));
+       if (player != undefined)
+        {
+          displaySuccess("You can play");
+          window.addEventListener('keydown', event => { const e = event as KeyboardEvent; this.keyBoardClicked(e);}, false);
+          if (this.game.get("first") != this.joueur_un.get("id"))
+          {
+            var inter_game = setInterval(this.game_draw,150, this.game, this.joueur_un); //arreter au bout d'un moment
+          }
         }
       }
 
@@ -125,14 +105,14 @@ export default class GameView extends BaseView {
 
       canva_render_scale()
       {
-        if ((this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (!this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")))
+        if ((this.game.model.get("user_id") == this.joueur_un.get("id") && this.game.get("first") == this.joueur_un.get("id")) || (this.game.model.get("user_id") != this.joueur_un.get("id") && this.game.get("first") != this.joueur_un.get("id")))
         {
           if (Number(this.game.model.get("scale")) < 0)
           {
             canvaView.player_one.paddle.y += 10;
-            if (canvaView.player_one.paddle.y >= this.canvas.height - (this.canvas.height / 2 - 50))
+            if (canvaView.player_one.paddle.y >= 250 - (250 / 2 - 50))
             {
-              canvaView.player_one.paddle.y = this.canvas.height - (this.canvas.height / 2 - 50);
+              canvaView.player_one.paddle.y = 250 - (250 / 2 - 50);
             }
           }
           else{
@@ -143,14 +123,14 @@ export default class GameView extends BaseView {
             }
           }
         }
-        else if ((!this.game.model.get("sent") && this.game.get("first") == this.joueur_un.get("id")) || (this.game.model.get("sent") && this.game.get("first") != this.joueur_un.get("id")))
+        else if ((this.game.model.get("user_id") != this.joueur_un.get("id") && this.game.get("first") == this.joueur_un.get("id")) || (this.game.model.get("user_id") == this.joueur_un.get("id") && this.game.get("first") != this.joueur_un.get("id")))
         {
           if (Number(this.game.model.get("scale")) < 0)
           {
             canvaView.player_two.paddle.y += 10;
-            if (canvaView.player_two.paddle.y >= this.canvas.height - (this.canvas.height / 2 - 50))
+            if (canvaView.player_two.paddle.y >= 250 - (250 / 2 - 50))
             {
-              canvaView.player_two.paddle.y = this.canvas.height - (this.canvas.height / 2 - 50);
+              canvaView.player_two.paddle.y = 250 - (250 / 2 - 50);
             }
           }
           else{
@@ -232,7 +212,7 @@ export default class GameView extends BaseView {
 
     render()
     {
-      displaySuccess("this canvas" + String(this.canvas.id));
+      //displaySuccess("this canvas" + String(this.canvas.id));
       this.inter = setInterval(this.page_reload, 1000);
       const template = $("#waiting").html();
       const html = Mustache.render(template, this.game.toJSON());
@@ -283,14 +263,10 @@ export default class GameView extends BaseView {
     else if (this.game.get("status") == "playing")
     {
       var el_playing = document.getElementById("playing");
-      this.canvas.style.backgroundColor = '#AAA';
-     // this.ctx = this.canvas.getContext('2d');
-      //el_playing.appendChild(this.canvas);
-
       const template = $("#playing").html();
       const html = Mustache.render(template, this.game.toJSON());
       this.$el.html(html);
-      //this.renderNested(this.canvaView, "#canvas_yes");
+      this.renderNested(canvaView, "#canvas_yes");
       return this;
     }
 
@@ -298,18 +274,6 @@ export default class GameView extends BaseView {
         // canvasClicked(e) {
       //   //setTimeout(this.canvasClicked,1000);
       //   const scale: number = e.offsetY / 250;
-      //   s : String;
-      //   var s = "Mouse down" + String(scale);
-      //   var g_id = this.game.get("id") as number;
-      //   var j_id = Number(this.joueur_un.get("id"));
-      //   var s_g_id = String("game_" + this.game.get("id"));
-      //   //ActionCable.server.broadcast(s_g_id, scale);
-      //   const mouvement = new Mouvement({
-      //     scale: scale,
-      //     game_id: g_id,
-      //     user_id: j_id,
-      //   });
-      //   const success = mouvement.save();
       // }
 
 }
