@@ -25,9 +25,9 @@ class UsersController < ApplicationController
 		@room = Room.find(params[:room_id])
 
 		if !@room
-			render json: {"room" => ["not found."]}, status: :not_found and return;
+			render json: {"room" => ["not found"]}, status: :not_found and return;
 		elsif !@current_user.is_room_owner?(@room)
-			render json: {"you" => ["must be owner of this room."]}, status: :unauthorized and return;
+			render json: {"you" => ["must be owner of this room"]}, status: :unauthorized and return;
 		end
 
 		@user_to_update = User.find(params[:user_id]);
@@ -35,7 +35,9 @@ class UsersController < ApplicationController
 		action = params[:update_action];
 
 		if !@user_to_update
-      render json: {"member" => ["not found in this room."]}, status: :not_found and return;
+			render json: {"user" => ["not found"]}, status: :not_found and return;
+		elsif !(@room.users.exists?(@user_to_update.id))
+			render json: {"user" => ["not found in this room"]}, status: :not_found and return;
 		elsif !(@room.valid_update_role_action(action))
 			render json: {"you" => ["must provide a valid action"]}, status: :unprocessable_entity and return;
 		end
