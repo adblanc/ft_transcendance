@@ -2,23 +2,36 @@ import Backbone from "backbone";
 import _ from "underscore";
 import Profile from "src/models/Profile";
 import Profiles from "src/collections/Profiles";
-import { mapServerErrors, syncWithFormData } from "src/utils";
+import { displaySuccess, mapServerErrors, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
+import consumer from "channels/consumer";
+import Mouvement from "src/models/Mouvement";
+import IMouvement from "src/models/Mouvement";
+import Mouvements from "src/collections/Mouvements";
 
 interface IGame {
-  id?: number;
+  id?: string;
   level: string;
   points: number;
-  url?: string;
+  status: string;
   user: Profile;
+  first: number;
+  button: number;
+  //player_points: number;
 }
 
 type CreatableGameArgs = Partial<
-  Pick<IGame, "id" | "points" | "level" | "url">
+  Pick<IGame, "id" | "points" | "level" | "status" | "first" | "button">
 >;
 
 export default class Game extends BaseModel<IGame> {
+  first: Number;
+  second?: boolean;
+  channel: ActionCable.Channel;
+  mouvements: Mouvements;
+  model: Mouvement;
+  currentUserId?: Number; 
   preinitialize() {
     this.relations = [
       {
@@ -30,6 +43,14 @@ export default class Game extends BaseModel<IGame> {
     ];
   }
 
+  initialize() {
+    this.second = false;
+    this.mouvements = new Mouvements();
+    this.model = new Mouvement();
+    this.channel = this.createConsumer();
+    this.currentUserId = undefined;
+  }
+
   constructor(options?: any) {
     super(options);
   }
@@ -38,18 +59,85 @@ export default class Game extends BaseModel<IGame> {
     return {
       level: "",
       points: 0,
+      status: "waiting",
+      user: [],
+      second: false,
+      button: 0,
+      //player_points: 0,
     };
   }
 
   urlRoot = () => `${BASE_ROOT}/games`;
+  baseGameRoot = () => `${this.urlRoot()}/${this.get("id")}`;
 
   sync(method: string, model: Game, options: JQueryAjaxSettings): any {
     return syncWithFormData(method, model, options);
   }
 
   createGame(attrs: CreatableGameArgs) {
+    if (!this.currentUserId) {
+      this.currentUserId = parseInt($("#current-user-profile").data("id"));
+    }
+    this.first = this.currentUserId;
     return this.asyncSave(attrs, { url: this.urlRoot() });
   }
+  join() {
+    
+    if (!this.currentUserId) {
+      this.currentUserId = parseInt($("#current-user-profile").data("id"));
+    }
+     if (this.currentUserId == this.get("first"))
+     {
+       displaySuccess("You already create this game");
+       return 0;
+     }
+    this.second = true;
+    return this.asyncSave({status: "playing", second: true},{ url: `${this.baseGameRoot()}/join`,});
+  }
+
+  finish(g_points: number)
+  {
+    const success = this.asyncSave({status: "finished", points: g_points},{ url: `${this.baseGameRoot()}/finish`,});
+    if (success)
+    { this.channel.unsubscribe();}
+    return success;
+  }
+
+  createConsumer() {
+    const game_id = this.get("id");
+
+    if (game_id === undefined) {
+      return undefined;
+    }
+
+    return consumer.subscriptions.create(
+      { channel: "GamingChannel", game_id },
+      {
+        connected: () => {
+          console.log("connected to the GAMMME", game_id);
+        },
+        received: (mouv: IMouvement) => 
+        {
+          if (!this.currentUserId) {
+            this.currentUserId = parseInt(
+              $("#current-user-profile").data("id")
+            );
+          }
+           this.model.set(mouv);
+           if (this.currentUserId === this.model.get("user_id"))
+          {this.model.set({sent: true});}
+          else
+          {this.model.set({sent: false});}
+         },
+        disconnected: () => {
+          console.log("disconnected to the GAMMME", game_id);
+        },
+      }
+     );
+    }
+}
+
+
   //  sync(method: string, model: Game, options: JQueryAjaxSettings): any {
   //   if (method == "create") {
   //     var formData = new FormData();
@@ -91,7 +179,7 @@ export default class Game extends BaseModel<IGame> {
   //       );
   //    // success();
   // }
-}
+//}
 
 // type rec = Record<string, string>;
 

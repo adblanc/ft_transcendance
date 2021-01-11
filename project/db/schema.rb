@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2020_12_31_055909) do
+=======
+ActiveRecord::Schema.define(version: 2021_01_07_135447) do
+>>>>>>> game
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,12 +40,44 @@ ActiveRecord::Schema.define(version: 2020_12_31_055909) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "games", force: :cascade do |t|
-    t.string "level"
-    t.integer "points"
-    t.string "url"
+  create_table "game_mouvs", force: :cascade do |t|
+    t.bigint "user_id"
+    t.integer "scale"
+    t.integer "game_id"
+    t.integer "ball_x"
+    t.integer "ball_y"
+    t.integer "score_one"
+    t.integer "score_two"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_game_mouvs_on_user_id"
+  end
+
+  create_table "game_users", force: :cascade do |t|
+    t.bigint "game_id"
+    t.bigint "user_id"
+    t.integer "points", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["game_id"], name: "index_game_user_on_game_id"
+    t.index ["user_id"], name: "index_game_user_on_user_id"
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "level"
+    t.integer "points"
+    t.string "status"
+    t.integer "first"
+    t.boolean "second"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_games_on_user_id"
+  end
+
+  create_table "games_users", id: false, force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "game_id", null: false
   end
 
   create_table "guild_users", force: :cascade do |t|

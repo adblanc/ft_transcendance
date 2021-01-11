@@ -3,13 +3,16 @@ Rails.application.routes.draw do
   get '/auth/guest', to: 'authentication#loginGuest', format: false
   get '/auth/tfa', to: 'authentication#loginTfa', format: false
   get '/profile/:id', to: 'users#show_other_user'
-
   resource :user, only: [:show, :update]
   get "user/notifications", to: "users#show"
-  resources :game
-  get '/games', to: 'game#index', format:false
-  put '/games', to: 'game#create', format: false
+  resources :games
+ post '/game', to: 'games#create', format: false
+ put '/games', to: 'games#create', format: false
+ put '/games/:id/join', to: 'games#join', format:false
+ put '/games/:id/finish', to: 'games#finish', format: false
 
+resources :game_mouvs
+post '/game_mouvs', to: 'game_mouvs#create'
   resources :guilds do
 	member do
 		put :quit
@@ -28,6 +31,7 @@ Rails.application.routes.draw do
 		put :mark_as_read
 	end
   end
+
   resources :room_messages
   resources :rooms
   get 'my-rooms', to: 'rooms#my_rooms'

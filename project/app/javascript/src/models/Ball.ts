@@ -21,19 +21,27 @@ export default class Ball extends Backbone.Model{
     y: number;
     velocity: Vec;
     radius: number;
+<<<<<<< HEAD
     level: number;
+=======
+>>>>>>> game
     constructor(x, y, radius, level)
     {
         super(Option);
         this.x = x;
         this.y = y;
         this.radius = radius;
+<<<<<<< HEAD
         if (level == 1)
         {this.velocity = new Vec(2,2);}
         else if (level == 2)
         {this.velocity = new Vec(2.5,2.5);}
         else if (level == 3)
         {this.velocity = new Vec(3,3);}
+=======
+        this.velocity = new Vec(level,level);
+        //this.velocity = new Vec(1,1);
+>>>>>>> game
     }
     // defaults() {
     //     return {
@@ -48,8 +56,11 @@ export default class Ball extends Backbone.Model{
     }
 
     update() {
-        if (this.top() < 0 || this.bottom() > 250)
-            this.velocity.y *= -1;
+        //if (this.top() <= 0 || this.bottom() > 250)
+        if (this.top() <= 0 || this.bottom() >= 250)
+        {
+            this.velocity.y *= -1;    
+        }
         this.x += this.velocity.x;
         this.y += this.velocity.y;
     }
