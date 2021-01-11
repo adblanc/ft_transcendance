@@ -19,6 +19,7 @@ if guild.activeWar
 				json.end guild.activeWar.activeWarTime.end
 				json.time_to_answer guild.activeWar.activeWarTime.time_to_answer
 				json.max_unanswered_calls guild.activeWar.activeWarTime.max_unanswered_calls
+				json.unanswered_calls guild.activeWar.activeWarTime.unanswered_calls
 			end
 		end
 	end

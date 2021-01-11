@@ -28,6 +28,9 @@ export default class ChallengeView extends ModalView<War> {
     const template = $("#challengeTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
 	this.$content.html(html);
+
+	if (this.model.get("max_unanswered_calls"))
+		this.$("#max-calls").show();
 	
     return this;
   }

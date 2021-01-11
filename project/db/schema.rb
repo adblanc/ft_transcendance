@@ -170,6 +170,7 @@ ActiveRecord::Schema.define(version: 2021_01_08_142036) do
     t.integer "status", default: 0
     t.integer "time_to_answer"
     t.integer "max_unanswered_calls"
+    t.integer "unanswered_calls", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["war_id"], name: "index_war_times_on_war_id"

@@ -6,7 +6,8 @@ class CreateWarTimes < ActiveRecord::Migration[6.0]
 		t.datetime :end
 		t.integer :status, default: 0
 		t.integer :time_to_answer
-		t.integer :max_unanswered_calls
+		t.integer :max_unanswered_calls, default: 0
+		t.integer :unanswered_calls, default: 0
       t.timestamps
     end
   end

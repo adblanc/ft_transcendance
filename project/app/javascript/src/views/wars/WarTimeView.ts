@@ -2,9 +2,8 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import ActivateView from "./ActivateView";
-import ChallengeView from "./ChallengeView";
+import ActiveWarTimeView from "./ActiveWarTimeView";
 import War from "src/models/War";
-import WarTime from "src/models/WarTime";
 import { displaySuccess, displayError } from "src/utils";
 
 type Options = Backbone.ViewOptions & { war: War};
@@ -18,15 +17,12 @@ export default class WarTimeView extends BaseView {
 	this.war = options.war;
 
 	this.listenTo(this.war, "change", this.render);
-
-	//console.log(this.war.get("activeWarTime"));
 	
   }
 
   events() {
     return {
 	  "click #wartime-btn": "onActivateClicked",
-	  "click #challenge-btn": "onChallengeClicked",
     };
   }
 
@@ -38,24 +34,21 @@ export default class WarTimeView extends BaseView {
 	  activateView.render();
   }
 
-  onChallengeClicked() {
-	const challengeView = new ChallengeView({
-		model: this.war,
-	  });
-  
-	  challengeView.render();
-  }
-
   render() {
     const template = $("#warTimeTemplate").html();
-    const html = Mustache.render(template, this.war.toJSON());
+    const html = Mustache.render(template, {});
 	this.$el.html(html);
 
 	if (this.war.get("atWarTime")) {
-		this.$("#active").show();
+		const activeWarTimeView = new ActiveWarTimeView({
+			war: this.war,
+		  });
+		this.renderNested(activeWarTimeView, "#active");
 	}
-	else
+	else {
+		console.log("test");
 		this.$("#not-active").show();
+	}
 	
     return this;
   }

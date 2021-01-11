@@ -44,6 +44,9 @@ export default class WarConfirmedView extends BaseView {
 	});
 	this.$el.html(html);
 
+	if (this.war.get("max_unanswered_calls"))
+		this.$("#max-calls").show();
+
 	if (this.war.get("status") === "started") {
 		this.$("#started").show();
 		const warTimeView = new WarTimeView({

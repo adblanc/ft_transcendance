@@ -10,6 +10,7 @@ interface IWarTime {
   end: Date;
   time_to_answer: string;
   max_unanswered_calls: string;
+  unanswered_calls: string;
   created_at: string;
   updated_at: string;
 }
