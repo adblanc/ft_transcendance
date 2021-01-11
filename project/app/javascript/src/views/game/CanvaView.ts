@@ -44,7 +44,6 @@ export default class CanvaView extends ModalView<Rectangle> {
 		 this.ctx = this.canvas.getContext('2d');
 		this.canvas.style.backgroundColor = '#DDD';
 		 // var el_playing = document.getElementById("playing");
-		 // displaySuccess(String(el_playing.id));
 		  //el_playing.appendChild(this.canvas);
 		  //document.getElementById("#canvas").appendChild(canvas);
 		 // canvas.addEventListener('mouse', update); 
