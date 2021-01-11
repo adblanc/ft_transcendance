@@ -7,43 +7,60 @@ import { displaySuccess } from "src/utils/toast";
 import Profile from "src/models/Profile";
 import { generateAcn } from "src/utils/acronym";
 import Ball from "src/models/Ball";
+import Mouvement from "src/models/Mouvement";
 
-var canvas = document.createElement("canvas");
-var ctx = canvas.getContext('2d');
+//var canvas = document.getElementById("canvas") as HTMLCanvasElement;
+//var canvas = document.createElement("canvas");
+//var ctx = canvas.getContext('2d');
 let lastTime = null;
 
 export default class CanvaView extends ModalView<Rectangle> {
 	constructor(options?: Backbone.ViewOptions<Rectangle>) {
 		super(options);
+		//this.init();
+		//this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
+		//this.ctx = this.canvas.getContext('2d');
 	  }
 		player_one: Player;
 		ball: Ball;
 		player_two: Player;
 		points: Number;
 		level: Number;
+		canvas: HTMLCanvasElement;
+		ctx: CanvasRenderingContext2D;
+		//mouv: Mouvement;
+		game_id: number;
 
-		init(width, height, bg, player_one, points, level, player_two) {
+		init(canvas, ctx, bg, player_one, points, level, player_two, game_id) {
 		this.points = points;
+		this.game_id = game_id;
 		 if (level == "easy")
 		 {this.level = 1;}
 		 else if (level == "normal")
 		 {this.level = 2;}
 		 else if (level == "hard")
 		 {this.level = 3;}
-		canvas.width = width;
-		  canvas.height = height;
-		  canvas.style.backgroundColor = bg;
-		  canvas.id = "canvas-id";
-		  document.body.appendChild(canvas);
-		  //console.log(canvas);
+		 else
+		 {
+			 this.level = 1;
+		 }
+		 this.canvas = canvas;
+		 this.ctx = this.canvas.getContext('2d');
+		  //this.canvas.style.backgroundColor = 'red';
+		  //canvas.id = "canvas-id";
+		  var el_playing = document.getElementById("playing");
+		  displaySuccess(String(el_playing.id));
+		  //document.body.appendChild(this.canvas);
+		  //el_playing.appendChild(this.canvas);
 		  //document.getElementById("#canvas").appendChild(canvas);
 		 // canvas.addEventListener('mouse', update); 
-		  var paddle = new Rectangle(0, 0, width, height);
-		  paddle.render(ctx, 'rgb(2, 149, 212)');
+		  var paddle = new Rectangle(0, 0, this.canvas.width, this.canvas.height);
+		  paddle.render(this.ctx, 'rgb(0, 150, 150)'); // C EST LA LA COULEUR
 		 this.player_one = player_one; 
 		 this.player_two = player_two;
-		  this.ball =  new Ball(width /2 , height / 2, 5, this.level * 5);
-		  return canvas;
+		  this.ball =  new Ball(this.canvas.width /2 , this.canvas.height / 2, 5, this.level * 5);
+		  this.draw();
+		  return this.canvas;
 		}
 
 		collide_player_one(player_one)
@@ -66,10 +83,10 @@ export default class CanvaView extends ModalView<Rectangle> {
 		draw()
     	{
         	//this.clear();
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			this.player_one.render(ctx, 'rgb(120, 80, 0)');
-			this.player_two.render(ctx, 'rgb(0, 80, 120)');
-			this.ball.render(ctx, 'rgb(80,80,80)');
+			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			this.player_one.render(this.ctx, 'rgb(120, 80, 0)');
+			this.player_two.render(this.ctx, 'rgb(0, 80, 120)');
+			this.ball.render(this.ctx, 'rgb(80,80,80)');
         	//this.drawRect(this.ball);
         	//this.drawScore();
 		}
@@ -78,44 +95,58 @@ export default class CanvaView extends ModalView<Rectangle> {
 			const b = this.ball;
         	b.velocity.x = 4;
         	b.velocity.y = 4;
-        	b.x = canvas.width / 2;
-        	b.y = canvas.height / 2;
+        	b.x = this.canvas.width / 2;
+        	b.y = this.canvas.height / 2;
 		}
 
 		update(dt): Number {
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			document.querySelector('#computer-score').textContent = String(this.player_one.score);
-			document.querySelector('#player-score').textContent = String(this.player_two.score);
+			//this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			//document.querySelector('#computer-score').textContent = String(this.player_one.score);
+			//document.querySelector('#player-score').textContent = String(this.player_two.score);
 			//this.ball.update();
 			this.player_one.update(dt);
 			if (this.ball.left() < 0)
 			{
 				this.player_one.add();
-				document.querySelector('#computer-score').textContent = String(this.player_one.score);
+				const mouvement = new Mouvement({
+					score_one: this.player_one.score,
+					score_two: this.player_two.score,
+					game_id: this.game_id,
+					scale: 0,
+					});
+				const success = mouvement.save();
+				//document.querySelector('#computer-score').textContent = String(this.player_one.score);
 				this.reset();
 			}
-			if (this.ball.right() > canvas.width)
+			else if (this.ball.right() > this.canvas.width)
 			{
 				this.player_two.add();
-				document.querySelector('#player-score').textContent = String(this.player_two.score);
+				const mouvement = new Mouvement({
+					score_one: this.player_one.score,
+					score_two: this.player_two.score,
+					game_id: this.game_id,
+					scale: 0,
+					});
+				const success = mouvement.save();
+				//document.querySelector('#player-score').textContent = String(this.player_two.score);
 				this.reset();
 			}
-			if (this.player_one.score >= this.points)
-				{
-					//document.body.removeChild(canvas);
-					return 1;
-				}
-			else if (this.player_two.score >= this.points)
-				{
-					//document.body.removeChild(canvas);
-					return 2;
-				}
+			// if (this.player_one.score >= this.points)
+			// 	{
+			// 		//document.body.removeChild(canvas);
+			// 		return 1;
+			// 	}
+			// else if (this.player_two.score >= this.points)
+			// 	{
+			// 		//document.body.removeChild(canvas);
+			// 		return 2;
+			// 	}
 			if (this.ball.left() < this.player_two.paddle.x + 15 || this.ball.right() > this.player_one.paddle.x)
 			{
 				this.collide_player_one(this.player_one);
 				this.collide_player_two(this.player_two);
 			}
-			this.draw();
+			//this.draw();
 			return 0;
 		}
 		
@@ -129,7 +160,7 @@ export default class CanvaView extends ModalView<Rectangle> {
 				return i;
 			}
 			lastTime = millis;
-			window.requestAnimationFrame(this.callback);
+			//window.requestAnimationFrame(this.callback);
 			return 0;
 		}
 
@@ -137,8 +168,16 @@ export default class CanvaView extends ModalView<Rectangle> {
 		{
 			this.ball.velocity.x = 0;
 			this.ball.velocity.y = 0;
-			document.body.removeChild(canvas);
+			//document.body.removeChild(this.canvas);
 		}
+
+		// render()
+		// {
+		// 	const template = $(this.canvas).html();
+		// 	const html = Mustache.render(template, {});
+		// 	this.$el.html(html);
+		// 	return this;
+		// }
 // 		 stop(i: Number)
 //   {
 //     const template = $("#game_win").html();

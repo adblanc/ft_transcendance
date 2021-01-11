@@ -12,6 +12,8 @@ export interface IMouvement {
   user_id?: number;
   created_at?: string;
   updated_at?: string;
+  score_one?: number;
+  score_two?: number;
 }
 
 export default class Mouvement extends Backbone.Model<IMouvement> {

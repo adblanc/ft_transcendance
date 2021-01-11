@@ -97,7 +97,10 @@ export default class Game extends BaseModel<IGame> {
 
   finish(g_points: number)
   {
-    return this.asyncSave({status: "finished", points: g_points},{ url: `${this.baseGameRoot()}/finish`,});
+    const success = this.asyncSave({status: "finished", points: g_points},{ url: `${this.baseGameRoot()}/finish`,});
+    if (success)
+    { this.channel.unsubscribe();}
+    return success;
   }
 
   createConsumer() {
@@ -126,6 +129,9 @@ export default class Game extends BaseModel<IGame> {
           else
           {this.model.set({sent: false});}
          },
+        disconnected: () => {
+          console.log("disconnected to the GAMMME", game_id);
+        },
       }
      );
     }

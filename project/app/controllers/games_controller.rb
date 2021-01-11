@@ -28,6 +28,7 @@ class GamesController < ApplicationController
     end
 
     def finish
+        ActionCable.server.remote_connections.where(current_user: current_user).disconnect
         @game = Game.find(params[:id])
         return head :not_found unless @game
         pts = game_params[:points]

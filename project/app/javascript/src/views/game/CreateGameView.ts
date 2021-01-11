@@ -107,7 +107,7 @@ export default class CreateGameView extends ModalView<Game> {
   playGame(points)
   {
     this.closeModal();
-    var canvas = canvaView.init(500, 250, '#EEE', this.player_one, "2", "2", this.player_two);
+    var canvas = canvaView.init(500, 250, '#AAA', this.player_one, "2", "2", this.player_two, 2);
     canvas.addEventListener('click', this.canvasClicked, false);
     canvas.addEventListener('mousemove', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
   }

@@ -28,6 +28,7 @@ export default class Ball extends Backbone.Model{
         this.y = y;
         this.radius = radius;
         this.velocity = new Vec(level,level);
+        //this.velocity = new Vec(1,1);
     }
     // defaults() {
     //     return {
@@ -42,8 +43,11 @@ export default class Ball extends Backbone.Model{
     }
 
     update() {
-        if (this.top() < 0 || this.bottom() > 250)
-            this.velocity.y *= -1;
+        //if (this.top() <= 0 || this.bottom() > 250)
+        if (this.top() <= 0 || this.bottom() >= 250)
+        {
+            this.velocity.y *= -1;    
+        }
         this.x += this.velocity.x;
         this.y += this.velocity.y;
     }

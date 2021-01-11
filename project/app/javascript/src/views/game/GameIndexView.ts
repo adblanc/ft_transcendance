@@ -40,7 +40,6 @@ export default class GameIndexView extends BaseView {
   }
   
   render() {
-    displaySuccess(JSON.stringify(this.games));
     const template = $("#index_game").html();
     const html = Mustache.render(template, {});
     this.$el.html(html);
@@ -71,7 +70,7 @@ export default class GameIndexView extends BaseView {
   //   GameIndexView.i++;
   //   displaySuccess(String(GameIndexView.i));
      const jeu = new Game();
-     var gameView = new CreateGameView(this.games.length+2, {model: jeu, collection: this.games});
+     var gameView = new CreateGameView(this.games.length+3, {model: jeu, collection: this.games});
      gameView.render();
    // var canvas = canvaView.init(500, 250, '#EEE', this.player_one, 3);
    // canvas.addEventListener('click', this.canvasClicked, false);
