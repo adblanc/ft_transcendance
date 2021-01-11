@@ -1,5 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
+import { eventBus } from "src/events/EventBus";
 import BaseView from "src/lib/BaseView";
 import { navigate } from "src/utils";
 
@@ -7,24 +8,31 @@ export default class ModalView<
   TModel extends Backbone.Model = Backbone.Model
 > extends BaseView<TModel> {
   $content: any;
+  modalId: number;
 
   constructor(options?: Backbone.ViewOptions<TModel>) {
     super(options);
 
     this.$content = undefined;
+    this.modalId = this.generateModalId();
+  }
+
+  generateModalId() {
+    return $(".modal-backdrop").length;
   }
 
   events() {
     return {
-      "click #modal-backdrop": this.close,
-      "click #modal-container": this.dismissClick,
+      "click .modal-backdrop": this.close,
+      "click .modal-container": this.dismissClick,
       "click #close-modal": this.close,
       "click a": this.onLinkOpen,
     };
   }
 
   onLinkOpen(e: JQuery.ClickEvent) {
-    this.close();
+    this.closeAllModal();
+    eventBus.trigger("chat:close");
 
     navigate(e);
   }
@@ -37,13 +45,20 @@ export default class ModalView<
     this.close();
   }
 
+  closeAllModal() {
+    $(".modal-backdrop").parent().off();
+    $(".modal-backdrop").parent().remove();
+  }
+
   render() {
     const template = $("#modalTemplate").html();
-    const html = Mustache.render(template, {});
+    const html = Mustache.render(template, {
+      id: this.modalId,
+    });
     this.$el.html(html);
     $("body").append(this.$el);
 
-    this.$content = $("#modal-content");
+    this.$content = $(`#modal-content-${this.modalId}`);
 
     return this;
   }

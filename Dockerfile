@@ -18,7 +18,7 @@ WORKDIR /app
 COPY ./project/Gemfile ./project/Gemfile.lock ./
 
 #install bundler and all our gems
-RUN gem install bundler && bundle install --jobs 20 --retry 5
+RUN gem install bundler -v 2.1.2 && bundle _2.1.2_ install --jobs 20 --retry 5
 
 #needed by yarn to create lockfile with dependencies
 COPY ./project/package.json ./

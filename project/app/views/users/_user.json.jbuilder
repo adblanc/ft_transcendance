@@ -20,3 +20,12 @@ if user.pending_guild?
 		json.img_url url_for(user.pending_guild.img) if user.pending_guild.img.attached?
 	end
 end
+
+
+
+json.blocked_users do
+  json.array! user.blocked_users do |blocked_user|
+  json.extract! blocked_user, :id, :login
+  json.avatar_url url_for(blocked_user.avatar) if blocked_user.avatar.attached?
+  end
+  end

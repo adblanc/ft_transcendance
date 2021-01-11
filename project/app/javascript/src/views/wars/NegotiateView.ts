@@ -19,12 +19,16 @@ export default class NegotiateView extends ModalView<War> {
 	profile: Profile;
 	fp_start: typeof flatpickr;
 	fp_end: typeof flatpickr;
+	dateTimeStart: Date;
+	dateTimeEnd: Date;
 
   constructor(options?: Options) {
     super(options);
 
 	this.guild = options.guild;
 	this.profile = options.profile;
+	this.dateTimeStart = this.model.get("start");
+	this.dateTimeEnd = this.model.get("end");
 
 	this.listenTo(this.guild, "change", this.render);
     this.listenTo(this.model, "change", this.render);
@@ -38,9 +42,28 @@ export default class NegotiateView extends ModalView<War> {
       "click #accept": () => this.onAction("accept"),
 	  "click #reject": () => this.onAction("reject"),
 	  "change #input-prize": "onChange",
-	  "change #input-start-date": "onChange",
-	  "change #input-end-date": "onChange",
+	  "change #input-start-date": "onDateChange",
+	  "change #input-end-date": "onDateChange",
+	  "change #max-calls": "onChange",
+	  "change #answer-time": "onChange",
     };
+  }
+
+  onChange(e: JQuery.Event) {
+	e.preventDefault();
+	this.$("#accept").addClass("btn-nego-disabled");
+	this.$("#negotiate").removeClass("btn-nego-disabled");
+  }
+
+  onDateChange(e: Event) {
+	e.preventDefault();
+	this.$("#accept").addClass("btn-nego-disabled");
+	this.$("#negotiate").removeClass("btn-nego-disabled");
+
+	if ($(e.target).is("#input-start-date"))
+		this.dateTimeStart = this.fp_start.selectedDates[0];
+	if ($(e.target).is("#input-end-date"))
+ 		this.dateTimeEnd = this.fp_end.selectedDates[0];
   }
 
   async onAction(action: WAR_ACTION) {
@@ -64,19 +87,18 @@ export default class NegotiateView extends ModalView<War> {
 
   async onModify(e: JQuery.Event) {
 	e.preventDefault();
-	console.log("test");
-	const dateTimeStart = this.fp_start.selectedDates[0];
-    const dateTimeEnd = this.fp_end.selectedDates[0];
-	const start = dateTimeStart; 
-	const end = dateTimeEnd;
+	const start = this.dateTimeStart; 
+	const end = this.dateTimeEnd;
 	const prize = this.$("#input-prize").val() as string;
+	const answer_time = this.$("#answer-time").val() as string;
+	const max_calls = this.$("#max-calls").val() as string;
 
 	if (parseInt(prize) > this.model.get("warOpponent").get("points") || parseInt(prize) > this.guild.get("points")) {
 		displayError("One or both guilds cannot wager that many points");
 		return;
 	}
 
-    const success = await this.model.modifyWar(start, end, prize);
+    const success = await this.model.modifyWar(start, end, prize, answer_time, max_calls);
 
     if (success) {
       displaySuccess("You have successfully proposed new terms.");
@@ -86,20 +108,14 @@ export default class NegotiateView extends ModalView<War> {
     }
   }
 
-  onChange(e: JQuery.Event) {
-	e.preventDefault();
-	this.$("#accept").addClass("btn-nego-disabled");
-	this.$("#negotiate").removeClass("btn-nego-disabled");
-  }
-
   render() {
 	const model = {
 		...this.model.toJSON(),
 		start: moment(this.model.get("start")).format(
-			"YYYY-MM-DDTHH:mm"
+			"MMM Do YY, h:mm a"
 		),
 		end: moment(this.model.get("end")).format(
-		  "YYYY-MM-DDTHH:mm"
+		  "MMM Do YY, h:mm a"
 		)
 	};
 

@@ -1,16 +1,16 @@
 import RoomUsers from "src/collections/RoomUsers";
 import BaseView from "src/lib/BaseView";
+import { currentUser } from "src/models/Profile";
 import RoomUser from "src/models/RoomUser";
 import RoomUserView from "./RoomUserView";
 
 type Options = Backbone.ViewOptions & {
   roomUsers: RoomUsers;
-  isCurrentUserOwner: boolean;
 };
 
 export default class RoomUsersView extends BaseView {
   roomUsers: RoomUsers;
-  isCurrentUserOwner: boolean;
+  currentRoomUser: RoomUser;
 
   constructor(options: Options) {
     super(options);
@@ -21,14 +21,16 @@ export default class RoomUsersView extends BaseView {
       throw Error("Please provide room users to this view.");
     }
 
-    this.isCurrentUserOwner = options.isCurrentUserOwner;
+    this.currentRoomUser = this.roomUsers.find(
+      (u) => u.get("login") === currentUser().get("login")
+    );
   }
 
   renderRoomUser(roomUser: RoomUser) {
     this.$el.append(
       new RoomUserView({
         model: roomUser,
-        isCurrentUserOwner: this.isCurrentUserOwner,
+        currentRoomUser: this.currentRoomUser,
       }).render().el
     );
   }

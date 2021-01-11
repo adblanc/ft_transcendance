@@ -6,19 +6,23 @@ import Room from "./Room";
 interface IRoomUser extends IProfile {
   roomRole: "Owner" | "Administrator" | "Member";
   isRoomAdministrator?: boolean;
+  isBlocked?: boolean;
 }
 
-export default class RoomUser extends BaseModel<IRoomUser> {
-  updateRole(action: "promote" | "demote") {
-    const room = (this.collection as any).parents[0] as Room;
+export type MuteBanTime = "10mn" | "30mn" | "1h" | "24h" | "indefinitely";
 
-    console.log("room", room);
+export default class RoomUser extends BaseModel<IRoomUser> {
+  room = (this.collection as any).parents[0] as Room;
+
+  updateRole(action: "promoted" | "demoted") {
     return this.asyncSave(
       {
         update_action: action,
       },
       {
-        url: `${BASE_ROOT}/${room.get("id")}/${this.get("id")}/update_role`,
+        url: `${BASE_ROOT}/${this.room.get("id")}/${this.get(
+          "id"
+        )}/update_role`,
       }
     );
   }
@@ -29,5 +33,45 @@ export default class RoomUser extends BaseModel<IRoomUser> {
 
   canBeDemote() {
     return this.get("roomRole") === "Administrator";
+  }
+
+  mute(room_id: number, time: MuteBanTime) {
+    return this.asyncSave(
+      {
+        mute_time: time,
+      },
+      {
+        url: `${BASE_ROOT}/mute/${room_id}`,
+      }
+    );
+  }
+
+  unMute(room_id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/unmute/${room_id}`,
+      }
+    );
+  }
+
+  ban(room_id: number, time: MuteBanTime) {
+    return this.asyncSave(
+      {
+        ban_time: time,
+      },
+      {
+        url: `${BASE_ROOT}/ban/${room_id}`,
+      }
+    );
+  }
+
+  unBan(room_id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/unban/${room_id}`,
+      }
+    );
   }
 }

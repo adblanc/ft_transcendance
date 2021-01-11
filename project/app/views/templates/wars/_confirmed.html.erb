@@ -4,14 +4,18 @@
 		<img style="margin-left: auto; margin-right: auto; margin-top:10px" width="100" height="100" class="flex flex-row rounded-full p-2" src="{{img}}" />
 	</div>
 	<a style="margin-top:10px; text-decoration: underline;" href="{{url}}" class="justify-center flex flex-row text-white">{{name}} </a>
-	<h1 style="margin-top:10px; font-size: 15px;" class="flex flex-row text-white ml-5"> Prize : {{war.prize}} points </h1>
+	<h1 style="margin-top:10px; font-size: 11px;" class="flex flex-row text-white ml-5"> Prize : {{war.prize}} points </h1>
+	<h1 style="font-size: 11px;" class="flex flex-row text-white ml-5"> Time to answer War Time Calls: {{war.time_to_answer}} </h1>
+	<h1 id="max-calls" style="font-size: 11px; display:none" class="flex flex-row text-white ml-5"> Max tolerable unanswered War Time calls: {{war.max_unanswered_calls}} </h1>
 	<div id="confirmed" style="display:none">
-		<h1 style="margin-top:10px; margin-down:10px; font-size: 15px;" class="flex flex-row text-white ml-5"> Starts {{war.countStart}} </h1>
-		<h1 style="margin-top:10px; margin-down:10px; font-size: 15px;" class="flex flex-row text-white ml-5 mb-5"> End: {{war.end}} </h1>
+		<h1 style="font-size: 11px;" class="flex flex-row text-white ml-5"> Starts {{war.countStart}} </h1>
+		<h1 style="font-size: 11px;" class="flex flex-row text-white ml-5"> End: {{war.end}} </h1>
 	</div>
-	<div id="started" style="display:none">
-		<h1 style="margin-top:10px; margin-down:10px; font-size: 15px;" class="flex flex-row text-white ml-5"> Ends {{war.countEnd}} </h1>
-		<h1 style="margin-top:10px; margin-down:10px; font-size: 15px;" class="flex flex-row text-white ml-5 mb-5"> Started on: {{war.start}} </h1>
-		<button id="wartime-btn" style="margin-left:140px;" class="btn-primary mt-3 mb-10" type="button">Start war time!</button>
+	<div id="started" style="display:none;">
+		<h1 style="font-size: 11px;" class="flex flex-row text-white ml-5"> Ends {{war.countEnd}} </h1>
+		<h1 style="font-size: 11px;" class="flex flex-row text-white ml-5 mb-5"> Started on: {{war.start}} </h1>
+		<h1 class="justify-center flex flex-row text-white" >My Guild points: {{war.warPoints}}</h1>
+		<h1 class="justify-center flex flex-row text-white" >Opponent points: {{op_points}}</h1>
+		<div id="wartime"></div>
 	</div>
 </script>

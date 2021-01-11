@@ -36,14 +36,8 @@ export default class ManageRoomView extends ModalView<Room> {
     super.render(); // we render the modal
     const template = $("#manage-room-template").html();
 
-    const users = this.model.get("users");
-    const currentUser = users.find(
-      (u) => u.get("login") === $("#current-user-profile").data("login")
-    );
-
     const html = Mustache.render(template, {
       ...this.model.toJSON(),
-      isRoomAdministrator: currentUser?.get("isRoomAdministrator"),
     });
 
     this.$content.html(html);
@@ -51,7 +45,6 @@ export default class ManageRoomView extends ModalView<Room> {
     this.renderNested(
       new RoomUsersView({
         roomUsers: this.model.get("users"),
-        isCurrentUserOwner: currentUser.get("roomRole") === "Owner",
       }),
       "#room-users-list"
     );

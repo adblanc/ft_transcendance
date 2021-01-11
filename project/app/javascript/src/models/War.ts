@@ -1,6 +1,7 @@
 import Backbone from "backbone";
 import _ from "underscore";
 import Guild from "src/models/Guild";
+import WarTime from "src/models/WarTime";
 import { mapServerErrors, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import Guilds from "src/collections/Guilds";
@@ -11,8 +12,12 @@ interface IWar {
   end: Date;
   status: string;
   prize: string;
+  time_to_answer: string;
+  max_unanswered_calls: string;
+  atWarTime: boolean;
   guilds: Guilds;
   warOpponent: Guild;
+  activeWarTime: WarTime;
   created_at: string;
   updated_at: string;
 }
@@ -33,6 +38,11 @@ export default class War extends BaseModel<IWar> {
 			key: "warOpponent",
 			relatedModel: Guild,
 		  },
+		  {
+			type: Backbone.One,
+			key: "activeWarTime",
+			relatedModel: WarTime,
+		  },
 		];
 	  }
 
@@ -47,12 +57,14 @@ export default class War extends BaseModel<IWar> {
     return syncWithFormData(method, model, options);
   }
 
-  createWar(start: Date, end:Date, prize: string, initiator_id: string, recipient_id: string) {
+  createWar(start: Date, end:Date, prize: string, answer_time: string, max_calls: string, initiator_id: string, recipient_id: string) {
     return this.asyncSave( 
 		{
 			'start': start,
 			'end': end,
 			'prize': prize,
+			'time_to_answer': answer_time,
+  			'max_unanswered_calls': max_calls,
 			'initiator_id': initiator_id,
 			'recipient_id': recipient_id,
 		}, 
@@ -61,12 +73,14 @@ export default class War extends BaseModel<IWar> {
 		});
 	}
 
-	modifyWar(start: Date, end:Date, prize: string) {
+	modifyWar(start: Date, end:Date, prize: string, answer_time: string, max_calls: string) {
 		return this.asyncSave( 
 		{
 			'start': start,
 			'end': end,
 			'prize': prize,
+			'time_to_answer': answer_time,
+  			'max_unanswered_calls': max_calls,
 		}, 
 		{ 
 			url: this.baseWarRoot(),
@@ -81,7 +95,7 @@ export default class War extends BaseModel<IWar> {
 		);
 	  }
 	
-	  accept() {
+	  /*accept() {
 		return this.asyncSave({},
 		  {
 			url: `${this.baseWarRoot()}/accept`,
@@ -93,6 +107,17 @@ export default class War extends BaseModel<IWar> {
 		return this.asyncSave({},
 		  {
 			url: `${this.baseWarRoot()}/reject`,
+		  }
+		);
+	  }*/
+
+	  activateWarTime(end:Date) {
+		return this.asyncSave( 
+			{
+				'end': end,
+			}, 
+		  {
+			url: `${this.baseWarRoot()}/activateWarTime`,
 		  }
 		);
 	  }

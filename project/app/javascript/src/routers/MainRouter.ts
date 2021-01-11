@@ -23,8 +23,10 @@ const NO_AUTH_ROUTES = ["auth", "authCallBack", "twoFactAuth"];
 const shouldBeAuth = (routeName: string) =>
   !NO_AUTH_ROUTES.find((route) => route === routeName);
 
-export default class MainRouter extends Backbone.Router {
+const shouldNotBeAuth = (routeName: string) =>
+  NO_AUTH_ROUTES.find((route) => route === routeName);
 
+export default class MainRouter extends Backbone.Router {
   constructor() {
     super({
       routes: {
@@ -34,12 +36,12 @@ export default class MainRouter extends Backbone.Router {
         gameindex: "gameIndex",
         "game/:id": "gameShow",
         guildindex: "guildIndex",
-		"guild/:id": "guildShow",
-		"guild/:id/wars": "guildWarHistory",
+        "guild/:id": "guildShow",
+        "guild/:id/wars": "guildWarHistory",
         "me/notifications": "notifShow",
-		"user/:id": "userShow",
-		"tfa/:user/:tfa": "twoFactAuth",
-		warindex: "warIndex",
+        "user/:id": "userShow",
+        "tfa/:user/:tfa": "twoFactAuth",
+        warindex: "warIndex",
         "*path": "notFound",
       },
     });
@@ -48,6 +50,9 @@ export default class MainRouter extends Backbone.Router {
   execute(callback: (...args: any[]) => void, args: any[], name: string) {
     if (shouldBeAuth(name) && !isAuth()) {
       this.navigate("/auth", { trigger: true });
+      return false;
+    } else if (shouldNotBeAuth(name) && isAuth()) {
+      this.navigate("/", { trigger: true });
       return false;
     }
 
@@ -62,10 +67,10 @@ export default class MainRouter extends Backbone.Router {
       const { data: rsp } = await axios.get(
         `${BASE_ROOT}/auth/42?code=${code}`
       );
-	  if (!rsp.token) {
-		this.navigate(`/tfa/${rsp.user}/${rsp.tfa}`, { trigger: true });
-		return ;
-	  }
+      if (!rsp.token) {
+        this.navigate(`/tfa/${rsp.user}/${rsp.tfa}`, { trigger: true });
+        return;
+      }
       addAuthHeaders(rsp.token);
     } catch (ex) {
       console.error(ex);
@@ -75,15 +80,15 @@ export default class MainRouter extends Backbone.Router {
   }
 
   twoFactAuth(user: string, tfa: string) {
-    const tfaView = new TfaView({ user: user, tfa: tfa});
+    const tfaView = new TfaView({ user: user, tfa: tfa });
 
-    pagesHandler.showPage(tfaView, false, false, false);
+    pagesHandler.showPage(tfaView, false, false);
   }
 
   auth() {
     const authView = new AuthView({});
 
-    pagesHandler.showPage(authView, false, false, false);
+    pagesHandler.showPage(authView, false, false);
   }
 
   index() {
@@ -143,5 +148,4 @@ export default class MainRouter extends Backbone.Router {
     const warIndexView = new WarIndexView();
     pagesHandler.showPage(warIndexView);
   }
-
 }

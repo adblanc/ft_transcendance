@@ -33,12 +33,14 @@ export default class DeclareWarView extends ModalView<War> {
 
   async onSubmit(e: JQuery.Event) {
 	e.preventDefault();
-
+	
 	const dateTimeStart = this.fp_start.selectedDates[0];
     const dateTimeEnd = this.fp_end.selectedDates[0];
 	const start = dateTimeStart; 
 	const end = dateTimeEnd;
 	const prize = this.$("#input-prize").val() as string;
+	const answer_time = this.$("#answer-time").val() as string;
+	const max_calls = this.$("#max-calls").val() as string;
 
 	const initiator_id = this.profile.get("guild").get("id");
 	const recipient_id = this.guild.get("id");
@@ -48,7 +50,7 @@ export default class DeclareWarView extends ModalView<War> {
 		return;
 	}
 
-    const success = await this.model.createWar(start, end, prize, initiator_id, recipient_id);
+    const success = await this.model.createWar(start, end, prize, answer_time, max_calls, initiator_id, recipient_id);
     if (success) {
       this.warSaved();
     }

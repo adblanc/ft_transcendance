@@ -98,4 +98,8 @@ class Guild < ApplicationRecord
 		increment!(:points, points)
 	end
 
+	def lose_score(points)
+		decrement!(:points, points)
+	end
+
 end

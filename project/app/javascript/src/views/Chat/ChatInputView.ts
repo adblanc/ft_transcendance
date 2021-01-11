@@ -25,12 +25,13 @@ export default class ChatInputView extends BaseView {
     };
   }
 
-  onKeyPress(e: JQuery.Event) {
+  async onKeyPress(e: JQuery.Event) {
     if (e.key !== "Enter") {
       return;
     }
     e.preventDefault();
-    this.sendMessage();
+
+    await this.sendMessage();
   }
 
   sendMessage() {
@@ -44,9 +45,10 @@ export default class ChatInputView extends BaseView {
       content,
       room_id: this.rooms.selectedRoom.get("id"),
     });
-    message.save();
 
     this.clearInput();
+
+    return message.asyncSave();
   }
 
   clearInput() {

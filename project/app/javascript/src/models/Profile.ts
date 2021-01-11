@@ -8,11 +8,17 @@ import { clearAuthHeaders, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 
+export interface IBlockedUser {
+  login: string;
+  avatar_url: string;
+  id: number;
+}
+
 export interface IProfile {
   login: string;
-  name: string;
-  email: string;
-  two_fact_auth: boolean;
+  name?: string;
+  email?: string;
+  two_fact_auth?: boolean;
   id?: number;
   avatar_url?: string;
   created_at?: string;
@@ -21,6 +27,7 @@ export interface IProfile {
   pending_guild?: Guild;
   guild?: Guild;
   notifications?: Notifications;
+  blocked_users?: IBlockedUser[];
 }
 
 type ModifiableProfileArgs = {
@@ -111,6 +118,24 @@ export default class Profile extends BaseModel<IProfile> {
       url: this.urlRoot(),
     });
   }
+
+  blockUser(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/block/${id}`,
+      }
+    );
+  }
+
+  unBlockUser(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/unblock/${id}`,
+      }
+    );
+  }
 }
 
 let memoizedUser: Profile = undefined;
@@ -127,8 +152,7 @@ export const currentUser = (fetch = false): Profile => {
   if (!memoizedUser) {
     memoizedUser = new Profile();
     fetchCurrentUser();
-  }
-  if (fetch) {
+  } else if (fetch) {
     fetchCurrentUser();
   }
 

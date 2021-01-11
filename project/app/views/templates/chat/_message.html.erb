@@ -3,6 +3,9 @@
     id="message-{{id}}"
     class="flex w-full items-center {{#sent}}flex-row-reverse{{/sent}}"
   >
+  <div class="text-gray-600 text-sm">
+  {{date}}
+  </div>
     <img  class="user-avatar w-12 h-12 rounded-full m-2 cursor-pointer" src="{{ avatar_url }}" />
     <div
       class=" max-w-lg break-words bg-gray-300 mx-4 my-2 p-2 rounded-lg {{#sent}} bg-teal-300{{/sent}}"

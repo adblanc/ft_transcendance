@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2021_01_07_135447) do
+=======
+ActiveRecord::Schema.define(version: 2021_01_08_142036) do
+>>>>>>> d263df91aaeb3b2829adad80eb17620888ffd409
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +40,7 @@ ActiveRecord::Schema.define(version: 2021_01_07_135447) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+<<<<<<< HEAD
   create_table "game_mouvs", force: :cascade do |t|
     t.bigint "user_id"
     t.integer "scale"
@@ -57,6 +62,20 @@ ActiveRecord::Schema.define(version: 2021_01_07_135447) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["game_id"], name: "index_game_user_on_game_id"
     t.index ["user_id"], name: "index_game_user_on_user_id"
+=======
+  create_table "bans", force: :cascade do |t|
+    t.integer "room_id"
+    t.integer "banned_user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "blocks", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "blocked_user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+>>>>>>> d263df91aaeb3b2829adad80eb17620888ffd409
   end
 
   create_table "games", force: :cascade do |t|
@@ -105,6 +124,13 @@ ActiveRecord::Schema.define(version: 2021_01_07_135447) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "mutes", force: :cascade do |t|
+    t.integer "room_id"
+    t.integer "muted_user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.integer "recipient_id"
     t.datetime "read_at"
@@ -130,6 +156,7 @@ ActiveRecord::Schema.define(version: 2021_01_07_135447) do
     t.text "content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_notification", default: false
     t.index ["room_id"], name: "index_room_messages_on_room_id"
     t.index ["user_id"], name: "index_room_messages_on_user_id"
   end
@@ -174,11 +201,16 @@ ActiveRecord::Schema.define(version: 2021_01_07_135447) do
   end
 
   create_table "war_times", force: :cascade do |t|
-    t.integer "war_id"
+    t.bigint "war_id"
     t.datetime "start"
     t.datetime "end"
+    t.integer "status", default: 0
+    t.integer "time_to_answer"
+    t.integer "max_unanswered_calls"
+    t.integer "unanswered_calls", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["war_id"], name: "index_war_times_on_war_id"
   end
 
   create_table "wars", force: :cascade do |t|
@@ -186,6 +218,8 @@ ActiveRecord::Schema.define(version: 2021_01_07_135447) do
     t.datetime "end"
     t.integer "prize"
     t.integer "status", default: 0
+    t.integer "time_to_answer"
+    t.integer "max_unanswered_calls"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

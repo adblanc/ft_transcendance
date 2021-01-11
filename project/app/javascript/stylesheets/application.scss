@@ -22,6 +22,8 @@ $chatInputHeight: 4rem;
   height: calc(
     #{$chatContainerHeight} - (#{$chatHeaderHeight} + #{$chatInputHeight})
   );
+
+  @apply p-2;
 }
 
 .btn-primary {
@@ -73,7 +75,9 @@ $chatInputHeight: 4rem;
 }
 
 .notif-container {
-  @apply bg-white absolute top-0 right-0 flex flex-col items-stretch rounded-lg shadow-lg;
+  top: $navbarHeight;
+
+  @apply bg-white absolute right-0 flex flex-col items-stretch rounded-lg shadow-lg z-10;
 }
 
 .notifpage {

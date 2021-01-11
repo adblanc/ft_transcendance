@@ -24,6 +24,7 @@ interface IGuild {
   waitingWar: War;
   pendingWars: Wars;
   warOpponent: Guild;
+  warPoints: string;
   created_at: string;
   updated_at: string;
 }

@@ -3,6 +3,7 @@ import Mustache from "mustache";
 import BaseView from "../lib/BaseView";
 import Profile, { currentUser } from "src/models/Profile";
 import NotificationView from "./NotificationView";
+import { eventBus } from "src/events/EventBus";
 
 export default class NotificationsView extends BaseView {
   profile: Profile;
@@ -13,6 +14,9 @@ export default class NotificationsView extends BaseView {
     this.profile = currentUser();
 
     this.listenTo(this.profile.notifications, "add", this.render);
+    this.listenTo(eventBus, "notifications:open", () => {
+      this.$el.toggleClass("invisible");
+    });
 
     $(document).on("click", this.dismissNotif);
   }
@@ -28,14 +32,14 @@ export default class NotificationsView extends BaseView {
     this.$el.toggleClass("invisible");
   }
 
-  dismissNotif = (e: Event) => {
+  dismissNotif = (e: JQuery.ClickEvent) => {
     if ($(e.target).closest("#notifications-container").length == 0) {
       if (!this.$el.hasClass("invisible")) this.$el.toggleClass("invisible");
     }
   };
 
   onClose = () => {
-    $(document).off("click");
+    $(document).off("click", "", this.dismissNotif);
   };
 
   render() {

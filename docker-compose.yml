@@ -11,7 +11,6 @@ services:
     #command: bin/rails s -b 0.0.0.0 # can be removed because redundant with CMD in dockerfile
     volumes:
       - ./project:/app #name of working directory in dockerfile. Comme ça ce qui se fait dans la console est gardé dans /app en local
-      - gem_cache:/usr/local/bundle/gems
       - node_modules:/app/node_modules
     ports:
       - "3000:3000"
@@ -19,5 +18,4 @@ services:
       - db
 volumes:
   db_data:
-  gem_cache:
   node_modules:

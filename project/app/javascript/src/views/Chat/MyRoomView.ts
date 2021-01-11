@@ -19,6 +19,10 @@ export default class MyRoomView extends BaseView<Room> {
     this.roomMessagesView = undefined;
   }
 
+  onClose = () => {
+    this.roomMessagesView?.close();
+  };
+
   events() {
     return {
       "click .room-name": this.onClick,
