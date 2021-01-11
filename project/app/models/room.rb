@@ -3,7 +3,7 @@ class Room < ApplicationRecord
 
 	has_secure_password :password, validations: false
 
-	validates :name, presence: true, uniqueness: true
+	validates :name, presence: true, uniqueness: true, length: {minimum: 0, maximum: 16}
 	validates :password, allow_blank: true, length: {minimum: 0}
 
 	has_many :room_messages, dependent: :destroy,

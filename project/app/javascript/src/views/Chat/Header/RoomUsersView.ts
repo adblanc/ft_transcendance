@@ -25,9 +25,7 @@ export default class RoomUsersView extends BaseView<Room> {
       throw Error("Please provide Room model to this view.");
     }
 
-    this.currentRoomUser = this.model
-      .get("users")
-      .find((u) => u.get("login") === currentUser().get("login"));
+    this.currentRoomUser = this.model.get("users").currentRoomUser();
 
     this.listenTo(this.model, "change", this.render);
   }

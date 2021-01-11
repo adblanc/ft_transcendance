@@ -26,10 +26,6 @@ export default class RoomMessagesView extends BaseView<Room> {
       return;
     }
 
-    const currentRoomUser = this.model
-      .get("users")
-      .find((u) => u.get("login") === currentUser().get("login"));
-
     const sender =
       this.model
         .get("users")
@@ -46,7 +42,7 @@ export default class RoomMessagesView extends BaseView<Room> {
 
     const profileView = new RoomUserProfileView({
       model: sender,
-      currentRoomUser,
+      currentRoomUser: this.model.get("users").currentRoomUser(),
     });
 
     profileView.render();
