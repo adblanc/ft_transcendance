@@ -9,14 +9,6 @@ import { generateAcn } from "src/utils/acronym";
 import Ball from "src/models/Ball";
 import Mouvement from "src/models/Mouvement";
 
-<<<<<<< HEAD
-var canvas = document.createElement("canvas");
-var ctx = canvas.getContext('2d');
-=======
-//var canvas = document.getElementById("canvas") as HTMLCanvasElement;
-//var canvas = document.createElement("canvas");
-//var ctx = canvas.getContext('2d');
->>>>>>> game
 let lastTime = null;
 
 export default class CanvaView extends ModalView<Rectangle> {
@@ -32,42 +24,16 @@ export default class CanvaView extends ModalView<Rectangle> {
 		super(options);
 		this.canvas = document.getElementById("canvas_yes") as HTMLCanvasElement;
 	  }
-<<<<<<< HEAD
-		player_one: Player;
-		ball: Ball;
-		player_two: Player;
-		points: Number;
-		level: Number;
 
-		init(width, height, bg, player_one, points, level, player_two) {
-		this.points = points;
-=======
 		init(bg, player_one, points, level, player_two, game_id) {
 		this.points = points;
 		this.game_id = game_id;
->>>>>>> game
 		 if (level == "easy")
 		 {this.level = 1;}
 		 else if (level == "normal")
 		 {this.level = 2;}
 		 else if (level == "hard")
 		 {this.level = 3;}
-<<<<<<< HEAD
-		canvas.width = width;
-		  canvas.height = height;
-		  canvas.style.backgroundColor = bg;
-		  canvas.id = "canvas-id";
-		  document.body.appendChild(canvas);
-		  //console.log(canvas);
-		  //document.getElementById("#canvas").appendChild(canvas);
-		 // canvas.addEventListener('mouse', update); 
-		  var paddle = new Rectangle(0, 0, width, height);
-		  paddle.render(ctx, 'rgb(2, 149, 212)');
-		 this.player_one = player_one; 
-		 this.player_two = player_two;
-		  this.ball =  new Ball(width /2 , height / 2, 5, this.level);
-		  return canvas;
-=======
 		 else
 		 {
 			 this.level = 1;
@@ -86,7 +52,6 @@ export default class CanvaView extends ModalView<Rectangle> {
 		  this.ball =  new Ball(this.canvas.width /2 , this.canvas.height / 2, 5, this.level * 5);
 		  this.draw();
 		  return this.canvas;
->>>>>>> game
 		}
 
 		collide_player_one(player_one)
@@ -109,17 +74,10 @@ export default class CanvaView extends ModalView<Rectangle> {
 		draw()
     	{
         	//this.clear();
-<<<<<<< HEAD
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			this.player_one.render(ctx, 'rgb(120, 80, 0)');
-			this.player_two.render(ctx, 'rgb(0, 80, 120)');
-			this.ball.render(ctx, 'rgb(80,80,80)');
-=======
 			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			this.player_one.render(this.ctx, 'rgb(120, 80, 0)');
 			this.player_two.render(this.ctx, 'rgb(0, 80, 120)');
 			this.ball.render(this.ctx, 'rgb(80,80,80)');
->>>>>>> game
         	//this.drawRect(this.ball);
         	//this.drawScore();
 		}
@@ -133,48 +91,14 @@ export default class CanvaView extends ModalView<Rectangle> {
 		}
 
 		update(dt): Number {
-<<<<<<< HEAD
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			document.querySelector('#computer-score').textContent = String(this.player_one.score);
-			document.querySelector('#player-score').textContent = String(this.player_two.score);
-			this.ball.update();
-=======
 			//this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			//document.querySelector('#computer-score').textContent = String(this.player_one.score);
 			//document.querySelector('#player-score').textContent = String(this.player_two.score);
 			//this.ball.update();
->>>>>>> game
 			this.player_one.update(dt);
 			if (this.ball.left() < 0)
 			{
 				this.player_one.add();
-<<<<<<< HEAD
-				document.querySelector('#computer-score').textContent = String(this.player_one.score);
-				this.reset();
-			}
-			if (this.ball.right() > canvas.width)
-			{
-				this.player_two.add();
-				document.querySelector('#player-score').textContent = String(this.player_two.score);
-				this.reset();
-			}
-			if (this.player_one.score >= this.points)
-				{
-					document.body.removeChild(canvas);
-					return this.player_one.score;
-				}
-			else if (this.player_two.score >= this.points)
-				{
-					document.body.removeChild(canvas);
-					return this.player_two.score;
-				}
-			if (this.ball.left() < this.player_two.paddle.x + 15 || this.ball.right() > this.player_one.paddle.x)
-			{
-				this.collide_player_one(this.player_one);
-				this.collide_player_two(this.player_two);
-			}
-			this.draw();
-=======
 				const mouvement = new Mouvement({
 					score_one: this.player_one.score,
 					score_two: this.player_two.score,
@@ -214,7 +138,6 @@ export default class CanvaView extends ModalView<Rectangle> {
 				this.collide_player_two(this.player_two);
 			}
 			//this.draw();
->>>>>>> game
 			return 0;
 		}
 		
@@ -228,19 +151,6 @@ export default class CanvaView extends ModalView<Rectangle> {
 				return i;
 			}
 			lastTime = millis;
-<<<<<<< HEAD
-			window.requestAnimationFrame(this.callback);
-		}
-
-		 stop(i: Number)
-  {
-    const template = $("#game_win").html();
-    const html = Mustache.render(template, {});
-    this.$el.html(html);
-    document.querySelector('#}uter-score').textContent = String(i);
-    return this;
-  }
-=======
 			//window.requestAnimationFrame(this.callback);
 			return 0;
 		}
@@ -267,5 +177,4 @@ export default class CanvaView extends ModalView<Rectangle> {
 //     document.querySelector('#computer-score').textContent = String(i);
 //     return this;
 //   }
->>>>>>> game
 };

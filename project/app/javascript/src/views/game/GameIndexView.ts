@@ -57,19 +57,7 @@ export default class GameIndexView extends BaseView {
   //     this.stop(y);
   //   } 
   // }
-<<<<<<< HEAD
 
-  stop(i: Number)
-  {
-    const template = $("#game_win").html();
-    const html = Mustache.render(template, {});
-    this.$el.html(html);
-    document.querySelector('#computer-score').textContent = String(i);
-    return this;
-  }
-=======
->>>>>>> game
-  
   events() {
      return {
        "click #create_game": "createGame",

@@ -117,18 +117,12 @@ export default class MainRouter extends Backbone.Router {
     pagesHandler.showPage(guildView);
   }
 
-<<<<<<< HEAD
   guildWarHistory(id: string) {
     const warHistoryView = new WarHistoryView({ guild: new Guild({ id }) });
     pagesHandler.showPage(warHistoryView);
   }
-
-  gameShow(id: number) {
-    const gameView = new GameView({ game: new Game({ id }) });
-=======
   gameShow(id: string) {
     const gameView = new GameView({ game: new Game({ id: id }) });
->>>>>>> game
     pagesHandler.showPage(gameView);
   }
 

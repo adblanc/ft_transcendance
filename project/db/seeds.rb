@@ -24,16 +24,10 @@ jeff = User.create(name: "jeff", login: "jeff", contribution: 1);
 john = User.create(name: "john", login: "john", contribution: 1);
 jack = User.create(name: "jack", login: "jack", contribution: 1);
 
-<<<<<<< HEAD
 User.all.each do |user|
 	user.update_attributes(:otp_secret_key => ROTP::Base32.random)
 end
-=======
-#game1 = Game.create(id: "32", level: "hard", status: "waiting", points: 3, first: 10);
-#game1 = Game.create(id: "38", level: "easy", points: 5, status: "waiting", first: 8);
-# coll1 = Games.create({});
-# coll1.game << game1;
->>>>>>> game
+
 
 bill.avatar.attach(
 	io: URI.open("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Hotdog_-_Evan_Swigart.jpg/1024px-Hotdog_-_Evan_Swigart.jpg"),
