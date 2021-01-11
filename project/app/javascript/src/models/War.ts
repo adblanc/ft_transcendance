@@ -1,6 +1,7 @@
 import Backbone from "backbone";
 import _ from "underscore";
 import Guild from "src/models/Guild";
+import WarTime from "src/models/WarTime";
 import { mapServerErrors, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import Guilds from "src/collections/Guilds";
@@ -16,6 +17,7 @@ interface IWar {
   atWarTime: boolean;
   guilds: Guilds;
   warOpponent: Guild;
+  activeWarTime: WarTime;
   created_at: string;
   updated_at: string;
 }
@@ -35,6 +37,11 @@ export default class War extends BaseModel<IWar> {
 			type: Backbone.One,
 			key: "warOpponent",
 			relatedModel: Guild,
+		  },
+		  {
+			type: Backbone.One,
+			key: "activeWarTime",
+			relatedModel: WarTime,
 		  },
 		];
 	  }

@@ -4,6 +4,7 @@ import BaseView from "../../lib/BaseView";
 import ActivateView from "./ActivateView";
 import ChallengeView from "./ChallengeView";
 import War from "src/models/War";
+import WarTime from "src/models/WarTime";
 import { displaySuccess, displayError } from "src/utils";
 
 type Options = Backbone.ViewOptions & { war: War};
@@ -17,6 +18,8 @@ export default class WarTimeView extends BaseView {
 	this.war = options.war;
 
 	this.listenTo(this.war, "change", this.render);
+
+	//console.log(this.war.get("activeWarTime"));
 	
   }
 
