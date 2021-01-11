@@ -12,6 +12,7 @@ export interface IMessage {
   user_login?: string;
   created_at?: string;
   updated_at?: string;
+  ancient?: boolean;
 }
 
 export default class Message extends BaseModel<IMessage> {

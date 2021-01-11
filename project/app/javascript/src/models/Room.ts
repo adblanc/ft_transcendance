@@ -56,6 +56,15 @@ export default class Room extends BaseRoom {
             .get("blocked_users")
             .find((u) => u.id === message.user_id);
 
+          if (
+            !message.ancient &&
+            message.content.includes(
+              `${currentUser().get("login")} has been banned`
+            )
+          ) {
+            return this.quit();
+          }
+
           if (!blocked) {
             this.messages.add(
               new Message({
