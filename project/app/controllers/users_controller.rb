@@ -22,7 +22,7 @@ class UsersController < ApplicationController
   end
 
   def update_room_role
-		@room = Room.find(params[:room_id])
+		@room = Room.find_by_id(params[:room_id])
 
 		if !@room
 			render json: {"room" => ["not found"]}, status: :not_found and return;
@@ -30,7 +30,7 @@ class UsersController < ApplicationController
 			render json: {"you" => ["must be owner of this room"]}, status: :unauthorized and return;
 		end
 
-		@user_to_update = User.find(params[:user_id]);
+		@user_to_update = User.find_by_id(params[:user_id]);
 
 		action = params[:update_action];
 

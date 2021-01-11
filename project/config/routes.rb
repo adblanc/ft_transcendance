@@ -43,6 +43,8 @@ Rails.application.routes.draw do
   delete "/quit-room", to: 'rooms#quit'
   put "/:room_id/:user_id/update_role", to: "users#update_room_role"
 
+  resources :direct_messages, only: [:index, :create]
+
   resources :wars do
   	member do
 	  put :accept

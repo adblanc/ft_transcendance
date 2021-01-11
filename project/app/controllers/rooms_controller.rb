@@ -53,8 +53,6 @@ class RoomsController < ApplicationController
 	  def join
 		@room = Room.find_by(name: room_params[:name])
 
-
-
 		if (@room && @current_user.is_room_ban?(@room))
 			render json: {"you" => ["are banned from this room."]}, status: :unprocessable_entity
 		elsif (@room && (!BCrypt::Password.valid_hash?(@room.password_digest) || @room.try(:authenticate, room_password)))
