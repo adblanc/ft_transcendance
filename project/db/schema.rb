@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 2021_01_07_135447) do
-=======
 ActiveRecord::Schema.define(version: 2021_01_08_142036) do
->>>>>>> d263df91aaeb3b2829adad80eb17620888ffd409
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,7 +36,20 @@ ActiveRecord::Schema.define(version: 2021_01_08_142036) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-<<<<<<< HEAD
+  create_table "bans", force: :cascade do |t|
+    t.integer "room_id"
+    t.integer "banned_user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "blocks", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "blocked_user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "game_mouvs", force: :cascade do |t|
     t.bigint "user_id"
     t.integer "scale"
@@ -62,20 +71,6 @@ ActiveRecord::Schema.define(version: 2021_01_08_142036) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["game_id"], name: "index_game_user_on_game_id"
     t.index ["user_id"], name: "index_game_user_on_user_id"
-=======
-  create_table "bans", force: :cascade do |t|
-    t.integer "room_id"
-    t.integer "banned_user_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "blocks", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "blocked_user_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
->>>>>>> d263df91aaeb3b2829adad80eb17620888ffd409
   end
 
   create_table "games", force: :cascade do |t|
@@ -206,7 +201,7 @@ ActiveRecord::Schema.define(version: 2021_01_08_142036) do
     t.datetime "end"
     t.integer "status", default: 0
     t.integer "time_to_answer"
-    t.integer "max_unanswered_calls"
+    t.integer "max_unanswered_calls", default: 0
     t.integer "unanswered_calls", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

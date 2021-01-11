@@ -28,7 +28,7 @@ class GamesController < ApplicationController
     end
 
     def finish
-        ActionCable.server.remote_connections.where(current_user: current_user).disconnect
+        #ActionCable.server.remote_connections.where(current_user: current_user).disconnect
         @game = Game.find(params[:id])
         return head :not_found unless @game
         pts = game_params[:points]
@@ -37,12 +37,6 @@ class GamesController < ApplicationController
         if @game.save
             @gameuserone = GameUser.where(game: @game, user: current_user).first
             @gameuserone.update_attribute(:points, pts)
-           # if @gameuserone.update_attribute(:points, params[:points])
-           #     @gameuserone
-          #  else
-         #       render json: @game.errors, status: :unprocessable_entity
-          #  #same avec le  deuxieme
-            #@gameuserone.update_attribute(:points, game_params[:points])
             @game
             
         else

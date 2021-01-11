@@ -11,10 +11,9 @@ Rails.application.routes.draw do
  put '/games/:id/join', to: 'games#join', format:false
  put '/games/:id/finish', to: 'games#finish', format: false
 
-<<<<<<< HEAD
 resources :game_mouvs
 post '/game_mouvs', to: 'game_mouvs#create'
-=======
+
   put "/block/:id", to: "blocks#block";
   put "/unblock/:id", to: "blocks#unblock";
 
@@ -23,7 +22,6 @@ post '/game_mouvs', to: 'game_mouvs#create'
   put "/ban/:room_id", to: "bans#ban";
   put "/unban/:room_id", to: "bans#unban";
 
->>>>>>> d263df91aaeb3b2829adad80eb17620888ffd409
   resources :guilds do
 	member do
 		put :quit

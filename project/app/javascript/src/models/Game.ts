@@ -118,6 +118,7 @@ export default class Game extends BaseModel<IGame> {
         },
         received: (mouv: IMouvement) => 
         {
+          console.log(JSON.stringify(mouv));
           if (!this.currentUserId) {
             this.currentUserId = parseInt(
               $("#current-user-profile").data("id")

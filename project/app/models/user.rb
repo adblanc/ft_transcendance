@@ -10,14 +10,11 @@ class User < ApplicationRecord
 	has_one :guild_user_pending,  -> (object) { where(status: :pending) }, class_name: "GuildUser", dependent: :destroy
 	has_one :pending_guild, through: :guild_user_pending, source: :guild
 	has_and_belongs_to_many :rooms
-<<<<<<< HEAD
-	has_and_belongs_to_many :game
-=======
+	#has_and_belongs_to_many :game
 
 	has_many :blocks
 	has_many :blocked_users, :through => :blocks
 
->>>>>>> d263df91aaeb3b2829adad80eb17620888ffd409
 	validates :avatar, blob: { content_type: :image, size_range: 1..5.megabytes }
 	validates :name, presence: true
 	validates :name, length: {minimum: 3, maximum: 32}

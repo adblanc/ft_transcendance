@@ -38,12 +38,8 @@ gem 'mail'
 gem 'activestorage-validator'
 
 # Use Redis adapter to run Action Cable in production
-<<<<<<< HEAD
-#gem 'redis', '~> 4.0'
-#gem 'redis'
-=======
+
 gem 'redis', '~> 4.0'
->>>>>>> d263df91aaeb3b2829adad80eb17620888ffd409
 # Use Active Model has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
