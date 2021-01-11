@@ -119,7 +119,7 @@ ActiveRecord::Schema.define(version: 2021_01_08_142036) do
     t.text "content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "is_notification"
+    t.boolean "is_notification", default: false
     t.index ["room_id"], name: "index_room_messages_on_room_id"
     t.index ["user_id"], name: "index_room_messages_on_user_id"
   end

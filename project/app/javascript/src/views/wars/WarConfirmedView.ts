@@ -1,14 +1,13 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
-import ActivateView from "./ActivateView";
-import TimetableView from "./TimetableView";
 import War from "src/models/War";
 import Guild from "src/models/Guild";
 import { displaySuccess } from "src/utils";
 import moment from "moment";
+import WarTimeView from "./WarTimeView";
 
-type Options = Backbone.ViewOptions & { war: War,  guild: Guild};
+type Options = Backbone.ViewOptions & { war: War, guild: Guild};
 
 export default class WarConfirmedView extends BaseView {
 	war: War;
@@ -21,29 +20,6 @@ export default class WarConfirmedView extends BaseView {
 	this.guild = options.guild;
 
 	this.listenTo(this.war, "change", this.render);
-  }
-
-  events() {
-    return {
-	  "click #wartime-btn": "onActivateClicked",
-	  "click #timetable-btn": "onTimetableClicked",
-    };
-  }
-
-  onActivateClicked() {
-	const activateView = new ActivateView({
-		model: this.war,
-	  });
-  
-	  activateView.render();
-  }
-
-  onTimetableClicked() {
-	const timetableView = new TimetableView({
-		model: this.war,
-	  });
-  
-	  timetableView.render();
   }
 
   render() {
@@ -70,10 +46,10 @@ export default class WarConfirmedView extends BaseView {
 
 	if (this.war.get("status") === "started") {
 		this.$("#started").show();
-		if (this.war.get("atWarTime"))
-			this.$("#wartimetable").show();
-		else
-			this.$("#wartime-btn").show();
+		const warTimeView = new WarTimeView({
+			war: this.war,
+		});
+		this.renderNested(warTimeView, "#wartime");
 	} else if (this.war.get("status") === "confirmed") {
 		this.$("#confirmed").show();
 	}
