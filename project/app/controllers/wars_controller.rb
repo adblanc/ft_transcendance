@@ -121,8 +121,8 @@ class WarsController < ApplicationController
 		@guild = Guild.find_by_id(current_user.guild.id)
 		@opponent = @war.opponent(@guild)
 
-		return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
 		return head :unauthorized if not @guild.atWar? && @opponent.atWar?
+		return head :unauthorized if @war.atWarTime?
 
 		if @war_time = WarTime.create!(war: @war, start: DateTime.now, end: params[:end], time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
 			@guild.members.each do |member|
