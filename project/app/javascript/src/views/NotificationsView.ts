@@ -61,7 +61,7 @@ export default class NotificationsView extends BaseView {
       )
       .forEach(function (item) {
         var notificationView = new NotificationView({
-          notification: item,
+          model: item,
           page: false,
         });
         $element.prepend(notificationView.render().el);

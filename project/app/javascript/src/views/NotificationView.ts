@@ -4,31 +4,38 @@ import BaseView from "../lib/BaseView";
 import Notification from "src/models/Notification";
 import moment from "moment";
 
-type Options = Backbone.ViewOptions & {
-  notification: Notification;
+type Options = Backbone.ViewOptions<Notification> & {
   page: boolean;
 };
 
-export default class ItemView extends BaseView {
-  notification: Notification;
+export default class ItemView extends BaseView<Notification> {
   momentString: string;
   page: boolean;
 
   constructor(options?: Options) {
     super(options);
 
-    this.notification = options.notification;
     this.page = options.page;
 
-    this.listenTo(this.notification, "change", this.render);
+    this.listenTo(this.model, "change", this.render);
+  }
+
+  events() {
+    return {
+      "click #trigger-notif": this.triggerNotif,
+    };
+  }
+
+  triggerNotif() {
+    console.log(this.model.toJSON());
   }
 
   render() {
     const notif = {
-      ...this.notification.toJSON(),
-      created_at: moment(this.notification.get("created_at")).format(
+      ...this.model.toJSON(),
+      created_at: moment(this.model.get("created_at")).format(
         "MMM Do YY, h:mm a"
-      )
+      ),
     };
 
     const template = $("#notifTemplate").html();
