@@ -3,7 +3,7 @@ class Room < ApplicationRecord
 
 	has_secure_password :password, validations: false
 
-	validates :name, presence: true, uniqueness: true, length: {minimum: 0, maximum: 16}
+	validates :name, presence: true, uniqueness: true, allow_blank: true, length: {minimum: 0, maximum: 16}
 	validates :password, allow_blank: true, length: {minimum: 0}
 
 	has_many :room_messages, dependent: :destroy,
@@ -34,12 +34,18 @@ class Room < ApplicationRecord
 	end
 
 	def remove_user(user)
-		users.delete(user)
-		if user.is_room_owner?(self)
-			return remove_owner(user)
-		elsif user.is_room_administrator?(self)
-			user.remove_role(:administrator, self)
+		if (self.is_dm)
+			self.destroy
+			return "destroyed";
+		else
+			users.delete(user)
+			if user.is_room_owner?(self)
+				return remove_owner(user)
+			elsif user.is_room_administrator?(self)
+				user.remove_role(:administrator, self)
+			end
 		end
+
 		return "left";
 	end
 
@@ -133,5 +139,9 @@ class Room < ApplicationRecord
 
 	def expected_mute_or_bantime
 		return "Expected: 10mn | 30mn | 1h | 24h | indefinitely";
+	end
+
+	def correct_name(current_user)
+		self.is_dm ? self.users.where("id != ?", current_user.id).take.name : self.name
 	end
 end

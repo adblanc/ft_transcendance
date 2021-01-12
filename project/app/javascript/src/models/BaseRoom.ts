@@ -7,6 +7,7 @@ export interface IRoom {
   password?: string;
   isOwner?: boolean;
   is_private?: boolean;
+  is_dm?: boolean;
   id?: number;
   selected?: boolean;
   users?: RoomUsers;

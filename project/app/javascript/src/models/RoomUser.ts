@@ -75,4 +75,13 @@ export default class RoomUser extends BaseModel<IRoomUser> {
       }
     );
   }
+
+  dm() {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/direct_messages/${this.get("id")}`,
+      }
+    );
+  }
 }

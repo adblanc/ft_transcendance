@@ -2,7 +2,6 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import MyRooms from "src/collections/MyRooms";
 import BaseView from "src/lib/BaseView";
-import PublicRoom from "src/models/PublicRoom";
 import Room from "src/models/Room";
 import MyRoomView from "./MyRoomView";
 
