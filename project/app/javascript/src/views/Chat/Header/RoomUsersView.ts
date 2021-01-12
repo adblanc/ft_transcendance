@@ -1,5 +1,4 @@
 import BaseView from "src/lib/BaseView";
-import { currentUser } from "src/models/Profile";
 import Room from "src/models/Room";
 import RoomUser from "src/models/RoomUser";
 import RoomUserView from "./RoomUserView";

@@ -142,6 +142,17 @@ class Room < ApplicationRecord
 	end
 
 	def correct_name(current_user)
-		self.is_dm ? self.users.where("id != ?", current_user.id).take.name : self.name
+		name = self.name;
+
+		if (self.is_dm)
+			other_user = self.users.where("id != ?", current_user.id).take;
+
+			if (other_user)
+				name = other_user.name;
+			end
+
+		end
+
+		name ? name : self.name;
 	end
 end

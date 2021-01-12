@@ -52,6 +52,7 @@ export default class CreateJoinChannelView extends BaseView {
 
     if (success) {
       this.rooms.add(room);
+      room.select();
       this.clearInput();
       displaySuccess(
         `Room ${name} successfully ${this.isJoin ? "joined" : "created"}.`

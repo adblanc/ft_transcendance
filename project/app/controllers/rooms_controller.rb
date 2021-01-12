@@ -22,6 +22,10 @@ class RoomsController < ApplicationController
 	end
 
 	def create
+		if (room_params[:name].blank?)
+			render json: {"name" => ["can't be blank"]}, status: :unprocessable_entity	and return;
+		end
+
 		@room = Room.create(room_params)
 
 		if @room.save
@@ -51,6 +55,10 @@ class RoomsController < ApplicationController
 	  end
 
 	  def join
+		if (room_params[:name].blank?)
+			render json: {"name" => ["can't be blank"]}, status: :unprocessable_entity	and return;
+		end
+
 		@room = Room.find_by(name: room_params[:name])
 
 		if (@room && @current_user.is_room_ban?(@room))
