@@ -8,6 +8,7 @@ interface INotification {
   link: string;
   read_at: string;
   created_at: string;
+  type?: string;
 }
 
 export default class Notification extends BaseModel<INotification> {

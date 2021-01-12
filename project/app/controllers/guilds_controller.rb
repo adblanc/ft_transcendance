@@ -69,7 +69,7 @@ class GuildsController < ApplicationController
 	if user.add_role(:officer, @guild)
 		@guild
 	end
-	user.send_notification("#{current_user.name} promoted you to Officer for #{@guild.name}", "/guild/#{@guild.id}")
+	user.send_notification("#{current_user.name} promoted you to Officer for #{@guild.name}", "/guild/#{@guild.id}", "guild")
   end
 
   def demote
@@ -80,7 +80,7 @@ class GuildsController < ApplicationController
 	if user.remove_role(:officer, @guild)
 		@guild
 	end
-	user.send_notification("#{current_user.name} demoted you to Member for #{@guild.name}", "/guild/#{@guild.id}")
+	user.send_notification("#{current_user.name} demoted you to Member for #{@guild.name}", "/guild/#{@guild.id}", "guild")
   end
 
   def fire
@@ -92,7 +92,7 @@ class GuildsController < ApplicationController
 		@guild
 	end
 	user.update(contribution: 0)
-	user.send_notification("#{current_user.name} fired you from #{@guild.name}", "/guild/#{@guild.id}")
+	user.send_notification("#{current_user.name} fired you from #{@guild.name}", "/guild/#{@guild.id}", "guild")
   end
 
   def transfer
@@ -106,7 +106,7 @@ class GuildsController < ApplicationController
 	if owner.add_role(:officer, @guild)
 		@guild
 	end
-	user.send_notification("#{current_user.name} transferred you ownership for #{@guild.name}", "/guild/#{@guild.id}")
+	user.send_notification("#{current_user.name} transferred you ownership for #{@guild.name}", "/guild/#{@guild.id}", "guild")
   end
 
   def join
@@ -116,7 +116,7 @@ class GuildsController < ApplicationController
 	@guild.pending_members.push(current_user)
 
 	(@guild.officers.to_ary << @guild.owner).each do |officers|
-		officers.send_notification("#{current_user.name} wants to join #{@guild.name}", "/guild/#{@guild.id}")
+		officers.send_notification("#{current_user.name} wants to join #{@guild.name}", "/guild/#{@guild.id}", "guild")
 	end
   end
 
@@ -128,7 +128,7 @@ class GuildsController < ApplicationController
 
     @guild.pending_members.delete(pending_member)
 	@guild.members.push(pending_member)
-	pending_member.send_notification("#{current_user.name} accepted your request to join #{@guild.name}", "/guild/#{@guild.id}")
+	pending_member.send_notification("#{current_user.name} accepted your request to join #{@guild.name}", "/guild/#{@guild.id}", "guild")
   end
 
   def reject
@@ -138,7 +138,7 @@ class GuildsController < ApplicationController
     pending_member = User.find_by_id(params[:user_id])
 
     @guild.pending_members.delete(pending_member)
-	pending_member.send_notification("#{current_user.name} rejected your request to join #{@guild.name}", "/guild/#{@guild.id}")
+	pending_member.send_notification("#{current_user.name} rejected your request to join #{@guild.name}", "/guild/#{@guild.id}", "guild")
   end
 
   def withdraw

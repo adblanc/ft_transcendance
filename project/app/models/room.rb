@@ -74,7 +74,7 @@ class Room < ApplicationRecord
 		target_content = target_notification_content(type, issuer, time);
 
 		if (target_content)
-			target.send_notification(target_content, "");
+			target.send_notification(target_content, "", "room");
 		end
 	end
 

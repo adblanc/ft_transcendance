@@ -110,7 +110,7 @@ class RoomsController < ApplicationController
 				@room.users.push(@current_user)
 				@room.users.push(@target_user)
 
-				@target_user.send_notification("#{@current_user.name} created a conversation with you", "");
+				@target_user.send_notification("#{@current_user.name} created a conversation with you", "", "dm-creation");
 				@room
 			else
 				render json: @room.errors, status: :unprocessable_entity
