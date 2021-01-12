@@ -15,7 +15,7 @@ interface IGame {
   level: string;
   points: number;
   status: string;
-  user: Profile;
+  user: Profiles;
   first: number;
   button: number;
   //player_points: number;
@@ -31,7 +31,7 @@ export default class Game extends BaseModel<IGame> {
   channel: ActionCable.Channel;
   mouvements: Mouvements;
   model: Mouvement;
-  currentUserId?: Number; 
+  currentUserId?: Number;
   preinitialize() {
     this.relations = [
       {
@@ -82,24 +82,28 @@ export default class Game extends BaseModel<IGame> {
     return this.asyncSave(attrs, { url: this.urlRoot() });
   }
   join() {
-    
     if (!this.currentUserId) {
       this.currentUserId = parseInt($("#current-user-profile").data("id"));
     }
-     if (this.currentUserId == this.get("first"))
-     {
-       displaySuccess("You already create this game");
-       return 0;
-     }
+    if (this.currentUserId == this.get("first")) {
+      displaySuccess("You already create this game");
+      return 0;
+    }
     this.second = true;
-    return this.asyncSave({status: "playing", second: true},{ url: `${this.baseGameRoot()}/join`,});
+    return this.asyncSave(
+      { status: "playing", second: true },
+      { url: `${this.baseGameRoot()}/join` }
+    );
   }
 
-  finish(g_points: number)
-  {
-    const success = this.asyncSave({status: "finished", points: g_points},{ url: `${this.baseGameRoot()}/finish`,});
-    if (success)
-    { this.channel.unsubscribe();}
+  finish(g_points: number) {
+    const success = this.asyncSave(
+      { status: "finished", points: g_points },
+      { url: `${this.baseGameRoot()}/finish` }
+    );
+    if (success) {
+      this.channel.unsubscribe();
+    }
     return success;
   }
 
@@ -116,70 +120,69 @@ export default class Game extends BaseModel<IGame> {
         connected: () => {
           console.log("connected to the GAMMME", game_id);
         },
-        received: (mouv: IMouvement) => 
-        {
+        received: (mouv: IMouvement) => {
           console.log(JSON.stringify(mouv));
           if (!this.currentUserId) {
             this.currentUserId = parseInt(
               $("#current-user-profile").data("id")
             );
           }
-           this.model.set(mouv);
-           if (this.currentUserId === this.model.get("user_id"))
-          {this.model.set({sent: true});}
-          else
-          {this.model.set({sent: false});}
-         },
+          this.model.set(mouv);
+          if (this.currentUserId === this.model.get("user_id")) {
+            this.model.set({ sent: true });
+          } else {
+            this.model.set({ sent: false });
+          }
+        },
         disconnected: () => {
           console.log("disconnected to the GAMMME", game_id);
         },
       }
-     );
-    }
+    );
+  }
 }
 
+//  sync(method: string, model: Game, options: JQueryAjaxSettings): any {
+//   if (method == "create") {
+//     var formData = new FormData();
 
-  //  sync(method: string, model: Game, options: JQueryAjaxSettings): any {
-  //   if (method == "create") {
-  //     var formData = new FormData();
+//     _.each(model.attributes, function (value, key) {
+// 	formData.append(key, value);
+//     });
+//     _.defaults(options || (options = {}), {
+//       data: formData,
+//       processData: false,
+// 	contentType: false,
+//     });
+//   }
+//   return Backbone.sync.call(this, method, model, options);
+// }
 
-  //     _.each(model.attributes, function (value, key) {
-  // 	formData.append(key, value);
-  //     });
-  //     _.defaults(options || (options = {}), {
-  //       data: formData,
-  //       processData: false,
-  // 	contentType: false,
-  //     });
-  //   }
-  //   return Backbone.sync.call(this, method, model, options);
-  // }
+//    user = new Profile();
+//     Points: number;
+//     Type: string;
+// constructor(Id: number, type: string, Pts: number, Profil: Profile) {
+//     super();
+//     this.set(this.Type: type);
+//     this.user = Profil;
+//     this.Points = Pts;
+//     this.url = this.urlRoot;
+//     console.log(this.id);
+// }
 
-  //    user = new Profile();
-  //     Points: number;
-  //     Type: string;
-  // constructor(Id: number, type: string, Pts: number, Profil: Profile) {
-  //     super();
-  //     this.set(this.Type: type);
-  //     this.user = Profil;
-  //     this.Points = Pts;
-  //     this.url = this.urlRoot;
-  //     console.log(this.id);
-  // }
-
-  // createGame(attrs: CreatableGameArgs,  success: () => void) {
-  //    this.set(attrs),
-  //     this.save(
-  //         {},
-  //         {
-  //           url: this.urlRoot(),
-  //           success: () => success(),
-  //           // error: (_, jqxhr) => {
-  //           //   error(this.mapServerErrors(jqxhr?.responseJSON));};
-  //         }
-  //       );
-  //    // success();
-  // }
+// createGame(attrs: CreatableGameArgs,  success: () => void) {
+//    this.set(attrs),
+//     this.save(
+//         {},
+//         {
+//           url: this.urlRoot(),
+//           success: () => success(),
+//           // error: (_, jqxhr) => {
+//           //   error(this.mapServerErrors(jqxhr?.responseJSON));};
+//         }
+//       );
+//    // success();
+// }
 //}
 
 // type rec = Record<string, string>;
