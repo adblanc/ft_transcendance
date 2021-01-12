@@ -3,7 +3,10 @@ class RoomMessagesController < ApplicationController
 	before_action :load_entities
 
 	def create
-		if (@current_user.is_room_mute?(@room))
+
+		if (!@room)
+			render json: {"room" => ["not found"]}, status: :unprocessable_entity
+		elsif (@current_user.is_room_mute?(@room))
 			render json: {"you" => ["are mute in this room"]}, status: :unprocessable_entity
 		elsif (@current_user.is_room_ban?(@room))
 			render json: {"you" => ["are ban in this room"]}, status: :unprocessable_entity
@@ -15,6 +18,6 @@ class RoomMessagesController < ApplicationController
 	protected
 
   def load_entities
-    @room = Room.find params[:room_id]
+    @room = Room.find_by_id(params[:room_id]);
   end
 end

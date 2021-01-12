@@ -79,10 +79,10 @@ class RoomsController < ApplicationController
 	def quit
 		@room = Room.find_by_id(params[:id])
 
-		if (@room && !current_user.rooms.exists?(@room.id))
+		if (!@room)
+			return;
+		elsif (@room && !current_user.rooms.exists?(@room.id))
 			render json: {"you" => ["are not in this room."]}, status: :unprocessable_entity
-		elsif (!@room)
-			render json: {"name" => ["is incorrect"]}, status: :unprocessable_entity
 		elsif (@current_user.is_room_ban?(@room));
 			render json: {"action" => ["left"]}, status: :ok
 		else
@@ -109,6 +109,8 @@ class RoomsController < ApplicationController
 			if @room.save
 				@room.users.push(@current_user)
 				@room.users.push(@target_user)
+
+				@target_user.send_notification("#{@current_user.name} created a conversation with you", "");
 				@room
 			else
 				render json: @room.errors, status: :unprocessable_entity
