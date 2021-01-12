@@ -6,14 +6,12 @@ class BansController < ApplicationController
 		if (!correct_req("ban"))
 			return ;
 		end
-		if (!@current_user.is_room_owner?(@room))
-			render json: {"you" => ["must be owner of this room"]}, status: :unprocessable_entity
-		elsif (@room.bans.where(banned_user_id: params[:id]).take)
+		if (@room.bans.exists?(banned_user_id: params[:id]))
 			render json: {"User" => ["is already banned"]}, status: :unprocessable_entity
 		else
 			@ban = @room.bans.build(:banned_user_id => params[:id])
 			if (@ban.save)
-				@room.send_room_notification("has been banned by #{@current_user.login}", @current_user, @banned_user)
+				@room.send_room_notification("ban", @current_user, @banned_user, params[:ban_time])
 				if (@time != "indefinitely")
 					UnbanRoomUserJob.set(wait: @time).perform_later(@ban)
 				end
@@ -28,12 +26,10 @@ class BansController < ApplicationController
 		if (!correct_req("unban"))
 			return ;
 		end
-		if (!@current_user.is_room_owner?(@room))
-			render json: {"you" => ["must be owner of this room"]}, status: :unprocessable_entity
-		elsif !(@ban = @room.bans.where(banned_user_id: params[:id]).take)
+		if !(@ban = @room.bans.where(banned_user_id: params[:id]).take)
 			render json: {"User" => ["is not banned"]}, status: :unprocessable_entity
 		else
-			@room.send_room_notification("has been unbanned by #{@current_user.login}", @current_user, @banned_user)
+			@room.send_room_notification("unban", @current_user, @banned_user, params[:ban_time])
 			UnbanRoomUserJob.perform_now(@ban)
 			@banned_user
 		end
@@ -53,6 +49,12 @@ class BansController < ApplicationController
 			return false
 		elsif (!@time && type == "ban")
 			render json: {"ban_time" => ["is not correct. #{@room.expected_mute_or_bantime}"]}, status: :unprocessable_entity
+			return false;
+		elsif (!@current_user.is_room_administrator?(@room))
+			render json: {"you" => ["must be administrator of this room"]}, status: :unprocessable_entity
+			return false;
+		elsif (@banned_user.is_room_owner?(@room))
+			render json: {"you" => ["can't ban the owner of the room"]}, status: :unprocessable_entity
 			return false;
 		end
 		return true

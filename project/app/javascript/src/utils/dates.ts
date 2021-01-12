@@ -4,7 +4,8 @@ export const formatMessageDate = (date: string) => {
   const isToday =
     moment(date).format("DD/MM/YYYY") === moment().format("DD/MM/YYYY");
 
-  return isToday
-    ? moment(date).format("LT")
-    : moment(date).format("DD/MM/YYYY LT");
+  return {
+    time: moment(date).format("LT"),
+    day: isToday ? "" : moment(date).format("DD/MM/YY"),
+  };
 };

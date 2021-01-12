@@ -34,7 +34,6 @@ export default class PublicRoomsView extends BaseView {
   }
 
   removePublicRoom(room: PublicRoom) {
-    console.log("we remove public room view", room.get("id"));
     this.$(`#room-${room.get("id")}`)
       .parent()
       .remove();

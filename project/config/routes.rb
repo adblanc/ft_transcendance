@@ -42,11 +42,14 @@ post '/game_mouvs', to: 'game_mouvs#create'
   end
 
   resources :room_messages
-  resources :rooms
+  resources :rooms, only: [:show, :index, :create, :update]
   get 'my-rooms', to: 'rooms#my_rooms'
   get '/join-room', to: 'rooms#join'
   delete "/quit-room", to: 'rooms#quit'
+  put "/direct_messages/:user_id", to: "rooms#init_direct_messages"
+  post "/direct_messages/:user_id", to: "rooms#init_direct_messages"
   put "/:room_id/:user_id/update_role", to: "users#update_room_role"
+
 
   resources :wars do
   	member do

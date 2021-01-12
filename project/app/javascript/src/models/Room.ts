@@ -55,6 +55,23 @@ export default class Room extends BaseRoom {
           const blocked = currentUser()
             .get("blocked_users")
             .find((u) => u.id === message.user_id);
+
+          if (
+            !message.ancient &&
+            message.content.includes(
+              `${currentUser().get("login")} has been banned`
+            )
+          ) {
+            return this.quit();
+          }
+
+          if (
+            !message.ancient &&
+            !this.get("users").find((u) => u.get("id") === message.user_id)
+          ) {
+            this.fetch();
+          }
+
           if (!blocked) {
             this.messages.add(
               new Message({
@@ -87,7 +104,7 @@ export default class Room extends BaseRoom {
 
   async quit() {
     const success = await this.asyncDestroy({
-      url: `${BASE_ROOT}/quit-room?name=${this.get("name")}`,
+      url: `${BASE_ROOT}/quit-room?id=${this.get("id")}`,
     });
 
     if (success) {
@@ -100,5 +117,14 @@ export default class Room extends BaseRoom {
     return this.asyncSave({
       password,
     });
+  }
+
+  createDm(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/direct_messages/${id}`,
+      }
+    );
   }
 }

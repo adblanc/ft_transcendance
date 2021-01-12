@@ -46,6 +46,18 @@ $chatInputHeight: 4rem;
   @apply bg-teal-600 transition-colors duration-300 ease-in-out;
 }
 
+.btn-danger {
+  @extend .btn-primary;
+
+  @apply bg-red-500;
+}
+
+.btn-danger:hover {
+  @extend .btn-primary:hover;
+
+  @apply bg-red-600;
+}
+
 .svg-btn {
   @apply w-6 h-6 cursor-pointer;
 }

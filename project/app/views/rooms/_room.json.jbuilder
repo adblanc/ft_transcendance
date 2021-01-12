@@ -1,4 +1,5 @@
-json.extract! room, :name, :id, :is_private, :created_at, :updated_at
+json.extract! room, :id, :is_private, :is_dm, :created_at, :updated_at
+json.name room.correct_name(@current_user)
 json.isOwner @current_user.has_role? :owner, room
 json.users do
 	json.array! room.users do |user|

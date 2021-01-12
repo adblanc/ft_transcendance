@@ -26,10 +26,6 @@ export default class RoomMessagesView extends BaseView<Room> {
       return;
     }
 
-    const currentRoomUser = this.model
-      .get("users")
-      .find((u) => u.get("login") === currentUser().get("login"));
-
     const sender =
       this.model
         .get("users")
@@ -46,15 +42,29 @@ export default class RoomMessagesView extends BaseView<Room> {
 
     const profileView = new RoomUserProfileView({
       model: sender,
-      currentRoomUser,
+      currentRoomUser: this.model.get("users").currentRoomUser(),
     });
 
     profileView.render();
   }
 
   renderMsg(message: Message) {
-    $("#messages-container").append(
-      new MessageView({ model: message }).render().el
+    const container = $("#messages-container");
+
+    const isScrolledToBottom =
+      container.prop("scrollHeight") - container.prop("clientHeight") <=
+      container.prop("scrollTop") + 1;
+
+    container.append(new MessageView({ model: message }).render().el);
+
+    if (isScrolledToBottom) {
+      this.scrollToBottom();
+    }
+  }
+
+  scrollToBottom() {
+    $("#messages-container").scrollTop(
+      $("#messages-container").prop("scrollHeight")
     );
   }
 

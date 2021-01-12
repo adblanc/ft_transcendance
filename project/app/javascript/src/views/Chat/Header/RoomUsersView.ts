@@ -1,29 +1,32 @@
-import RoomUsers from "src/collections/RoomUsers";
 import BaseView from "src/lib/BaseView";
-import { currentUser } from "src/models/Profile";
+import Room from "src/models/Room";
 import RoomUser from "src/models/RoomUser";
 import RoomUserView from "./RoomUserView";
 
-type Options = Backbone.ViewOptions & {
-  roomUsers: RoomUsers;
+const sortByRole = (user: RoomUser) => {
+  switch (user.get("roomRole")) {
+    case "Owner":
+      return 0;
+    case "Administrator":
+      return 1;
+    default:
+      return 2;
+  }
 };
 
-export default class RoomUsersView extends BaseView {
-  roomUsers: RoomUsers;
-  currentRoomUser: RoomUser;
+export default class RoomUsersView extends BaseView<Room> {
+  currentRoomUser?: RoomUser;
 
-  constructor(options: Options) {
+  constructor(options?: Backbone.ViewOptions<Room>) {
     super(options);
 
-    this.roomUsers = options.roomUsers;
-
-    if (!this.roomUsers) {
-      throw Error("Please provide room users to this view.");
+    if (!this.model) {
+      throw Error("Please provide Room model to this view.");
     }
 
-    this.currentRoomUser = this.roomUsers.find(
-      (u) => u.get("login") === currentUser().get("login")
-    );
+    this.currentRoomUser = this.model.get("users").currentRoomUser();
+
+    this.listenTo(this.model, "change", this.render);
   }
 
   renderRoomUser(roomUser: RoomUser) {
@@ -36,7 +39,11 @@ export default class RoomUsersView extends BaseView {
   }
 
   render() {
-    this.roomUsers.forEach((user) => this.renderRoomUser(user));
+    this.$el.html("");
+    this.model
+      .get("users")
+      .sortBy(sortByRole)
+      .forEach((user) => this.renderRoomUser(user));
 
     return this;
   }

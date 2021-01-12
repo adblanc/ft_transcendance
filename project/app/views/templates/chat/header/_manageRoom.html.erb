@@ -1,10 +1,10 @@
 <script type="text/html" id="manage-room-template">
- <div id="room-users-list" class="overflow-y-auto h-64">
+ <div id="room-users-list" class="overflow-y-auto max-h-64">
     </div>
     {{#isOwner}}
-  <form action="">
+  <form class="mt-8" action="">
     <label class="block" for="room-password">
-      <span class="text-gray-700">Change room's password</span>
+      <span class="text-gray-700 underline font-semibold mb-1">Change room's password</span>
       <input
         class="form-input mt-1 block w-full"
         type="text"

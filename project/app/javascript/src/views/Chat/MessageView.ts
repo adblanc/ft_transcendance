@@ -1,6 +1,5 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import moment from "moment";
 import { eventBus } from "src/events/EventBus";
 import Message from "src/models/Message";
 import _ from "underscore";
@@ -32,9 +31,12 @@ export default class MessageView extends Backbone.View<Message> {
       isNotification ? MSG_NOTIFICATION_TEMPLATE_ID : MSG_TEMPLATE_ID
     ).html();
 
+    const { day, time } = formatMessageDate(this.model.get("created_at"));
+
     const html = Mustache.render(template, {
       ...this.model.toJSON(),
-      date: formatMessageDate(this.model.get("created_at")),
+      day,
+      time,
     });
     this.$el.html(html);
 

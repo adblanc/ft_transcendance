@@ -10,11 +10,11 @@ type Options = Backbone.ViewOptions & {
 };
 
 const MY_ROOMS_VIEW_INFOS = {
-  label: "My channels list",
-  id: "my-rooms-list",
+  label: "Direct messages",
+  id: "my-dms-list",
 };
 
-export default class MyRoomsView extends BaseView {
+export default class DirectMessagesView extends BaseView {
   myRooms: MyRooms;
   myRoomViews: MyRoomView[];
 
@@ -33,15 +33,15 @@ export default class MyRoomsView extends BaseView {
   };
 
   renderMyRoom(room: Room) {
-    if (!room.get("is_dm")) {
+    if (room.get("is_dm")) {
       const myRoomView = new MyRoomView({ model: room });
       this.myRoomViews.push(myRoomView);
-      this.$("#my-rooms-list").append(myRoomView.render().el);
+      this.$(`#${MY_ROOMS_VIEW_INFOS["id"]}`).append(myRoomView.render().el);
     }
   }
 
   removeMyRoom(room: Room) {
-    if (!room.get("is_dm")) {
+    if (room.get("is_dm")) {
       this.myRoomViews.forEach((r) => {
         if (r.model.get("id") === room.get("id")) {
           r.close();

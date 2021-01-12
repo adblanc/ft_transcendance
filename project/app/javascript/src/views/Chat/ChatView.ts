@@ -7,11 +7,13 @@ import ChatInputView from "./ChatInputView";
 import CreateJoinChannelView from "./CreateJoinChannelView";
 import PublicRoomsView from "./PublicRoomsView";
 import MyRoomsView from "./MyRoomsView";
+import DirectMessagesView from "./DirectMessagesView";
 
 export default class ChatView extends BaseView {
   myRooms: MyRooms;
   publicRoomsView: PublicRoomsView;
   myRoomsView: MyRoomsView;
+  directMessagesView: DirectMessagesView;
   createJoinChannelView: CreateJoinChannelView;
   chatHeaderView?: ChatHeaderView;
   chatInputView?: ChatInputView;
@@ -20,7 +22,13 @@ export default class ChatView extends BaseView {
     super(options);
 
     this.myRooms = new MyRooms();
+    this.myRooms.fetch();
+
     this.myRoomsView = new MyRoomsView({
+      myRooms: this.myRooms,
+    });
+
+    this.directMessagesView = new DirectMessagesView({
       myRooms: this.myRooms,
     });
 
@@ -114,6 +122,7 @@ export default class ChatView extends BaseView {
 
     this.preprendNested(this.createJoinChannelView, "#left-container-chat");
 
+    this.appendNested(this.directMessagesView, "#left-container-chat");
     this.appendNested(this.myRoomsView, "#left-container-chat");
     this.appendNested(this.publicRoomsView, "#left-container-chat");
 

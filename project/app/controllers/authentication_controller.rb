@@ -55,6 +55,7 @@ class AuthenticationController < ApplicationController
 		raise "att" if user.tfa_error_nb >= 3
 		raise "exp" if Time.now.to_i - user.tfa_time > 30
 		if params[:tfa] == user.tfa_id && hotp.verify(params[:otp], user.otp_count)
+			set_cookie(user);
 			render json: TokiToki.encode(user.login)
 		else
 			user.update_attributes(:tfa_error_nb => user.tfa_error_nb + 1)
@@ -113,7 +114,12 @@ class AuthenticationController < ApplicationController
 				ROTP::HOTP.new(user.otp_secret_key).at(user.otp_count))
 			render json: { token: nil, user: user.login, tfa: user.tfa_id }
 		else
+			set_cookie(user);
 			render json: { token: TokiToki.encode(user.login) }
 		end
+	end
+
+	def set_cookie(user)
+		cookies.encrypted[:user_id] = {value: user.id, expires: 4.hour.from_now}
 	end
   end
