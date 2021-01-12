@@ -1,6 +1,7 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import { currentUser } from "src/models/Profile";
+import Room from "src/models/Room";
 import RoomUser, { MuteBanTime } from "src/models/RoomUser";
 import { displaySuccess } from "src/utils";
 import ModalView from "../ModalView";
@@ -122,9 +123,12 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
       }
       this.closeAllModal();
     } else {
-      const success = await this.model.dm();
+      const dmRoom = new Room();
+      const success = await dmRoom.createDm(this.model.get("id"));
 
       if (success) {
+        this.model.room.collection.add(dmRoom);
+        dmRoom.select();
         this.closeAllModal();
       }
     }

@@ -118,4 +118,13 @@ export default class Room extends BaseRoom {
       password,
     });
   }
+
+  createDm(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/direct_messages/${id}`,
+      }
+    );
+  }
 }
