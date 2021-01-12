@@ -15,8 +15,18 @@ export default class UserView extends BaseView {
 
     this.user = new User({ id: options.userId });
     this.user.fetch({ error: this.onFetchError });
-	this.listenTo(this.user, "change", this.render);
+    this.listenTo(this.user, "change", this.render);
     this.listenTo(eventBus, "profile:change", this.actualize);
+  }
+
+  events() {
+    return {
+      "click #send-dm": this.onClickSendDm,
+    };
+  }
+
+  onClickSendDm() {
+    console.log("send dm");
   }
 
   onFetchError() {
@@ -34,8 +44,8 @@ export default class UserView extends BaseView {
 
     return this;
   }
- 
+
   actualize() {
-  	this.user.fetch({ error: this.onFetchError });
+    this.user.fetch({ error: this.onFetchError });
   }
 }
