@@ -2,7 +2,7 @@ import Backbone, { ModelFetchOptions } from "backbone";
 import _ from "underscore";
 import Guild from "src/models/Guild";
 import Notifications from "src/collections/Notifications";
-import Notification from "src/models/Notification";
+import Notification, { INotification } from "src/models/Notification";
 import consumer from "channels/consumer";
 import { clearAuthHeaders, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
@@ -86,8 +86,7 @@ export default class Profile extends BaseModel<IProfile> {
         connected: () => {
           //console.log("connected to", user_id);
         },
-        received: (notification: Notification) => {
-          //console.log("we received", notification);
+        received: (notification: INotification) => {
           this.notifications.add(notification);
         },
       }

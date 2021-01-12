@@ -2,13 +2,14 @@ import { BASE_ROOT } from "src/constants";
 import BaseModel from "src/lib/BaseModel";
 import _ from "underscore";
 
-interface INotification {
+export interface INotification {
   id: number;
   message: string;
   link: string;
   read_at: string;
   created_at: string;
   type?: string;
+  ancient?: boolean;
 }
 
 export default class Notification extends BaseModel<INotification> {

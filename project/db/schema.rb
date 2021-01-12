@@ -133,7 +133,7 @@ ActiveRecord::Schema.define(version: 2021_01_12_143411) do
     t.string "link"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "type"
+    t.string "notification_type"
   end
 
   create_table "roles", force: :cascade do |t|
