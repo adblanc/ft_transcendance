@@ -3,6 +3,7 @@ import Mustache from "mustache";
 import BaseView from "../lib/BaseView";
 import Notification from "src/models/Notification";
 import moment from "moment";
+import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions<Notification> & {
   page: boolean;
@@ -27,7 +28,10 @@ export default class ItemView extends BaseView<Notification> {
   }
 
   triggerNotif() {
-    console.log(this.model.toJSON());
+    if (this.model.get("notification_type") === "dm-creation") {
+      eventBus.trigger("chat:open");
+      eventBus.trigger("notifications:close");
+    }
   }
 
   render() {

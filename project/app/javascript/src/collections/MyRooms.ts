@@ -17,6 +17,7 @@ export default class MyRooms extends Backbone.Collection<Room> {
     this.listenTo(this, "add", this.checkSelectedAdd);
     this.listenTo(this, "remove", this.onRemove);
     this.listenTo(eventBus, "chat:public-channel-joined", this.addPublicRoom);
+    this.listenTo(eventBus, "chat:other-user-dm-creation", () => this.fetch());
   }
 
   addPublicRoom(publicRoom: PublicRoom) {

@@ -14,9 +14,8 @@ export default class NotificationsView extends BaseView {
     this.profile = currentUser();
 
     this.listenTo(this.profile.notifications, "add", this.render);
-    this.listenTo(eventBus, "notifications:open", () => {
-      this.$el.toggleClass("invisible");
-    });
+    this.listenTo(eventBus, "notifications:open", this.toggleNotifications);
+    this.listenTo(eventBus, "notifications:close", this.hideNotif);
 
     $(document).on("click", this.dismissNotif);
   }
@@ -28,13 +27,24 @@ export default class NotificationsView extends BaseView {
     };
   }
 
+  toggleNotifications() {
+    this.$el.toggleClass("invisible");
+  }
+
+  hideNotif() {
+    if (!this.$el.hasClass("invisible")) {
+      this.$el.toggleClass("invisible");
+    }
+  }
+
   onSeeClicked() {
     this.$el.toggleClass("invisible");
   }
 
   dismissNotif = (e: JQuery.ClickEvent) => {
-    if ($(e.target).closest("#notifications-container").length == 0) {
-      if (!this.$el.hasClass("invisible")) this.$el.toggleClass("invisible");
+    console.log("dismiss notif");
+    if ($(e.target).closest("#notifications-container").length === 0) {
+      this.hideNotif();
     }
   };
 

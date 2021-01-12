@@ -7,6 +7,7 @@ import consumer from "channels/consumer";
 import { clearAuthHeaders, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
+import { eventBus } from "src/events/EventBus";
 
 export interface IBlockedUser {
   login: string;
@@ -87,10 +88,17 @@ export default class Profile extends BaseModel<IProfile> {
           //console.log("connected to", user_id);
         },
         received: (notification: INotification) => {
+          this.checkDmCreationNotification(notification);
           this.notifications.add(notification);
         },
       }
     );
+  }
+
+  checkDmCreationNotification(notification: INotification) {
+    if (!notification.ancient) {
+      eventBus.trigger("chat:other-user-dm-creation");
+    }
   }
 
   fetch(options?: ModelFetchOptions): JQueryXHR {

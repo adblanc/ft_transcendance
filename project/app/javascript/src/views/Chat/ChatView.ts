@@ -42,7 +42,8 @@ export default class ChatView extends BaseView {
     this.chatInputView = undefined;
 
     this.listenTo(eventBus, "chat:toggle", this.toggleChat);
-    this.listenTo(eventBus, "chat:close", this.closeChat);
+    this.listenTo(eventBus, "chat:close", this.hideChat);
+    this.listenTo(eventBus, "chat:open", this.showChat);
     this.listenTo(this.myRooms, "add", this.refreshHeaderInput);
     this.listenTo(this.myRooms, "remove", this.removeHeaderInput);
   }
@@ -54,6 +55,10 @@ export default class ChatView extends BaseView {
     this.chatHeaderView?.close();
     this.chatInputView?.close();
   };
+
+  private isVisible() {
+    return !this.$el.hasClass("invisible");
+  }
 
   hideChat() {
     if (!this.isVisible()) {
@@ -69,18 +74,8 @@ export default class ChatView extends BaseView {
     this.toggleChat();
   }
 
-  private isVisible() {
-    return !this.$el.hasClass("invisible");
-  }
-
   toggleChat() {
     this.$el.toggleClass("invisible");
-  }
-
-  closeChat() {
-    if (!this.$el.hasClass("invisible")) {
-      this.$el.addClass("invisible");
-    }
   }
 
   refreshHeaderInput() {

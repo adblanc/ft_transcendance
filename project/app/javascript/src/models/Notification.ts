@@ -8,7 +8,7 @@ export interface INotification {
   link: string;
   read_at: string;
   created_at: string;
-  type?: string;
+  notification_type?: string;
   ancient?: boolean;
 }
 
