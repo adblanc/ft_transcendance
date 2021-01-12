@@ -37,8 +37,14 @@ export default class ChatHeaderView extends BaseView {
   askConfirmationQuit() {
     const { selectedRoom } = this.rooms;
 
+    const question = selectedRoom.get("is_dm")
+      ? `Are you sure you want to delete your messages with ${selectedRoom.get(
+          "name"
+        )} ?`
+      : `Are you sure you want to quit ${selectedRoom.get("name")} ?`;
+
     const confirmationView = new ConfirmationModalView({
-      question: `Are you sure you want to quit ${selectedRoom.get("name")} ?`,
+      question,
       onYes: this.quitRoom,
     });
 
@@ -56,7 +62,11 @@ export default class ChatHeaderView extends BaseView {
       if (action === "left") {
         eventBus.trigger("chat:my-room-left", selectedRoom);
       }
-      displaySuccess(`Room ${selectedRoom.get("name")} successfully ${action}`);
+
+      const msg = selectedRoom.get("is_dm")
+        ? `Messages with ${selectedRoom.get("name")} successfully ${action}`
+        : `Room ${selectedRoom.get("name")} successfully ${action}`;
+      displaySuccess(msg);
     }
   };
 
