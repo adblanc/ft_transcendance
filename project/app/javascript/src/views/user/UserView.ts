@@ -3,6 +3,7 @@ import Mustache from "mustache";
 import moment from "moment";
 import User from "src/models/User";
 import BaseView from "src/lib/BaseView";
+import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions & { userId: number };
 
@@ -14,8 +15,8 @@ export default class UserView extends BaseView {
 
     this.user = new User({ id: options.userId });
     this.user.fetch({ error: this.onFetchError });
-    //marche po
-    this.listenTo(this.user, "change", this.render);
+	this.listenTo(this.user, "change", this.render);
+    this.listenTo(eventBus, "profile:change", this.actualize);
   }
 
   onFetchError() {
@@ -32,5 +33,9 @@ export default class UserView extends BaseView {
     this.$el.html(html);
 
     return this;
+  }
+ 
+  actualize() {
+  	this.user.fetch({ error: this.onFetchError });
   }
 }

@@ -3,6 +3,7 @@ import Mustache from "mustache";
 import ModalView from "./ModalView";
 import Profile from "../models/Profile";
 import { displaySuccess } from "src/utils";
+import { eventBus } from "src/events/EventBus";
 
 export default class ModifyProfileView extends ModalView<Profile> {
   constructor(options?: Backbone.ViewOptions<Profile>) {
@@ -33,6 +34,7 @@ export default class ModifyProfileView extends ModalView<Profile> {
 
     if (success) {
       displaySuccess("Profile successfully changed.");
+	  eventBus.trigger("profile:change");
       this.closeModal();
       this.model.fetch();
     }

@@ -5,6 +5,11 @@
     data-login="{{ login }}"
     data-avatar_url="{{ avatar_url }}"
     class="w-16 h-16 rounded-full p-2"
-    src="{{ avatar_url }}"
+	{{#avatar_url}}
+		src="{{ avatar_url }}"
+	{{/avatar_url}}
+	{{^avatar_url}}
+		src="https://img.pngio.com/circle-outline-png-transparent-circle-outline-png-image-free-white-circle-outline-transparent-300_300.png"
+	{{/avatar_url}}
   />
 </button>

@@ -27,7 +27,12 @@
 			{{#has_guild}}
 			<p><span style='font-weight:bold'>{{guild_role}}</span> de la guilde</p>
 			<a style="text-decoration: underline" href="/guild/{{guild.id}}">
-			<img style='margin: auto; margin-top:10px' width="80" height="80" class="rounded-full p-2" src={{img_url}}/>
+				{{#guild.img_url}}
+					<img style='margin: auto; margin-top:10px' width="80" height="80" class="rounded-full p-2" src={{guild.img_url}}/>
+				{{/guild.img_url}}
+				{{^guild.img_url}}
+					<img style='margin: auto; margin-top:10px' width="80" height="80" class="rounded-full p-2" src="https://img.pngio.com/circle-outline-png-transparent-circle-outline-png-image-free-white-circle-outline-transparent-300_300.png"/>
+				{{/guild.img_url}}
 			<p style='margin-bottom:20px'>{{guild.name}}</p></a>
 			{{/has_guild}}
 			{{^has_guild}}
