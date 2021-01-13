@@ -15,31 +15,24 @@
 			<p class="text-center mt-6">No avatar availaible</p>
 		{{/avatar_url}}
 		<div class="pb-10 py-16 px-16 text-center">
-			<h2 class="text-2xl mb-2">Account:</h2>
+			<h2 class="text-2xl mb-2 font-semibold">Account:</h2>
 			<div>
 				<div><span class="font-bold">Name: </span>{{login}}</div>
 				<div><span class="font-bold">Creation date: </span>{{created_at}}</div>
 				<div><span class="font-bold">Email: </span>{{email}}</div>
 			</div>
 			<div class="flex border border-gray-100 my-4"></div>
-			<h2 class="text-2xl mb-2">Stats:</h2>
+			<h2 class="text-2xl mb-2 font-semibold">Stats:</h2>
 			<p>Nothing at the moment</p>
-			<div class="flex border border-gray-100 my-4"></div>
-			<h2 class="text-2xl mb-2">Guild:</h2>
-			<div style='margin: auto; margin-bottom:20px; text-align: center'>
 			{{#has_guild}}
-			<p><span style='font-weight:bold'>{{guild_role}}</span> of the guild</p>
-			<a style="text-decoration: underline" href="/guild/{{guild.id}}">
-				{{#guild.img_url}}
-					<img style='margin: auto; margin-top:10px' width="80" height="80" class="rounded-full p-2" src={{guild.img_url}}/>
-				{{/guild.img_url}}
-				{{^guild.img_url}}
-					<img style='margin: auto; margin-top:10px' width="80" height="80" class="rounded-full p-2" src="https://img.pngio.com/circle-outline-png-transparent-circle-outline-png-image-free-white-circle-outline-transparent-300_300.png"/>
-				{{/guild.img_url}}
-			<p style='margin-bottom:20px'>{{guild.name}}</p></a>
-			{{/has_guild}}
-			{{^has_guild}}
-			<p style='margin-bottom:20px;' class="justify-center flex">No guild at the moment</p>
+				<div class="flex border border-gray-100 my-4"></div>
+				<h2 class="text-2xl mb-2 font-semibold">Guild:</h2>
+				<div class="flex flex-col justify-center items-center">
+					<p><span class="font-bold">{{guild_role}}</span> of the guild</p>
+				<a class="underline" href="/guild/{{guild.id}}">
+					<img class="rounded-full p-2 w-16 h-16 mt-2 mx-auto" src={{#guild.img_url}}{{guild.img_url}}{{/guild.img_url}}{{^guild.img_url}}https://img.pngio.com/circle-outline-png-transparent-circle-outline-png-image-free-white-circle-outline-transparent-300_300.png"{{/guild.img_url}}/>
+					<p class="mb-2">{{guild.name}}</p>
+				</a>
 			{{/has_guild}}
 			</div>
 		</div>
