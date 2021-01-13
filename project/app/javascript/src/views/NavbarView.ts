@@ -36,12 +36,7 @@ export default class NavbarView extends BaseView {
       "click #btn-logout": "onLogout",
       "click #btn-notifications": "onClickNotification",
       "click #btn-messages": "onClickMessage",
-      "click #navbar-brand": "onBrandClick",
     };
-  }
-
-  onBrandClick() {
-    Backbone.history.navigate("/", { trigger: true });
   }
 
   onLogout() {

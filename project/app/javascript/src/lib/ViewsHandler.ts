@@ -63,8 +63,6 @@ class PagesHandler {
     this.currentPage = page;
     this.currentPage.render();
 
-    console.log("on affiche current page");
-
     $("#container").html(this.currentPage.el);
 
     this.handleChat(withChat);
