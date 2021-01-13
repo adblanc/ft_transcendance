@@ -41,6 +41,9 @@ export default class DeclareWarView extends ModalView<War> {
 	const prize = this.$("#input-prize").val() as string;
 	const answer_time = this.$("#answer-time").val() as string;
 	const max_calls = this.$("#max-calls").val() as string;
+	var inc_tour = false;
+	if (this.$("#inc-tour").is(":checked"))
+		inc_tour = true;
 
 	const initiator_id = this.profile.get("guild").get("id");
 	const recipient_id = this.guild.get("id");
@@ -50,7 +53,7 @@ export default class DeclareWarView extends ModalView<War> {
 		return;
 	}
 
-    const success = await this.model.createWar(start, end, prize, answer_time, max_calls, initiator_id, recipient_id);
+    const success = await this.model.createWar(start, end, prize, answer_time, max_calls, inc_tour, initiator_id, recipient_id);
     if (success) {
       this.warSaved();
     }

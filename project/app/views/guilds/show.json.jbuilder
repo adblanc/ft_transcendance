@@ -44,6 +44,7 @@ json.pendingWars do
 		json.end pendingWar.end
 		json.time_to_answer pendingWar.time_to_answer
 		json.max_unanswered_calls pendingWar.max_unanswered_calls
+		json.inc_tour pendingWar.inc_tour
 		json.warOpponent do 
 			json.id  @guild.warOpponent(pendingWar).id
 			json.points  @guild.warOpponent(pendingWar).points

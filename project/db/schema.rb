@@ -217,6 +217,7 @@ ActiveRecord::Schema.define(version: 2021_01_11_143304) do
     t.integer "status", default: 0
     t.integer "time_to_answer"
     t.integer "max_unanswered_calls"
+    t.boolean "inc_tour", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

@@ -15,6 +15,7 @@ interface IWar {
   prize: string;
   time_to_answer: string;
   max_unanswered_calls: string;
+  inc_tour: boolean;
   atWarTime: boolean;
   guilds: Guilds;
   warOpponent: Guild;
@@ -63,9 +64,10 @@ export default class War extends BaseModel<IWar> {
     end: Date,
     prize: string,
     answer_time: string,
-    max_calls: string,
+	max_calls: string,
+	inc_tour: boolean,
     initiator_id: string,
-    recipient_id: string
+	recipient_id: string
   ) {
     return this.asyncSave(
       {
@@ -73,7 +75,8 @@ export default class War extends BaseModel<IWar> {
         end: end,
         prize: prize,
         time_to_answer: answer_time,
-        max_unanswered_calls: max_calls,
+		max_unanswered_calls: max_calls,
+		inc_tour: inc_tour,
         initiator_id: initiator_id,
         recipient_id: recipient_id,
       },
@@ -86,9 +89,10 @@ export default class War extends BaseModel<IWar> {
   modifyWar(
     start: Date,
     end: Date,
-    prize: string,
+	prize: string,
     answer_time: string,
-    max_calls: string
+	max_calls: string,
+	inc_tour: boolean
   ) {
     return this.asyncSave(
       {
@@ -96,7 +100,8 @@ export default class War extends BaseModel<IWar> {
         end: end,
         prize: prize,
         time_to_answer: answer_time,
-        max_unanswered_calls: max_calls,
+		max_unanswered_calls: max_calls,
+		inc_tour: inc_tour
       },
       {
         url: this.baseWarRoot(),
