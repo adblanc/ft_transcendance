@@ -8,6 +8,7 @@ import CreateJoinChannelView from "./CreateJoinChannelView";
 import PublicRoomsView from "./PublicRoomsView";
 import MyRoomsView from "./MyRoomsView";
 import DirectMessagesView from "./DirectMessagesView";
+import Room from "src/models/Room";
 
 export default class ChatView extends BaseView {
   myRooms: MyRooms;
@@ -44,6 +45,7 @@ export default class ChatView extends BaseView {
     this.listenTo(eventBus, "chat:toggle", this.toggleChat);
     this.listenTo(eventBus, "chat:close", this.hideChat);
     this.listenTo(eventBus, "chat:open", this.showChat);
+    this.listenTo(eventBus, "chat:go-to-dm", this.goToDm);
     this.listenTo(this.myRooms, "add", this.refreshHeaderInput);
     this.listenTo(this.myRooms, "remove", this.removeHeaderInput);
   }
@@ -109,6 +111,27 @@ export default class ChatView extends BaseView {
   }
 
   myRoomsLength = () => this.$("#my-rooms-list").children().length;
+
+  async goToDm(userId: number) {
+    const dmRoom = this.myRooms.find(
+      (r) =>
+        r.get("is_dm") && !!r.get("users").find((u) => u.get("id") === userId)
+    );
+
+    if (dmRoom) {
+      if (!dmRoom.get("selected")) {
+        dmRoom.select();
+      }
+    } else {
+      const dmRoom = new Room();
+      const success = await dmRoom.createDm(userId);
+
+      if (success) {
+        this.myRooms.add(dmRoom);
+        dmRoom.select();
+      }
+    }
+  }
 
   render() {
     const template = $("#chat-container-template").html();

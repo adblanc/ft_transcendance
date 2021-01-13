@@ -13,7 +13,7 @@ export default class UserView extends BaseView {
   constructor(options: Options) {
     super(options);
 
-    this.user = new User({ id: options.userId });
+    this.user = new User({ id: options.userId, login: "" });
     this.user.fetch({ error: this.onFetchError });
     this.listenTo(this.user, "change", this.render);
     this.listenTo(eventBus, "profile:change", this.actualize);
@@ -26,7 +26,9 @@ export default class UserView extends BaseView {
   }
 
   onClickSendDm() {
-    console.log("send dm");
+    console.log("send dm", this.user.get("id"));
+    eventBus.trigger("chat:open");
+    eventBus.trigger("chat:go-to-dm", this.user.get("id"));
   }
 
   onFetchError() {

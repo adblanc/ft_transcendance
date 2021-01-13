@@ -1,5 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
+import { eventBus } from "src/events/EventBus";
 import { currentUser } from "src/models/Profile";
 import Room from "src/models/Room";
 import RoomUser, { MuteBanTime } from "src/models/RoomUser";
@@ -109,29 +110,8 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
   }
 
   async sendDm() {
-    console.log("send dm");
-
-    const dmRoom = this.model.room.collection.find(
-      (r) =>
-        r.get("is_dm") &&
-        !!r.get("users").find((u) => u.get("id") === this.model.get("id"))
-    );
-
-    if (dmRoom) {
-      if (!dmRoom.get("selected")) {
-        dmRoom.select();
-      }
-      this.closeAllModal();
-    } else {
-      const dmRoom = new Room();
-      const success = await dmRoom.createDm(this.model.get("id"));
-
-      if (success) {
-        this.model.room.collection.add(dmRoom);
-        dmRoom.select();
-        this.closeAllModal();
-      }
-    }
+    eventBus.trigger("chat:go-to-dm", this.model.get("id"));
+    this.closeAllModal();
   }
 
   render() {
