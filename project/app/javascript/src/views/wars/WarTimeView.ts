@@ -46,7 +46,6 @@ export default class WarTimeView extends BaseView {
 		this.renderNested(activeWarTimeView, "#active");
 	}
 	else {
-		console.log("test");
 		this.$("#not-active").show();
 	}
 	

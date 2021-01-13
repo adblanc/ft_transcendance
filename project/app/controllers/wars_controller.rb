@@ -124,17 +124,18 @@ class WarsController < ApplicationController
 		return head :unauthorized if not @guild.atWar? && @opponent.atWar?
 		return head :unauthorized if @war.atWarTime?
 
-		if @war_time = WarTime.create!(war: @war, start: DateTime.now, end: params[:end], time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
+		@war_time = WarTime.create!(war: @war, start: DateTime.now, end: params[:end], time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
+		if @war_time.save
 			@guild.members.each do |member|
 				member.send_notification("War time has just started with #{@opponent.name}! Take your slots!", "/wars", "war")
 			end
 			@opponent.members.each do |member|
 				member.send_notification("War time has just started with #{@guild.name}! Take your slots!", "/wars", "war")
 			end
+			EndWarTimeJob.set(wait_until: @war_time.end).perform_later(@war_time, @war)
 		else
 			render json: @war_time.errors, status: :unprocessable_entity
 		end
-		EndWarTimeJob.set(wait_until: @war_time.end).perform_later(@war_time, @war)
 	end
 
 	private
