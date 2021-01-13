@@ -5,7 +5,7 @@ class StartWarJob < ApplicationJob
 	  war.update(status: :started)
 	  war.guilds.each do |guild|
 		guild.members.each do |member|
-			member.send_notification("War with #{war.opponent(guild).name} just started !", "/warindex", "war")
+			member.send_notification("War with #{war.opponent(guild).name} just started !", "/wars", "war")
 		end
 	  end
 	end

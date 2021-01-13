@@ -5,7 +5,7 @@ class EndWarTimeJob < ApplicationJob
 	  warTime.update(status: :inactive)
 	  war.guilds.each do |guild|
 		guild.members.each do |member|
-			member.send_notification("WarTime with #{war.opponent(guild).name} just ended !", "/warindex", "war")
+			member.send_notification("WarTime with #{war.opponent(guild).name} just ended !", "/wars", "war")
 		end
 	  end
 	end
