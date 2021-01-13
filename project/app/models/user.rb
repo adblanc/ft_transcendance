@@ -97,6 +97,22 @@ class User < ApplicationRecord
 		end
 	end
 
+	def appear_doing(action)
+		ActionCable.server.broadcast("appearance_channel", event: "appear", user_id: self.id, action: action);
+	end
+
+	def appear
+		self.update_attributes(is_present: true);
+
+		ActionCable.server.broadcast("appearance_channel", event: "appear", user_id: self.id);
+	end
+
+	def disappear
+		self.update_attributes(is_present: false);
+
+		ActionCable.server.broadcast("appearance_channel", event: "disappear", user_id: self.id);
+	end
+
 	def send_notification(message, link, type)
 		@notification = Notification.create(recipient: self, message: message, link: link, notification_type: type)
 		ActionCable.server.broadcast("user_#{self.id}", @notification);
