@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_13_131355) do
+ActiveRecord::Schema.define(version: 2021_01_13_141627) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -186,6 +186,7 @@ ActiveRecord::Schema.define(version: 2021_01_13_131355) do
     t.integer "tfa_error_nb", default: 0, null: false
     t.integer "tfa_time", default: 0, null: false
     t.boolean "is_present", default: false
+    t.string "appearing_on"
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["name"], name: "index_users_on_name", unique: true
   end

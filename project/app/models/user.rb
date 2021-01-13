@@ -97,18 +97,18 @@ class User < ApplicationRecord
 		end
 	end
 
-	def appear_doing(action)
+	def appear_doing(appearing_on)
 		ActionCable.server.broadcast("appearance_channel", event: "appear", user_id: self.id, action: action);
 	end
 
-	def appear
-		self.update_attributes(is_present: true);
+	def appear(appearing_on)
+		self.update_attributes(is_present: true, appearing_on: appearing_on);
 
-		ActionCable.server.broadcast("appearance_channel", event: "appear", user_id: self.id);
+		ActionCable.server.broadcast("appearance_channel", event: "appear", user_id: self.id, appearing_on: appearing_on);
 	end
 
 	def disappear
-		self.update_attributes(is_present: false);
+		self.update_attributes(is_present: false, appearing_on: nil);
 
 		ActionCable.server.broadcast("appearance_channel", event: "disappear", user_id: self.id);
 	end

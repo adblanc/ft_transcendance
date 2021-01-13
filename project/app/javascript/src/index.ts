@@ -21,7 +21,7 @@ export function start() {
   });
   router.on("route", (page) => {
     if (page === "game/:id") {
-      appearanceChannel.perform("appear", { on: "in game" });
+      appearanceChannel.perform("appear", { appearing_on: "in game" });
     } // il faudrait reset le "en jeu" apres avoir fini la partie pas ici je pense
   });
 
