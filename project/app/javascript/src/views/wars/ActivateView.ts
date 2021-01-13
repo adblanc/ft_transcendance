@@ -49,6 +49,10 @@ export default class ActivateView extends ModalView<War> {
 		minuteIncrement: 1,
 		static: true,
 		minDate: new Date(),
+		onChange: function(rawdate, altdate, FPOBJ) {
+			FPOBJ.close();
+			FPOBJ._input.blur();
+		}
 	});
     return this;
   }

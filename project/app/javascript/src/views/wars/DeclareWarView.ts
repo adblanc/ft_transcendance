@@ -77,6 +77,10 @@ export default class DeclareWarView extends ModalView<War> {
 		minuteIncrement: 1,
 		static: true,
 		minDate: new Date(),
+		onChange: function(rawdate, altdate, FPOBJ) {
+			FPOBJ.close(); // Close datepicker on date select
+			FPOBJ._input.blur(); // Blur input field on date select
+		}
 	});
 	this.fp_end = flatpickr(this.$("#input-end-date"), {
 		enableTime: true,
@@ -84,6 +88,10 @@ export default class DeclareWarView extends ModalView<War> {
 		minuteIncrement: 1,
 		static: true,
 		minDate: new Date(),
+		onChange: function(rawdate, altdate, FPOBJ) {
+			FPOBJ.close(); // Close datepicker on date select
+			FPOBJ._input.blur(); // Blur input field on date select
+		}
 	});
     return this;
   }

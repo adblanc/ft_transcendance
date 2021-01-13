@@ -147,6 +147,10 @@ export default class NegotiateView extends ModalView<War> {
 		minuteIncrement: 1,
 		static: true,
 		minDate: new Date(),
+		onChange: function(rawdate, altdate, FPOBJ) {
+			FPOBJ.close();
+			FPOBJ._input.blur();
+		}
 	});
 	this.fp_end = flatpickr(this.$("#input-end-date"), {
 		enableTime: true,
@@ -154,6 +158,10 @@ export default class NegotiateView extends ModalView<War> {
 		minuteIncrement: 1,
 		static: true,
 		minDate: new Date(),
+		onChange: function(rawdate, altdate, FPOBJ) {
+			FPOBJ.close();
+			FPOBJ._input.blur();
+		}
 	});
 
     return this;
