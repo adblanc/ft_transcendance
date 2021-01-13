@@ -19,5 +19,3 @@ export const clearAuthHeaders = () => {
   Backbone.ajax = BackboneAjax;
   localStorage.removeItem(AUTH_TOKEN);
 };
-
-export const isAuth = () => !!localStorage.getItem(AUTH_TOKEN);

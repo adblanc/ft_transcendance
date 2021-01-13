@@ -9,7 +9,7 @@ import WarHistoryView from "../views/guild/WarHistoryView";
 import NotFoundView from "../views/NotFoundView";
 import GameView from "../views/game/GameView";
 import GameIndexView from "../views/game/GameIndexView";
-import { addAuthHeaders, isAuth } from "../utils";
+import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
 import TfaView from "../views/TfaView";
 import Guild from "src/models/Guild";
@@ -17,14 +17,6 @@ import Game from "src/models/Game";
 import UserView from "../views/user/UserView";
 import WarIndexView from "../views/wars/WarIndexView";
 import { BASE_ROOT } from "src/constants";
-
-const NO_AUTH_ROUTES = ["auth", "authCallBack", "twoFactAuth"];
-
-const shouldBeAuth = (routeName: string) =>
-  !NO_AUTH_ROUTES.find((route) => route === routeName);
-
-const shouldNotBeAuth = (routeName: string) =>
-  NO_AUTH_ROUTES.find((route) => route === routeName);
 
 export default class MainRouter extends Backbone.Router {
   constructor() {
@@ -45,21 +37,6 @@ export default class MainRouter extends Backbone.Router {
         "*path": "notFound",
       },
     });
-  }
-
-  execute(callback: (...args: any[]) => void, args: any[], name: string) {
-    if (shouldBeAuth(name) && !isAuth()) {
-      this.navigate("/auth", { trigger: true });
-      return false;
-    } else if (shouldNotBeAuth(name) && isAuth()) {
-      this.navigate("/", { trigger: true });
-      return false;
-    }
-
-    if (callback) {
-      callback.apply(this, args);
-    }
-    return true;
   }
 
   async authCallBack(code: string) {
@@ -142,9 +119,6 @@ export default class MainRouter extends Backbone.Router {
   }
 
   warIndex() {
-    if (!isAuth()) {
-      return this.navigate("/auth", { trigger: true });
-    }
     const warIndexView = new WarIndexView();
     pagesHandler.showPage(warIndexView);
   }
