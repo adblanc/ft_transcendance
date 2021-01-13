@@ -2,9 +2,10 @@ import Backbone from "backbone";
 import _ from "underscore";
 import Guild from "src/models/Guild";
 import WarTime from "src/models/WarTime";
-import { mapServerErrors, syncWithFormData } from "src/utils";
+import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import Guilds from "src/collections/Guilds";
+import { BASE_ROOT } from "src/constants";
 
 interface IWar {
   id: string;
@@ -25,84 +26,101 @@ interface IWar {
 export type WAR_ACTION = "accept" | "reject";
 
 export default class War extends BaseModel<IWar> {
-	preinitialize() {
-		this.relations = [
-		  {
-			type: Backbone.Many,
-			key: "guilds",
-			collectionType: Guilds,
-			relatedModel: Guild,
-		  },
-		  {
-			type: Backbone.One,
-			key: "warOpponent",
-			relatedModel: Guild,
-		  },
-		  {
-			type: Backbone.One,
-			key: "activeWarTime",
-			relatedModel: WarTime,
-		  },
-		];
-	  }
+  preinitialize() {
+    this.relations = [
+      {
+        type: Backbone.Many,
+        key: "guilds",
+        collectionType: Guilds,
+        relatedModel: Guild,
+      },
+      {
+        type: Backbone.One,
+        key: "warOpponent",
+        relatedModel: Guild,
+      },
+      {
+        type: Backbone.One,
+        key: "activeWarTime",
+        relatedModel: WarTime,
+      },
+    ];
+  }
 
   constructor(options?: any) {
     super(options);
   }
 
-  urlRoot = () => "http://localhost:3000/wars";
+  urlRoot = () => `${BASE_ROOT}/wars`;
   baseWarRoot = () => `${this.urlRoot()}/${this.get("id")}`;
 
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
     return syncWithFormData(method, model, options);
   }
 
-  createWar(start: Date, end:Date, prize: string, answer_time: string, max_calls: string, initiator_id: string, recipient_id: string) {
-    return this.asyncSave( 
-		{
-			'start': start,
-			'end': end,
-			'prize': prize,
-			'time_to_answer': answer_time,
-  			'max_unanswered_calls': max_calls,
-			'initiator_id': initiator_id,
-			'recipient_id': recipient_id,
-		}, 
-		{ 
-			url: this.urlRoot() 
-		});
-	}
+  createWar(
+    start: Date,
+    end: Date,
+    prize: string,
+    answer_time: string,
+    max_calls: string,
+    initiator_id: string,
+    recipient_id: string
+  ) {
+    return this.asyncSave(
+      {
+        start: start,
+        end: end,
+        prize: prize,
+        time_to_answer: answer_time,
+        max_unanswered_calls: max_calls,
+        initiator_id: initiator_id,
+        recipient_id: recipient_id,
+      },
+      {
+        url: this.urlRoot(),
+      }
+    );
+  }
 
-	modifyWar(start: Date, end:Date, prize: string, answer_time: string, max_calls: string) {
-		return this.asyncSave( 
-		{
-			'start': start,
-			'end': end,
-			'prize': prize,
-			'time_to_answer': answer_time,
-  			'max_unanswered_calls': max_calls,
-		}, 
-		{ 
-			url: this.baseWarRoot(),
-		});
-	}
+  modifyWar(
+    start: Date,
+    end: Date,
+    prize: string,
+    answer_time: string,
+    max_calls: string
+  ) {
+    return this.asyncSave(
+      {
+        start: start,
+        end: end,
+        prize: prize,
+        time_to_answer: answer_time,
+        max_unanswered_calls: max_calls,
+      },
+      {
+        url: this.baseWarRoot(),
+      }
+    );
+  }
 
-	manageAction(method: WAR_ACTION) {
-		return this.asyncSave({},
-		  {
-			url: `${this.baseWarRoot()}/${method}`,
-		  }
-		);
-	  }
-	
-	  /*accept() {
+  manageAction(method: WAR_ACTION) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${this.baseWarRoot()}/${method}`,
+      }
+    );
+  }
+
+  /*accept() {
 		return this.asyncSave({},
 		  {
 			url: `${this.baseWarRoot()}/accept`,
 		  }
 		);
 	  }
-	
+
 	  reject() {
 		return this.asyncSave({},
 		  {
@@ -111,17 +129,14 @@ export default class War extends BaseModel<IWar> {
 		);
 	  }*/
 
-	  activateWarTime(end:Date) {
-		return this.asyncSave( 
-			{
-				'end': end,
-			}, 
-		  {
-			url: `${this.baseWarRoot()}/activateWarTime`,
-		  }
-		);
-	  }
-	  
+  activateWarTime(end: Date) {
+    return this.asyncSave(
+      {
+        end: end,
+      },
+      {
+        url: `${this.baseWarRoot()}/activateWarTime`,
+      }
+    );
+  }
 }
-
-

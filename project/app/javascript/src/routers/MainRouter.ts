@@ -25,15 +25,15 @@ export default class MainRouter extends Backbone.Router {
         "": "index",
         auth: "auth",
         "auth/callback?code=:code": "authCallBack",
-        gameindex: "gameIndex",
+        game: "gameIndex",
         "game/:id": "gameShow",
-        guildindex: "guildIndex",
+        guilds: "guildIndex",
         "guild/:id": "guildShow",
         "guild/:id/wars": "guildWarHistory",
         "me/notifications": "notifShow",
         "user/:id": "userShow",
         "tfa/:user/:tfa": "twoFactAuth",
-        warindex: "warIndex",
+        wars: "warsIndex",
         "*path": "notFound",
       },
     });
@@ -50,7 +50,6 @@ export default class MainRouter extends Backbone.Router {
       }
       addAuthHeaders(rsp.token);
     } catch (ex) {
-      console.error(ex);
       this.navigate("/auth", { trigger: true });
     }
     this.navigate("/", { trigger: true });
@@ -118,7 +117,7 @@ export default class MainRouter extends Backbone.Router {
     pagesHandler.showPage(userView);
   }
 
-  warIndex() {
+  warsIndex() {
     const warIndexView = new WarIndexView();
     pagesHandler.showPage(warIndexView);
   }

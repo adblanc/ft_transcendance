@@ -1,22 +1,23 @@
 import Backbone from "backbone";
+import { BASE_ROOT } from "src/constants";
 import Guild from "src/models/Guild";
 
 export default class Guilds extends Backbone.Collection<Guild> {
   constructor() {
-	super();
-	this.model = Guild;
-	this.url = "/guilds";
+    super();
+    this.model = Guild;
+    this.url = `${BASE_ROOT}/guilds`;
 
-	this.comparator = function(model) {
-		return -model.get('points');
-	}
+    this.comparator = function (model) {
+      return -model.get("points");
+    };
   }
 }
 
 //version js dans BoardView avant
-	/*var Collection = Backbone.Collection.extend({
+/*var Collection = Backbone.Collection.extend({
 		url: "/guilds",
-	
+
 		initialize: function(models, options) {
 			options = options || {};
 			models = new Guild();
