@@ -4,6 +4,7 @@ import moment from "moment";
 import User from "src/models/User";
 import BaseView from "src/lib/BaseView";
 import { eventBus } from "src/events/EventBus";
+import { currentUser } from "src/models/Profile";
 
 type Options = Backbone.ViewOptions & { userId: number };
 
@@ -41,6 +42,7 @@ export default class UserView extends BaseView {
       ...this.user.toJSON(),
       created_at: moment(this.user.get("created_at"))?.format("DD/MM/YYYY"),
       has_guild: !!this.user.get("guild"),
+      is_current_user: this.user.get("id") === currentUser().get("id"),
     });
     this.$el.html(html);
 
