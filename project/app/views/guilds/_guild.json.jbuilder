@@ -12,6 +12,7 @@ if guild.activeWar
 		json.status guild.activeWar.status
 		json.time_to_answer guild.activeWar.time_to_answer
 		json.max_unanswered_calls guild.activeWar.max_unanswered_calls
+		json.inc_tour guild.activeWar.inc_tour
 		json.warPoints guild.activeWar.war_points(guild)
 		json.atWarTime guild.activeWar.atWarTime?
 		if guild.activeWar.activeWarTime
