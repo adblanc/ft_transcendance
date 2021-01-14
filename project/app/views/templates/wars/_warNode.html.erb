@@ -1,6 +1,9 @@
 <script type="text/html" id="warNodeTemplate">
 	<div id="grow">
-		<h1 style="font-size:11px" class="flex flex-row text-white ml-2">From {{start}} to {{end}} </h1> 
-		<h1 class="flex flex-row text-white ml-2">War against {{warOpponent.name}}</h1> 
+		<div style=" float:left; margin-left:30px">
+			<h1 style="font-size:11px" class="flex flex-row text-white">From {{start}} to {{end}} </h1> 
+			<h1 class="flex flex-row text-white">War against {{warOpponent.name}}</h1> 
+		</div>
+		<h1 style="float:right; margin-right:100px; margin-top:4px" class="flex flex-row text-white">{{status}}</h1> 
 	</div>
 </script>
