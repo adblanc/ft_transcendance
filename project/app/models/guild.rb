@@ -33,6 +33,7 @@ class Guild < ApplicationRecord
 			new_owner = members.first
 			new_owner.add_role(:owner, self)
 			new_owner.remove_role(:officer, self) if new_owner.guild_officer?(self)
+			new_owner.send_notification("The owner of #{self.name} left! You have been automatically appointed owner of #{self.name}.", "/guild/#{self.id}", "guild")
 		end
 	end
 
