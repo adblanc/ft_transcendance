@@ -4,7 +4,12 @@ import Guild from "src/models/Guild";
 import Notifications from "src/collections/Notifications";
 import Notification, { INotification } from "src/models/Notification";
 import consumer from "channels/consumer";
-import { clearAuthHeaders, syncWithFormData } from "src/utils";
+import {
+  AppearanceData,
+  clearAuthHeaders,
+  createAppereanceConsumer,
+  syncWithFormData,
+} from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import { eventBus } from "src/events/EventBus";
@@ -21,10 +26,12 @@ export interface IProfile {
   email?: string;
   two_fact_auth?: boolean;
   id?: number;
-  avatar_url?: string;
+  avatar_url?: string | null;
   created_at?: string;
   updated_at?: string;
   guild_role?: "Owner" | "Officer" | "Member";
+  appearing_on?: string;
+  is_present?: boolean;
   pending_guild?: Guild;
   guild?: Guild;
   notifications?: Notifications;
@@ -38,6 +45,7 @@ type ModifiableProfileArgs = {
 
 export default class Profile extends BaseModel<IProfile> {
   channel: ActionCable.Channel;
+  appearanceChannel: ActionCable.Channel;
   notifications: Notifications;
 
   preinitialize() {
@@ -64,6 +72,10 @@ export default class Profile extends BaseModel<IProfile> {
   initialize() {
     this.notifications = new Notifications();
     //this.channel = this.createConsumer();
+    this.listenTo(eventBus, "appeareance", (data) => {
+      console.log("react to appearance");
+      this.reactToAppearance(data);
+    });
   }
 
   defaults() {
@@ -79,6 +91,17 @@ export default class Profile extends BaseModel<IProfile> {
 
   urlRoot = () => `${BASE_ROOT}/user`;
 
+  reactToAppearance = ({ event, user_id, appearing_on }: AppearanceData) => {
+    console.log(event, user_id, appearing_on);
+    if (user_id === this.get("id")) {
+      console.log("update profile", event, user_id, appearing_on);
+      this.set({
+        is_present: event === "appear" ? true : false,
+        appearing_on,
+      });
+    }
+  };
+
   createNotificationsConsumer() {
     const user_id = this.get("id");
     return consumer.subscriptions.create(
@@ -88,6 +111,7 @@ export default class Profile extends BaseModel<IProfile> {
           //console.log("connected to", user_id);
         },
         received: (notification: INotification) => {
+          console.log("new notification", notification);
           this.checkDmCreationNotification(notification);
           this.notifications.add(notification);
         },
@@ -151,6 +175,7 @@ const fetchCurrentUser = () => {
   memoizedUser.fetch({
     success: () => {
       memoizedUser.channel = memoizedUser.createNotificationsConsumer();
+      memoizedUser.appearanceChannel = createAppereanceConsumer();
     },
   });
 };
@@ -167,7 +192,9 @@ export const currentUser = (fetch = false): Profile => {
 };
 
 export const logoutUser = () => {
+  console.log("logout user");
   clearAuthHeaders();
-  memoizedUser?.channel?.unsubscribe();
+  consumer.disconnect();
+  memoizedUser?.off("appearance");
   memoizedUser = undefined;
 };

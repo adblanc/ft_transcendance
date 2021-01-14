@@ -1,7 +1,7 @@
 import Backbone from "backbone";
+import { currentUser } from "./models/Profile";
 import MainRouter from "./routers/MainRouter";
 import { addAuthHeaders, catchNavigation } from "./utils";
-import { appearanceChannel } from "../channels/appearance_channel";
 
 export function start() {
   const token = localStorage.getItem("tokenAuth") || "";
@@ -21,7 +21,9 @@ export function start() {
   });
   router.on("route", (page) => {
     if (page === "game/:id") {
-      appearanceChannel.perform("appear", { appearing_on: "in game" });
+      currentUser().appearanceChannel.perform("appear", {
+        appearing_on: "in game",
+      });
     } // il faudrait reset le "en jeu" apres avoir fini la partie pas ici je pense
   });
 

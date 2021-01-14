@@ -118,7 +118,7 @@ $chatInputHeight: 4rem;
 }
 
 .presence-bg {
-  @apply absolute bottom-0 right-0 rounded-full h-4 w-4 bg-teal-500 mr-2 mb-2 flex items-center justify-center;
+  @apply absolute bottom-0 right-0 rounded-full h-4 w-4 bg-transparent mr-2 mb-2 flex items-center justify-center;
 }
 
 .presence {

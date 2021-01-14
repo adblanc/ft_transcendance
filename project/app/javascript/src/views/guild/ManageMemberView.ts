@@ -1,28 +1,24 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
-import Profile from "src/models/Profile";
+import Profile, { currentUser } from "src/models/Profile";
 import Guild, { GUILD_ACTION } from "src/models/Guild";
 import { displaySuccess } from "src/utils";
 
 type Options = Backbone.ViewOptions<Profile> & {
   guild: Guild;
-  loggedIn: Profile;
 };
 
 export default class ManageMemberView extends ModalView<Profile> {
   guild: Guild;
-  loggedIn: Profile;
 
   constructor(options?: Options) {
     super(options);
 
     this.guild = options.guild;
-    this.loggedIn = options.loggedIn;
     this.listenTo(this.model, "change", this.render);
     this.listenTo(this.model, "add", this.render);
     this.listenTo(this.guild, "change", this.render);
-    this.listenTo(this.loggedIn, "change", this.render);
     this.listenTo(this.guild.get("members"), "update", this.render);
   }
 
@@ -62,7 +58,7 @@ export default class ManageMemberView extends ModalView<Profile> {
         );
     }
     this.guild.fetch();
-    this.loggedIn.fetch();
+    currentUser().fetch();
     this.closeModal();
   }
 

@@ -1,13 +1,14 @@
-import consumer from "./consumer";
+import consumer from "channels/consumer";
+import { eventBus } from "src/events/EventBus";
 
-type Data = {
+export type AppearanceData = {
   event: "disappear" | "appear";
   user_id: number;
+  appearing_on: string;
 };
 
-export const appearanceChannel = consumer.subscriptions.create(
-  "AppearanceChannel",
-  {
+export const createAppereanceConsumer = () => {
+  return consumer.subscriptions.create("AppearanceChannel", {
     connected() {
       console.log("Connected to appearance");
     },
@@ -18,9 +19,10 @@ export const appearanceChannel = consumer.subscriptions.create(
       console.log("Disconnected from appearance");
     },
 
-    received(data: Data) {
+    received(data: AppearanceData) {
       console.log("received: ", data);
+      eventBus.trigger("appeareance", data);
       // Called when there's incoming data on the websocket for this channel
     },
-  }
-);
+  });
+};

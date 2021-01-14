@@ -1,4 +1,5 @@
-json.extract! user, :id, :login, :email, :two_fact_auth, :name, :contribution, :is_present, :appearing_on, :created_at, :updated_at
+json.extract! user, :id, :login, :email, :two_fact_auth, :name, :contribution, :appearing_on, :created_at, :updated_at
+json.is_present true
 json.avatar_url url_for(user.avatar) if user.avatar.attached?
 json.guild_role user.guild_role?
 json.admin user.admin?
@@ -11,6 +12,8 @@ if user.guild_role?
 		json.atWar user.guild.atWar?
 		json.warInitiator user.guild.warInitiator?
 	end
+else
+	json.guild nil
 end
 if user.pending_guild?
   json.pending_guild do

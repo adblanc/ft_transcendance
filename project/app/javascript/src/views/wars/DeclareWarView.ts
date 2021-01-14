@@ -2,29 +2,25 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
 import Guild from "src/models/Guild";
-import Profile from "src/models/Profile";
+import { currentUser } from "src/models/Profile";
 import War from "src/models/War";
 import { displayError, displaySuccess } from "src/utils/toast";
 const flatpickr = require("flatpickr");
-require("flatpickr/dist/flatpickr.css")
+require("flatpickr/dist/flatpickr.css");
 
 type Options = Backbone.ViewOptions<War> & {
-	guild: Guild, 
-	profile: Profile;
- };
+  guild: Guild;
+};
 
 export default class DeclareWarView extends ModalView<War> {
-	profile: Profile;
-	guild: Guild;
-	fp_start: typeof flatpickr;
-	fp_end: typeof flatpickr;
+  guild: Guild;
+  fp_start: typeof flatpickr;
+  fp_end: typeof flatpickr;
 
   constructor(options?: Options) {
-	super(options);
-	
-	this.profile = options.profile;
-	this.guild = options.guild;
+    super(options);
 
+    this.guild = options.guild;
   }
 
   events() {
@@ -32,25 +28,36 @@ export default class DeclareWarView extends ModalView<War> {
   }
 
   async onSubmit(e: JQuery.Event) {
-	e.preventDefault();
-	
-	const dateTimeStart = this.fp_start.selectedDates[0];
+    e.preventDefault();
+
+    const dateTimeStart = this.fp_start.selectedDates[0];
     const dateTimeEnd = this.fp_end.selectedDates[0];
-	const start = dateTimeStart; 
-	const end = dateTimeEnd;
-	const prize = this.$("#input-prize").val() as string;
-	const answer_time = this.$("#answer-time").val() as string;
-	const max_calls = this.$("#max-calls").val() as string;
+    const start = dateTimeStart;
+    const end = dateTimeEnd;
+    const prize = this.$("#input-prize").val() as string;
+    const answer_time = this.$("#answer-time").val() as string;
+    const max_calls = this.$("#max-calls").val() as string;
 
-	const initiator_id = this.profile.get("guild").get("id");
-	const recipient_id = this.guild.get("id");
+    const initiator_id = currentUser().get("guild").get("id");
+    const recipient_id = this.guild.get("id");
 
-	if (parseInt(prize) > this.profile.get("guild").get("points") || parseInt(prize) > this.guild.get("points")) {
-		displayError("One or both guilds cannot wager that many points");
-		return;
-	}
+    if (
+      parseInt(prize) > currentUser().get("guild").get("points") ||
+      parseInt(prize) > this.guild.get("points")
+    ) {
+      displayError("One or both guilds cannot wager that many points");
+      return;
+    }
 
-    const success = await this.model.createWar(start, end, prize, answer_time, max_calls, initiator_id, recipient_id);
+    const success = await this.model.createWar(
+      start,
+      end,
+      prize,
+      answer_time,
+      max_calls,
+      initiator_id,
+      recipient_id
+    );
     if (success) {
       this.warSaved();
     }
@@ -69,22 +76,22 @@ export default class DeclareWarView extends ModalView<War> {
     super.render();
     const template = $("#warFormTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
-	this.$content.html(html);
-	
-	this.fp_start = flatpickr(this.$("#input-start-date"), {
-		enableTime: true,
-		dateFormat: "Y-m-d H:i",
-		minuteIncrement: 1,
-		static: true,
-		minDate: new Date(),
-	});
-	this.fp_end = flatpickr(this.$("#input-end-date"), {
-		enableTime: true,
-		dateFormat: "Y-m-d H:i",
-		minuteIncrement: 1,
-		static: true,
-		minDate: new Date(),
-	});
+    this.$content.html(html);
+
+    this.fp_start = flatpickr(this.$("#input-start-date"), {
+      enableTime: true,
+      dateFormat: "Y-m-d H:i",
+      minuteIncrement: 1,
+      static: true,
+      minDate: new Date(),
+    });
+    this.fp_end = flatpickr(this.$("#input-end-date"), {
+      enableTime: true,
+      dateFormat: "Y-m-d H:i",
+      minuteIncrement: 1,
+      static: true,
+      minDate: new Date(),
+    });
     return this;
   }
 }
