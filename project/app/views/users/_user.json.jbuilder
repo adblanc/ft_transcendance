@@ -24,12 +24,15 @@ if user.pending_guild?
 	end
 end
 
-
+json.friends do
+	json.array! user.friends do |friend|
+		json.partial! "users/userSnippet", user: friend
+	end
+end
 
 json.blocked_users do
-  json.array! user.blocked_users do |blocked_user|
-  json.extract! blocked_user, :id, :login
-  json.avatar_url url_for(blocked_user.avatar) if blocked_user.avatar.attached?
-  end
-  end
+	json.array! user.blocked_users do |blocked_user|
+		json.partial! "users/userSnippet", user: blocked_user
+	end
+end
 
