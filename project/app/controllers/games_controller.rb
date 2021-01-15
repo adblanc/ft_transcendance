@@ -1,6 +1,10 @@
 
 class GamesController < ApplicationController
 
+	def index
+		@games = Game.all
+	end
+
     def show
         @game = Game.find_by_id(params[:id])
         return head :not_found unless @game
@@ -31,10 +35,11 @@ class GamesController < ApplicationController
 		@player = GameUser.where(id: params[:user_id])
 		@player.points.increment!
 		if @player.points == @game.goal
-			@game.update(:status :finished)
+			@game.update(status: :finished)
+		end
     end
     
-private
+	private
     def game_params
         params.permit(:level, :goal)
     end

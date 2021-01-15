@@ -64,7 +64,7 @@ export default class CreateGameView extends ModalView<Game> {
   render() {
     super.render();
     const template = $("#gameFormTemplate").html();
-    const html = Mustache.render(template, this.model.toJSON());
+    const html = Mustache.render(template);
     this.$content.html(html);
     return this;
   }
