@@ -1,6 +1,6 @@
 import Backbone from "backbone";
 import _ from "underscore";
-import Profile from "src/models/Profile";
+import Profile, { currentUser } from "src/models/Profile";
 import Profiles from "src/collections/Profiles";
 import { displaySuccess, mapServerErrors, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
@@ -76,14 +76,14 @@ export default class Game extends BaseModel<IGame> {
 
   createGame(attrs: CreatableGameArgs) {
     if (!this.currentUserId) {
-      this.currentUserId = parseInt($("#current-user-profile").data("id"));
+      this.currentUserId = currentUser().get("id");
     }
     this.first = this.currentUserId;
     return this.asyncSave(attrs, { url: this.urlRoot() });
   }
   join() {
     if (!this.currentUserId) {
-      this.currentUserId = parseInt($("#current-user-profile").data("id"));
+      this.currentUserId = currentUser().get("id");
     }
     if (this.currentUserId == this.get("first")) {
       displaySuccess("You already create this game");
@@ -123,9 +123,7 @@ export default class Game extends BaseModel<IGame> {
         received: (mouv: IMouvement) => {
           console.log(JSON.stringify(mouv));
           if (!this.currentUserId) {
-            this.currentUserId = parseInt(
-              $("#current-user-profile").data("id")
-            );
+            this.currentUserId = currentUser().get("id");
           }
           this.model.set(mouv);
           if (this.currentUserId === this.model.get("user_id")) {

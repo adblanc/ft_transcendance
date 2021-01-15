@@ -1,20 +1,12 @@
 json.partial! "guilds/guild", guild: @guild
 json.members do
   json.array! @guild.members do |member|
-     json.id member.id
-	 json.name member.name
-	 json.avatar_url url_for(member.avatar) if member.avatar.attached?
-	 json.guild_role member.guild_role?
-	 json.contribution member.contribution
+	json.partial! "guilds/guildMember", member: member
   end
 end
 json.pending_members do
   json.array! @guild.pending_members do |pending_member|
-     json.id pending_member.id
-	 json.name pending_member.name
-	 json.avatar_url url_for(pending_member.avatar) if pending_member.avatar.attached?
-	 json.guild_role pending_member.guild_role?
-	 json.contribution pending_member.contribution
+    json.partial! "guilds/guildMember", member: pending_member
   end
 end
 json.wars do
@@ -27,7 +19,7 @@ json.wars do
 		json.time_to_answer war.time_to_answer
 		json.max_unanswered_calls war.max_unanswered_calls
 		json.atWarTime war.atWarTime?
-		json.warOpponent do 
+		json.warOpponent do
 			json.id  @guild.warOpponent(war).id
 			json.points  @guild.warOpponent(war).points
 			json.name  @guild.warOpponent(war).name
@@ -45,7 +37,7 @@ json.pendingWars do
 		json.time_to_answer pendingWar.time_to_answer
 		json.max_unanswered_calls pendingWar.max_unanswered_calls
 		json.inc_tour pendingWar.inc_tour
-		json.warOpponent do 
+		json.warOpponent do
 			json.id  @guild.warOpponent(pendingWar).id
 			json.points  @guild.warOpponent(pendingWar).points
 			json.name  @guild.warOpponent(pendingWar).name

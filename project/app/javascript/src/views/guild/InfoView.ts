@@ -2,17 +2,16 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "src/lib/BaseView";
 import PageImgView from "./imgsViews/PageImgView";
-import Profile from "src/models/Profile";
+import { currentUser } from "src/models/Profile";
 import Guild from "src/models/Guild";
 import ModifyGuildView from "./ModifyGuildView";
 import DeclareWarView from "../wars/DeclareWarView";
 import { displaySuccess } from "src/utils";
 import War from "src/models/War";
 
-type Options = Backbone.ViewOptions & { guild: Guild; profile: Profile };
+type Options = Backbone.ViewOptions & { guild: Guild };
 
 export default class InfoView extends BaseView {
-  profile: Profile;
   guild: Guild;
   imgView: Backbone.View;
 
@@ -20,14 +19,13 @@ export default class InfoView extends BaseView {
     super(options);
 
     this.guild = options.guild;
-    this.profile = options.profile;
     this.imgView = new PageImgView({
       model: this.guild,
     });
 
     this.listenTo(this.guild, "change", this.render);
-	this.listenTo(this.profile, "change", this.render);
-	this.listenTo(this.guild.get("members"), "update", this.render);
+    this.listenTo(this.guild.get("members"), "update", this.render);
+    this.listenTo(currentUser(), "change", this.render);
   }
 
   events() {
@@ -35,8 +33,8 @@ export default class InfoView extends BaseView {
       "click #edit-btn": "onEditClicked",
       "click #quit-btn": "onQuitClicked",
       "click #join-btn": "onJoinClicked",
-	  "click #withdraw-btn": "onWithdrawClicked",
-	  "click #war-btn": "onWarClicked",
+      "click #withdraw-btn": "onWithdrawClicked",
+      "click #war-btn": "onWarClicked",
     };
   }
 
@@ -58,7 +56,7 @@ export default class InfoView extends BaseView {
   guildQuit() {
     displaySuccess(`You successfully left ${this.guild.get("name")}.`);
     this.guild.fetch();
-    this.profile.fetch();
+    currentUser().fetch();
     if (this.guild.get("members").length == 0) {
       displaySuccess(
         `You were the only member of ${this.guild.get(
@@ -66,7 +64,7 @@ export default class InfoView extends BaseView {
         )}, so the guild was destroyed.`
       );
       return Backbone.history.navigate("/", { trigger: true });
-    } else if (this.profile.get("guild_role") == "Owner") {
+    } else if (currentUser().get("guild_role") == "Owner") {
       displaySuccess(
         `Your owner privileges were transferred to ${this.guild.get(
           "name"
@@ -87,7 +85,7 @@ export default class InfoView extends BaseView {
       `You have sent a join request to ${this.guild.get("name")}. `
     );
     this.guild.fetch();
-    this.profile.fetch();
+    currentUser().fetch();
   }
 
   async onWithdrawClicked() {
@@ -103,22 +101,20 @@ export default class InfoView extends BaseView {
       `You have withdrawn your request to join ${this.guild.get("name")}. `
     );
     this.guild.fetch();
-    this.profile.fetch();
+    currentUser().fetch();
   }
 
   onWarClicked() {
-	const war = new War();
+    const war = new War();
     const declareWarView = new DeclareWarView({
-	  model: war,
-	  guild: this.guild,
-	  profile : this.profile,
+      model: war,
+      guild: this.guild,
     });
 
     declareWarView.render();
   }
 
   render() {
-
     const template = $("#infoTemplate").html();
     const html = Mustache.render(template, this.guild.toJSON());
     this.$el.html(html);
@@ -128,44 +124,43 @@ export default class InfoView extends BaseView {
     const $elementwar = this.$("#war");
     const $elementjoin = this.$("#join");
 
-    if (this.profile.get("guild")) {
+    console.log("render", currentUser().toJSON());
+
+    if (currentUser().get("guild")) {
       if (
-        this.profile.get("guild").get("id") === this.guild.get("id") &&
-        this.profile.get("guild_role") === "Owner"
+        currentUser().get("guild").get("id") === this.guild.get("id") &&
+        currentUser().get("guild_role") === "Owner"
       ) {
         $elementedit.show();
       }
-      if (this.profile.get("guild").get("id") === this.guild.get("id")) {
+      if (currentUser().get("guild").get("id") === this.guild.get("id")) {
         $elementquit.show();
-      } else if (this.profile.get("guild_role") === "Owner"){
+      } else if (currentUser().get("guild_role") === "Owner") {
         $elementwar.show();
       }
     } else {
       $elementjoin.show();
-	}
+    }
 
     if (this.guild.get("atWar")) {
       this.$("#war-btn").addClass("btn-war-disabled");
       this.$("#war-btn").html("This Guild is at war");
-	}
-	else if (this.guild.get("warInitiator")) {
-		this.$("#war-btn").addClass("btn-war-disabled");
-		this.$("#war-btn").html("This Guild has initiated a war");
-	}
-	else if (this.profile.get("guild")) {
-			if (this.profile.get("guild").get("atWar")) {
-			this.$("#war-btn").addClass("btn-war-disabled");
-			this.$("#war-btn").html("Your Guild is at war");
-		}
-		else if (this.profile.get("guild").get("warInitiator")) {
-			this.$("#war-btn").addClass("btn-war-disabled");
-			this.$("#war-btn").html("Your Guild has initiated a war");
-		}
-	}
+    } else if (this.guild.get("warInitiator")) {
+      this.$("#war-btn").addClass("btn-war-disabled");
+      this.$("#war-btn").html("This Guild has initiated a war");
+    } else if (currentUser().get("guild")) {
+      if (currentUser().get("guild").get("atWar")) {
+        this.$("#war-btn").addClass("btn-war-disabled");
+        this.$("#war-btn").html("Your Guild is at war");
+      } else if (currentUser().get("guild").get("warInitiator")) {
+        this.$("#war-btn").addClass("btn-war-disabled");
+        this.$("#war-btn").html("Your Guild has initiated a war");
+      }
+    }
 
-    if (this.profile.get("pending_guild")) {
+    if (currentUser().get("pending_guild")) {
       if (
-        this.profile.get("pending_guild").get("id") === this.guild.get("id")
+        currentUser().get("pending_guild").get("id") === this.guild.get("id")
       ) {
         this.$("#join-btn").css("font-size", 15 + "px");
         this.$("#join-btn").html("Withdraw your join request");

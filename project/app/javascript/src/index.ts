@@ -1,4 +1,5 @@
 import Backbone from "backbone";
+import { currentUser } from "./models/Profile";
 import MainRouter from "./routers/MainRouter";
 import { addAuthHeaders, catchNavigation } from "./utils";
 
@@ -17,6 +18,13 @@ export function start() {
         router.navigate("denied", { trigger: true });
       },
     },
+  });
+  router.on("route", (page) => {
+    if (page === "game/:id") {
+      currentUser().appearanceChannel.perform("appear", {
+        appearing_on: "in game",
+      });
+    } // il faudrait reset le "en jeu" apres avoir fini la partie pas ici je pense
   });
 
   $(document).ready(() => {

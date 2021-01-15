@@ -5,6 +5,7 @@ import User from "src/models/User";
 import BaseView from "src/lib/BaseView";
 import { eventBus } from "src/events/EventBus";
 import { currentUser } from "src/models/Profile";
+import { displaySuccess } from "src/utils";
 
 type Options = Backbone.ViewOptions & { userId: number };
 
@@ -23,13 +24,23 @@ export default class UserView extends BaseView {
   events() {
     return {
       "click #send-dm": this.onClickSendDm,
+      "click #add-friend": this.onAddFriend,
     };
   }
 
   onClickSendDm() {
-    console.log("send dm", this.user.get("id"));
     eventBus.trigger("chat:open");
     eventBus.trigger("chat:go-to-dm", this.user.get("id"));
+  }
+
+  async onAddFriend() {
+    const success = await currentUser().addFriend(this.user.get("id"));
+
+    if (success) {
+      displaySuccess(
+        `Your invitation has been sent to ${this.user.get("login")}`
+      );
+    }
   }
 
   onFetchError() {

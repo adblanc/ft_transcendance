@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_11_143304) do
+ActiveRecord::Schema.define(version: 2021_01_15_160004) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,13 @@ ActiveRecord::Schema.define(version: 2021_01_11_143304) do
   create_table "blocks", force: :cascade do |t|
     t.integer "user_id"
     t.integer "blocked_user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "friendships", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "friend_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -185,6 +192,8 @@ ActiveRecord::Schema.define(version: 2021_01_11_143304) do
     t.string "tfa_id", default: "", null: false
     t.integer "tfa_error_nb", default: 0, null: false
     t.integer "tfa_time", default: 0, null: false
+    t.boolean "is_present", default: false
+    t.string "appearing_on"
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["name"], name: "index_users_on_name", unique: true
   end

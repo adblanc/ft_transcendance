@@ -4,12 +4,11 @@ import Profiles from "src/collections/Profiles";
 import MemberView from "./MemberView";
 import PendingView from "./PendingView";
 import Guild from "src/models/Guild";
-import Profile from "src/models/Profile";
+import Profile, { currentUser } from "src/models/Profile";
 
-type Options = Backbone.ViewOptions & { guild: Guild; profile: Profile };
+type Options = Backbone.ViewOptions & { guild: Guild };
 
 export default class MembersView extends Backbone.View {
-  profile: Profile;
   profiles: Profiles;
   guild: Guild;
   max: number;
@@ -19,21 +18,19 @@ export default class MembersView extends Backbone.View {
     super(options);
 
     this.guild = options.guild;
-    this.profile = options.profile;
-	this.profiles = this.guild.get("members");
-	this.profiles.sort();
-	this.max = 5;
+    this.profiles = this.guild.get("members");
+    this.profiles.sort();
+    this.max = 5;
 
     this.listenTo(this.guild, "change", this.render);
-    this.listenTo(this.profile, "change", this.render);
-	this.listenTo(this.profiles, "update", this.render);
-	this.listenTo(this.profiles, "sort", this.render);
+    this.listenTo(this.profiles, "update", this.render);
+    this.listenTo(this.profiles, "sort", this.render);
   }
 
   events() {
     return {
-	  "click #pending-btn": "onPendingClicked",
-	  'click #load-more': 'onLoadMore'
+      "click #pending-btn": "onPendingClicked",
+      "click #load-more": "onLoadMore",
     };
   }
 
@@ -46,25 +43,24 @@ export default class MembersView extends Backbone.View {
   }
 
   renderMember(member: Profile) {
-	var memberView = new MemberView({
-		model: member,
-		loggedIn: this.profile,
-		guild: this.guild,
-	  });
-	  this.$("#listing").append(memberView.render().el);
+    var memberView = new MemberView({
+      model: member,
+      guild: this.guild,
+    });
+    this.$("#listing").append(memberView.render().el);
   }
 
   onLoadMore() {
-	  var members = this.profiles.models.slice(this.count, this.count + this.max);
-	  if(members.length) {
-			members.forEach(function (item) {
-				this.renderMember(item);
-			}, this);
-		  	this.count += members.length;
-	  } 
-	  if (this.count == this.profiles.length) {
-		  this.$("#load-more").hide();
-	  }
+    var members = this.profiles.models.slice(this.count, this.count + this.max);
+    if (members.length) {
+      members.forEach(function (item) {
+        this.renderMember(item);
+      }, this);
+      this.count += members.length;
+    }
+    if (this.count == this.profiles.length) {
+      this.$("#load-more").hide();
+    }
   }
 
   render() {
@@ -72,11 +68,11 @@ export default class MembersView extends Backbone.View {
     const html = Mustache.render(template, this.guild.toJSON());
     this.$el.html(html);
 
-    if (this.profile.get("guild")) {
+    if (currentUser().get("guild")) {
       if (
-        this.profile.get("guild").get("id") === this.guild.get("id") &&
-        (this.profile.get("guild_role") === "Owner" ||
-          this.profile.get("guild_role") === "Officer")
+        currentUser().get("guild").get("id") === this.guild.get("id") &&
+        (currentUser().get("guild_role") === "Owner" ||
+          currentUser().get("guild_role") === "Officer")
       ) {
         this.$("#pending").show();
       }
@@ -88,14 +84,14 @@ export default class MembersView extends Backbone.View {
       }
     }
 
-	var members = this.profiles.first(this.max);
-	members.forEach(function (item) {
-		this.renderMember(item);
-	}, this);
-	this.count = members.length;
-	if (this.count == this.profiles.length) {
-		this.$("#load-more").hide();
-	}
+    var members = this.profiles.first(this.max);
+    members.forEach(function (item) {
+      this.renderMember(item);
+    }, this);
+    this.count = members.length;
+    if (this.count == this.profiles.length) {
+      this.$("#load-more").hide();
+    }
 
     return this;
   }

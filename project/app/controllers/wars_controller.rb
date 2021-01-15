@@ -124,7 +124,8 @@ class WarsController < ApplicationController
 		return head :unauthorized if not @guild.atWar? && @opponent.atWar?
 		return head :unauthorized if @war.atWarTime?
 
-		@war_time = WarTime.create!(war: @war, start: DateTime.now, end: params[:end], time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
+		@war_time = WarTime.create(war: @war, start: DateTime.now, end: params[:end], time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
+
 		if @war_time.save
 			@guild.members.each do |member|
 				member.send_notification("War time has just started with #{@opponent.name}! Take your slots!", "/wars", "war")

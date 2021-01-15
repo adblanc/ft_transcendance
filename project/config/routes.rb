@@ -43,6 +43,9 @@ Rails.application.routes.draw do
     end
     end
 
+    put "/add_friend/:id", to: "friendships#add";
+    put "/remove_friend/:id", to: "friendships#remove";
+
     resources :room_messages
     resources :rooms, only: [:show, :index, :create, :update]
     get 'my-rooms', to: 'rooms#my_rooms'
