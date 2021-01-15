@@ -11,18 +11,15 @@ import IMouvement from "src/models/Mouvement";
 import Mouvements from "src/collections/Mouvements";
 
 interface IGame {
-  id?: string;
+  id: string;
   level: string;
-  points: number;
+  goal: number;
   status: string;
-  user: Profiles;
-  first: number;
-  button: number;
-  //player_points: number;
+  users: Profiles;
 }
 
 type CreatableGameArgs = Partial<
-  Pick<IGame, "id" | "points" | "level" | "status" | "first" | "button">
+  Pick<IGame, "id" | "goal" | "level">
 >;
 
 export default class Game extends BaseModel<IGame> {
@@ -36,7 +33,7 @@ export default class Game extends BaseModel<IGame> {
     this.relations = [
       {
         type: Backbone.Many,
-        key: "user",
+        key: "users",
         collectionType: Profiles,
         relatedModel: Profile,
       },
@@ -57,13 +54,7 @@ export default class Game extends BaseModel<IGame> {
 
   defaults() {
     return {
-      level: "",
-      points: 0,
-      status: "waiting",
-      user: [],
-      second: false,
-      button: 0,
-      //player_points: 0,
+      users: [],
     };
   }
 
@@ -75,44 +66,15 @@ export default class Game extends BaseModel<IGame> {
   }
 
   createGame(attrs: CreatableGameArgs) {
-    if (!this.currentUserId) {
-      this.currentUserId = parseInt($("#current-user-profile").data("id"));
-    }
-    this.first = this.currentUserId;
     return this.asyncSave(attrs, { url: this.urlRoot() });
   }
-  join() {
-    if (!this.currentUserId) {
-      this.currentUserId = parseInt($("#current-user-profile").data("id"));
-    }
-    if (this.currentUserId == this.get("first")) {
-      displaySuccess("You already create this game");
-      return 0;
-    }
-    this.second = true;
-    return this.asyncSave(
-      { status: "playing", second: true },
-      { url: `${this.baseGameRoot()}/join` }
-    );
-  }
 
-  finish(g_points: number) {
-    const success = this.asyncSave(
-      { status: "finished", points: g_points },
-      { url: `${this.baseGameRoot()}/finish` }
-    );
-    if (success) {
-      this.channel.unsubscribe();
-    }
-    return success;
+  score(user_id: string) {
+    return this.asyncSave(user_id, { url: this.baseGameRoot() });
   }
 
   createConsumer() {
     const game_id = this.get("id");
-
-    if (game_id === undefined) {
-      return undefined;
-    }
 
     return consumer.subscriptions.create(
       { channel: "GamingChannel", game_id },

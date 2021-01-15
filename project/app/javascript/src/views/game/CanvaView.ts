@@ -178,3 +178,10 @@ export default class CanvaView extends ModalView<Rectangle> {
   //     return this;
   //   }
 }
+
+/*var canvaView = new CanvaView({
+	model: rectangle,
+	});
+	var rectangle = new Rectangle(0, 0, 480, 480);
+  var canvas = document.createElement("canvas");*/
+  

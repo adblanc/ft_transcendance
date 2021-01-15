@@ -64,25 +64,21 @@ ActiveRecord::Schema.define(version: 2021_01_11_143304) do
   end
 
   create_table "game_users", force: :cascade do |t|
-    t.bigint "game_id"
-    t.bigint "user_id"
+    t.bigint "war_id"
+    t.bigint "guild_id"
     t.integer "points", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["game_id"], name: "index_game_user_on_game_id"
-    t.index ["user_id"], name: "index_game_user_on_user_id"
+    t.index ["guild_id"], name: "index_game_users_on_guild_id"
+    t.index ["war_id"], name: "index_game_users_on_war_id"
   end
 
   create_table "games", force: :cascade do |t|
-    t.bigint "user_id"
     t.string "level"
-    t.integer "points"
-    t.string "status"
-    t.integer "first"
-    t.boolean "second"
+    t.integer "goal", default: 3
+    t.string "status", default: "0"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_games_on_user_id"
   end
 
   create_table "games_users", id: false, force: :cascade do |t|
@@ -223,6 +219,8 @@ ActiveRecord::Schema.define(version: 2021_01_11_143304) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "game_users", "guilds"
+  add_foreign_key "game_users", "wars"
   add_foreign_key "guild_users", "guilds"
   add_foreign_key "guild_users", "users"
   add_foreign_key "guild_wars", "guilds"

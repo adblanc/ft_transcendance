@@ -19,7 +19,6 @@ type Options = Backbone.ViewOptions & { game: Game };
 var canvaView = new CanvaView({
    model: rectangle,});
   var rectangle = new Rectangle(0, 0, 480, 480);
-var points: number = 2;
 
 export default class GameView extends BaseView {
   canvaView: CanvaView;
@@ -78,10 +77,10 @@ export default class GameView extends BaseView {
         this.listenTo(this.game.model, "change:score_one", this.change_score_one);
         this.listenTo(this.game.model, "change:score_two", this.change_score_two);
         this.listenTo(this.game.model, "change:ball_x", this.canva_render_ball);
-        this.joueurs = this.game.get("user");
+        this.joueurs = this.game.get("users");
         var j_str = this.joueur_un.get("name") as string;
         var player = this.joueurs.findWhere({"name": j_str})
-        this.canvas = canvaView.init('#AAA', this.player_one, this.game.get("points"), this.game.get("level"), this.player_two, this.game.get("id"));
+        this.canvas = canvaView.init('#AAA', this.player_one, this.game.get("goal"), this.game.get("level"), this.player_two, this.game.get("id"));
         //var canvas = canvaView.init(this.canvas.height, this.canvas.width, '#EEE', this.player_one, this.game.get("points"), this.game.get("level"), this.player_two);
         //canvas.addEventListener('mousemove', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
        // window.addEventListener('keydown', event => { const e = event as KeyboardEvent; this.keyBoardClicked(-1);}, false);
@@ -89,7 +88,7 @@ export default class GameView extends BaseView {
         {
           displaySuccess("You can play");
           window.addEventListener('keydown', event => { const e = event as KeyboardEvent; this.keyBoardClicked(e);}, false);
-          if (this.game.get("first") != this.joueur_un.get("id"))
+          if (this.game.get("users").get(0) != this.joueur_un.get("id"))
           {
             var inter_game = setInterval(this.game_draw,150, this.game, this.joueur_un); //arreter au bout d'un moment
           }
@@ -105,7 +104,7 @@ export default class GameView extends BaseView {
 
       canva_render_scale()
       {
-        if ((this.game.model.get("user_id") == this.joueur_un.get("id") && this.game.get("first") == this.joueur_un.get("id")) || (this.game.model.get("user_id") != this.joueur_un.get("id") && this.game.get("first") != this.joueur_un.get("id")))
+        if ((this.game.model.get("user_id") == this.joueur_un.get("id") && this.game.get("users").get(0) == this.joueur_un.get("id")) || (this.game.model.get("user_id") != this.joueur_un.get("id") && this.game.get("users").get(0) != this.joueur_un.get("id")))
         {
           if (Number(this.game.model.get("scale")) < 0)
           {
@@ -123,7 +122,7 @@ export default class GameView extends BaseView {
             }
           }
         }
-        else if ((this.game.model.get("user_id") != this.joueur_un.get("id") && this.game.get("first") == this.joueur_un.get("id")) || (this.game.model.get("user_id") == this.joueur_un.get("id") && this.game.get("first") != this.joueur_un.get("id")))
+        else if ((this.game.model.get("user_id") != this.joueur_un.get("id") && this.game.get("users").get(0) == this.joueur_un.get("id")) || (this.game.model.get("user_id") == this.game.get("users").get(0) && this.game.get("users").get(0) != this.joueur_un.get("id")))
         {
           if (Number(this.game.model.get("scale")) < 0)
           {
@@ -147,9 +146,9 @@ export default class GameView extends BaseView {
       change_score_one()
       {
         document.querySelector('#computer-score').textContent = String(this.game.model.get("score_one"));
-        if (this.game.model.get("score_one") >= this.game.get("points"))
+        if (this.game.model.get("score_one") >= this.game.get("goal"))
         {
-          if (this.game.get("first") == this.joueur_un.get("id"))
+          if (this.game.get("users").get(0) == this.joueur_un.get("id"))
             { 
               this.g_points = canvaView.player_one.score;
             }
@@ -158,7 +157,6 @@ export default class GameView extends BaseView {
               this.g_points = canvaView.player_two.score;
             }
             canvaView.stop();
-            this.game.finish(this.g_points);
             window.location.reload();
       }
     }
@@ -166,9 +164,9 @@ export default class GameView extends BaseView {
       change_score_two()
       {
         document.querySelector('#player-score').textContent = String(this.game.model.get("score_two"));
-        if (this.game.model.get("score_two") >= this.game.get("points"))
+        if (this.game.model.get("score_two") >= this.game.get("goal"))
         {
-        if (this.game.get("first") == this.joueur_un.get("id"))
+        if (this.game.get("users").get(0) == this.joueur_un.get("id"))
           
           { 
             displaySuccess("You lost");
@@ -179,7 +177,6 @@ export default class GameView extends BaseView {
             this.g_points = canvaView.player_two.score;
           }
           canvaView.stop();
-          this.game.finish(this.g_points);
           window.location.reload();
         }
       }
