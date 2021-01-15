@@ -118,7 +118,7 @@ $chatInputHeight: 4rem;
 }
 
 .presence-bg {
-  @apply absolute bottom-0 right-0 rounded-full h-4 w-4 bg-transparent mr-2 mb-2 flex items-center justify-center;
+  @apply absolute bottom-0 right-0 rounded-full h-4 w-4 mr-2 mb-2 flex items-center justify-center;
 }
 
 .presence {
@@ -133,4 +133,17 @@ $chatInputHeight: 4rem;
     @extend .presence;
     @apply bg-red-600;
   }
+}
+
+.tooltip .tooltip-text {
+  visibility: hidden;
+  text-align: center;
+  position: absolute;
+  z-index: 100;
+
+  @apply text-sm;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
 }

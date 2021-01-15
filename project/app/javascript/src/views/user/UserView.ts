@@ -27,7 +27,6 @@ export default class UserView extends BaseView {
   }
 
   onClickSendDm() {
-    console.log("send dm", this.user.get("id"));
     eventBus.trigger("chat:open");
     eventBus.trigger("chat:go-to-dm", this.user.get("id"));
   }

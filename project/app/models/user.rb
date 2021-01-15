@@ -104,7 +104,7 @@ class User < ApplicationRecord
 	end
 
 	def disappear
-		self.update_attributes(is_present: false, appearing_on: nil);
+		self.update_attributes(is_present: false, appearing_on: "offline");
 
 		ActionCable.server.broadcast("appearance_channel", event: "disappear", user_id: self.id);
 	end

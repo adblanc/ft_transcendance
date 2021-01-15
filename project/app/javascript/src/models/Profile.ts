@@ -72,10 +72,7 @@ export default class Profile extends BaseModel<IProfile> {
   initialize() {
     this.notifications = new Notifications();
     //this.channel = this.createConsumer();
-    this.listenTo(eventBus, "appeareance", (data) => {
-      console.log("react to appearance");
-      this.reactToAppearance(data);
-    });
+    this.listenTo(eventBus, "appeareance", this.reactToAppearance);
   }
 
   defaults() {
@@ -92,9 +89,8 @@ export default class Profile extends BaseModel<IProfile> {
   urlRoot = () => `${BASE_ROOT}/user`;
 
   reactToAppearance = ({ event, user_id, appearing_on }: AppearanceData) => {
-    console.log(event, user_id, appearing_on);
+    console.log("profile react to appearance");
     if (user_id === this.get("id")) {
-      console.log("update profile", event, user_id, appearing_on);
       this.set({
         is_present: event === "appear" ? true : false,
         appearing_on,
@@ -111,7 +107,6 @@ export default class Profile extends BaseModel<IProfile> {
           //console.log("connected to", user_id);
         },
         received: (notification: INotification) => {
-          console.log("new notification", notification);
           this.checkDmCreationNotification(notification);
           this.notifications.add(notification);
         },
@@ -174,6 +169,7 @@ let memoizedUser: Profile = undefined;
 const fetchCurrentUser = () => {
   memoizedUser.fetch({
     success: () => {
+      console.log("we successfully fetched current user", memoizedUser);
       memoizedUser.channel = memoizedUser.createNotificationsConsumer();
       memoizedUser.appearanceChannel = createAppereanceConsumer();
     },
