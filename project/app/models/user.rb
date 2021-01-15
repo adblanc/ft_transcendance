@@ -18,6 +18,7 @@ class User < ApplicationRecord
 	has_many :friendships
 	has_many :friends, :through => :friendships
 
+
 	validates :avatar, blob: { content_type: :image, size_range: 1..5.megabytes }
 	validates :name, presence: true
 	validates :name, length: {minimum: 3, maximum: 32}
@@ -90,6 +91,13 @@ class User < ApplicationRecord
 			return false;
 		end
 		return self.blocks.exists?(blocked_user_id: user.id);
+	end
+
+	def is_friend_of?(user)
+		if (user == self)
+			return false;
+		end
+		return self.friendships.exists?(friend_id: user.id);
 	end
 
 	def pending_guild?

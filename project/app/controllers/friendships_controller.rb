@@ -1,11 +1,11 @@
 class FriendshipsController < ApplicationController
 	before_action :authenticate_user!
 
-	def create
-		if (@current_user.blocks.exists?(friend_id: params[:id]))
+	def add
+		if (@current_user.friendships.where(friend_id: params[:id]).take)
 			render json: {"User" => ["is already your friend"]}, status: :unprocessable_entity
 		else
-			@friend = @current_user.friends.build(:friend_id => params[:id])
+			@friend = @current_user.friendships.build(:friend_id => params[:id])
 			if @friend.save
 				@current_user
 			else
@@ -14,8 +14,8 @@ class FriendshipsController < ApplicationController
 		end
 	end
 
-	def destroy
-		@friend = @current_user.friends.where(friend_id: params[:id]).take;
+	def remove
+		@friend = @current_user.friendships.where(friend_id: params[:id]).take;
 		if (@friend)
 			if (@friend.destroy)
 				@current_user

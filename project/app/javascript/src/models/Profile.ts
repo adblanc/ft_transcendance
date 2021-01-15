@@ -32,6 +32,7 @@ export interface IProfile {
   guild_role?: "Owner" | "Officer" | "Member";
   appearing_on?: string;
   is_present?: boolean;
+  is_friend?: boolean;
   pending_guild?: Guild;
   guild?: Guild;
   notifications?: Notifications;
@@ -159,6 +160,24 @@ export default class Profile extends BaseModel<IProfile> {
       {},
       {
         url: `${BASE_ROOT}/unblock/${id}`,
+      }
+    );
+  }
+
+  addFriend(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/add_friend/${id}`,
+      }
+    );
+  }
+
+  removeFriend(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/remove_friend/${id}`,
       }
     );
   }
