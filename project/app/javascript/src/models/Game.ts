@@ -19,7 +19,7 @@ interface IGame {
 }
 
 type CreatableGameArgs = Partial<
-  Pick<IGame, "id" | "goal" | "level">
+  Pick<IGame, "goal" | "level">
 >;
 
 export default class Game extends BaseModel<IGame> {
@@ -40,16 +40,14 @@ export default class Game extends BaseModel<IGame> {
     ];
   }
 
-  initialize() {
-    this.second = false;
+  constructor(options?: any) {
+	super(options);
+	
+	this.second = false;
     this.mouvements = new Mouvements();
     this.model = new Mouvement();
     this.channel = this.createConsumer();
     this.currentUserId = undefined;
-  }
-
-  constructor(options?: any) {
-    super(options);
   }
 
   defaults() {

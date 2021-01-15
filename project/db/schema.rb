@@ -75,8 +75,8 @@ ActiveRecord::Schema.define(version: 2021_01_11_143304) do
 
   create_table "games", force: :cascade do |t|
     t.string "level"
-    t.integer "goal", default: 3
-    t.string "status", default: "0"
+    t.integer "goal"
+    t.integer "status", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

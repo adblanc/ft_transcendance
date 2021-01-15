@@ -11,7 +11,7 @@ class GamesController < ApplicationController
     end
 
 	def create
-		@games = Games.where(status: :pending)
+		@games = Game.where(status: :pending)
 		@games.each do | game |
 			if game.goal == params[:goal] && game.level == params[:level]
 				game.users.push(current_user)
