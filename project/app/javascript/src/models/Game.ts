@@ -8,6 +8,8 @@ import { BASE_ROOT } from "src/constants";
 import consumer from "channels/consumer";
 import Mouvement from "src/models/Mouvement";
 import Mouvements from "src/collections/Mouvements";
+import { currentUser } from "src/models/Profile";
+import { displayError } from "src/utils/toast";
 
 interface IGame {
   id: number;
@@ -93,6 +95,11 @@ export default class Game extends BaseModel<IGame> {
           if (data.event === "started") {
             console.log("we navigate");
             this.navigateToGame();
+            return this.unsubscribeChannelConsumer();
+		  }
+		  else if (data.event === "expired") {
+			currentUser().fetch();
+			displayError("We were not able to find an opponent. Please try different game settings.");
             return this.unsubscribeChannelConsumer();
           }
         },
