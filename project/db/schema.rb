@@ -64,13 +64,13 @@ ActiveRecord::Schema.define(version: 2021_01_11_143304) do
   end
 
   create_table "game_users", force: :cascade do |t|
-    t.bigint "war_id"
-    t.bigint "guild_id"
+    t.bigint "game_id"
+    t.bigint "user_id"
     t.integer "points", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["guild_id"], name: "index_game_users_on_guild_id"
-    t.index ["war_id"], name: "index_game_users_on_war_id"
+    t.index ["game_id"], name: "index_game_users_on_game_id"
+    t.index ["user_id"], name: "index_game_users_on_user_id"
   end
 
   create_table "games", force: :cascade do |t|
@@ -219,8 +219,8 @@ ActiveRecord::Schema.define(version: 2021_01_11_143304) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "game_users", "guilds"
-  add_foreign_key "game_users", "wars"
+  add_foreign_key "game_users", "games"
+  add_foreign_key "game_users", "users"
   add_foreign_key "guild_users", "guilds"
   add_foreign_key "guild_users", "users"
   add_foreign_key "guild_wars", "guilds"

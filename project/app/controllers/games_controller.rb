@@ -16,7 +16,7 @@ class GamesController < ApplicationController
 			if game.goal == params[:goal].to_i && game.level == params[:level]
 				game.users.push(current_user)
 				game.update(status: :started)
-				PlayGameJob.perform_now(self)
+				PlayGameJob.perform_now(game)
 				return game
 			end
 		end
