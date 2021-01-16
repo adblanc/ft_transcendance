@@ -29,45 +29,6 @@
 </canvas>
 
 
-<script type="text/html" id="game">
-    <form action="" method="get">
-      <label for="pet-select">Choose a level:</label>
-    <select name="level" id="level">
-      <option value="easy">Easy</option>
-      <option value="normal">Normal</option>
-    <option value="hard">Hard</option>
-  </select>
-  <p>
-  <label for="pet-select">Choose a number of points:</label></p>
-  <select name="points" id="points">
-      <option value="">--Please choose an option--</option>
-      <option value=1>1</option>
-      <option value=2>2</option>
-      <option value=3>3</option>
-      <option value=4>4</option>
-      <option value=5>5</option>
-      <option value=6>6</option>
-      <option value=7>7</option>
-      <option value=8>8</option>
-      <option value=9>9</option>
-  </select>
-
-        <label class="block" for="input-enemy">
-          <span class="text-white font-semibold">Add an enemy</span>
-          <input class="form-input block mt-1"
-            type="text"
-            name="input-enemy"
-            id="input-enemy"/>
-            <span class="text-white font-semibold">Enter</span>
-            <input class="form-input block mt-1"
-            type="button"
-            name="enter"
-            id="game-enter"/>
-        </label>
-      </form>
-  </div>
-</script>
-
 <script type="text/html" id="game_win">
 <div class="flex h-screen">
 <h1 class="m-auto text-5xl text-teal-500" id="score">You won a {{level}} game</h1>

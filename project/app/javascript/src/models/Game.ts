@@ -77,24 +77,13 @@ export default class Game extends BaseModel<IGame> {
       { channel: "GamingChannel", game_id },
       {
         connected: () => {
-          console.log("connected to the GAMMME", game_id);
+          console.log("connected to the game", game_id);
         },
-        received: (mouv: IMouvement) => {
-          console.log(JSON.stringify(mouv));
-          if (!this.currentUserId) {
-            this.currentUserId = parseInt(
-              $("#current-user-profile").data("id")
-            );
-          }
-          this.model.set(mouv);
-          if (this.currentUserId === this.model.get("user_id")) {
-            this.model.set({ sent: true });
-          } else {
-            this.model.set({ sent: false });
-          }
+        received: (data: any) => {
+          console.log(data);
         },
         disconnected: () => {
-          console.log("disconnected to the GAMMME", game_id);
+          console.log("disconnected to the game", game_id);
         },
       }
     );

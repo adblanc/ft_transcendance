@@ -35,32 +35,13 @@ export default class CreateGameView extends ModalView<Game> {
   	}
 
   gameSaved() {
+	console.log("test");
 	this.closeModal();
 	displaySuccess("Matching you with another player...");
-	this.model.fetch();
-	this.model.channel = this.createConsumer();
+	
+	//this.model.channel = this.createConsumer();
+	//redirection page game
 }
-
-  /*playGame(points, level)
-  {
-    this.closeModal();
-    var canvas = canvaView.init('#AAA', this.player_one, "2", "2", this.player_two, 2);
-    canvas.addEventListener('click', this.canvasClicked, false);
-    canvas.addEventListener('mousemove', event => { const e = event as MouseEvent; this.canvasClicked(e);}, false);
-  }
-
-  canvasClicked(e) {
-    const scale: number = e.offsetY / 250;
-    s : String;
-    var y: Number = 0;
-    var s = "Mouse down" + String(scale);
-   canvaView.player_one.paddle.y = canvas.height * scale;
-  if ((y = canvaView.callback(10)) != 0 )
-    {
-      displaySuccess("You won the game" + String(y));
-      var gameIndex = new GameIndexView({});
-    } 
-  }*/
 
   render() {
     super.render();
