@@ -69,7 +69,6 @@ export default class Game extends BaseModel<IGame> {
   }
 
   createGame(attrs: CreatableGameArgs) {
-	  console.log(attrs);
     return this.asyncSave(attrs, { url: this.urlRoot() });
   }
 

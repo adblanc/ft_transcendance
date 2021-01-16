@@ -11,9 +11,7 @@ class GamesController < ApplicationController
     end
 
 	def create
-
 		return head :unauthorized if current_user.inGame? 
-		/check game_type as well/
 		@games = Game.where(status: :pending)
 		@games.to_ary.each do | game |
 			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type] 

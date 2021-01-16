@@ -1,4 +1,5 @@
 import Backbone from "backbone";
+import Mustache from "mustache";
 import BaseView from "src/lib/BaseView";
 import Game from "src/models/Game";
 
@@ -6,7 +7,7 @@ type Options = Backbone.ViewOptions<Game> & {
   gameId: string;
 };
 
-export default class NewGameView extends BaseView<Game> {
+export default class GameView extends BaseView<Game> {
   constructor(options: Options) {
     super(options);
 
@@ -17,5 +18,12 @@ export default class NewGameView extends BaseView<Game> {
 
   onFetchError() {
     Backbone.history.navigate("/not-found", { trigger: true });
+  }
+
+  render() {
+    const template = $("#playGameTemplate").html();
+    const html = Mustache.render(template, this.model.toJSON());
+    this.$el.html(html);
+    return this;
   }
 }
