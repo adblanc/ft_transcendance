@@ -16,9 +16,10 @@ class GamesController < ApplicationController
 			if game.goal == params[:goal].to_i && game.level == params[:level]
 				game.users.push(current_user)
 				game.update(status: :started)
-				/ActionCable.broadcast-> game channel started/
-				/PlayGameJob.perform_now(game)/
 				@game = game
+				/ActionCable.broadcast-> game channel started/
+				ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
+				/PlayGameJob.perform_now(game)/
 				return @game
 			end
 		end
@@ -30,7 +31,7 @@ class GamesController < ApplicationController
             render json: @game.errors, status: :unprocessable_entity
         end
 	end
-	
+
     def score
 		@game = Game.find_by_id(params[:id])
 		return head :not_found unless @game
@@ -40,7 +41,7 @@ class GamesController < ApplicationController
 			@game.update(status: :finished)
 		end
     end
-    
+
 	private
     def game_params
         params.permit(:level, :goal)

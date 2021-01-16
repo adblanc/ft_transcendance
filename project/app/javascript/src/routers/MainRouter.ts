@@ -7,7 +7,7 @@ import GuildView from "../views/guild/GuildView";
 import GuildIndexView from "../views/guild/GuildIndexView";
 import WarHistoryView from "../views/guild/WarHistoryView";
 import NotFoundView from "../views/NotFoundView";
-import GameView from "../views/game/GameView";
+//import GameView from "../views/game/GameView";
 import GameIndexView from "../views/game/GameIndexView";
 import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
@@ -17,6 +17,7 @@ import Game from "src/models/Game";
 import UserView from "../views/user/UserView";
 import WarIndexView from "../views/wars/WarIndexView";
 import { BASE_ROOT } from "src/constants";
+import NewGameView from "src/views/game/NewGameView";
 
 export default class MainRouter extends Backbone.Router {
   constructor() {
@@ -102,8 +103,11 @@ export default class MainRouter extends Backbone.Router {
     const warHistoryView = new WarHistoryView({ guild: new Guild({ id }) });
     pagesHandler.showPage(warHistoryView);
   }
+
   gameShow(id: string) {
-    const gameView = new GameView({ game: new Game({ id: id }) });
+    //const gameView = new GameView({ game: new Game({ id: id }) });
+
+    const gameView = new NewGameView({ gameId: id });
     pagesHandler.showPage(gameView);
   }
 

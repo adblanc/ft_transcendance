@@ -2,25 +2,28 @@ import Backbone from "backbone";
 import _ from "underscore";
 import Profile from "src/models/Profile";
 import Profiles from "src/collections/Profiles";
-import { displaySuccess, mapServerErrors, syncWithFormData } from "src/utils";
+import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import consumer from "channels/consumer";
 import Mouvement from "src/models/Mouvement";
-import IMouvement from "src/models/Mouvement";
 import Mouvements from "src/collections/Mouvements";
 
 interface IGame {
-  id: string;
-  level: string;
-  goal: number;
-  status: string;
-  users: Profiles;
+  id: number;
+  level?: string;
+  goal?: number;
+  status?: "pending" | "started";
+  users?: Profiles;
 }
 
-type CreatableGameArgs = Partial<
-  Pick<IGame, "goal" | "level">
->;
+interface GameData {
+  event: "started";
+}
+
+type CreatableGameArgs = Partial<Pick<IGame, "goal" | "level">>;
+
+type ConstructorArgs = Pick<IGame, "id">;
 
 export default class Game extends BaseModel<IGame> {
   first: Number;
@@ -40,10 +43,10 @@ export default class Game extends BaseModel<IGame> {
     ];
   }
 
-  constructor(options?: any) {
-	super(options);
-	
-	this.second = false;
+  constructor(options?: ConstructorArgs) {
+    super(options);
+
+    this.second = false;
     this.mouvements = new Mouvements();
     this.model = new Mouvement();
     this.currentUserId = undefined;
@@ -70,72 +73,39 @@ export default class Game extends BaseModel<IGame> {
     return this.asyncSave(user_id, { url: this.baseGameRoot() });
   }
 
-  createConsumer() {
-    const game_id = this.get("id");
+  unsubscribeChannelConsumer() {
+    this.channel?.unsubscribe();
+    this.channel = undefined;
+  }
 
-    return consumer.subscriptions.create(
-      { channel: "GamingChannel", game_id },
+  createChannelConsumer() {
+    this.unsubscribeChannelConsumer();
+    const gameId = this.get("id");
+
+    this.channel = consumer.subscriptions.create(
+      { channel: "GamingChannel", id: gameId },
       {
         connected: () => {
-          console.log("connected to the game", game_id);
+          console.log("connected to the game", gameId);
         },
-        received: (data: any) => {
+        received: (data: GameData) => {
           console.log(data);
+          if (data.event === "started") {
+            console.log("we navigate");
+            this.navigateToGame();
+            return this.unsubscribeChannelConsumer();
+          }
         },
         disconnected: () => {
-          console.log("disconnected to the game", game_id);
+          console.log("disconnected to the game", gameId);
         },
       }
     );
   }
+
+  navigateToGame() {
+    Backbone.history.navigate(`/game/${this.get("id")}`, {
+      trigger: true,
+    });
+  }
 }
-
-//  sync(method: string, model: Game, options: JQueryAjaxSettings): any {
-//   if (method == "create") {
-//     var formData = new FormData();
-
-//     _.each(model.attributes, function (value, key) {
-// 	formData.append(key, value);
-//     });
-//     _.defaults(options || (options = {}), {
-//       data: formData,
-//       processData: false,
-// 	contentType: false,
-//     });
-//   }
-//   return Backbone.sync.call(this, method, model, options);
-// }
-
-//    user = new Profile();
-//     Points: number;
-//     Type: string;
-// constructor(Id: number, type: string, Pts: number, Profil: Profile) {
-//     super();
-//     this.set(this.Type: type);
-//     this.user = Profil;
-//     this.Points = Pts;
-//     this.url = this.urlRoot;
-//     console.log(this.id);
-// }
-
-// createGame(attrs: CreatableGameArgs,  success: () => void) {
-//    this.set(attrs),
-//     this.save(
-//         {},
-//         {
-//           url: this.urlRoot(),
-//           success: () => success(),
-//           // error: (_, jqxhr) => {
-//           //   error(this.mapServerErrors(jqxhr?.responseJSON));};
-//         }
-//       );
-//    // success();
-// }
-//}
-
-// type rec = Record<string, string>;
-
-// mapServerErrors(errors: rec) {
-//     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
-//   }
-// }
