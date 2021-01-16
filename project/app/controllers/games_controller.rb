@@ -13,10 +13,10 @@ class GamesController < ApplicationController
 	def create
 
 		return head :unauthorized if current_user.inGame? 
-
+		/check game_type as well/
 		@games = Game.where(status: :pending)
 		@games.to_ary.each do | game |
-			if game.goal == params[:goal].to_i && game.level == params[:level]
+			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type] 
 				game.users.push(current_user)
 				game.update(status: :started)
 				@game = game
@@ -47,6 +47,6 @@ class GamesController < ApplicationController
 
 	private
     def game_params
-        params.permit(:level, :goal)
+        params.permit(:level, :goal, :game_type)
     end
 end

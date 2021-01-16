@@ -3,7 +3,8 @@ class CreateGames < ActiveRecord::Migration[6.0]
     create_table :games do |t|
       t.string :level
       t.integer :goal
-      t.integer :status, default: 0
+	  t.integer :status, default: 0
+	  t.integer :game_type
       t.timestamps
     end
   end

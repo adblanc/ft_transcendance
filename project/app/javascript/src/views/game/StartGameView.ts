@@ -11,14 +11,17 @@ export default class StartGameView extends BaseView {
   
   events() {
 	return {
-	  "click #friendly-btn": "startFriendly",
+	  "click #friendly-btn": () => this.startGame("friendly"),
+	  "click #ladder-btn": () => this.startGame("ladder"),
+	  "click #tournament-btn": () => this.startGame("tournament"),
 	};
   }
 
-   startFriendly() {
+   startGame(type: string) {
 	   const game = new Game();
 	   const createGameView = new CreateGameView({
 			model: game,
+			type: type,
 	  });
   
 	  createGameView.render();

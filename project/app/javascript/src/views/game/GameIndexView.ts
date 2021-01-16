@@ -22,9 +22,10 @@ export default class GameIndexView extends BaseView {
 	this.$el.html(html);
 	
 	if (currentUser().get("pendingGame")) { 
-		//rajouter check_type pour pas de mélange avec warTime games par exemple
-		const waitingGameView = new WaitingGameView();
-		this.renderNested(waitingGameView, "#game-index-container");
+		if (currentUser().get("pendingGame").get("game_type") != "war_time") {
+			const waitingGameView = new WaitingGameView();
+			this.renderNested(waitingGameView, "#game-index-container");
+		}
 	}
 	else {
 		const startGameView = new StartGameView();

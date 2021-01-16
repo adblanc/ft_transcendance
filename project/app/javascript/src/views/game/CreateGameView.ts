@@ -5,15 +5,24 @@ import { displaySuccess } from "src/utils/toast";
 import Game from "src/models/Game";
 import { currentUser } from "src/models/Profile";
 
+type Options = Backbone.ViewOptions<Game> & {
+	type: string;
+  };
+
 export default class CreateGameView extends ModalView<Game> {
-  constructor(options?: Backbone.ViewOptions<Game>) {
-    super(options);
+	type: string; 
+
+  constructor(options?: Options) {
+	super(options);
+	
+	this.type = options.type;
+	console.log(this.type);
   }
 
   events() {
     return {
       ...super.events(),
-      "click #input-game-submit": "onSubmit",
+	  "click #input-game-submit": "onSubmit",
     };
   }
 
@@ -21,7 +30,8 @@ export default class CreateGameView extends ModalView<Game> {
     e.preventDefault();
     const attrs = {
       level: this.$("#level").val() as string,
-      goal: this.$("#goal").val() as number,
+	  goal: this.$("#goal").val() as number,
+	  game_type: this.type,
     };
 
     const success = await this.model.createGame(attrs);

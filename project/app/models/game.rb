@@ -9,6 +9,13 @@ class Game < ApplicationRecord
 		:unanswered
 	]
 
+	enum game_type: [
+		:friendly,
+		:ladder,
+		:war_time,
+		:tournament
+	]
+
     validates :level,  presence: true
 	validates :goal, presence: true
 

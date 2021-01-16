@@ -15,7 +15,8 @@ interface IGame {
   id: number;
   level?: string;
   goal?: number;
-  status?: "pending" | "started";
+  status?: "pending" | "started" | "finished" | "unanswered";
+  game_type?: string;
   users?: Profiles;
 }
 
@@ -23,7 +24,7 @@ interface GameData {
   event: "started";
 }
 
-type CreatableGameArgs = Partial<Pick<IGame, "goal" | "level">>;
+type CreatableGameArgs = Partial<Pick<IGame, "goal" | "level" | "game_type">>;
 
 type ConstructorArgs = Pick<IGame, "id">;
 
@@ -68,6 +69,7 @@ export default class Game extends BaseModel<IGame> {
   }
 
   createGame(attrs: CreatableGameArgs) {
+	  console.log(attrs);
     return this.asyncSave(attrs, { url: this.urlRoot() });
   }
 

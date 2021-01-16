@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 2021_01_11_143304) do
     t.string "level"
     t.integer "goal"
     t.integer "status", default: 0
+    t.integer "game_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
