@@ -35,10 +35,10 @@ export default class CreateGameView extends ModalView<Game> {
   	}
 
   gameSaved() {
-    this.closeModal();
+	this.closeModal();
+	displaySuccess("Matching you with another player...");
 	this.model.fetch();
 	this.model.channel = this.createConsumer();
-    displaySuccess("Matching you with another player...");
 }
 
   /*playGame(points, level)

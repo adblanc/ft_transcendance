@@ -6,7 +6,7 @@ class Game < ApplicationRecord
 		:pending,
 		:started,
 		:finished,
-		:unanswered,
+		:unanswered
 	]
 
     validates :level,  presence: true

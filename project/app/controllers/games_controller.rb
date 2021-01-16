@@ -13,12 +13,7 @@ class GamesController < ApplicationController
 	def create
 		@games = Game.where(status: :pending)
 		@games.to_ary.each do | game |
-			logger.debug "#{params[:goal]}"
-			logger.debug "#{game.goal}"
-			logger.debug "#{params[:level]}"
-			logger.debug "#{game.level}"
 			if game.goal == params[:goal].to_i && game.level == params[:level]
-				logger.debug "test"
 				game.users.push(current_user)
 				game.update(status: :started)
 				PlayGameJob.perform_now(self)
