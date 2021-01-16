@@ -46,7 +46,6 @@ export default class Game extends BaseModel<IGame> {
 	this.second = false;
     this.mouvements = new Mouvements();
     this.model = new Mouvement();
-    this.channel = this.createConsumer();
     this.currentUserId = undefined;
   }
 

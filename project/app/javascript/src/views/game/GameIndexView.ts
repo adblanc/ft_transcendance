@@ -5,7 +5,6 @@ import Rectangle from "src/models/Rectangle";
 import BaseView from "src/lib/BaseView";
 import CreateGameView from "./CreateGameView";
 import CanvaView from "./CanvaView";
-import GameView from "./GameView"
 import Player from "src/models/Player";
 import { displaySuccess } from "src/utils/toast";
 
