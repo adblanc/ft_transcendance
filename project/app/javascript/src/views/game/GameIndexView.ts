@@ -3,35 +3,34 @@ import Backbone from "backbone";
 import Game from "src/models/Game";
 import Rectangle from "src/models/Rectangle";
 import BaseView from "src/lib/BaseView";
-import CreateGameView from "./CreateGameView";
-import CanvaView from "./CanvaView";
+import WaitingGameView from "./WaitingGameView";
+import StartGameView from "./StartGameView";
 import Player from "src/models/Player";
 import { displaySuccess } from "src/utils/toast";
+import { currentUser } from "src/models/Profile";
 
 export default class GameIndexView extends BaseView {
   constructor(options?: Backbone.ViewOptions) {
 	super(options);
-  }
-  
-  events() {
-	return {
-	  "click #create_game": "startGame",
-	};
-  }
 
-   startGame() {
-	   const game = new Game();
-	   const createGameView = new CreateGameView({
-			model: game,
-	  });
-  
-	  createGameView.render();
-   }
+	this.listenTo(currentUser(), "change", this.render);
+  }
 
   render() {
-    const template = $("#index_game").html();
+    const template = $("#gameIndexTemplate").html();
     const html = Mustache.render(template, {});
-    this.$el.html(html);
+	this.$el.html(html);
+	
+	if (currentUser().get("pendingGame")) { 
+		//rajouter check_type pour pas de mélange avec warTime games par exemple
+		const waitingGameView = new WaitingGameView();
+		this.renderNested(waitingGameView, "#game-index-container");
+	}
+	else {
+		const startGameView = new StartGameView();
+		this.renderNested(startGameView, "#game-index-container");
+	}
+
     return this;
   }
 

@@ -33,7 +33,7 @@ export default class CreateGameView extends ModalView<Game> {
   gameSaved() {
     this.closeModal();
     displaySuccess("Matching you with another player...");
-
+	currentUser().fetch();
     if (this.model.get("status") === "started") {
       this.model.navigateToGame();
     } else {

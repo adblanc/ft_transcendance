@@ -99,6 +99,10 @@ class User < ApplicationRecord
 		end
 	end
 
+	def pendingGame
+		games.where(status: [:pending]).first
+	end
+
 	def send_notification(message, link, type)
 		@notification = Notification.create(recipient: self, message: message, link: link, notification_type: type)
 		ActionCable.server.broadcast("user_#{self.id}", @notification);

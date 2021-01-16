@@ -17,9 +17,7 @@ class GamesController < ApplicationController
 				game.users.push(current_user)
 				game.update(status: :started)
 				@game = game
-				/ActionCable.broadcast-> game channel started/
 				ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
-				/PlayGameJob.perform_now(game)/
 				return @game
 			end
 		end

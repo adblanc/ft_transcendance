@@ -21,7 +21,7 @@ if user.pending_guild?
 	end
 end
 
-
+json.pendingGame user.pendingGame
 
 json.blocked_users do
   json.array! user.blocked_users do |blocked_user|
