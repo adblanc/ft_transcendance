@@ -1,69 +1,50 @@
 
 class GamesController < ApplicationController
 
-    def index
-        @games = Game.all
-    end
+	def index
+		@games = Game.all
+	end
 
     def show
-        @game = Game.find(params[:id])
-        @gameuserone = GameUser.where(game: @game, user: current_user).first
-        # if (params[:status] == "finished")
-        #     return head :not_found
+        @game = Game.find_by_id(params[:id])
         return head :not_found unless @game
     end
 
-    def join
-        @game = Game.find(params[:id])
-        return head :not_found unless @game
-        @game.update(game_params)
+	def create
+		return head :unauthorized if current_user.inGame? 
+		@games = Game.where(status: :pending)
+		@games.to_ary.each do | game |
+			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type] 
+				game.users.push(current_user)
+				game.update(status: :started)
+				@game = game
+				ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
+				return @game
+			end
+		end
+		@game = Game.create(game_params)
         if @game.save
-            @gameuser = GameUser.create!(game: @game, user: current_user, points: 0)
-            @game
-        else
-            render json: @game.errors, status: :unprocessable_entity
-          end
-        #return head :unauthorized if current_user.guild.present? || current_user.pending_guild.present?
-        @game.user.push(current_user)
-    end
-
-    def finish
-        #ActionCable.server.remote_connections.where(current_user: current_user).disconnect
-        @game = Game.find(params[:id])
-        return head :not_found unless @game
-        pts = game_params[:points]
-        @game.update_attribute(:status, "finished")
-        #@game.update_attribute(:points, pts)
-        if @game.save
-            @gameuserone = GameUser.where(game: @game, user: current_user).first
-            @gameuserone.update_attribute(:points, pts)
-            @game
-            
+			@game.users.push(current_user)
+			@expire = 5
+			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game)
+			@game
         else
             render json: @game.errors, status: :unprocessable_entity
         end
-    end
-    
-    def new
-        game = Game.new
+	end
+
+    def score
+		@game = Game.find_by_id(params[:id])
+		return head :not_found unless @game
+		@player = GameUser.where(id: params[:user_id])
+		@player.points.increment!
+		if @player.points == @game.goal
+			@game.update(status: :finished)
+		end
     end
 
-    def create
-        @game = Game.create(game_params)
-        @game.user.push(current_user)
-       #current_user.add_role :owner, @game
-        if @game.save
-            @gameuser = GameUser.create!(game: @game, user: current_user, points: 0)
-            @game
-        else
-            render json: @game.errors, status: :unprocessable_entity
-        end
-    end
-private
+	private
     def game_params
-        params.permit(:id, :level, :points, :status, :first, :second, :player_points)
-    end
-    def game_user_params
-        params.permit(:game, :user, :player_points)
+        params.permit(:level, :goal, :game_type)
     end
 end

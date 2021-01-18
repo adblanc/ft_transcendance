@@ -25,10 +25,11 @@ export default class MainRouter extends Backbone.Router {
         "": "index",
         auth: "auth",
         "auth/callback?code=:code": "authCallBack",
-        game: "gameIndex",
-        "game/:id": "gameShow",
-        guilds: "guildIndex",
-        "guild/:id": "guildShow",
+        play: "play",
+        "game/:id": "game",
+        training: "training",
+        guilds: "guilds",
+        "guild/:id": "guild",
         "guild/:id/wars": "guildWarHistory",
         "me/notifications": "notifShow",
         "user/:id": "userShow",
@@ -75,7 +76,7 @@ export default class MainRouter extends Backbone.Router {
     pagesHandler.showPage(indexView);
   }
 
-  gameIndex() {
+  play() {
     const gameIndexView = new GameIndexView({});
 
     pagesHandler.showPage(gameIndexView);
@@ -87,13 +88,13 @@ export default class MainRouter extends Backbone.Router {
     pagesHandler.showPage(notFoundView);
   }
 
-  guildIndex() {
+  guilds() {
     const guildIndexView = new GuildIndexView();
 
     pagesHandler.showPage(guildIndexView);
   }
 
-  guildShow(id: string) {
+  guild(id: string) {
     const guildView = new GuildView({ guild: new Guild({ id }) });
     pagesHandler.showPage(guildView);
   }
@@ -102,8 +103,14 @@ export default class MainRouter extends Backbone.Router {
     const warHistoryView = new WarHistoryView({ guild: new Guild({ id }) });
     pagesHandler.showPage(warHistoryView);
   }
-  gameShow(id: string) {
-    const gameView = new GameView({ game: new Game({ id: id }) });
+
+  game(id: string) {
+    const gameView = new GameView({ gameId: id });
+    pagesHandler.showPage(gameView);
+  }
+
+  training() {
+    const gameView = new GameView({ isTraining: true, gameId: "0" });
     pagesHandler.showPage(gameView);
   }
 

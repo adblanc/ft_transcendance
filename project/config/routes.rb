@@ -7,11 +7,11 @@ Rails.application.routes.draw do
     resource :user, only: [:show, :update]
     get "user/notifications", to: "users#show"
 
-    resources :games
-    post '/game', to: 'games#create', format: false
-    put '/games', to: 'games#create', format: false
-    put '/games/:id/join', to: 'games#join', format:false
-    put '/games/:id/finish', to: 'games#finish', format: false
+    resources :games do
+	member do
+		put :score
+		end
+	end
 
     resources :game_mouvs
     post '/game_mouvs', to: 'game_mouvs#create'

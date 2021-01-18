@@ -13,6 +13,7 @@ import {
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import { eventBus } from "src/events/EventBus";
+import Game from "./Game";
 
 export interface IBlockedUser {
   login: string;
@@ -35,6 +36,7 @@ export interface IProfile {
   is_friend?: boolean;
   pending_guild?: Guild;
   guild?: Guild;
+  pendingGame?: Game;
   notifications?: Notifications;
   blocked_users?: IBlockedUser[];
 }
@@ -60,6 +62,11 @@ export default class Profile extends BaseModel<IProfile> {
         type: Backbone.One,
         key: "pending_guild",
         relatedModel: Guild,
+	  },
+	  {
+        type: Backbone.One,
+        key: "pendingGame",
+        relatedModel: Game,
       },
       {
         type: Backbone.Many,

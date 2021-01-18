@@ -1,12 +1,10 @@
 class CreateGames < ActiveRecord::Migration[6.0]
   def change
     create_table :games do |t|
-      t.references :user
       t.string :level
-      t.integer :points
-      t.string :status
-      t.integer :first
-      t.boolean :second
+      t.integer :goal
+	  t.integer :status, default: 0
+	  t.integer :game_type
       t.timestamps
     end
   end

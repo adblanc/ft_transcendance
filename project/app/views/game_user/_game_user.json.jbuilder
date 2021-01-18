@@ -1,1 +1,0 @@
-json.extract! game_user, :game, :user, :points
