@@ -1,11 +1,9 @@
 import Mustache from "mustache";
 import Backbone from "backbone";
 import Game from "src/models/Game";
-import Rectangle from "src/models/Rectangle";
 import BaseView from "src/lib/BaseView";
 import WaitingGameView from "./WaitingGameView";
 import StartGameView from "./StartGameView";
-import Player from "src/models/Player";
 import { displaySuccess } from "src/utils/toast";
 import { currentUser } from "src/models/Profile";
 

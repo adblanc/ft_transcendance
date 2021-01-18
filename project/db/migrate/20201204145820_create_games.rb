@@ -5,6 +5,7 @@ class CreateGames < ActiveRecord::Migration[6.0]
       t.integer :goal
 	  t.integer :status, default: 0
 	  t.integer :game_type
+	  t.belongs_to :war_time, index: true
       t.timestamps
     end
   end

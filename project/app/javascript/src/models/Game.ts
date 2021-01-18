@@ -6,8 +6,6 @@ import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import consumer from "channels/consumer";
-import Mouvement from "src/models/Mouvement";
-import Mouvements from "src/collections/Mouvements";
 import { displayError } from "src/utils/toast";
 import { eventBus } from "src/events/EventBus";
 
@@ -39,8 +37,6 @@ export default class Game extends BaseModel<IGame> {
   first: Number;
   second?: boolean;
   channel: ActionCable.Channel;
-  mouvements: Mouvements;
-  model: Mouvement;
   currentUserId?: Number;
   preinitialize() {
     this.relations = [
@@ -57,8 +53,6 @@ export default class Game extends BaseModel<IGame> {
     super(options);
 
     this.second = false;
-    this.mouvements = new Mouvements();
-    this.model = new Mouvement();
     this.currentUserId = undefined;
   }
 

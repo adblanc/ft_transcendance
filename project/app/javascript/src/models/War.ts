@@ -118,21 +118,7 @@ export default class War extends BaseModel<IWar> {
     );
   }
 
-  /*accept() {
-		return this.asyncSave({},
-		  {
-			url: `${this.baseWarRoot()}/accept`,
-		  }
-		);
-	  }
-
-	  reject() {
-		return this.asyncSave({},
-		  {
-			url: `${this.baseWarRoot()}/reject`,
-		  }
-		);
-	  }*/
+  
 
   activateWarTime(end: Date) {
     return this.asyncSave(
@@ -141,6 +127,19 @@ export default class War extends BaseModel<IWar> {
       },
       {
         url: `${this.baseWarRoot()}/activateWarTime`,
+      }
+    );
+  }
+
+  challenge(level: string, goal: number, game_type: string) {
+    return this.asyncSave(
+      {
+		level: level,
+		goal: goal,
+		game_type: game_type,
+      },
+      {
+        url: `${this.baseWarRoot()}/challenge`,
       }
     );
   }

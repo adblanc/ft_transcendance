@@ -1,5 +1,6 @@
 class WarTime < ApplicationRecord
 	belongs_to :war
+	has_many :games
 
 	enum status: [
 		:active,
