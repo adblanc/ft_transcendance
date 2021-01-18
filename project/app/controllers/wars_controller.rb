@@ -162,6 +162,21 @@ class WarsController < ApplicationController
 		end
 	end
 
+	def acceptChallenge
+		@war = War.find_by_id(params[:id])
+		@warTime = @war.activeWarTime
+		@guild = Guild.find_by_id(current_user.guild.id)
+		@game = @warTime.pendingGame
+		@opponent = @war.opponent(@guild)
+
+		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
+		return head :unauthorized if @warTime.activeGame
+
+		@game.users.push(current_user)
+		@game.update(status: :started)
+		/ActionCable and redirect/
+	end
+
 	private
 
 	def war_params
