@@ -15,15 +15,9 @@ export default class PageImgView extends BaseView {
   }
 
   render() {
-    if (this.model.get("img_url")) {
-      const template = $("#pageImgExists").html();
-      const html = Mustache.render(template, this.model.toJSON());
-      this.$el.html(html);
-    } else {
-      const template = $("#noPageImg").html();
-      const html = Mustache.render(template, this.model.toJSON());
-      this.$el.html(html);
-    }
+    const template = $("#pageImgExists").html();
+    const html = Mustache.render(template, this.model.toJSON());
+    this.$el.html(html);
 
     return this;
   }

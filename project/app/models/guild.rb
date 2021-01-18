@@ -14,6 +14,16 @@ class Guild < ApplicationRecord
 	validates :name, presence: true, uniqueness: true, length: {minimum: 5, maximum: 20}
 	validates :ang, presence: true, length: {minimum: 2, maximum: 5}
 
+	after_create :attach_img
+
+	def attach_img
+		self.img.attach(
+			io: File.open("default/guild.jpg", "r"),
+			filename: "guild.jpg",
+			"content_type": "image/jpeg",
+		)
+	end
+
 	def remove_user(user)
 		members.delete(user)
 		user.update(contribution: 0)

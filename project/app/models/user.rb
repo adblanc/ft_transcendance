@@ -26,6 +26,16 @@ class User < ApplicationRecord
 	validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
 	validates :two_fact_auth, inclusion: { in: [ true, false ] }
 
+	after_create :attach_avatar
+
+	def attach_avatar
+		self.avatar.attach(
+			io: File.open("default/user.jpg", "r"),
+			filename: "user.jpg",
+			"content_type": "image/jpeg",
+		)
+	end
+
 	def assign_default_role
 		/global role - could be switched to admin/
 		self.add_role(:regular)

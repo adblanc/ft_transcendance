@@ -15,15 +15,9 @@ export default class ItemImgView extends BaseView {
   }
 
   render() {
-    if (this.model.get("img_url")) {
-      const template = $("#itemImgExists").html();
-      const html = Mustache.render(template, this.model.toJSON());
-      this.$el.html(html);
-    } else {
-      const template = $("#itemNoImg").html();
-      const html = Mustache.render(template, this.model.toJSON());
-      this.$el.html(html);
-    }
+    const template = $("#itemImgExists").html();
+    const html = Mustache.render(template, this.model.toJSON());
+    this.$el.html(html);
 
     return this;
   }

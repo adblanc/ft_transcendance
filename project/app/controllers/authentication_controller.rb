@@ -30,20 +30,23 @@ class AuthenticationController < ApplicationController
 		avatar_url = user_info[:avatar_url]
 		email = user_info[:email]
 
-		# ... create user if it doesn't exist...
-		user = User.where(login: login).first_or_create!(
-			name: name,
-			email: email,
-			otp_secret_key: ROTP::Base32.random
-		)
+		user = User.where(login: login)
+		if user.empty?
+			user = User.create!(
+				login: login,
+				name: name,
+				email: email,
+				otp_secret_key: ROTP::Base32.random,
+			)
 
-		user.avatar.attach(
-			io: URI.open(avatar_url),
-			filename: "#{login}.png",
-			"content_type": "image/png",
-		) if !user.avatar.attached?
+			user.avatar.attach(
+				io: URI.open(avatar_url),
+				filename: "#{login}.png",
+				"content_type": "image/png",
+			)
+		end
 
-		tfaTreatment(user)
+		tfaTreatment(user.first)
 	rescue StandardError => error
 		render json: error, :status => :unauthorized
 	end

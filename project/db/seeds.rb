@@ -41,12 +41,9 @@ ben.avatar.attach(
 	"content_type": "image/png",
 )
 
-
 guild1 = Guild.create(name: 'The Best Guild', ang: "TBG", points: 18)
 guild2 = Guild.create(name: 'The Doom', ang: "TDM", points: 2)
 guild3 = Guild.create(name: 'The Blabla', ang: "BLB", points: 4)
-
-
 
 guild1.img.attach(
 	io: URI.open("https://i.pinimg.com/originals/1a/27/ff/1a27ff81c19e1c10583ea970b0f3827f.jpg"),
