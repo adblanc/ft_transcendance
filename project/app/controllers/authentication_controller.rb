@@ -44,9 +44,11 @@ class AuthenticationController < ApplicationController
 				filename: "#{login}.png",
 				"content_type": "image/png",
 			)
+		else
+			user = user.first
 		end
 
-		tfaTreatment(user.first)
+		tfaTreatment(user)
 	rescue StandardError => error
 		render json: error, :status => :unauthorized
 	end
