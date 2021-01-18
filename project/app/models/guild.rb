@@ -91,7 +91,7 @@ class Guild < ApplicationRecord
 	def war_score(points)
 		war = wars.find_by(status: :started)
 		if war.present?
-			guild_wars.find_by(war: war).score(points)
+			self.guild_wars.find_by(war: war).score(points)
 		end
 	end
 

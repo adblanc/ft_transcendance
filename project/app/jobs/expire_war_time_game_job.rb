@@ -9,7 +9,9 @@ class ExpireWarTimeGameJob < ApplicationJob
 	  opponent.members.each do |member|
 		member.send_notification("Your guild has not answered #{user.name}'s' war time challenge!", "/wars", "war")
 	  end
-	  /points/
+
+	  guild.war_score(10)
+	  
 	  warTime.increment!(:unanswered_calls, 1)
 	  if warTime.unanswered_calls == warTime.max_unanswered_calls
 		warTime.update(status: :inactive)
