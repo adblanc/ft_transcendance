@@ -4,21 +4,18 @@ import BaseView from "../../lib/BaseView";
 import War from "src/models/War";
 import Guild from "src/models/Guild";
 import NegotiateView from "./NegotiateView";
-import Profile from "src/models/Profile";
 
-type Options = Backbone.ViewOptions & { model: War, guild: Guild, profile: Profile};
+type Options = Backbone.ViewOptions & { model: War, guild: Guild};
 
 export default class ItemPendingView extends BaseView {
   model: War;
   guild: Guild;
-  profile: Profile;
 
   constructor(options?: Options) {
     super(options);
 
 	this.model = options.model;
 	this.guild = options.guild;
-	this.profile = options.profile;
 
 	this.listenTo(this.model, "change", this.render);
   }
@@ -33,7 +30,6 @@ export default class ItemPendingView extends BaseView {
 	const negotiateView = new NegotiateView({
 		model: this.model,
 		guild: this.guild,
-		profile: this.profile,
 	  });
   
 	  negotiateView.render();

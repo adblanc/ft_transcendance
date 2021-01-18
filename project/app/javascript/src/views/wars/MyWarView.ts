@@ -2,19 +2,17 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import War from "src/models/War";
-import Profile from "src/models/Profile";
 import Guild from "src/models/Guild";
 import WarPendingView from "./WarPendingView";
 import WarConfirmedView from "./WarConfirmedView";
 import NoWarView from "./NoWarView";
 import WarWaitingView from "./WarWaitingView";
 
-type Options = Backbone.ViewOptions & { guild: Guild, profile: Profile};
+type Options = Backbone.ViewOptions & { guild: Guild};
 
 export default class MyWarView extends BaseView {
 	guild: Guild;
 	war: War;
-	profile: Profile;
 	warPendingView: WarPendingView;
 	warConfirmedView: WarConfirmedView;
 	warWaitingView: WarWaitingView;
@@ -24,7 +22,6 @@ export default class MyWarView extends BaseView {
     super(options);
 
 	this.guild = options.guild;
-	this.profile = options.profile;
 	this.warPendingView = undefined;
 	this.warConfirmedView = undefined;
 	this.warWaitingView = undefined;
@@ -80,7 +77,6 @@ export default class MyWarView extends BaseView {
 			this.warPendingView = new WarPendingView({
 				collection: this.guild.get("pendingWars"),
 				guild: this.guild,
-				profile: this.profile,
 			})
 			this.setundefined("pending");
 		}
