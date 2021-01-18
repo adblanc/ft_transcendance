@@ -15,19 +15,7 @@ export default class WarIndexView extends BaseView {
 
   constructor(options?: Backbone.ViewOptions) {
 	super(options);
-	
-	if (currentUser().get("guild")) {
-		var id = currentUser().get("guild").get("id");
-		var guild = new Guild({id});
-		guild.fetch({
-			success: () => {
-				this.myWarView = new MyWarView({
-					guild: guild,
-				})
-				this.renderNested(this.myWarView, "#mywar");
-			}
-		});
-	}
+
 	this.wars = new Wars();
 	this.wars.fetch({
 		success: () => {
@@ -38,7 +26,22 @@ export default class WarIndexView extends BaseView {
 		}
 	});
 
-	this.listenTo(currentUser(), "change", this.render);
+	currentUser().fetch({
+		success: () => {
+			if (currentUser().get("guild")) {
+				var id = currentUser().get("guild").get("id");
+				var guild = new Guild({id});
+				guild.fetch({
+					success: () => {
+						this.myWarView = new MyWarView({
+							guild: guild,
+						})
+						this.renderNested(this.myWarView, "#mywar");
+					}
+				});
+			}
+		}
+	});
 
   }
 

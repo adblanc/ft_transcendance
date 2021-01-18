@@ -45,6 +45,7 @@ export default class WarBoardView extends BaseView {
   }
 
   render() {
+
     const template = $("#warBoardTemplate").html();
     const html = Mustache.render(template, {});
     this.$el.html(html);
