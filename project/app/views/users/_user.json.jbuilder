@@ -23,6 +23,8 @@ if user.pending_guild?
 		json.points user.pending_guild.points
 		json.img_url url_for(user.pending_guild.img) if user.pending_guild.img.attached?
 	end
+else
+	json.pending_guild nil
 end
 
 json.friends do
@@ -30,6 +32,7 @@ json.friends do
 		json.partial! "users/userSnippet", user: friend
 	end
 end
+json.pendingGame user.pendingGame
 
 json.blocked_users do
 	json.array! user.blocked_users do |blocked_user|

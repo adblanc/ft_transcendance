@@ -2,25 +2,23 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import CreateGuildView from "./CreateGuildView";
+import { currentUser } from "src/models/Profile";
 import Guild from "src/models/Guild";
 import Guilds from "src/collections/Guilds";
 import Profile from "src/models/Profile";
 import { displaySuccess } from "src/utils";
 
-type Options = Backbone.ViewOptions & { profile: Profile; collection: Guilds };
+type Options = Backbone.ViewOptions & { collection: Guilds };
 
 export default class MyGuildView extends BaseView {
-  profile: Profile;
   collection: Guilds;
 
   constructor(options?: Options) {
     super(options);
 
-    this.profile = options.profile;
     this.collection = options.collection;
 
-    this.listenTo(this.profile, "change", this.render);
-    //this.profile.fetch();
+    this.listenTo(currentUser(), "change", this.render);
   }
 
   events() {
@@ -41,7 +39,7 @@ export default class MyGuildView extends BaseView {
   }
 
   async onWithdrawClicked() {
-    const success = await this.profile.get("pending_guild").withdraw();
+    const success = await currentUser().get("pending_guild").withdraw();
 
     if (success) {
       this.guildWithdraw();
@@ -50,25 +48,25 @@ export default class MyGuildView extends BaseView {
 
   guildWithdraw() {
     displaySuccess(
-      `You have withdrawn your request to join ${this.profile
+      `You have withdrawn your request to join ${currentUser()
         .get("pending_guild")
         .get("name")}.`
     );
-    this.profile.fetch();
+    currentUser().fetch();
   }
 
   render() {
-    if (this.profile.get("guild")) {
+    if (currentUser().get("guild")) {
       const template = $("#withGuildTemplate").html();
-      const html = Mustache.render(template, this.profile.toJSON());
+      const html = Mustache.render(template, currentUser().toJSON());
       this.$el.html(html);
-    } else if (this.profile.get("pending_guild")) {
+    } else if (currentUser().get("pending_guild")) {
       const template = $("#withPendingGuildTemplate").html();
-      const html = Mustache.render(template, this.profile.toJSON());
+      const html = Mustache.render(template, currentUser().toJSON());
       this.$el.html(html);
     } else {
       const template = $("#noGuildTemplate").html();
-      const html = Mustache.render(template, this.profile.toJSON());
+      const html = Mustache.render(template, currentUser().toJSON());
       this.$el.html(html);
     }
 

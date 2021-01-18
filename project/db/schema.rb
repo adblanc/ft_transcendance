@@ -76,20 +76,17 @@ ActiveRecord::Schema.define(version: 2021_01_15_160004) do
     t.integer "points", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["game_id"], name: "index_game_user_on_game_id"
-    t.index ["user_id"], name: "index_game_user_on_user_id"
+    t.index ["game_id"], name: "index_game_users_on_game_id"
+    t.index ["user_id"], name: "index_game_users_on_user_id"
   end
 
   create_table "games", force: :cascade do |t|
-    t.bigint "user_id"
     t.string "level"
-    t.integer "points"
-    t.string "status"
-    t.integer "first"
-    t.boolean "second"
+    t.integer "goal"
+    t.integer "status", default: 0
+    t.integer "game_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_games_on_user_id"
   end
 
   create_table "games_users", id: false, force: :cascade do |t|
@@ -232,6 +229,8 @@ ActiveRecord::Schema.define(version: 2021_01_15_160004) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "game_users", "games"
+  add_foreign_key "game_users", "users"
   add_foreign_key "guild_users", "guilds"
   add_foreign_key "guild_users", "users"
   add_foreign_key "guild_wars", "guilds"

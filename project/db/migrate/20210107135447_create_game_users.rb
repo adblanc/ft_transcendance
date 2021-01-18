@@ -1,12 +1,9 @@
 class CreateGameUsers < ActiveRecord::Migration[6.0]
   def change
     create_table :game_users do |t|
-      t.bigint "game_id"
-      t.bigint "user_id"
-      t.integer "points", default: 0
-      t.index ["game_id"], name: "index_game_user_on_game_id"
-      t.index ["user_id"], name: "index_game_user_on_user_id"
-
+		t.belongs_to :game, index: true, foreign_key: true
+		t.belongs_to :user, index: true, foreign_key: true
+		t.integer :points, default: 0
       t.timestamps
     end
   end

@@ -10,7 +10,9 @@ class User < ApplicationRecord
 	has_one :guild_user_pending,  -> (object) { where(status: :pending) }, class_name: "GuildUser", dependent: :destroy
 	has_one :pending_guild, through: :guild_user_pending, source: :guild
 	has_and_belongs_to_many :rooms
-	#has_and_belongs_to_many :game
+
+	has_many :game_users
+	has_and_belongs_to_many :games, through: :game_user
 
 	has_many :blocks
 	has_many :blocked_users, :through => :blocks
@@ -128,6 +130,14 @@ class User < ApplicationRecord
 		self.update_attributes(is_present: false, appearing_on: "offline");
 
 		ActionCable.server.broadcast("appearance_channel", event: "disappear", user_id: self.id);
+	end
+
+	def pendingGame
+		games.where(status: [:pending]).first
+	end
+
+	def inGame?
+		self.games.started.present? || self.games.pending.present?
 	end
 
 	def send_notification(message, link, type)

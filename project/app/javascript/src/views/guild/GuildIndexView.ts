@@ -4,12 +4,11 @@ import BaseView from "src/lib/BaseView";
 import Guilds from "src/collections/Guilds";
 import ItemView from "./ItemView";
 import MyGuildView from "./MyGuildView";
-import Profile from "src/models/Profile";
+import { currentUser } from "src/models/Profile";
 import Guild from "src/models/Guild";
 
 export default class GuildIndexView extends BaseView {
   collection: Guilds;
-  profile: Profile;
   myGuildView: Backbone.View;
   max: number;
   count: number;
@@ -19,15 +18,12 @@ export default class GuildIndexView extends BaseView {
 
 	this.max = 5;
     this.collection = new Guilds();
-	this.profile = new Profile();
 	
     this.myGuildView = new MyGuildView({
-      profile: this.profile,
       collection: this.collection,
 	});
 
-    this.listenTo(this.profile, "change", this.render);
-    this.profile.fetch();
+	this.listenTo(currentUser(), "change", this.render);
 
     this.listenTo(this.collection, "reset", this.render);
     this.listenTo(this.collection, "change", this.render);

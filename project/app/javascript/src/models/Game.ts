@@ -2,28 +2,38 @@ import Backbone from "backbone";
 import _ from "underscore";
 import Profile, { currentUser } from "src/models/Profile";
 import Profiles from "src/collections/Profiles";
-import { displaySuccess, mapServerErrors, syncWithFormData } from "src/utils";
+import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import consumer from "channels/consumer";
 import Mouvement from "src/models/Mouvement";
-import IMouvement from "src/models/Mouvement";
 import Mouvements from "src/collections/Mouvements";
+import { displayError } from "src/utils/toast";
+import { eventBus } from "src/events/EventBus";
 
 interface IGame {
-  id?: string;
-  level: string;
-  points: number;
-  status: string;
-  user: Profiles;
-  first: number;
-  button: number;
-  //player_points: number;
+  id: number;
+  level?: string;
+  goal?: number;
+  status?: "pending" | "started" | "finished" | "unanswered";
+  game_type?: string;
+  users?: Profiles;
 }
 
-type CreatableGameArgs = Partial<
-  Pick<IGame, "id" | "points" | "level" | "status" | "first" | "button">
->;
+export interface GameData {
+  event: "started";
+
+  action: "player_movement";
+  playerId: number;
+}
+
+export interface MovementData extends GameData {
+  posY: number;
+}
+
+type CreatableGameArgs = Partial<Pick<IGame, "goal" | "level" | "game_type">>;
+
+type ConstructorArgs = Pick<IGame, "id">;
 
 export default class Game extends BaseModel<IGame> {
   first: Number;
@@ -36,34 +46,25 @@ export default class Game extends BaseModel<IGame> {
     this.relations = [
       {
         type: Backbone.Many,
-        key: "user",
+        key: "users",
         collectionType: Profiles,
         relatedModel: Profile,
       },
     ];
   }
 
-  initialize() {
+  constructor(options?: ConstructorArgs) {
+    super(options);
+
     this.second = false;
     this.mouvements = new Mouvements();
     this.model = new Mouvement();
-    this.channel = this.createConsumer();
     this.currentUserId = undefined;
-  }
-
-  constructor(options?: any) {
-    super(options);
   }
 
   defaults() {
     return {
-      level: "",
-      points: 0,
-      status: "waiting",
-      user: [],
-      second: false,
-      button: 0,
-      //player_points: 0,
+      users: [],
     };
   }
 
@@ -75,117 +76,58 @@ export default class Game extends BaseModel<IGame> {
   }
 
   createGame(attrs: CreatableGameArgs) {
-    if (!this.currentUserId) {
-      this.currentUserId = currentUser().get("id");
-    }
-    this.first = this.currentUserId;
     return this.asyncSave(attrs, { url: this.urlRoot() });
   }
-  join() {
-    if (!this.currentUserId) {
-      this.currentUserId = currentUser().get("id");
-    }
-    if (this.currentUserId == this.get("first")) {
-      displaySuccess("You already create this game");
-      return 0;
-    }
-    this.second = true;
-    return this.asyncSave(
-      { status: "playing", second: true },
-      { url: `${this.baseGameRoot()}/join` }
-    );
+
+  score(user_id: string) {
+    return this.asyncSave(user_id, { url: this.baseGameRoot() });
   }
 
-  finish(g_points: number) {
-    const success = this.asyncSave(
-      { status: "finished", points: g_points },
-      { url: `${this.baseGameRoot()}/finish` }
-    );
-    if (success) {
-      this.channel.unsubscribe();
-    }
-    return success;
+  unsubscribeChannelConsumer() {
+    this.channel?.unsubscribe();
+    this.channel = undefined;
   }
 
-  createConsumer() {
-    const game_id = this.get("id");
+  createChannelConsumer() {
+    this.unsubscribeChannelConsumer();
+    const gameId = this.get("id");
 
-    if (game_id === undefined) {
-      return undefined;
-    }
-
-    return consumer.subscriptions.create(
-      { channel: "GamingChannel", game_id },
+    this.channel = consumer.subscriptions.create(
+      { channel: "GamingChannel", id: gameId },
       {
         connected: () => {
-          console.log("connected to the GAMMME", game_id);
+          console.log("connected to the game", gameId);
         },
-        received: (mouv: IMouvement) => {
-          console.log(JSON.stringify(mouv));
-          if (!this.currentUserId) {
-            this.currentUserId = currentUser().get("id");
+        received: (data: GameData) => {
+          if (
+            data.action === "player_movement" &&
+            data.playerId !== currentUser().get("id")
+          ) {
+            console.log("received other player data", data);
+            eventBus.trigger("pong:player_movement", data);
           }
-          this.model.set(mouv);
-          if (this.currentUserId === this.model.get("user_id")) {
-            this.model.set({ sent: true });
-          } else {
-            this.model.set({ sent: false });
+          if (data.event === "started") {
+            console.log("we navigate");
+            this.navigateToGame();
+            return this.unsubscribeChannelConsumer();
+          } else if (data.event === "expired") {
+            currentUser().fetch();
+            displayError(
+              "We were not able to find an opponent. Please try different game settings."
+            );
+            return this.unsubscribeChannelConsumer();
           }
         },
         disconnected: () => {
-          console.log("disconnected to the GAMMME", game_id);
+          console.log("disconnected to the game", gameId);
         },
       }
     );
   }
+
+  navigateToGame() {
+    Backbone.history.navigate(`/game/${this.get("id")}`, {
+      trigger: true,
+    });
+  }
 }
-
-//  sync(method: string, model: Game, options: JQueryAjaxSettings): any {
-//   if (method == "create") {
-//     var formData = new FormData();
-
-//     _.each(model.attributes, function (value, key) {
-// 	formData.append(key, value);
-//     });
-//     _.defaults(options || (options = {}), {
-//       data: formData,
-//       processData: false,
-// 	contentType: false,
-//     });
-//   }
-//   return Backbone.sync.call(this, method, model, options);
-// }
-
-//    user = new Profile();
-//     Points: number;
-//     Type: string;
-// constructor(Id: number, type: string, Pts: number, Profil: Profile) {
-//     super();
-//     this.set(this.Type: type);
-//     this.user = Profil;
-//     this.Points = Pts;
-//     this.url = this.urlRoot;
-//     console.log(this.id);
-// }
-
-// createGame(attrs: CreatableGameArgs,  success: () => void) {
-//    this.set(attrs),
-//     this.save(
-//         {},
-//         {
-//           url: this.urlRoot(),
-//           success: () => success(),
-//           // error: (_, jqxhr) => {
-//           //   error(this.mapServerErrors(jqxhr?.responseJSON));};
-//         }
-//       );
-//    // success();
-// }
-//}
-
-// type rec = Record<string, string>;
-
-// mapServerErrors(errors: rec) {
-//     return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
-//   }
-// }

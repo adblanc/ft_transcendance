@@ -1,9 +1,26 @@
 class Game < ApplicationRecord
-    resourcify
-        has_and_belongs_to_many :user
-        validates :level,  presence: true
-        #accepts_nested_attributes_for :user
-        validates :status, presence: true 
-        validates :first, presence: true
-        validates :points, presence: true, length: {minimum: 1, maximum: 10}
+	has_many :game_users
+	has_and_belongs_to_many :users, through: :game_user
+
+	enum status: [
+		:pending,
+		:started,
+		:finished,
+		:unanswered
+	]
+
+	enum game_type: [
+		:friendly,
+		:ladder,
+		:war_time,
+		:tournament
+	]
+
+    validates :level,  presence: true
+	validates :goal, presence: true
+
+	def finish
+		logger.debug "test"
+	end
+		
 end
