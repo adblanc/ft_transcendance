@@ -21,7 +21,6 @@ export default class ActiveWarTimeView extends BaseView {
 
 	this.listenTo(this.war, "change", this.render);
 	this.listenTo(this.warTime, "change", this.render);
-
 	
   }
 

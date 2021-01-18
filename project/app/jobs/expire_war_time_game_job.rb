@@ -15,10 +15,17 @@ class ExpireWarTimeGameJob < ApplicationJob
 		warTime.update(status: :inactive)
 		guild.members.each do |member|
 			member.send_notification("Too many unanswered match calls! War Time with #{opponent.name} just ended!", "/wars", "war")
-		  end
-		  opponent.members.each do |member|
+		end
+		opponent.members.each do |member|
 			member.send_notification("Too many unanswered match calls! War Time with #{guild.name} just ended!", "/wars", "war")
-		  end
+		end
+		Delayed::Job.all.each do |job|
+			job.destroy if job_corresponds_to_target?(job, warTime)
+		end
 	  end
+	end
+
+	def job_corresponds_to_target?(job, target)
+		job.payload_object.args.first == target.id
 	end
 end

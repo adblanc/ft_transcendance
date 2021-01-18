@@ -18,6 +18,8 @@ gem 'jbuilder', '~> 2.7'
 #rolify
 gem 'rolify'
 
+gem 'delayed_job_active_record'
+
 # jobs background: https://github.com/mperham/sidekiq
 gem 'sidekiq'
 
