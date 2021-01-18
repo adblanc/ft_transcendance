@@ -10,6 +10,7 @@ import Mouvement from "src/models/Mouvement";
 import Mouvements from "src/collections/Mouvements";
 import { currentUser } from "src/models/Profile";
 import { displayError } from "src/utils/toast";
+import { eventBus } from "src/events/EventBus";
 
 interface IGame {
   id: number;
@@ -20,8 +21,15 @@ interface IGame {
   users?: Profiles;
 }
 
-interface GameData {
+export interface GameData {
   event: "started";
+
+  action: "player_movement";
+  playerId: number;
+}
+
+export interface MovementData extends GameData {
+  posY: number;
 }
 
 type CreatableGameArgs = Partial<Pick<IGame, "goal" | "level" | "game_type">>;
@@ -92,15 +100,22 @@ export default class Game extends BaseModel<IGame> {
           console.log("connected to the game", gameId);
         },
         received: (data: GameData) => {
-          console.log(data);
+          if (
+            data.action === "player_movement" &&
+            data.playerId !== currentUser().get("id")
+          ) {
+            console.log("received other player data", data);
+            eventBus.trigger("pong:player_movement", data);
+          }
           if (data.event === "started") {
             console.log("we navigate");
             this.navigateToGame();
             return this.unsubscribeChannelConsumer();
-		  }
-		  else if (data.event === "expired") {
-			currentUser().fetch();
-			displayError("We were not able to find an opponent. Please try different game settings.");
+          } else if (data.event === "expired") {
+            currentUser().fetch();
+            displayError(
+              "We were not able to find an opponent. Please try different game settings."
+            );
             return this.unsubscribeChannelConsumer();
           }
         },

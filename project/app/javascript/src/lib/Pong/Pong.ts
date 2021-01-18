@@ -156,6 +156,9 @@ export default class Pong {
   }
 
   moveAI(dt: number) {
+    if (this.mode === "online") {
+      return;
+    }
     if (
       this.ball.pos.y - this.difficulty.ballDetectionRange > this.AI.top &&
       this.ball.pos.y < this.AI.bottom - this.difficulty.ballDetectionRange

@@ -9,7 +9,7 @@ class GamingChannel < ApplicationCable::Channel
 
   def player_movement(data) # ici on recoit ce que un autre joueur perform
     # broadcast to all game users the movements
-    # ActionCable.server.broadcast("game_#{@id}", data);
+     ActionCable.server.broadcast("game_#{@id}", data);
   end
 
   def unsubscribed
