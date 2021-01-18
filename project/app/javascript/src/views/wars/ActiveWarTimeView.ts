@@ -6,6 +6,7 @@ import War from "src/models/War";
 import WarTime from "src/models/WarTime";
 import moment from "moment";
 import { displaySuccess, displayError } from "src/utils";
+import { currentUser } from "src/models/Profile";
 
 type Options = Backbone.ViewOptions & { war: War};
 
@@ -21,7 +22,6 @@ export default class ActiveWarTimeView extends BaseView {
 
 	this.listenTo(this.war, "change", this.render);
 	this.listenTo(this.warTime, "change", this.render);
-
 	
   }
 
@@ -50,6 +50,21 @@ export default class ActiveWarTimeView extends BaseView {
     const template = $("#activeWarTimeTemplate").html();
     const html = Mustache.render(template, warTime);
 	this.$el.html(html);
+
+	if (this.warTime.get("pendingGame")) {
+		if (this.warTime.get("pendingGameInitiator").get("id") == currentUser().get("id"))
+			this.$("#wait").show();
+		else if (this.warTime.get("pendingGameGuildInitiator").get("id") == currentUser().get("guild").get("id")) 
+			this.$("#unavailable").show();
+		else
+			this.$("#accept").show();
+	}
+	else if (this.warTime.get("activeGame")) {
+		this.$("#in-game").show();
+	}
+	else { 
+		this.$("#challenge").show();
+	}
 	
     return this;
   }

@@ -8,4 +8,6 @@ if war.activeWarTime
 		json.max_unanswered_calls war.activeWarTime.max_unanswered_calls
 		json.unanswered_calls war.activeWarTime.unanswered_calls
 	end
+else
+	json.activeWarTime nil
 end

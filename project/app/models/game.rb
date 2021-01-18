@@ -1,6 +1,7 @@
 class Game < ApplicationRecord
 	has_many :game_users
 	has_and_belongs_to_many :users, through: :game_user
+	belongs_to :war_time, optional: true
 
 	enum status: [
 		:pending,

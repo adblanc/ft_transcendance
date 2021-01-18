@@ -121,7 +121,7 @@ class WarsController < ApplicationController
 		@guild = Guild.find_by_id(current_user.guild.id)
 		@opponent = @war.opponent(@guild)
 
-		return head :unauthorized if not @guild.atWar? && @opponent.atWar?
+		return head :unauthorized if not @guild.atWar? || @opponent.atWar?
 		return head :unauthorized if @war.atWarTime?
 
 		@war_time = WarTime.create(war: @war, start: DateTime.now, end: params[:end], time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
@@ -139,10 +139,36 @@ class WarsController < ApplicationController
 		end
 	end
 
+	def challenge
+		@war = War.find_by_id(params[:id])
+		@warTime = @war.activeWarTime
+		@guild = Guild.find_by_id(current_user.guild.id)
+		@opponent = @war.opponent(@guild)
+
+		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
+		return head :unauthorized if @warTime.activeGame || @warTime.pendingGame
+
+		@game = Game.create(game_params)
+		@game.update(war_time: @warTime)
+
+		if @game.save
+			@game.users.push(current_user)
+			@opponent.members.each do |member|
+				member.send_notification("#{current_user.name} has challenged your guild to a war time match! Answer the call!", "/wars", "war")
+			end
+			ExpireWarTimeGameJob.set(wait_until: DateTime.now + @war.time_to_answer.minutes).perform_later(@game, @guild, @opponent, @warTime, current_user)
+		else
+			render json: @game.errors, status: :unprocessable_entity
+		end
+	end
+
 	private
 
 	def war_params
 		params.permit( :start, :end, :prize, :time_to_answer, :max_unanswered_calls, :inc_tour)
 	end
+	def game_params
+        params.permit(:level, :goal, :game_type)
+    end
 
 end

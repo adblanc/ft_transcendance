@@ -1,7 +1,19 @@
 <script type="text/html" id="activeWarTimeTemplate">
-	<h1 style="margin-top:10px;font-size: 15px;" class="justify-center flex flex-row text-white "> War time is activated until {{end}} ! </h1>
-	<div style="text-align: center">
+	<h1 style="margin-top:10px;font-size: 13px; text-align: center;" class="justify-center flex flex-row text-white "> War Time is activated until {{end}} ! </h1>
+	<div id="challenge" style="text-align: center; display:none">
 		<button id="challenge-btn" class="btn-primary mt-3 mb-3" type="button">Duel someone!</button>
 	</div>
-	<h1 style="margin-down:10px; font-size: 11px;" class="justify-center flex flex-row text-white"> Unanswered calls so far : {{unanswered_calls}} </h1>
+	<div id="accept" style="text-align: center; display:none">
+		<button id="accept-btn" class="btn-primary mt-3 mb-3 animate-bounce" type="button">One pending duel!</button>
+	</div>
+	<div id="in-game" style="text-align: center; display:none">
+		<h1 style="margin-top:10px;font-size: 14px;" class="justify-center flex flex-row text-white "> A War Time game is currently being played. </h1>
+	</div>
+	<div id="wait" style="text-align: center; display:none">
+		<h1 style="margin-top:10px;font-size: 14px;" class="justify-center flex flex-row text-white "> You are waiting for someone to answer your match call. </h1>
+	</div>
+	<div id="unavailable" style="text-align: center; display:none">
+		<h1 style="margin-top:10px;font-size: 14px;" class="justify-center flex flex-row text-white "> Someone from your guild has already initiated a War Time game. </h1>
+	</div>
+	<h1 style="margin-down:10px; font-size: 11px;" class="justify-center flex flex-row text-white mt-3"> Unanswered calls so far : {{unanswered_calls}} </h1>
 </script>

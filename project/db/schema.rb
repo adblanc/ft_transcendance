@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_15_160004) do
+ActiveRecord::Schema.define(version: 2021_01_18_170420) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,24 +50,26 @@ ActiveRecord::Schema.define(version: 2021_01_15_160004) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer "priority", default: 0, null: false
+    t.integer "attempts", default: 0, null: false
+    t.text "handler", null: false
+    t.text "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string "locked_by"
+    t.string "queue"
+    t.datetime "created_at", precision: 6
+    t.datetime "updated_at", precision: 6
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
   create_table "friendships", force: :cascade do |t|
     t.integer "user_id"
     t.integer "friend_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "game_mouvs", force: :cascade do |t|
-    t.bigint "user_id"
-    t.integer "scale"
-    t.integer "game_id"
-    t.integer "ball_x"
-    t.integer "ball_y"
-    t.integer "score_one"
-    t.integer "score_two"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_game_mouvs_on_user_id"
   end
 
   create_table "game_users", force: :cascade do |t|
@@ -85,8 +87,10 @@ ActiveRecord::Schema.define(version: 2021_01_15_160004) do
     t.integer "goal"
     t.integer "status", default: 0
     t.integer "game_type"
+    t.bigint "war_time_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["war_time_id"], name: "index_games_on_war_time_id"
   end
 
   create_table "games_users", id: false, force: :cascade do |t|

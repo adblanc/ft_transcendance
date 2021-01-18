@@ -13,9 +13,6 @@ Rails.application.routes.draw do
 		end
 	end
 
-    resources :game_mouvs
-    post '/game_mouvs', to: 'game_mouvs#create'
-
     put "/block/:id", to: "blocks#block";
     put "/unblock/:id", to: "blocks#unblock";
 
@@ -60,7 +57,9 @@ Rails.application.routes.draw do
       member do
       put :accept
       put :reject
-      put :activateWarTime
+	  put :activateWarTime
+	  put :challenge
+	  put :acceptChallenge
       end
     end
   end

@@ -16,7 +16,6 @@ export default class CreateGameView extends ModalView<Game> {
 	super(options);
 	
 	this.type = options.type;
-	console.log(this.type);
   }
 
   events() {

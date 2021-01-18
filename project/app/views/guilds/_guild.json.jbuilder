@@ -22,9 +22,17 @@ if guild.activeWar
 				json.time_to_answer guild.activeWar.activeWarTime.time_to_answer
 				json.max_unanswered_calls guild.activeWar.activeWarTime.max_unanswered_calls
 				json.unanswered_calls guild.activeWar.activeWarTime.unanswered_calls
+				json.activeGame guild.activeWar.activeWarTime.activeGame
+				json.pendingGame guild.activeWar.activeWarTime.pendingGame
+				json.pendingGameInitiator guild.activeWar.activeWarTime.pendingGameInitiator
+				json.pendingGameGuildInitiator guild.activeWar.activeWarTime.pendingGameGuildInitiator
 			end
+		else
+			json.activeWarTime nil
 		end
 	end
+else
+	json.activeWar nil
 end
 if guild.activeWar
 	json.warOpponent do 

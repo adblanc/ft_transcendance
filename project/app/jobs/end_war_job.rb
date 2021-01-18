@@ -23,7 +23,7 @@ class EndWarJob < ApplicationJob
 	def send_winner(war, winner)
 		war.guilds.each do |guild|
 			guild.members.each do |member|
-				member.send_notification("War with #{war.opponent(guild).name} just ended ! #{winner.name} won #{war.prize}!", "/wars", "war")
+				member.send_notification("War with #{war.opponent(guild).name} just ended ! #{winner.name} won #{war.prize} points!", "/wars", "war")
 			end
 		end
 	end
