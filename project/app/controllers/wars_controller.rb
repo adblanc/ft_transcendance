@@ -155,7 +155,7 @@ class WarsController < ApplicationController
 			@opponent.members.each do |member|
 				member.send_notification("#{current_user.name} has challenged your guild to a war time match! Answer the call!", "/wars", "war")
 			end
-			ExpireGameJob.set(wait_until: DateTime.now + @war.time_to_answer.minutes).perform_later(@game, @guild, @opponent, @warTime, current_user)
+			ExpireWarTimeGameJob.set(wait_until: DateTime.now + @war.time_to_answer.minutes).perform_later(@game, @guild, @opponent, @warTime, current_user)
 		else
 			render json: @game.errors, status: :unprocessable_entity
 		end
