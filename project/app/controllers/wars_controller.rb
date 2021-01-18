@@ -146,6 +146,7 @@ class WarsController < ApplicationController
 		@opponent = @war.opponent(@guild)
 
 		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
+		return head :unauthorized if @warTime.activeGame || @warTime.pendingGame
 
 		@game = Game.create(game_params)
 		@game.update(war_time: @warTime)

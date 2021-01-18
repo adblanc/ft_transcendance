@@ -18,4 +18,19 @@ class WarTime < ApplicationRecord
 		end
 	end
 
+	def activeGame
+		games.where(status: [:started]).first
+	end
+
+	def pendingGame
+		games.where(status: [:pending]).first
+	end
+
+	def pendingGameInitiator
+		games.where(status: [:pending]).first.users.first
+	end
+
+	def pendingGameGuildInitiator
+		games.where(status: [:pending]).first.users.first.guild
+	end
 end
