@@ -36,7 +36,7 @@ export default class ChallengeView extends ModalView<War> {
 
   gameSaved() {
     this.closeModal();
-    displaySuccess("Your challenge has been sent to the other guild...");
+    displaySuccess("Your challenge has been sent to the opponent guild...");
 	currentUser().fetch();
     this.model.fetch();
   }

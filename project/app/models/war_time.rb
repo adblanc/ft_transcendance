@@ -17,4 +17,5 @@ class WarTime < ApplicationRecord
 			end
 		end
 	end
+
 end
