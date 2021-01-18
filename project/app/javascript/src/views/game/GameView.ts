@@ -78,7 +78,7 @@ export default class GameView extends BaseView<Game> {
 
   render() {
     const template = $("#playGameTemplate").html();
-    const html = Mustache.render(template, this.model.toJSON());
+    const html = Mustache.render(template, this.model?.toJSON());
     this.$el.html(html);
 
     const canvas = this.$("#pong")[0] as HTMLCanvasElement;
