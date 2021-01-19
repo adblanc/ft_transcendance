@@ -27,12 +27,22 @@ else
 	json.pending_guild nil
 end
 
+if user.pendingGame
+	json.pendingGame do
+		json.id user.pendingGame.id
+		json.game_type user.pendingGame.game_type
+		json.goal user.pendingGame.goal
+		json.level user.pendingGame.level
+		json.status user.pendingGame.status
+		json.war_time user.pendingGame.war_time
+	end
+end
+
 json.friends do
 	json.array! user.friends do |friend|
 		json.partial! "users/userSnippet", user: friend
 	end
 end
-json.pendingGame user.pendingGame
 
 json.blocked_users do
 	json.array! user.blocked_users do |blocked_user|

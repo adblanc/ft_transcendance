@@ -4,6 +4,7 @@ import BaseView from "../../lib/BaseView";
 import ChallengeView from "./ChallengeView";
 import AcceptChallengeView from "./AcceptChallengeView";
 import War from "src/models/War";
+import Game from "src/models/Game";
 import WarTime from "src/models/WarTime";
 import moment from "moment";
 import { displaySuccess, displayError } from "src/utils";
@@ -34,8 +35,9 @@ export default class ActiveWarTimeView extends BaseView {
   }
 
   onChallengeClicked() {
+	const game = new Game();
 	const challengeView = new ChallengeView({
-		model: this.war,
+		model: game,
 		warTime: this.warTime,
 	});
   
@@ -44,8 +46,7 @@ export default class ActiveWarTimeView extends BaseView {
 
   onAcceptClicked() {
 	const acceptChallengeView = new AcceptChallengeView({
-		model: this.war,
-		warTime: this.warTime,
+		model: this.warTime.get("pendingGame"),
 	});
   
 	acceptChallengeView.render();

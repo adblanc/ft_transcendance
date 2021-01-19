@@ -10,8 +10,10 @@ Rails.application.routes.draw do
     resources :games do
 	member do
 		put :score
+	  	put :acceptChallenge
 		end
 	end
+	post "games/challenge", to: "games#challenge";
 
     put "/block/:id", to: "blocks#block";
     put "/unblock/:id", to: "blocks#unblock";
@@ -58,8 +60,6 @@ Rails.application.routes.draw do
       put :accept
       put :reject
 	  put :activateWarTime
-	  put :challenge
-	  put :acceptChallenge
       end
     end
   end

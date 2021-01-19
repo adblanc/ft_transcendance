@@ -1,1 +1,1 @@
-json.extract! game, :id, :level, :goal, :status, :game_type
+json.extract! game, :id, :level, :goal, :status, :game_type, :war_time

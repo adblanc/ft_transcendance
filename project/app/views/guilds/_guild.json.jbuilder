@@ -23,10 +23,22 @@ if guild.activeWar
 				json.max_unanswered_calls guild.activeWar.activeWarTime.max_unanswered_calls
 				json.unanswered_calls guild.activeWar.activeWarTime.unanswered_calls
 				json.activeGame guild.activeWar.activeWarTime.activeGame
-				json.pendingGame guild.activeWar.activeWarTime.pendingGame
 				if guild.activeWar.activeWarTime.pendingGame
+					json.pendingGame do
+						json.id guild.activeWar.activeWarTime.pendingGame.id
+						json.level guild.activeWar.activeWarTime.pendingGame.level
+						json.goal guild.activeWar.activeWarTime.pendingGame.goal
+						json.users do
+							json.array! @guild.activeWar.activeWarTime.pendingGame.users do |user|
+								json.id user.id
+								json.name user.name
+							end
+						end
+					end
 					json.pendingGameInitiator guild.activeWar.activeWarTime.pendingGameInitiator
 					json.pendingGameGuildInitiator guild.activeWar.activeWarTime.pendingGameGuildInitiator
+				else
+					json.pendingGame nil
 				end
 			end
 		else

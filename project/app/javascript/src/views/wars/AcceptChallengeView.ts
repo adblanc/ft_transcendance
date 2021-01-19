@@ -7,19 +7,10 @@ import { displaySuccess, displayError } from "src/utils";
 import { currentUser } from "src/models/Profile";
 import Game from "src/models/Game";
 
-type Options = Backbone.ViewOptions<War> & {
-	warTime: WarTime;
-};
+export default class AcceptChallengeView extends ModalView<Game> {
 
-export default class AcceptChallengeView extends ModalView<War> {
-	warTime: WarTime;
-	game: Game;
-
-  constructor(options?: Options) {
+  constructor(options?: Backbone.ViewOptions<Game>) {
 	super(options);
-
-	this.warTime = options.warTime;
-	this.game = this.warTime.get("pendingGame");
 	
   }
 
@@ -41,14 +32,14 @@ export default class AcceptChallengeView extends ModalView<War> {
     displaySuccess("Your have accepted a War Time Challenge...");
 	currentUser().fetch();
 	this.model.fetch();
-	this.model.get("activeWarTime").get("activeGame").navigateToGame();
+	this.model.navigateToGame();
   }
 
 
   render() {
     super.render();
     const template = $("#acceptChallengeTemplate").html();
-    const html = Mustache.render(template, this.game.toJSON());
+    const html = Mustache.render(template, this.model.toJSON());
 	this.$content.html(html);
 	
     return this;

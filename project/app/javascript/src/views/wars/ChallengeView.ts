@@ -2,15 +2,16 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
 import War from "src/models/War";
+import Game from "src/models/Game";
 import WarTime from "src/models/WarTime";
 import { displaySuccess, displayError } from "src/utils";
 import { currentUser } from "src/models/Profile";
 
-type Options = Backbone.ViewOptions<War> & {
+type Options = Backbone.ViewOptions<Game> & {
 	warTime: WarTime;
 };
 
-export default class ChallengeView extends ModalView<War> {
+export default class ChallengeView extends ModalView<Game> {
 	warTime: WarTime;
 
   constructor(options?: Options) {
@@ -29,11 +30,13 @@ export default class ChallengeView extends ModalView<War> {
 	var level = this.$("#level").val() as string;
 	var goal = this.$("#goal").val() as number;
 	var game_type = "war_time";
+	var warTimeId = this.warTime.get("id");
   
 	const success = await this.model.challenge(
 		level,
 		goal,
 		game_type,
+		warTimeId,
 	);
 	if (success) {
 		this.gameSaved();
@@ -44,16 +47,10 @@ export default class ChallengeView extends ModalView<War> {
     this.closeModal();
     displaySuccess("Your challenge has been sent to the opponent guild...");
 	currentUser().fetch();
-
-	this.model.fetch({
-		success: () => {
-			console.log(this.model.get("activeWarTime"));
-			console.log(this.model.get("activeWarTime").get("pendingGame"));
-			this.model.get("activeWarTime").get("pendingGame").createChannelConsumer();
-			Backbone.history.navigate(`/play`, {
-				trigger: true,
-			});
-		}
+	this.model.fetch();
+	this.model.createChannelConsumer();
+	Backbone.history.navigate(`/play`, {
+		trigger: true,
 	});
   }
 
@@ -61,10 +58,10 @@ export default class ChallengeView extends ModalView<War> {
   render() {
     super.render();
     const template = $("#challengeTemplate").html();
-    const html = Mustache.render(template, this.model.toJSON());
+    const html = Mustache.render(template, this.warTime.toJSON());
 	this.$content.html(html);
 
-	if (this.model.get("max_unanswered_calls"))
+	if (this.warTime.get("max_unanswered_calls"))
 		this.$("#max-calls").show();
 	
     return this;

@@ -8,6 +8,7 @@ import { BASE_ROOT } from "src/constants";
 import consumer from "channels/consumer";
 import { displaySuccess, displayError } from "src/utils/toast";
 import { eventBus } from "src/events/EventBus";
+import WarTime from "./WarTime";
 
 interface IGame {
   id: number;
@@ -16,6 +17,7 @@ interface IGame {
   status?: "pending" | "started" | "finished" | "unanswered";
   game_type?: string;
   users?: Profiles;
+  war_time?: WarTime;
 }
 
 export interface GameData {
@@ -45,6 +47,11 @@ export default class Game extends BaseModel<IGame> {
         key: "users",
         collectionType: Profiles,
         relatedModel: Profile,
+	  },
+	  {
+        type: Backbone.One,
+        key: "war_time",
+        relatedModel: WarTime,
       },
     ];
   }
@@ -58,7 +65,7 @@ export default class Game extends BaseModel<IGame> {
 
   defaults() {
     return {
-      users: [],
+	  users: [],
     };
   }
 
@@ -130,5 +137,28 @@ export default class Game extends BaseModel<IGame> {
     Backbone.history.navigate(`/game/${this.get("id")}`, {
       trigger: true,
     });
+  }
+
+  challenge(level: string, goal: number, game_type: string, warTimeId: string) {
+    return this.asyncSave(
+      {
+		level: level,
+		goal: goal,
+		game_type: game_type,
+		warTimeId: warTimeId,
+      },
+      {
+        url: `${this.urlRoot()}/challenge`,
+      }
+    );
+  }
+
+  acceptChallenge() {
+    return this.asyncSave(
+	  {},
+      {
+        url: `${this.baseGameRoot()}/acceptChallenge`,
+      }
+    );
   }
 }

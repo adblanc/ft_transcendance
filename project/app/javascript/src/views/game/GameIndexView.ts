@@ -1,6 +1,5 @@
 import Mustache from "mustache";
 import Backbone from "backbone";
-import Game from "src/models/Game";
 import BaseView from "src/lib/BaseView";
 import WaitingGameView from "./WaitingGameView";
 import StartGameView from "./StartGameView";
@@ -20,7 +19,9 @@ export default class GameIndexView extends BaseView {
 	this.$el.html(html);
 	
 	if (currentUser().get("pendingGame")) { 
-		const waitingGameView = new WaitingGameView();
+		const waitingGameView = new WaitingGameView({
+			model: currentUser().get("pendingGame"),
+		});
 		this.renderNested(waitingGameView, "#game-index-container");
 	}
 	else {

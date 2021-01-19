@@ -131,24 +131,4 @@ export default class War extends BaseModel<IWar> {
     );
   }
 
-  challenge(level: string, goal: number, game_type: string) {
-    return this.asyncSave(
-      {
-		level: level,
-		goal: goal,
-		game_type: game_type,
-      },
-      {
-        url: `${this.baseWarRoot()}/challenge`,
-      }
-    );
-  }
-
-  acceptChallenge() {
-    return this.asyncSave(
-      {
-        url: `${this.baseWarRoot()}/acceptChallenge`,
-      }
-    );
-  }
 }

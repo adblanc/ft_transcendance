@@ -139,57 +139,10 @@ class WarsController < ApplicationController
 		end
 	end
 
-	def challenge
-		@war = War.find_by_id(params[:id])
-		@warTime = @war.activeWarTime
-		@guild = Guild.find_by_id(current_user.guild.id)
-		@opponent = @war.opponent(@guild)
-
-		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
-		return head :unauthorized if @warTime.activeGame || @warTime.pendingGame
-
-		@game = Game.create(game_params)
-		@game.update(war_time: @warTime)
-
-		if @game.save
-			@game.users.push(current_user)
-			@opponent.members.each do |member|
-				member.send_notification("#{current_user.name} has challenged your guild to a war time match! Answer the call!", "/wars", "war")
-			end
-			ExpireWarTimeGameJob.set(wait_until: DateTime.now + @war.time_to_answer.minutes).perform_later(@game, @guild, @opponent, @warTime, current_user)
-		else
-			render json: @game.errors, status: :unprocessable_entity
-		end
-	end
-
-	def acceptChallenge
-		@war = War.find_by_id(params[:id])
-		@warTime = @war.activeWarTime
-		@guild = Guild.find_by_id(current_user.guild.id)
-		@game = @warTime.pendingGame
-		@opponent = @war.opponent(@guild)
-
-		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
-		return head :unauthorized if @warTime.activeGame
-
-		@game.users.push(current_user)
-		@game.update(status: :started)
-		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
-		Delayed::Job.all.each do |job|
-			job.destroy if job_corresponds_to_target?(job, @game)
-		end
-	end
-
 	private
 
 	def war_params
 		params.permit( :start, :end, :prize, :time_to_answer, :max_unanswered_calls, :inc_tour)
-	end
-	def game_params
-        params.permit(:level, :goal, :game_type)
-	end
-	def job_corresponds_to_target?(job, target)
-		job.payload_object.args.first == target.id
 	end
 
 end
