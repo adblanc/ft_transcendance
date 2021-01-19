@@ -19,6 +19,9 @@ class GamesController < ApplicationController
 				game.update(status: :started)
 				@game = game
 				ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
+				Delayed::Job.all.each do |job|
+					job.destroy if job_corresponds_to_target?(job, @game)
+				end
 				return @game
 			end
 		end
@@ -46,5 +49,8 @@ class GamesController < ApplicationController
 	private
     def game_params
         params.permit(:level, :goal, :game_type)
-    end
+	end
+	def job_corresponds_to_target?(job, target)
+		job.payload_object.args.first == target.id
+	end
 end

@@ -2,15 +2,21 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
 import War from "src/models/War";
+import WarTime from "src/models/WarTime";
 import { displaySuccess, displayError } from "src/utils";
 import { currentUser } from "src/models/Profile";
 
+type Options = Backbone.ViewOptions<War> & {
+	warTime: WarTime;
+};
+
 export default class ChallengeView extends ModalView<War> {
+	warTime: WarTime;
 
-  constructor(options?: Backbone.ViewOptions<War>) {
-    super(options);
-
-    this.listenTo(this.model, "change", this.render);
+  constructor(options?: Options) {
+	super(options);
+	
+	this.warTime = options.warTime;
   }
 
   events() {
@@ -38,7 +44,17 @@ export default class ChallengeView extends ModalView<War> {
     this.closeModal();
     displaySuccess("Your challenge has been sent to the opponent guild...");
 	currentUser().fetch();
-    this.model.fetch();
+
+	this.model.fetch({
+		success: () => {
+			console.log(this.model.get("activeWarTime"));
+			console.log(this.model.get("activeWarTime").get("pendingGame"));
+			this.model.get("activeWarTime").get("pendingGame").createChannelConsumer();
+			Backbone.history.navigate(`/play`, {
+				trigger: true,
+			});
+		}
+	});
   }
 
 

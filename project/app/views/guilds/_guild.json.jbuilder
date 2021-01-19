@@ -24,8 +24,10 @@ if guild.activeWar
 				json.unanswered_calls guild.activeWar.activeWarTime.unanswered_calls
 				json.activeGame guild.activeWar.activeWarTime.activeGame
 				json.pendingGame guild.activeWar.activeWarTime.pendingGame
-				json.pendingGameInitiator guild.activeWar.activeWarTime.pendingGameInitiator
-				json.pendingGameGuildInitiator guild.activeWar.activeWarTime.pendingGameGuildInitiator
+				if guild.activeWar.activeWarTime.pendingGame
+					json.pendingGameInitiator guild.activeWar.activeWarTime.pendingGameInitiator
+					json.pendingGameGuildInitiator guild.activeWar.activeWarTime.pendingGameGuildInitiator
+				end
 			end
 		else
 			json.activeWarTime nil

@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import ChallengeView from "./ChallengeView";
+import AcceptChallengeView from "./AcceptChallengeView";
 import War from "src/models/War";
 import WarTime from "src/models/WarTime";
 import moment from "moment";
@@ -28,15 +29,26 @@ export default class ActiveWarTimeView extends BaseView {
   events() {
     return {
 	  "click #challenge-btn": "onChallengeClicked",
+	  "click #accept-btn": "onAcceptClicked",
     };
   }
 
   onChallengeClicked() {
 	const challengeView = new ChallengeView({
 		model: this.war,
-	  });
+		warTime: this.warTime,
+	});
   
-	  challengeView.render();
+	challengeView.render();
+  }
+
+  onAcceptClicked() {
+	const acceptChallengeView = new AcceptChallengeView({
+		model: this.war,
+		warTime: this.warTime,
+	});
+  
+	acceptChallengeView.render();
   }
 
   render() {

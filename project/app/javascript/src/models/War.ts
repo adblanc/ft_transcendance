@@ -143,4 +143,12 @@ export default class War extends BaseModel<IWar> {
       }
     );
   }
+
+  acceptChallenge() {
+    return this.asyncSave(
+      {
+        url: `${this.baseWarRoot()}/acceptChallenge`,
+      }
+    );
+  }
 }

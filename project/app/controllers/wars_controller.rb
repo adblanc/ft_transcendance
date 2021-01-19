@@ -174,7 +174,10 @@ class WarsController < ApplicationController
 
 		@game.users.push(current_user)
 		@game.update(status: :started)
-		/ActionCable and redirect/
+		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
+		Delayed::Job.all.each do |job|
+			job.destroy if job_corresponds_to_target?(job, @game)
+		end
 	end
 
 	private
@@ -184,6 +187,9 @@ class WarsController < ApplicationController
 	end
 	def game_params
         params.permit(:level, :goal, :game_type)
-    end
+	end
+	def job_corresponds_to_target?(job, target)
+		job.payload_object.args.first == target.id
+	end
 
 end

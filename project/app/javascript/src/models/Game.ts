@@ -6,7 +6,7 @@ import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import consumer from "channels/consumer";
-import { displayError } from "src/utils/toast";
+import { displaySuccess, displayError } from "src/utils/toast";
 import { eventBus } from "src/events/EventBus";
 
 interface IGame {
@@ -105,10 +105,17 @@ export default class Game extends BaseModel<IGame> {
             this.navigateToGame();
             return this.unsubscribeChannelConsumer();
           } else if (data.event === "expired") {
-            currentUser().fetch();
-            displayError(
-              "We were not able to find an opponent. Please try different game settings."
-            );
+			currentUser().fetch();
+			if (this.get("game_type") != "war_time") {
+				displayError(
+				"We were not able to find an opponent. Please try different game settings."
+				);
+			}
+			else {
+				displaySuccess(
+					"No one answered your War Time challenge! You have won the match."
+				);
+			}
             return this.unsubscribeChannelConsumer();
           }
         },

@@ -20,10 +20,8 @@ export default class GameIndexView extends BaseView {
 	this.$el.html(html);
 	
 	if (currentUser().get("pendingGame")) { 
-		if (currentUser().get("pendingGame").get("game_type") != "war_time") {
-			const waitingGameView = new WaitingGameView();
-			this.renderNested(waitingGameView, "#game-index-container");
-		}
+		const waitingGameView = new WaitingGameView();
+		this.renderNested(waitingGameView, "#game-index-container");
 	}
 	else {
 		const startGameView = new StartGameView();
