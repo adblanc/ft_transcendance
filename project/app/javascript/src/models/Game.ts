@@ -9,11 +9,8 @@ import consumer from "channels/consumer";
 import { displaySuccess, displayError } from "src/utils/toast";
 import { eventBus } from "src/events/EventBus";
 import WarTime from "./WarTime";
-
-interface Spectator {
-  id: number;
-  login: string;
-}
+import Spectators from "src/collections/Spectators";
+import Spectator from "./Spectator";
 
 interface IGame {
   id: number;
@@ -23,14 +20,16 @@ interface IGame {
   game_type?: string;
   isSpectator?: boolean;
   users?: Profiles;
-  spectators?: Spectator[];
+  spectators?: Spectators;
   war_time?: WarTime;
 }
 
 export interface GameData {
   event: "started" | "expired";
 
-  action: "player_movement";
+  payload: any;
+
+  action: "player_movement" | "new_spectator";
   playerId: number;
 }
 
@@ -46,7 +45,6 @@ export default class Game extends BaseModel<IGame> {
   first: Number;
   second?: boolean;
   channel: ActionCable.Channel;
-  currentUserId?: Number;
   preinitialize() {
     this.relations = [
       {
@@ -54,6 +52,12 @@ export default class Game extends BaseModel<IGame> {
         key: "users",
         collectionType: Profiles,
         relatedModel: Profile,
+      },
+      {
+        type: Backbone.Many,
+        key: "spectators",
+        collectionType: Spectators,
+        relatedModel: Spectator,
       },
       {
         type: Backbone.One,
@@ -67,12 +71,12 @@ export default class Game extends BaseModel<IGame> {
     super(options);
 
     this.second = false;
-    this.currentUserId = undefined;
   }
 
   defaults() {
     return {
       users: [],
+      spectators: [],
     };
   }
 
@@ -105,11 +109,22 @@ export default class Game extends BaseModel<IGame> {
       {
         connected: () => {
           console.log("connected to the game", gameId);
+          if (this.get("isSpectator")) {
+            console.log("on send new_spectator");
+            this.channel.perform("new_spectator", {
+              payload: {
+                id: currentUser().get("id"),
+                login: currentUser().get("login"),
+              },
+            });
+          }
         },
         received: (data: GameData) => {
+          console.log("game received", data);
           this.onMovementReceived(data);
           this.onGameStarted(data);
           this.onGameExpired(data);
+          this.onNewSpectator(data);
         },
         disconnected: () => {
           console.log("disconnected to the game", gameId);
@@ -149,6 +164,17 @@ export default class Game extends BaseModel<IGame> {
         );
       }
       return this.unsubscribeChannelConsumer();
+    }
+  }
+
+  onNewSpectator(data: GameData) {
+    if (
+      data.action === "new_spectator" &&
+      !this.get("spectators").find((u) => u.get("id") === data.payload.id)
+    ) {
+      console.log("on push spectators", data.payload);
+      this.get("spectators").push(new Spectator(data.payload));
+      console.log("spectators size", this.get("spectators").size());
     }
   }
 

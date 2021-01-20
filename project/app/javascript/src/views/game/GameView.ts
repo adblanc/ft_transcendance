@@ -5,6 +5,7 @@ import BaseView from "src/lib/BaseView";
 import Pong from "src/lib/Pong";
 import Game, { MovementData } from "src/models/Game";
 import { currentUser } from "src/models/Profile";
+import SpectatorsView from "./SpectatorsView";
 
 type Options = Backbone.ViewOptions<Game> & {
   gameId: string;
@@ -14,6 +15,7 @@ type Options = Backbone.ViewOptions<Game> & {
 export default class GameView extends BaseView<Game> {
   pong: Pong | undefined;
   isTraining: boolean;
+  spectatorsView: SpectatorsView;
 
   constructor(options: Options) {
     super(options);
@@ -33,8 +35,13 @@ export default class GameView extends BaseView<Game> {
     this.model.fetch({
       error: this.onFetchError,
       success: () => {
+        console.log("game model fetch success");
         this.model.createChannelConsumer();
       },
+    });
+
+    this.spectatorsView = new SpectatorsView({
+      spectators: this.model.get("spectators"),
     });
 
     this.listenTo(eventBus, "pong:player_movement", this.moveOtherPlayer);
@@ -85,17 +92,24 @@ export default class GameView extends BaseView<Game> {
     }
   }
 
+  renderSpectators() {
+    this.renderNested(this.spectatorsView, "#spectators");
+  }
+
   render() {
     const template = $("#playGameTemplate").html();
+
+    console.log("render gameview");
 
     const html = Mustache.render(template, {
       ...this.model?.toJSON(),
       isTraining: this.isTraining,
       firstPlayerName: this.model?.get("users")?.first()?.get("name"),
       secondPlayerName: this.model?.get("users")?.last()?.get("name"),
-      spectatorsNumber: this.model?.get("spectators")?.length,
     });
     this.$el.html(html);
+
+    this.renderSpectators();
 
     const canvas = this.$("#pong")[0] as HTMLCanvasElement;
 

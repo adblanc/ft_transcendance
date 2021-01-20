@@ -6,10 +6,7 @@
 	{{#firstPlayerName}}
 		<h1 class="text-center text-2xl font-semibold text-gray-800">{{firstPlayerName}} vs {{secondPlayerName}}</h1>
 	{{/firstPlayerName}}
-		<canvas class="pong-canvas my-8" id="pong" width="600" height="400"> </canvas>
-		<h1 class="text-center text-2xl font-semibold text-gray-800 underline">{{spectatorsNumber}} spectator</h1>
-	{{#spectators}}
-		<div>{{login}}</div>
-	{{/spectators}}
+		<canvas class="pong-canvas my-8" id="pong" width="600" height="400"></canvas>
+		<div id="spectators"></div>
 	</div>
 </script>
