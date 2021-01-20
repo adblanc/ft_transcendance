@@ -113,15 +113,6 @@ export default class Game extends BaseModel<IGame> {
       {
         connected: () => {
           console.log("connected to the game", gameId);
-          if (this.get("isSpectator")) {
-            console.log("on send new_spectator");
-            this.channel.perform("new_spectator", {
-              payload: {
-                id: currentUser().get("id"),
-                login: currentUser().get("login"),
-              },
-            });
-          }
         },
         received: (data: GameData) => {
           console.log("game received", data);
