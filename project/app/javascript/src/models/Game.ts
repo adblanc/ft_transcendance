@@ -16,6 +16,7 @@ interface IGame {
   goal?: number;
   status?: "pending" | "started" | "finished" | "unanswered";
   game_type?: string;
+  isSpectator?: boolean;
   users?: Profiles;
   war_time?: WarTime;
 }
@@ -47,8 +48,8 @@ export default class Game extends BaseModel<IGame> {
         key: "users",
         collectionType: Profiles,
         relatedModel: Profile,
-	  },
-	  {
+      },
+      {
         type: Backbone.One,
         key: "war_time",
         relatedModel: WarTime,
@@ -65,7 +66,7 @@ export default class Game extends BaseModel<IGame> {
 
   defaults() {
     return {
-	  users: [],
+      users: [],
     };
   }
 
@@ -112,17 +113,16 @@ export default class Game extends BaseModel<IGame> {
             this.navigateToGame();
             return this.unsubscribeChannelConsumer();
           } else if (data.event === "expired") {
-			currentUser().fetch();
-			if (this.get("game_type") != "war_time") {
-				displayError(
-				"We were not able to find an opponent. Please try different game settings."
-				);
-			}
-			else {
-				displaySuccess(
-					"No one answered your War Time challenge! You have won the match."
-				);
-			}
+            currentUser().fetch();
+            if (this.get("game_type") != "war_time") {
+              displayError(
+                "We were not able to find an opponent. Please try different game settings."
+              );
+            } else {
+              displaySuccess(
+                "No one answered your War Time challenge! You have won the match."
+              );
+            }
             return this.unsubscribeChannelConsumer();
           }
         },
@@ -142,10 +142,10 @@ export default class Game extends BaseModel<IGame> {
   challenge(level: string, goal: number, game_type: string, warTimeId: string) {
     return this.asyncSave(
       {
-		level: level,
-		goal: goal,
-		game_type: game_type,
-		warTimeId: warTimeId,
+        level: level,
+        goal: goal,
+        game_type: game_type,
+        warTimeId: warTimeId,
       },
       {
         url: `${this.urlRoot()}/challenge`,
@@ -155,7 +155,7 @@ export default class Game extends BaseModel<IGame> {
 
   acceptChallenge() {
     return this.asyncSave(
-	  {},
+      {},
       {
         url: `${this.baseGameRoot()}/acceptChallenge`,
       }

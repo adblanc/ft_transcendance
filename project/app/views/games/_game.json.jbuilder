@@ -1,4 +1,5 @@
 json.extract! game, :id, :level, :goal, :status, :game_type, :war_time
+json.isSpectator @current_user.is_spectating?(game)
 json.spectators do
 	json.array! game.spectators do |spectator|
 		json.partial! "games/spectator", spectator: spectator

@@ -56,7 +56,7 @@ export default class GameView extends BaseView<Game> {
   }
 
   onMouseMove(e: JQuery.MouseMoveEvent) {
-    if (this.pong) {
+    if (this.pong && !this.model?.get("isSpectator")) {
       const scale = e.offsetY / e.target.getBoundingClientRect().height;
 
       this.pong.players[0].pos.y = this.pong.canvas.height * scale;
@@ -71,7 +71,7 @@ export default class GameView extends BaseView<Game> {
   }
 
   onClick(e: JQuery.ClickEvent) {
-    if (this.pong) {
+    if (this.pong && !this.model?.get("isSpectator")) {
       this.pong.start();
     }
   }

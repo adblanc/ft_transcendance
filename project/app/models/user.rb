@@ -144,6 +144,7 @@ class User < ApplicationRecord
 	end
 
 	def inGame?
+		return false;
 		self.games.started.present? || self.games.pending.present?
 	end
 

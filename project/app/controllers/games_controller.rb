@@ -36,8 +36,8 @@ class GamesController < ApplicationController
 		@game = Game.create(game_params)
         if @game.save
 			@game.users.push(current_user)
-			@expire = 5
-			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game)
+			# @expire = 5
+			# ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game)
 			current_user.add_role(:player, @game);
 			@game
         else
