@@ -1,4 +1,3 @@
-import { eventBus } from "src/events/EventBus";
 import ChatView from "src/views/Chat/ChatView";
 import NavbarView from "src/views/NavbarView";
 import NotificationsView from "src/views/NotificationsView";

@@ -62,8 +62,8 @@ export default class Profile extends BaseModel<IProfile> {
         type: Backbone.One,
         key: "pending_guild",
         relatedModel: Guild,
-	  },
-	  {
+      },
+      {
         type: Backbone.One,
         key: "pendingGame",
         relatedModel: Game,
@@ -195,9 +195,11 @@ let memoizedUser: Profile = undefined;
 const fetchCurrentUser = () => {
   memoizedUser.fetch({
     success: () => {
-      console.log("we successfully fetched current user", memoizedUser);
       memoizedUser.channel = memoizedUser.createNotificationsConsumer();
       memoizedUser.appearanceChannel = createAppereanceConsumer();
+    },
+    error: () => {
+      logoutUser();
     },
   });
 };
@@ -214,7 +216,6 @@ export const currentUser = (fetch = false): Profile => {
 };
 
 export const logoutUser = () => {
-  console.log("logout user");
   clearAuthHeaders();
   consumer.disconnect();
   memoizedUser?.off("appearance");
