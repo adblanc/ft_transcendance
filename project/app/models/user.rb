@@ -22,7 +22,7 @@ class User < ApplicationRecord
 
 	validates :avatar, blob: { content_type: :image, size_range: 1..5.megabytes }
 	validates :name, presence: true
-	validates :name, length: {minimum: 3, maximum: 32}
+	validates :name, length: {minimum: 3, maximum: 32}, uniqueness: true
 	validates :login, presence: true, uniqueness: true
 	validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
 	validates :two_fact_auth, inclusion: { in: [ true, false ] }
