@@ -38,6 +38,7 @@ export default class GameView extends BaseView<Game> {
     });
 
     this.listenTo(eventBus, "pong:player_movement", this.moveOtherPlayer);
+    this.listenTo(this.model, "change", this.render);
   }
 
   events() {
@@ -52,7 +53,15 @@ export default class GameView extends BaseView<Game> {
   }
 
   moveOtherPlayer(data: MovementData) {
-    this.pong.players[1].pos.y = data.posY;
+    let index = 1;
+
+    if (this.model.get("isSpectator")) {
+      index = this.model
+        .get("users")
+        .findIndex((u) => u.get("id") === data.playerId);
+    }
+
+    this.pong.players[index].pos.y = data.posY;
   }
 
   onMouseMove(e: JQuery.MouseMoveEvent) {
@@ -78,7 +87,14 @@ export default class GameView extends BaseView<Game> {
 
   render() {
     const template = $("#playGameTemplate").html();
-    const html = Mustache.render(template, this.model?.toJSON());
+
+    const html = Mustache.render(template, {
+      ...this.model?.toJSON(),
+      isTraining: this.isTraining,
+      firstPlayerName: this.model?.get("users")?.first()?.get("name"),
+      secondPlayerName: this.model?.get("users")?.last()?.get("name"),
+      spectatorsNumber: this.model?.get("spectators")?.length,
+    });
     this.$el.html(html);
 
     const canvas = this.$("#pong")[0] as HTMLCanvasElement;

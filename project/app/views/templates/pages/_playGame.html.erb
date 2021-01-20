@@ -1,5 +1,15 @@
 <script type="text/html" id="playGameTemplate">
-	<div class="relative flex page-height justify-center items-center">
-		<canvas class="pong-canvas" id="pong" width="600" height="400">
+	<div class="relative flex flex-col page-height justify-center items-center">
+	{{#isTraining}}
+		<h1 class="text-center text-2xl font-semibold text-gray-800">Training</h1>
+	{{/isTraining}}
+	{{#firstPlayerName}}
+		<h1 class="text-center text-2xl font-semibold text-gray-800">{{firstPlayerName}} vs {{secondPlayerName}}</h1>
+	{{/firstPlayerName}}
+		<canvas class="pong-canvas my-8" id="pong" width="600" height="400"> </canvas>
+		<h1 class="text-center text-2xl font-semibold text-gray-800 underline">{{spectatorsNumber}} spectator</h1>
+	{{#spectators}}
+		<div>{{login}}</div>
+	{{/spectators}}
 	</div>
 </script>

@@ -10,6 +10,11 @@ import { displaySuccess, displayError } from "src/utils/toast";
 import { eventBus } from "src/events/EventBus";
 import WarTime from "./WarTime";
 
+interface Spectator {
+  id: number;
+  login: string;
+}
+
 interface IGame {
   id: number;
   level?: string;
@@ -18,11 +23,12 @@ interface IGame {
   game_type?: string;
   isSpectator?: boolean;
   users?: Profiles;
+  spectators?: Spectator[];
   war_time?: WarTime;
 }
 
 export interface GameData {
-  event: "started";
+  event: "started" | "expired";
 
   action: "player_movement";
   playerId: number;
@@ -101,36 +107,49 @@ export default class Game extends BaseModel<IGame> {
           console.log("connected to the game", gameId);
         },
         received: (data: GameData) => {
-          if (
-            data.action === "player_movement" &&
-            data.playerId !== currentUser().get("id")
-          ) {
-            console.log("received other player data", data);
-            eventBus.trigger("pong:player_movement", data);
-          }
-          if (data.event === "started") {
-            console.log("we navigate");
-            this.navigateToGame();
-            return this.unsubscribeChannelConsumer();
-          } else if (data.event === "expired") {
-            currentUser().fetch();
-            if (this.get("game_type") != "war_time") {
-              displayError(
-                "We were not able to find an opponent. Please try different game settings."
-              );
-            } else {
-              displaySuccess(
-                "No one answered your War Time challenge! You have won the match."
-              );
-            }
-            return this.unsubscribeChannelConsumer();
-          }
+          this.onMovementReceived(data);
+          this.onGameStarted(data);
+          this.onGameExpired(data);
         },
         disconnected: () => {
           console.log("disconnected to the game", gameId);
         },
       }
     );
+  }
+
+  onMovementReceived(data: GameData) {
+    if (
+      data.action === "player_movement" &&
+      data.playerId !== currentUser().get("id")
+    ) {
+      console.log("received other player data", data);
+      eventBus.trigger("pong:player_movement", data);
+    }
+  }
+
+  onGameStarted(data: GameData) {
+    if (data.event === "started") {
+      console.log("we navigate");
+      this.navigateToGame();
+      return this.unsubscribeChannelConsumer();
+    }
+  }
+
+  onGameExpired(data: GameData) {
+    if (data.event == "expired") {
+      currentUser().fetch();
+      if (this.get("game_type") != "war_time") {
+        displayError(
+          "We were not able to find an opponent. Please try different game settings."
+        );
+      } else {
+        displaySuccess(
+          "No one answered your War Time challenge! You have won the match."
+        );
+      }
+      return this.unsubscribeChannelConsumer();
+    }
   }
 
   navigateToGame() {

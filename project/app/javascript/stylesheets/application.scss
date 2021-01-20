@@ -175,8 +175,9 @@ $chatInputHeight: 4rem;
 }
 
 .pong-canvas {
-  height: $pageHeight;
-  max-width: 100vw;
+  height: calc(#{$pageHeight} / 2);
+  max-height: 800px;
+  max-width: 90vw;
   image-rendering: pixelated;
   border: solid 1px #fff;
   margin: 0 auto;
