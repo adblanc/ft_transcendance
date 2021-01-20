@@ -17,8 +17,10 @@ class User < ApplicationRecord
 	has_many :blocks
 	has_many :blocked_users, :through => :blocks
 
-	has_many :friendships
-	has_many :friends, :through => :friendships
+	has_many :friend_requests_as_requestor, foreign_key: :requestor_id, class_name: :FriendRequest
+	has_many :friend_requests_as_receiver, foreign_key: :receiver_id, class_name: :FriendRequest
+	has_many :friendships, :foreign_key => 'user_id', dependent: :destroy
+	has_many :friends, through: :friendships, source: :friend
 
 	validates :avatar, blob: { content_type: :image, size_range: 1..5.megabytes }
 	validates :name, presence: true
@@ -105,10 +107,24 @@ class User < ApplicationRecord
 	end
 
 	def is_friend_of?(user)
-		if (user == self)
-			return false;
+		friends.each do | friend |
+			return true if friend == user
 		end
-		return self.friendships.exists?(friend_id: user.id);
+		return false
+	end
+
+	def has_requested_friend?(user)
+		friend_requests_as_requestor.each do | request |
+			return true if request.other(self) == user
+		end
+		return false
+	end
+
+	def has_received_friend?(user)
+		friend_requests_as_receiver.each do | request |
+			return true if request.other(self) == user
+		end
+		return false
 	end
 
 	def pending_guild?

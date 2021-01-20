@@ -2,29 +2,31 @@ class FriendshipsController < ApplicationController
 	before_action :authenticate_user!
 
 	def add
-		if (@current_user.friendships.where(friend_id: params[:id]).take)
-			render json: {"User" => ["is already your friend"]}, status: :unprocessable_entity
-		else
-			@friend = @current_user.friendships.build(:friend_id => params[:id])
-			if @friend.save
-				@current_user
-			else
-				render json: @friend.errors, status: :unprocessable_entity
-			end
-		end
+		@user = User.find_by_id(params[:id])
+		return head :unauthorized if @current_user.is_friend_of(@user)
+
+		FriendRequest.create(requestor: @current_user, receiver: @user)
+		@user.send_notification("#{@current_user.name} sent you a friend request", "/profile/#{@user.id}", "friend_request")
+	end
+
+	def accept
+		@user = User.find_by_id(params[:id])
+		@request = FriendRequest.where(requestor: @user, receiver: @current_user)
+		@request.destroy
+		@current_user.friends.push(@user)
+		@user.send_notification("#{@current_user.name} accepted your friend request", "/profile/#{@user.id}", "friend_request")
+	end
+
+	def refuse
+		@user = User.find_by_id(params[:id])
+		@request = FriendRequest.where(requestor: @user, receiver: @current_user)
+		@request.destroy
+		@user.send_notification("#{@current_user.name} refused friend request", "/profile/#{@user.id}", "friend_request")
 	end
 
 	def remove
-		@friend = @current_user.friendships.where(friend_id: params[:id]).take;
-		if (@friend)
-			if (@friend.destroy)
-				@current_user
-			else
-				render json: @friend.errors, status: :unprocessable_entity
-			end
-		else
-			render json: {"User" => ["is already not your friend"]}, status: :unprocessable_entity
-		end
+		@user = User.find_by_id(params[:id])
+		@current_user.friends.delete(@user)
 	end
 
   end

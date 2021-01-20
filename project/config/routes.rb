@@ -42,7 +42,9 @@ Rails.application.routes.draw do
     end
     end
 
-    put "/add_friend/:id", to: "friendships#add";
+	put "/add_friend/:id", to: "friendships#add";
+	put "/accept_friend/:id", to: "friendships#accept";
+	put "/refuse_friend/:id", to: "friendships#refuse";
     put "/remove_friend/:id", to: "friendships#remove";
 
     resources :room_messages

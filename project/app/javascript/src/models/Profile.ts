@@ -180,6 +180,24 @@ export default class Profile extends BaseModel<IProfile> {
     );
   }
 
+  acceptFriend(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/accept_friend/${id}`,
+      }
+    );
+  }
+
+  refuseFriend(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/refuse_friend/${id}`,
+      }
+    );
+  }
+
   removeFriend(id: number) {
     return this.asyncSave(
       {},
