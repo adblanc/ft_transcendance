@@ -2,7 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
 import Guild from "src/models/Guild";
-import { displaySuccess } from "src/utils/toast";
+import { displaySuccess, displayError } from "src/utils/toast";
 
 export default class ModifyGuildView extends ModalView<Guild> {
   constructor(options?: Backbone.ViewOptions<Guild>) {
@@ -25,11 +25,13 @@ export default class ModifyGuildView extends ModalView<Guild> {
   onDestroy(e: JQuery.Event) {
     //e.preventDefault();
 
-    this.model.destroy();
-    displaySuccess("Guild successfully destroyed.");
-    this.closeModal();
-
-    Backbone.history.navigate("/", { trigger: true });
+	this.model.destroy({
+		success : function() { displaySuccess("Guild successfully destroyed."); },
+		error : function() { displayError("Guild can't be destroyed."); },
+		wait: true,
+	});
+	this.closeModal();
+	Backbone.history.navigate("/", { trigger: true });
   }
 
   async onSubmit(e: JQuery.Event) {

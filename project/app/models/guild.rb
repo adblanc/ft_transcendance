@@ -21,7 +21,7 @@ class Guild < ApplicationRecord
 			io: File.open("default/guild.jpg", "r"),
 			filename: "guild.jpg",
 			"content_type": "image/jpeg",
-		)
+		) if !self.img.attached?
 	end
 
 	def remove_user(user)
