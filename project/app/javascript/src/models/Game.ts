@@ -33,11 +33,6 @@ export interface GameData {
   playerId: number;
 }
 
-interface SpectatorData {
-  action: "spectator_joined" | "spectator_left";
-  payload: ISpectator;
-}
-
 export interface MovementData extends GameData {
   posY: number;
 }
@@ -101,7 +96,7 @@ export default class Game extends BaseModel<IGame> {
 
   connectToWS() {
     this.createChannelConsumer();
-    this.connectToSpectatorsChannel();
+    this.get("spectators").connectToSpectatorsChannel(this.get("id"));
   }
 
   unsubscribeChannelConsumer() {
@@ -139,40 +134,6 @@ export default class Game extends BaseModel<IGame> {
         },
       }
     );
-  }
-
-  connectToSpectatorsChannel() {
-    this.unsubscribeSpectatorsChannel();
-    this.spectatorsChannel = consumer.subscriptions.create(
-      { channel: "GameSpectatorsChannel", id: this.get("id") },
-      {
-        connected: () => {
-          console.log("connected to spectators", this.get("id"));
-        },
-        received: ({ action, payload }: SpectatorData) => {
-          console.log("received", action, payload);
-          if (
-            action === "spectator_joined" &&
-            !this.get("spectators").find((s) => s.get("id") === payload.id)
-          ) {
-            this.get("spectators").push(new Spectator(payload));
-          } else if (action === "spectator_left") {
-            const spectator = this.get("spectators").find(
-              (s) => s.get("id") === payload.id
-            );
-
-            if (spectator) {
-              this.get("spectators").remove(spectator);
-            }
-          }
-        },
-      }
-    );
-  }
-
-  unsubscribeSpectatorsChannel() {
-    this.spectatorsChannel?.unsubscribe();
-    this.spectatorsChannel = undefined;
   }
 
   onMovementReceived(data: GameData) {
