@@ -22,10 +22,10 @@ export default class ModifyGuildView extends ModalView<Guild> {
     };
   }
 
-  onDestroy(e: JQuery.Event) {
-    //e.preventDefault();
+  async onDestroy(e: JQuery.Event) {
+    e.preventDefault();
 
-	this.model.destroy({
+	await this.model.destroy({
 		success : function() { displaySuccess("Guild successfully destroyed."); },
 		error : function() { displayError("Guild can't be destroyed."); },
 		wait: true,
