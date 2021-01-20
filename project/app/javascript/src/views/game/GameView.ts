@@ -36,7 +36,7 @@ export default class GameView extends BaseView<Game> {
       error: this.onFetchError,
       success: () => {
         console.log("game model fetch success");
-        this.model.createChannelConsumer();
+        this.model.connectToWS();
       },
     });
 

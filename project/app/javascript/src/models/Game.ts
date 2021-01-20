@@ -10,7 +10,7 @@ import { displaySuccess, displayError } from "src/utils/toast";
 import { eventBus } from "src/events/EventBus";
 import WarTime from "./WarTime";
 import Spectators from "src/collections/Spectators";
-import Spectator from "./Spectator";
+import Spectator, { ISpectator } from "./Spectator";
 
 interface IGame {
   id: number;
@@ -29,8 +29,13 @@ export interface GameData {
 
   payload: any;
 
-  action: "player_movement" | "new_spectator";
+  action: "player_movement";
   playerId: number;
+}
+
+interface SpectatorData {
+  action: "spectator_joined" | "spectator_left";
+  payload: ISpectator;
 }
 
 export interface MovementData extends GameData {
@@ -43,8 +48,9 @@ type ConstructorArgs = Pick<IGame, "id">;
 
 export default class Game extends BaseModel<IGame> {
   first: Number;
-  second?: boolean;
   channel: ActionCable.Channel;
+  spectatorsChannel?: ActionCable.Channel;
+
   preinitialize() {
     this.relations = [
       {
@@ -69,8 +75,6 @@ export default class Game extends BaseModel<IGame> {
 
   constructor(options?: ConstructorArgs) {
     super(options);
-
-    this.second = false;
   }
 
   defaults() {
@@ -93,6 +97,11 @@ export default class Game extends BaseModel<IGame> {
 
   score(user_id: string) {
     return this.asyncSave(user_id, { url: this.baseGameRoot() });
+  }
+
+  connectToWS() {
+    this.createChannelConsumer();
+    this.connectToSpectatorsChannel();
   }
 
   unsubscribeChannelConsumer() {
@@ -124,13 +133,46 @@ export default class Game extends BaseModel<IGame> {
           this.onMovementReceived(data);
           this.onGameStarted(data);
           this.onGameExpired(data);
-          this.onNewSpectator(data);
         },
         disconnected: () => {
           console.log("disconnected to the game", gameId);
         },
       }
     );
+  }
+
+  connectToSpectatorsChannel() {
+    this.unsubscribeSpectatorsChannel();
+    this.spectatorsChannel = consumer.subscriptions.create(
+      { channel: "GameSpectatorsChannel", id: this.get("id") },
+      {
+        connected: () => {
+          console.log("connected to spectators", this.get("id"));
+        },
+        received: ({ action, payload }: SpectatorData) => {
+          console.log("received", action, payload);
+          if (
+            action === "spectator_joined" &&
+            !this.get("spectators").find((s) => s.get("id") === payload.id)
+          ) {
+            this.get("spectators").push(new Spectator(payload));
+          } else if (action === "spectator_left") {
+            const spectator = this.get("spectators").find(
+              (s) => s.get("id") === payload.id
+            );
+
+            if (spectator) {
+              this.get("spectators").remove(spectator);
+            }
+          }
+        },
+      }
+    );
+  }
+
+  unsubscribeSpectatorsChannel() {
+    this.spectatorsChannel?.unsubscribe();
+    this.spectatorsChannel = undefined;
   }
 
   onMovementReceived(data: GameData) {
@@ -164,17 +206,6 @@ export default class Game extends BaseModel<IGame> {
         );
       }
       return this.unsubscribeChannelConsumer();
-    }
-  }
-
-  onNewSpectator(data: GameData) {
-    if (
-      data.action === "new_spectator" &&
-      !this.get("spectators").find((u) => u.get("id") === data.payload.id)
-    ) {
-      console.log("on push spectators", data.payload);
-      this.get("spectators").push(new Spectator(data.payload));
-      console.log("spectators size", this.get("spectators").size());
     }
   }
 

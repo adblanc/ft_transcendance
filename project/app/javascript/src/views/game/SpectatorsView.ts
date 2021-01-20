@@ -13,8 +13,7 @@ export default class SpectatorsView extends BaseView {
     super();
 
     this.spectators = spectators;
-    this.listenTo(this.spectators, "add", this.render);
-    this.listenTo(this.spectators, "remove", this.render);
+    this.listenTo(this.spectators, "update", this.render);
   }
 
   render() {

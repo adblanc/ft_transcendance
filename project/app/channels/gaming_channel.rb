@@ -15,10 +15,6 @@ class GamingChannel < ApplicationCable::Channel
      end
   end
 
-  def new_spectator(data)
-      ActionCable.server.broadcast("game_#{@id}", data);
-  end
-
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
   end
