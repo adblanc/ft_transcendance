@@ -19,11 +19,14 @@ json.wars do
 		json.time_to_answer war.time_to_answer
 		json.max_unanswered_calls war.max_unanswered_calls
 		json.atWarTime war.atWarTime?
+		json.nb_games war.nb_games
+		json.nb_wartimes war.nb_wartimes
+		json.war_points war.war_points(@guild)
 		json.warOpponent do
 			json.id  @guild.warOpponent(war).id
-			json.points  @guild.warOpponent(war).points
+			json.ang  @guild.warOpponent(war).ang
+			json.war_points  @guild.warOpponent(war).war_points(war)
 			json.name  @guild.warOpponent(war).name
-			json.img_url url_for(@guild.warOpponent(war).img) if @guild.warOpponent(war).img.attached?
 		end
 	end
 end
@@ -39,7 +42,6 @@ json.pendingWars do
 		json.inc_tour pendingWar.inc_tour
 		json.warOpponent do
 			json.id  @guild.warOpponent(pendingWar).id
-			json.points  @guild.warOpponent(pendingWar).points
 			json.name  @guild.warOpponent(pendingWar).name
 			json.img_url url_for(@guild.warOpponent(pendingWar).img) if @guild.warOpponent(pendingWar).img.attached?
 		end

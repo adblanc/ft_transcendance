@@ -53,9 +53,9 @@ class GamesController < ApplicationController
 		return head :unauthorized if @warTime.activeGame || @warTime.pendingGame
 
 		@game = Game.create(game_params)
-		@game.update(war_time: @warTime)
 
 		if @game.save
+			@game.update(war_time: @warTime)
 			@game.users.push(current_user)
 			@opponent.members.each do |member|
 				member.send_notification("#{current_user.name} has challenged your guild to a war time match! Answer the call!", "/wars", "war")

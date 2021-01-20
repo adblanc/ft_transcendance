@@ -20,6 +20,8 @@ interface IWar {
   guilds: Guilds;
   warOpponent: Guild;
   activeWarTime: WarTime;
+  nb_games: number;
+  nb_wartimes: number;
   created_at: string;
   updated_at: string;
 }

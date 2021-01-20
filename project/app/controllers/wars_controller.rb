@@ -134,6 +134,7 @@ class WarsController < ApplicationController
 				member.send_notification("War time has just started with #{@guild.name}! Take your slots!", "/wars", "war")
 			end
 			EndWarTimeJob.set(wait_until: @war_time.end).perform_later(@war_time, @war)
+			@war.increment!(:nb_wartimes, 1)
 		else
 			render json: @war_time.errors, status: :unprocessable_entity
 		end

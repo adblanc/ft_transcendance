@@ -102,6 +102,7 @@ class Guild < ApplicationRecord
 		if war.present?
 			self.guild_wars.find_by(war: war).score(points)
 		end
+		war.increment!(:nb_games, 1)
 	end
 
 	def win_score(points)

@@ -33,14 +33,19 @@ export default class WarHistoryView extends BaseView {
 	
 	const $element = this.$("#listing");
 
+	if (this.collection.isEmpty() || (this.collection.length == 1 && this.guild.get("pendingWar"))) {
+		this.$("#no-war").show();
+	}
+
     this.collection.forEach(function (item) {
 	  if (item.get("status") != "pending") {
 		var nodeView = new NodeView({
 			model: item,
+			guild: this.guild,
 		});
 		$element.append(nodeView.render().el);
 	  }
-    });
+    }, this);
 
     return this;
   }

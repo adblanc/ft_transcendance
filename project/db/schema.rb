@@ -212,6 +212,8 @@ ActiveRecord::Schema.define(version: 2021_01_15_160004) do
     t.integer "status", default: 0
     t.integer "time_to_answer"
     t.integer "max_unanswered_calls"
+    t.integer "nb_games", default: 0
+    t.integer "nb_wartimes", default: 0
     t.boolean "inc_tour", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

@@ -1,9 +1,20 @@
 <script type="text/html" id="warNodeTemplate">
-	<div id="grow">
-		<div style=" float:left; margin-left:30px">
-			<h1 style="font-size:11px" class="flex flex-row text-white">From {{start}} to {{end}} </h1> 
-			<h1 class="flex flex-row text-white">War against {{warOpponent.name}}</h1> 
+	<div class="row mt-3">
+		<div class="column justify-center" style=" height:60px; text-align: center;">
+				<div class="column justify-center ml-5" style="float:left; text-align: center;">
+					<h1 style="font-size:13px" class="justify-center flex flex-row text-white">{{ang}} : {{war.war_points}} points </a>
+					<h1 style="font-size:13px" class="justify-center flex flex-row text-white">{{war.warOpponent.ang}} : {{war.warOpponent.war_points}} points</a>
+				</div>
+				<div class="column" style="float:left; text-align: center;margin-left:135px">
+					<h1 style="font-size:11px" class=" justify-center flex flex-row text-white">From {{war.start}} to {{war.end}} </h1> 
+					<h1 style="font-size:14px"class="justify-center flex flex-row text-white">War against {{war.warOpponent.name}}</h1>
+					<h1 style="font-size:14px" class=" justify-center flex flex-row text-white">Prize : {{war.prize}} pts</h1> 
+				</div>
+				<div class="column mr-5" style="float:right; text-align: center;">
+					<h1 style="font-size:11px;" class="flex flex-row text-white">Total number of games: {{war.nb_games }}</h1>
+					<h1 style="font-size:11px;" class="flex flex-row text-white">Total number of War Times: {{war.nb_wartimes }}</h1>
+				</div>		
 		</div>
-		<h1 style="float:right; margin-right:100px; margin-top:4px" class="flex flex-row text-white">{{status}}</h1> 
 	</div>
+	<div class="line ml-1" style="width:520px; margin-left:70px; border: 1px solid; color: #14B8A6;"></div>
 </script>
