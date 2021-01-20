@@ -1,10 +1,7 @@
 class GamingChannel < ApplicationCable::Channel
   def subscribed
-    @id = params[:id]
-     stream_from "game_#{@id}"
-
-    # mouv = GameMouv.where(game_id: game_id).order(created_at: :asc).each do |mouv|
-    #   transmit(mouv)
+      @id = params[:id]
+      stream_from "game_#{@id}"
   end
 
   def player_movement(data) # ici on recoit ce que un autre joueur perform

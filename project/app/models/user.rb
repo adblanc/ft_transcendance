@@ -119,6 +119,14 @@ class User < ApplicationRecord
 		end
 	end
 
+	def is_playing_in?(game)
+		return self.has_role?(:player, game);
+	end
+
+	def is_spectating?(game)
+		return self.has_role?(:spectator, game);
+	end
+
 	def appear(appearing_on)
 		self.update_attributes(is_present: true, appearing_on: appearing_on);
 

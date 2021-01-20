@@ -1,4 +1,6 @@
 class Game < ApplicationRecord
+	resourcify
+
 	has_many :game_users
 	has_and_belongs_to_many :users, through: :game_user
 	belongs_to :war_time, optional: true
@@ -23,5 +25,9 @@ class Game < ApplicationRecord
 	def finish
 		logger.debug "test"
 	end
-		
+
+	def	spectators
+		User.with_role(:spectator, self);
+	end
+
 end
