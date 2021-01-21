@@ -14,7 +14,7 @@ import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import { eventBus } from "src/events/EventBus";
 import Game from "./Game";
-import FriendRequest from "./FriendRequest";
+import User from "./User";
 import FriendRequests from "src/collections/FriendRequests";
 
 export interface IBlockedUser {
@@ -83,7 +83,7 @@ export default class Profile extends BaseModel<IProfile> {
         type: Backbone.Many,
         key: "friend_requests",
         collectionType: FriendRequests,
-        relatedModel: FriendRequest,
+        relatedModel: User,
       },
     ];
   }

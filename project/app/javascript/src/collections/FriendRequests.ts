@@ -1,10 +1,10 @@
 import Backbone from "backbone";
-import FriendRequest from "../models/FriendRequest";
+import User from "../models/User";
 
-export default class FriendRequests extends Backbone.Collection<FriendRequest> {
+export default class FriendRequests extends Backbone.Collection<User> {
   constructor() {
     super();
 
-    this.model = FriendRequest;
+    this.model = User;
   }
 }

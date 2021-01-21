@@ -2,7 +2,6 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
 import FriendRequests from "src/collections/FriendRequests";
-import FriendRequest from "src/models/FriendRequest";
 import User from "src/models/User";
 import ItemRequestView from "./ItemRequestView"
 
@@ -17,7 +16,7 @@ export default class RequestsView extends ModalView<User> {
     this.listenTo(this.requests, "remove", this.onRemove);
   }
 
-  onRemove(request: FriendRequest) {
+  onRemove(request: User) {
     this.$(`#pending-request-${request.get("id")}`)
       .parent()
       .remove();
@@ -47,7 +46,7 @@ export default class RequestsView extends ModalView<User> {
     this.requests.forEach((item) => {
       this.$("#listing").append(
         new ItemRequestView({
-          model: item.get("requestor"),
+          model: item,
         }).render().el
       );
     }, this);

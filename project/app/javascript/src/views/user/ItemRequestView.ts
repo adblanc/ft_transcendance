@@ -12,7 +12,8 @@ export default class ItemRequestView extends BaseView {
   constructor(options?: Options) {
     super(options);
 
-    this.model = options.model;
+	this.model = options.model;
+	console.log(this.model);
   }
 
   events() {
@@ -55,7 +56,7 @@ export default class ItemRequestView extends BaseView {
   }
 
   render() {
-    const template = $("#itemRequestTemplate").html();
+    const template = $("#requestItemTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
     this.$el.html(html);
 
