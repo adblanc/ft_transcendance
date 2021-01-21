@@ -37,8 +37,19 @@ class FriendshipsController < ApplicationController
 		@other_user = User.find_by_id(params[:id])
 		return head :unauthorized if not @current_user.is_friend_of?(@other_user) 
 
-		@other_user = User.find_by_id(params[:id])
-		@current_user.friends.delete(@other_user)
+		@friendship = look_for_friendship(@current_user, @other_user)
+		@friendship.destroy
+		@other_user
+	end
+
+	private
+
+	def look_for_friendship(user_a, user_b)
+		if @friendship = Friendship.where(user: user_a, friend: user_b).first
+			return @friendship
+		else
+			return Friendship.where(user: user_b, friend: user_a).first
+		end
 	end
 
   end

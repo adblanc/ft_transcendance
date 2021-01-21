@@ -27,6 +27,7 @@ export default class UserView extends BaseView {
     return {
       "click #send-dm": this.onClickSendDm,
 	  "click #add-friend": this.onAddFriend,
+	  "click #remove-friend": this.onRemoveFriend,
 	  "click #request-btn": "onRequestClicked",
     };
   }
@@ -42,6 +43,16 @@ export default class UserView extends BaseView {
     if (success) {
       displaySuccess(
         `Your invitation has been sent to ${this.user.get("login")}`
+	  );
+    }
+  }
+
+  async onRemoveFriend() {
+    const success = await this.user.removeFriend();
+
+    if (success) {
+      displaySuccess(
+        `Your are no longer friend with ${this.user.get("login")}`
 	  );
     }
   }
