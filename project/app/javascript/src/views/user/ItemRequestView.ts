@@ -13,7 +13,6 @@ export default class ItemRequestView extends BaseView {
     super(options);
 
 	this.model = options.model;
-	console.log(this.model);
   }
 
   events() {
@@ -52,13 +51,13 @@ export default class ItemRequestView extends BaseView {
         );
         break;
     }
-    this.model.fetch(); //A voir si on ne refetch pas la friendRequest
+    this.model.fetch(); //A voir
   }
 
   render() {
     const template = $("#requestItemTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
-    this.$el.html(html);
+	this.$el.html(html);
 
     return this;
   }

@@ -38,8 +38,8 @@ export default class RequestsView extends ModalView<User> {
 
   render() {
     super.render();
-    const template = $("#requestItemTemplate").html();
-    const html = Mustache.render(template, this.model.toJSON());
+    const template = $("#requestsTemplate").html();
+    const html = Mustache.render(template, {});
     this.$content.html(html);
     this.renderIsEmpty();
 
