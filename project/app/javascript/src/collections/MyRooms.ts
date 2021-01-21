@@ -1,10 +1,12 @@
 import Backbone from "backbone";
+import { RoomsGlobalData } from "channels/rooms_global_channel";
 import { BASE_ROOT } from "src/constants";
 import { eventBus } from "src/events/EventBus";
 import PublicRoom from "src/models/PublicRoom";
 import Room from "../models/Room";
+import BaseRooms from "./BaseRooms";
 
-export default class MyRooms extends Backbone.Collection<Room> {
+export default class MyRooms extends BaseRooms<Room> {
   selectedRoom?: Room;
   preinitialize() {
     this.model = Room;
