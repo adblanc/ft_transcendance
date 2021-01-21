@@ -4,6 +4,7 @@ import ModalView from "../ModalView";
 import Friends from "src/collections/Friends";
 import User from "src/models/User";
 import ItemFriendView from "./ItemFriendView"
+import { eventBus } from "src/events/EventBus";
 
 export default class FriendsView extends ModalView<User> {
   friends: Friends;
@@ -24,6 +25,7 @@ export default class FriendsView extends ModalView<User> {
     if (this.friends.isEmpty()) {
       this.renderIsEmpty();
 	}
+	eventBus.trigger("model:change");
   }
 
   renderIsEmpty() {
@@ -47,6 +49,7 @@ export default class FriendsView extends ModalView<User> {
       this.$("#listing").append(
         new ItemFriendView({
 		  model: item,
+		  user: this.model,
         }).render().el
       );
     }, this);

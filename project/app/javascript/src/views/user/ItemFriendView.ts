@@ -4,20 +4,22 @@ import BaseView from "../../lib/BaseView";
 import User from "src/models/User";
 import { displaySuccess } from "src/utils";
 
-type Options = Backbone.ViewOptions & { model: User};
+type Options = Backbone.ViewOptions & { model: User, user: User};
 
 export default class ItemFriendView extends BaseView {
   model: User;
+  user: User;
 
   constructor(options?: Options) {
     super(options);
 
 	this.model = options.model;
+	this.user = options.user;
   }
 
   events() {
     return {
-	  "click #remove-friend": this.onRemoveFriend,
+	  "click #remove-btn": this.onRemoveFriend,
     };
   }
 
@@ -28,7 +30,8 @@ export default class ItemFriendView extends BaseView {
       displaySuccess(
         `Your are no longer friend with ${this.model.get("login")}`
 	  );
-    }
+	}
+	this.user.fetch();
   }
 
   render() {

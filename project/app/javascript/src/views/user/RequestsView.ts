@@ -4,6 +4,7 @@ import ModalView from "../ModalView";
 import FriendRequests from "src/collections/FriendRequests";
 import User from "src/models/User";
 import ItemRequestView from "./ItemRequestView"
+import { eventBus } from "src/events/EventBus";
 
 export default class RequestsView extends ModalView<User> {
   requests: FriendRequests;
@@ -24,6 +25,7 @@ export default class RequestsView extends ModalView<User> {
     if (this.requests.isEmpty()) {
       this.renderIsEmpty();
 	}
+	eventBus.trigger("model:change");
   }
 
   renderIsEmpty() {
