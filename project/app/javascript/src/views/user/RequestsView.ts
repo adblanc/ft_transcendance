@@ -46,7 +46,8 @@ export default class RequestsView extends ModalView<User> {
     this.requests.forEach((item) => {
       this.$("#listing").append(
         new ItemRequestView({
-          model: item,
+		  model: item,
+		  user: this.model,
         }).render().el
       );
     }, this);

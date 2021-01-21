@@ -4,15 +4,17 @@ import BaseView from "../../lib/BaseView";
 import User from "src/models/User";
 import { displaySuccess } from "src/utils";
 
-type Options = Backbone.ViewOptions & { model: User };
+type Options = Backbone.ViewOptions & { model: User, user: User };
 
 export default class ItemRequestView extends BaseView {
   model: User;
+  user: User;
 
   constructor(options?: Options) {
     super(options);
 
 	this.model = options.model;
+	this.user = options.user;
   }
 
   events() {
@@ -51,7 +53,7 @@ export default class ItemRequestView extends BaseView {
         );
         break;
     }
-    this.model.fetch(); //A voir
+    this.user.fetch();
   }
 
   render() {
