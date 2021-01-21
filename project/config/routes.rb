@@ -46,7 +46,7 @@ Rails.application.routes.draw do
     put "/remove_friend/:id", to: "friendships#remove";
 
     resources :room_messages
-    resources :rooms, only: [:show, :index, :create, :update]
+    resources :rooms, only: [:show, :index, :create, :update, :destroy]
     get 'my-rooms', to: 'rooms#my_rooms'
     get '/join-room', to: 'rooms#join'
     delete "/quit-room", to: 'rooms#quit'

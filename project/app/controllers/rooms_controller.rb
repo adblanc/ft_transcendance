@@ -81,7 +81,7 @@ class RoomsController < ApplicationController
 
 		if (!@room)
 			return;
-		elsif (@room && !current_user.rooms.exists?(@room.id))
+		elsif (!current_user.rooms.exists?(@room.id))
 			render json: {"you" => ["are not in this room."]}, status: :unprocessable_entity
 		elsif (@current_user.is_room_ban?(@room));
 			render json: {"action" => ["left"]}, status: :ok
@@ -92,6 +92,19 @@ class RoomsController < ApplicationController
 			else
 				render json: {"action" => ["deleted"]}, status: :ok
 			end
+		end
+	end
+
+	def destroy
+		@room = Room.find_by_id(params[:id])
+
+		if (!@room)
+			render json: {"room" => ["does not exists"]}, status: :not_found
+		elsif (!@current_user.is_room_owner?(@room))
+			render json: {"you" => ["must be owner of this room"]}, status: :unprocessable_entity
+		else
+			@room.destroy
+			@room
 		end
 	end
 

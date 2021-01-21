@@ -113,6 +113,15 @@ export default class Room extends BaseRoom {
     return success;
   }
 
+  async delete() {
+    const success = await this.asyncDestroy();
+
+    if (success) {
+      this.channel.unsubscribe();
+    }
+    return success;
+  }
+
   modifyPassword(password: string) {
     return this.asyncSave({
       password,

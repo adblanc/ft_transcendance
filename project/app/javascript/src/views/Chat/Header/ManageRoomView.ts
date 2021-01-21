@@ -4,6 +4,7 @@ import Room from "src/models/Room";
 import { displaySuccess } from "src/utils";
 import ModalView from "src/views/ModalView";
 import RoomUsersView from "./RoomUsersView";
+import ConfirmationModalView from "src/views/ConfirmationModalView";
 
 export default class ManageRoomView extends ModalView<Room> {
   constructor(options?: Backbone.ViewOptions<Room>) {
@@ -14,10 +15,14 @@ export default class ManageRoomView extends ModalView<Room> {
   }
 
   events() {
-    return { ...super.events(), "click #room-submit": this.onSubmit };
+    return {
+      ...super.events(),
+      "click #room-submit": this.onSubmit,
+      "click #room-delete": this.askDeleteConfirmation,
+    };
   }
 
-  async onSubmit(e: JQuery.Event) {
+  async onSubmit(e: JQuery.ClickEvent) {
     e.preventDefault();
 
     const password = this.$("#input-room-password").val() as string;
@@ -27,6 +32,32 @@ export default class ManageRoomView extends ModalView<Room> {
     if (success) {
       displaySuccess(
         `${this.model.get("name")}'s password successfully changed.`
+      );
+      this.closeModal();
+    }
+  }
+
+  askDeleteConfirmation(e: JQuery.ClickEvent) {
+    const question = `Are you sure you want to delete ${this.model.get(
+      "name"
+    )} ?`;
+
+    const confirmationView = new ConfirmationModalView({
+      question,
+      onYes: () => this.onDelete(e),
+    });
+
+    confirmationView.render();
+  }
+
+  async onDelete(e: JQuery.ClickEvent) {
+    e.preventDefault();
+
+    const success = await this.model.delete();
+
+    if (success) {
+      displaySuccess(
+        `${this.model.get("name")}'s has been successfully deleted.`
       );
       this.closeModal();
     }
