@@ -79,7 +79,8 @@ export default class ManageMemberView extends ModalView<Profile> {
 	if (this.model.get("guild_role") == "Owner") {
 		this.$("#transfer").addClass("hidden");
 	}
-	if (currentUser().attributes.guild_role != "Owner") {
+	if (currentUser().get("guild").get("id") != this.guild.get("id") ||
+		currentUser().attributes.guild_role != "Owner") {
 		this.$("#fire").addClass("hidden");
 	}
 
