@@ -88,7 +88,8 @@ export default class UserView extends BaseView {
       created_at: moment(this.user.get("created_at"))?.format("DD/MM/YYYY"),
       has_guild: !!this.user.get("guild"),
 	  is_current_user: this.user.get("id") === currentUser().get("id"),
-	  no_relation: !this.user.get("is_friend") && !this.user.get("has_received_friend") && !this.user.get("has_requested_friend")
+	  no_relation: !this.user.get("is_friend") && !this.user.get("has_received_friend") && !this.user.get("has_requested_friend"),
+	  cur: currentUser().get("id"),
     });
     this.$el.html(html);
 
