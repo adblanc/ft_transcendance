@@ -2,6 +2,7 @@ class Room < ApplicationRecord
 	resourcify
 
 	after_destroy :notify_destruction_to_rooms_channel
+	before_destroy :notify_destruction_to_users
 
 	has_secure_password :password, validations: false
 
@@ -23,6 +24,12 @@ class Room < ApplicationRecord
 			id: self.id,
 		}
 		ActionCable.server.broadcast("rooms_global", {"action" => "channel_deleted", "payload" => payload});
+	end
+
+	def notify_destruction_to_users
+		self.users.each do |user|
+			user.send_notification("Room #{self.name} has been deleted", "", "room_deleted")
+		end
 	end
 
 
