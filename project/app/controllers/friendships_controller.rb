@@ -17,7 +17,7 @@ class FriendshipsController < ApplicationController
 
 		@request = FriendRequest.where(requestor: @other_user, receiver: @current_user).first
 		@request.destroy
-		@current_user.friends.push(@other_user)
+		Friendship.create(user: @current_user, friend: @other_user)
 		@other_user.send_notification("#{@current_user.name} accepted your friend request", "/user/#{@other_user.id}", "friend_request")
 		@other_user
 	end
