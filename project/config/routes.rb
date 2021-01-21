@@ -3,9 +3,15 @@ Rails.application.routes.draw do
     get '/auth/42', to: 'authentication#login42', format: false
     get '/auth/guest', to: 'authentication#loginGuest', format: false
     get '/auth/tfa', to: 'authentication#loginTfa', format: false
-    get '/profile/:id', to: 'users#show_other_user'
+
     resource :user, only: [:show, :update]
-    get "user/notifications", to: "users#show"
+	get "user/notifications", to: "users#show"
+	
+	get '/profile/:id', to: 'users#show_other_user'
+	put "/profile/:id/add_friend", to: "friendships#add";
+	put "/profile/:id/accept_friend", to: "friendships#accept";
+	put "/profile/:id/refuse_friend", to: "friendships#refuse";
+    put "/profile/:id/remove_friend", to: "friendships#remove";
 
     resources :games do
 	member do
@@ -41,11 +47,6 @@ Rails.application.routes.draw do
       put :mark_as_read
     end
     end
-
-	put "/add_friend/:id", to: "friendships#add";
-	put "/accept_friend/:id", to: "friendships#accept";
-	put "/refuse_friend/:id", to: "friendships#refuse";
-    put "/remove_friend/:id", to: "friendships#remove";
 
     resources :room_messages
     resources :rooms, only: [:show, :index, :create, :update]

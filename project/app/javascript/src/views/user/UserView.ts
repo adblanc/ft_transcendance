@@ -34,26 +34,27 @@ export default class UserView extends BaseView {
   }
 
   async onAddFriend() {
-    const success = await currentUser().addFriend(this.user.get("id"));
+    const success = await this.user.addFriend();
 
     if (success) {
       displaySuccess(
         `Your invitation has been sent to ${this.user.get("login")}`
-      );
+	  );
     }
   }
 
   onFetchError() {
     Backbone.history.navigate("/not-found", { trigger: true });
   }
-
+ 
   render() {
     const template = $("#userPageTemplate").html();
     const html = Mustache.render(template, {
       ...this.user.toJSON(),
       created_at: moment(this.user.get("created_at"))?.format("DD/MM/YYYY"),
       has_guild: !!this.user.get("guild"),
-      is_current_user: this.user.get("id") === currentUser().get("id"),
+	  is_current_user: this.user.get("id") === currentUser().get("id"),
+	  no_relation: !this.user.get("is_friend") && !this.user.get("has_received_friend") && !this.user.get("has_requested_friend")
     });
     this.$el.html(html);
 

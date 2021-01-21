@@ -34,6 +34,8 @@ export interface IProfile {
   appearing_on?: string;
   is_present?: boolean;
   is_friend?: boolean;
+  has_requested_friend?: boolean;
+  has_received_friend?: boolean;
   pending_guild?: Guild;
   guild?: Guild;
   pendingGame?: Game;
@@ -171,41 +173,7 @@ export default class Profile extends BaseModel<IProfile> {
     );
   }
 
-  addFriend(id: number) {
-    return this.asyncSave(
-      {},
-      {
-        url: `${BASE_ROOT}/add_friend/${id}`,
-      }
-    );
-  }
 
-  acceptFriend(id: number) {
-    return this.asyncSave(
-      {},
-      {
-        url: `${BASE_ROOT}/accept_friend/${id}`,
-      }
-    );
-  }
-
-  refuseFriend(id: number) {
-    return this.asyncSave(
-      {},
-      {
-        url: `${BASE_ROOT}/refuse_friend/${id}`,
-      }
-    );
-  }
-
-  removeFriend(id: number) {
-    return this.asyncSave(
-      {},
-      {
-        url: `${BASE_ROOT}/remove_friend/${id}`,
-      }
-    );
-  }
 }
 
 let memoizedUser: Profile = undefined;
