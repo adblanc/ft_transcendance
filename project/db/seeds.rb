@@ -14,7 +14,6 @@ bob.avatar.attach(
 	"content_type": "image/png",
 )
 
-
 bill = User.create(name: "bill", login: "bill", contribution: 10);
 ben = User.create(name: "ben", login: "ben", contribution: 15);
 boule = User.create(name: "boule", login: "boule", contribution: 0);
@@ -27,7 +26,6 @@ jack = User.create(name: "jack", login: "jack", contribution: 1);
 User.all.each do |user|
 	user.update_attributes(:otp_secret_key => ROTP::Base32.random)
 end
-
 
 bill.avatar.attach(
 	io: URI.open("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Hotdog_-_Evan_Swigart.jpg/1024px-Hotdog_-_Evan_Swigart.jpg"),
@@ -68,3 +66,5 @@ billy.add_role(:owner, guild3)
 guild1.members << jeff
 guild1.members << jack
 guild1.members << john
+
+john.add_role :admin

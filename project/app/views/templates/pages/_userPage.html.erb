@@ -4,7 +4,7 @@
       class=" bg-teal-900 w-1/4 rounded-3xl flex flex-col flex-grow max-w-2xl hover:shadow-2xl transition-shadow ease-in-out duration-300">
 		<div class="text-center px-16 h-16 bg-teal-900 flex flex-row justify-center items-center text-3xl relative">
 			<div class="flex-1">
-				{{name}}
+				{{name}}{{#admin}} [admin]{{/admin}}
 			</div>
 			{{^is_current_user}}
 				{{^is_friend}}
@@ -34,7 +34,7 @@
 				<div class="flex flex-col justify-center items-center">
 					<p><span class="font-bold">{{guild_role}}</span> of the guild</p>
 				<a class="underline" href="/guild/{{guild.id}}">
-					<img class="rounded-full p-2 w-16 h-16 mt-2 mx-auto" src={{#guild.img_url}}{{guild.img_url}}{{/guild.img_url}}{{^guild.img_url}}https://img.pngio.com/circle-outline-png-transparent-circle-outline-png-image-free-white-circle-outline-transparent-300_300.png"{{/guild.img_url}}/>
+					<img class="rounded-full p-2 w-16 h-16 mt-2 mx-auto" src={{guild.img_url}}/>
 					<p class="mb-2">{{guild.name}}</p>
 				</a>
 			{{/has_guild}}

@@ -69,10 +69,19 @@ export default class ManageMemberView extends ModalView<Profile> {
     this.$content.html(html);
 
     if (this.model.get("guild_role") == "Officer") {
-      this.$("#promote").addClass("btn-disabled");
+		this.$("#demote").addClass("bg-teal-500");
+		this.$("#promote").addClass("btn-disabled").addClass("bg-gray-500");
     } else {
-      this.$("#demote").addClass("btn-disabled");
+		this.$("#demote").addClass("btn-disabled").addClass("bg-gray-500");
+		this.$("#promote").addClass("bg-teal-500");
     }
+
+	if (this.model.get("guild_role") == "Owner") {
+		this.$("#transfer").addClass("hidden");
+	}
+	if (currentUser().attributes.guild_role != "Owner") {
+		this.$("#fire").addClass("hidden");
+	}
 
     return this;
   }

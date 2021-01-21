@@ -31,6 +31,7 @@ export interface IProfile {
   created_at?: string;
   updated_at?: string;
   guild_role?: "Owner" | "Officer" | "Member";
+  admin?: boolean;
   appearing_on?: string;
   is_present?: boolean;
   is_friend?: boolean;
@@ -91,6 +92,7 @@ export default class Profile extends BaseModel<IProfile> {
       two_fact_auth: false,
       number: 0,
       guild_role: "none",
+	  admin: false,
     };
   }
 
@@ -190,33 +192,33 @@ export default class Profile extends BaseModel<IProfile> {
   }
 }
 
-let memoizedUser: Profile = undefined;
+let memorizedUser: Profile = undefined;
 
 const fetchCurrentUser = () => {
-  memoizedUser.fetch({
+  memorizedUser.fetch({
     success: () => {
-      console.log("we successfully fetched current user", memoizedUser);
-      memoizedUser.channel = memoizedUser.createNotificationsConsumer();
-      memoizedUser.appearanceChannel = createAppereanceConsumer();
+      console.log("we successfully fetched current user", memorizedUser);
+      memorizedUser.channel = memorizedUser.createNotificationsConsumer();
+      memorizedUser.appearanceChannel = createAppereanceConsumer();
     },
   });
 };
 
 export const currentUser = (fetch = false): Profile => {
-  if (!memoizedUser) {
-    memoizedUser = new Profile();
+  if (!memorizedUser) {
+    memorizedUser = new Profile();
     fetchCurrentUser();
   } else if (fetch) {
     fetchCurrentUser();
   }
 
-  return memoizedUser;
+  return memorizedUser;
 };
 
 export const logoutUser = () => {
   console.log("logout user");
   clearAuthHeaders();
   consumer.disconnect();
-  memoizedUser?.off("appearance");
-  memoizedUser = undefined;
+  memorizedUser?.off("appearance");
+  memorizedUser = undefined;
 };

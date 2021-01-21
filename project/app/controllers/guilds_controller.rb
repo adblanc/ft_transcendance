@@ -85,7 +85,7 @@ class GuildsController < ApplicationController
 
   def fire
 	@guild = Guild.find_by_id(params[:id])
-	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin?
+	return head :unauthorized unless current_user.guild_owner?(@guild)
 
     user = User.find(params[:user_id])
 	if @guild.remove_user(user)
@@ -97,9 +97,10 @@ class GuildsController < ApplicationController
 
   def transfer
 	@guild = Guild.find_by_id(params[:id])
-	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin?
-
 	user = User.find(params[:user_id])
+	return head :unauthorized unless current_user.guild_owner?(@guild) or
+		(current_user.admin? and not user.guild_owner?(@guild))
+
 	owner = User.with_role(:owner, @guild).first
 	user.add_role(:owner, @guild)
 	owner.remove_role(:owner, @guild)
@@ -122,7 +123,7 @@ class GuildsController < ApplicationController
 
   def accept
 	@guild = Guild.find_by_id(params[:id])
-	return head :unauthorized unless authorized_for_guild?(current_user, @guild) || current_user.admin?
+	return head :unauthorized unless authorized_for_guild?(current_user, @guild)
 
 	pending_member = User.find_by_id(params[:user_id])
 
@@ -133,7 +134,7 @@ class GuildsController < ApplicationController
 
   def reject
 	@guild = Guild.find_by_id(params[:id])
-	return head :unauthorized unless authorized_for_guild?(current_user, @guild) || current_user.admin?
+	return head :unauthorized unless authorized_for_guild?(current_user, @guild)
 
     pending_member = User.find_by_id(params[:user_id])
 
