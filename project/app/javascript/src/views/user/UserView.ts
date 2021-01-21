@@ -20,7 +20,7 @@ export default class UserView extends BaseView {
     this.user = new User({ id: options.userId, login: "" });
     this.user.fetch({ error: this.onFetchError });
 	this.listenTo(this.user, "change", this.render);
-	this.listenTo(this.user.get("friend_requests"), "remove", this.render);
+	this.listenTo(eventBus, "user:change", this.render);
     this.listenTo(eventBus, "profile:change", this.actualize);
   }
 

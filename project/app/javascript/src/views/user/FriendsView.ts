@@ -25,7 +25,7 @@ export default class FriendsView extends ModalView<User> {
     if (this.friends.isEmpty()) {
       this.renderIsEmpty();
 	}
-	eventBus.trigger("model:change");
+	eventBus.trigger("user:change");
   }
 
   renderIsEmpty() {
