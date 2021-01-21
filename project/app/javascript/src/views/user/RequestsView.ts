@@ -23,7 +23,7 @@ export default class RequestsView extends ModalView<User> {
 
     if (this.requests.isEmpty()) {
       this.renderIsEmpty();
-    }
+	}
   }
 
   renderIsEmpty() {

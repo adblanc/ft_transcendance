@@ -3,6 +3,7 @@ import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import User from "src/models/User";
 import { displaySuccess } from "src/utils";
+import { currentUser } from "src/models/Profile";
 
 type Options = Backbone.ViewOptions & { model: User, user: User };
 
@@ -53,7 +54,7 @@ export default class ItemRequestView extends BaseView {
         );
         break;
     }
-    this.user.fetch();
+	this.user.fetch();
   }
 
   render() {

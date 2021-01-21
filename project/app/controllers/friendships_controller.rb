@@ -24,11 +24,12 @@ class FriendshipsController < ApplicationController
 
 	def refuse
 		@other_user = User.find_by_id(params[:id])
-		return head :unauthorized if @current_user.is_friend_of?(@other_user) || @other_user.has_requested_friend(@current_user) 
+		return head :unauthorized if @current_user.is_friend_of?(@other_user) 
+		return head :unauthorized if not @other_user.has_requested_friend?(@current_user)
 
-		@request = FriendRequest.where(requestor: @other_user, receiver: @current_user)
+		@request = FriendRequest.where(requestor: @other_user, receiver: @current_user).first
 		@request.destroy
-		@other_user.send_notification("#{@current_user.name} refused friend request", "/user/#{@other_user.id}", "friend_request")
+		@other_user.send_notification("#{@current_user.name} refused your friend request", "/user/#{@other_user.id}", "friend_request")
 		@other_user
 	end
 

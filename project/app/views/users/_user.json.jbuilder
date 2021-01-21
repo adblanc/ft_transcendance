@@ -43,10 +43,14 @@ json.friends do
 	end
 end
 
-json.friend_requests do
-	json.array! user.friend_requests_as_receiver do |request|
-		json.partial! "users/userSnippet", user: request.requestor
+if user.friend_requests_as_receiver
+	json.friend_requests do
+		json.array! user.friend_requests_as_receiver do |request|
+			json.partial! "users/userSnippet", user: request.requestor
+		end
 	end
+else
+	json.friend_requests nil
 end
 
 json.blocked_users do
