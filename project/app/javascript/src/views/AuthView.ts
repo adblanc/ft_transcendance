@@ -31,7 +31,7 @@ export default class AuthView extends BaseView {
 		}
         addAuthHeaders(rsp.token);
       } catch (ex) {
-		if ex.response.data.msg == "banned_user" {
+		if (ex.response.data.msg == "banned_user") {
 			displayError(`${input} is banned for the moment`);
 		} else {
 			displayError(`${input} is an invalid guest`);

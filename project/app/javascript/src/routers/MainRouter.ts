@@ -55,7 +55,7 @@ export default class MainRouter extends Backbone.Router {
 	  } catch (ex) {
 	  	const resp = ex.response.data;
 
-		if resp.msg == "banned_user" {
+		if (resp.msg == "banned_user") {
 			displayError(`${resp.user} is banned for the moment`);
 		} else {
 			displayError(`Logging as ${resp.user} has failed`);
