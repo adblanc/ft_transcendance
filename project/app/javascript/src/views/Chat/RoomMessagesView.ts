@@ -2,7 +2,6 @@ import Backbone from "backbone";
 import { eventBus } from "src/events/EventBus";
 import BaseView from "src/lib/BaseView";
 import Message from "src/models/Message";
-import { currentUser } from "src/models/Profile";
 import Room from "src/models/Room";
 import RoomUser from "src/models/RoomUser";
 import MessageView from "./MessageView";
@@ -49,6 +48,10 @@ export default class RoomMessagesView extends BaseView<Room> {
   }
 
   renderMsg(message: Message) {
+    if (!this.model.get("selected")) {
+      return;
+    }
+
     const container = $("#messages-container");
 
     const isScrolledToBottom =
