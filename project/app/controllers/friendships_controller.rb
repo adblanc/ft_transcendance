@@ -2,11 +2,12 @@ class FriendshipsController < ApplicationController
 	before_action :authenticate_user!
 
 	def add
-		@user = User.find_by_id(params[:id])
-		return head :unauthorized if @current_user.is_friend_of(@user)
+		@other_user = User.find_by_id(params[:id])
+		return head :unauthorized if @current_user.is_friend_of?(@other_user)
 
-		FriendRequest.create(requestor: @current_user, receiver: @user)
-		@user.send_notification("#{@current_user.name} sent you a friend request", "/profile/#{@user.id}", "friend_request")
+		FriendRequest.create(requestor: @current_user, receiver: @other_user)
+		@other_user.send_notification("#{@current_user.name} sent you a friend request", "/profile/#{@other_user.id}", "friend_request")
+		@other_user
 	end
 
 	def accept

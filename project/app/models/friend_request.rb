@@ -1,6 +1,6 @@
 class FriendRequest < ApplicationRecord
-  belongs_to :requestor, class_name: "User", foreign_key: :user_id
-  belongs_to :receiver, class_name: "User", foreign_key: :user_id
+  belongs_to :requestor, class_name: "User"
+  belongs_to :receiver, class_name: "User"
 
   def other(user)
 	if user == requestor
