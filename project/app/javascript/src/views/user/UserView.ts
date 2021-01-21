@@ -58,6 +58,12 @@ export default class UserView extends BaseView {
     });
     this.$el.html(html);
 
+	if (this.user.get("friend_requests")) {
+		if (this.user.get("friend_requests").length > 0) {
+		  this.$("#request-btn").addClass("animate-bounce");
+		}
+	}
+
     return this;
   }
 
