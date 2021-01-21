@@ -81,21 +81,21 @@ class Room < ApplicationRecord
 	def room_notification_content(type, issuer, target, time)
 		case type
 		when "ban"
-			return "#{target.login} has been banned #{time} by #{issuer.login}"
+			return "#{target.login_with_ang} has been banned #{time} by #{issuer.login_with_ang}"
 		when "mute"
-			return "#{target.login} has been muted #{time} by #{issuer.login}"
+			return "#{target.login_with_ang} has been muted #{time} by #{issuer.login_with_ang}"
 		when "unban"
-			return "#{target.login} has been unbanned by #{issuer.login}"
+			return "#{target.login_with_ang} has been unbanned by #{issuer.login_with_ang}"
 		when "unmute"
-			return "#{target.login} has been unmuted by #{issuer.login}"
+			return "#{target.login_with_ang} has been unmuted by #{issuer.login_with_ang}"
 		when "promoted"
-			return "#{target.login} has been promoted by #{issuer.login}"
+			return "#{target.login_with_ang} has been promoted by #{issuer.login_with_ang}"
 		when "demoted"
-			return "#{target.login} has been demoted by #{issuer.login}"
+			return "#{target.login_with_ang} has been demoted by #{issuer.login_with_ang}"
 		when "join"
-			return "#{target.login} has joined"
+			return "#{target.login_with_ang} has joined"
 		when "left"
-			return "#{target.login} has left"
+			return "#{target.login_with_ang} has left"
 		else
 			return nil;
 		end
@@ -104,17 +104,17 @@ class Room < ApplicationRecord
 	def target_notification_content(type, issuer, time)
 		case type
 		when "ban"
-			return "you have been banned #{time} from #{self.name} by #{issuer.login}"
+			return "you have been banned #{time} from #{self.name} by #{issuer.login_with_ang}"
 		when "mute"
 			return nil;
 		when "unban"
-			return "you have been unbanned from #{self.name} by #{issuer.login}"
+			return "you have been unbanned from #{self.name} by #{issuer.login_with_ang}"
 		when "unmute"
-			return "you have been unmuted from #{self.name} by #{issuer.login}"
+			return "you have been unmuted from #{self.name} by #{issuer.login_with_ang}"
 		when "promoted"
-			return "you have been promoted in #{self.name} by #{issuer.login}"
+			return "you have been promoted in #{self.name} by #{issuer.login_with_ang}"
 		when "demoted"
-			return "you have been demoted in #{self.name} by #{issuer.login}"
+			return "you have been demoted in #{self.name} by #{issuer.login_with_ang}"
 		else
 			return nil;
 		end
@@ -155,4 +155,5 @@ class Room < ApplicationRecord
 
 		name ? name : self.name;
 	end
+
 end

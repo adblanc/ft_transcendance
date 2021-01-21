@@ -9,7 +9,7 @@ export interface IMessage {
   id?: number;
   avatar_url?: string;
   user_id?: number;
-  user_login?: string;
+  pseudo?: string;
   created_at?: string;
   updated_at?: string;
   ancient?: boolean;

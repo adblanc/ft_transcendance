@@ -4,7 +4,7 @@
       <span class="text-gray-700 mb-1">Channel name</span>
       <input id="channel-name" class="form-input block" />
     </label>
-      <span class="link-primary" id="switch-private">A private one</span>
+      <span class="link-primary" id="switch-private">{{^isPrivate}}A private one{{/isPrivate}}{{#isPrivate}}A public one{{/isPrivate}}</span>
     {{#isPrivate}}
     <label class="block my-2">
       <span class="text-gray-700 mb-1">Channel password</span>

@@ -25,19 +25,9 @@ export default class RoomMessagesView extends BaseView<Room> {
       return;
     }
 
-    const sender =
-      this.model
-        .get("users")
-        .find((u) => u.get("id") === message.get("user_id")) ||
-      new RoomUser(
-        {
-          login: message.get("user_login"),
-          id: message.get("user_id"),
-          roomRole: "Member",
-          avatar_url: message.get("avatar_url"),
-        },
-        { collection: this.model.get("users") }
-      );
+    const sender = this.model
+      .get("users")
+      .find((u) => u.get("id") === message.get("user_id"));
 
     const profileView = new RoomUserProfileView({
       model: sender,

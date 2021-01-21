@@ -104,6 +104,19 @@ class User < ApplicationRecord
 		return self.blocks.exists?(blocked_user_id: user.id);
 	end
 
+	def	login_with_ang
+		ang = self.guild_ang
+
+		return "#{ang ? "[#{ang}] ": ""}#{self.login}";
+	end
+
+	def guild_ang
+		if (self.guild.present?)
+			return self.guild.ang;
+		end
+		return nil;
+	end
+
 	def is_friend_of?(user)
 		if (user == self)
 			return false;
