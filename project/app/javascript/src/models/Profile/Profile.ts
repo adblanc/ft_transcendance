@@ -14,6 +14,9 @@ import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import { eventBus } from "src/events/EventBus";
 import Game from "../Game";
+import User from "../User";
+import FriendRequests from "src/collections/FriendRequests";
+import Friends from "src/collections/Friends";
 
 export interface IBlockedUser {
   login: string;
@@ -35,11 +38,15 @@ export interface IProfile {
   appearing_on?: string;
   is_present?: boolean;
   is_friend?: boolean;
+  has_requested_friend?: boolean;
+  has_received_friend?: boolean;
   pending_guild?: Guild;
   guild?: Guild;
   pendingGame?: Game;
   notifications?: Notifications;
   blocked_users?: IBlockedUser[];
+  friend_requests?: FriendRequests;
+  friends?: Friends;
 }
 
 type ModifiableProfileArgs = {
@@ -75,6 +82,18 @@ export default class Profile extends BaseModel<IProfile> {
         key: "notifications",
         collectionType: Notifications,
         relatedModel: Notification,
+	  },
+	  {
+        type: Backbone.Many,
+        key: "friend_requests",
+        collectionType: FriendRequests,
+        relatedModel: User,
+	  },
+	  {
+        type: Backbone.Many,
+        key: "friends",
+        collectionType: Friends,
+        relatedModel: User,
       },
     ];
   }
@@ -195,23 +214,7 @@ export default class Profile extends BaseModel<IProfile> {
     );
   }
 
-  addFriend(id: number) {
-    return this.asyncSave(
-      {},
-      {
-        url: `${BASE_ROOT}/add_friend/${id}`,
-      }
-    );
-  }
 
-  removeFriend(id: number) {
-    return this.asyncSave(
-      {},
-      {
-        url: `${BASE_ROOT}/remove_friend/${id}`,
-      }
-    );
-  }
 }
 
 let memorizedUser: Profile = undefined;

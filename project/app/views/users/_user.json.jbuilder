@@ -1,6 +1,5 @@
 json.extract! user, :id, :login, :email, :two_fact_auth, :name, :contribution, :appearing_on, :created_at, :updated_at
 json.is_present user == @current_user ? true : user.is_present
-json.is_friend	user.is_friend_of?(@current_user)
 json.avatar_url url_for(user.avatar) if user.avatar.attached?
 json.guild_role user.guild_role?
 json.admin user.admin?
@@ -42,6 +41,16 @@ json.friends do
 	json.array! user.friends do |friend|
 		json.partial! "users/userSnippet", user: friend
 	end
+end
+
+if user.friend_requests_as_receiver
+	json.friend_requests do
+		json.array! user.friend_requests_as_receiver do |request|
+			json.partial! "users/userSnippet", user: request.requestor
+		end
+	end
+else
+	json.friend_requests nil
 end
 
 json.blocked_users do
