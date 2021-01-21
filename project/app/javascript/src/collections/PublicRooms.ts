@@ -7,14 +7,22 @@ export default class PublicRooms extends Backbone.Collection<PublicRoom> {
   preinitialize() {
     this.model = PublicRoom;
 
-    this.listenTo(this, "remove", this.onRemove);
     this.listenTo(eventBus, "chat:my-room-left", this.myRoomLeft);
+    this.listenTo(
+      eventBus,
+      "chat:rooms_global:deleted",
+      this.onGlobalRoomDelete
+    );
   }
 
   url = () => `${BASE_ROOT}/rooms`;
 
-  onRemove(room: PublicRoom) {
-    eventBus.trigger("chat:public-channel-joined", room);
+  onGlobalRoomDelete(data: any) {
+    const room = this.find((r) => r.get("id") === data.payload.id);
+
+    if (room) {
+      this.remove(room);
+    }
   }
 
   myRoomLeft() {

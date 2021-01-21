@@ -1,4 +1,5 @@
 import Mustache from "mustache";
+import { eventBus } from "src/events/EventBus";
 
 import PublicRoom from "src/models/PublicRoom";
 import { displaySuccess } from "src/utils";
@@ -25,12 +26,8 @@ export default class JoinPublicChannelView extends ModalView<PublicRoom> {
 
     if (success) {
       displaySuccess(`Room ${this.model.get("name")} successfully joined`);
-
-      console.log("this.model/collection", this.model.collection);
-
-      const removed = this.model.collection.remove(this.model);
-
-      console.log("removed", removed);
+      eventBus.trigger("chat:public-channel-joined", this.model);
+      this.model.collection.remove(this.model);
     }
     this.closeModal();
   }
