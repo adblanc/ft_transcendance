@@ -3,6 +3,7 @@ import Mustache from "mustache";
 import moment from "moment";
 import User from "src/models/User";
 import BaseView from "src/lib/BaseView";
+import RequestsView from "./RequestsView";
 import { eventBus } from "src/events/EventBus";
 import { currentUser } from "src/models/Profile";
 import { displaySuccess } from "src/utils";
@@ -24,7 +25,8 @@ export default class UserView extends BaseView {
   events() {
     return {
       "click #send-dm": this.onClickSendDm,
-      "click #add-friend": this.onAddFriend,
+	  "click #add-friend": this.onAddFriend,
+	  "click #request-btn": "onRequestClicked",
     };
   }
 
@@ -41,6 +43,14 @@ export default class UserView extends BaseView {
         `Your invitation has been sent to ${this.user.get("login")}`
 	  );
     }
+  }
+
+  onRequestClicked() {
+    const requestsView = new RequestsView({
+      model: this.user,
+    });
+
+    requestsView.render();
   }
 
   onFetchError() {
