@@ -1,0 +1,16 @@
+<script type="text/html" id="friendItemTemplate">
+<div id="friend-{{id}}" class="row" >
+	<img style="float:left" width="80" height="80" class="rounded-full p-2 ml-5" src="{{avatar_url}}" />
+	<div style="padding:15px">
+		<table>
+		<tr>
+			<td style="padding:0 20px; text-decoration:underline"><b class="m-auto ml-1"><a href='/user/{{id}}'>{{login}}</a></b></td>
+			<td>
+			<svg id="remove-friend" class="w-8 h-8 cursor-pointer mr-2" fill="none" stroke="black" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6"></path></svg>
+			</td>
+		</tr>
+		</table>
+		<div class="line flex flex-row" style="border: 1px solid; color: #14B8A6; margin-left:75px; margin-top: 10px; width:280px"></div>
+	</div>
+</div>
+</script>

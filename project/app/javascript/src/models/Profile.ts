@@ -16,6 +16,7 @@ import { eventBus } from "src/events/EventBus";
 import Game from "./Game";
 import User from "./User";
 import FriendRequests from "src/collections/FriendRequests";
+import Friends from "src/collections/Friends";
 
 export interface IBlockedUser {
   login: string;
@@ -44,6 +45,7 @@ export interface IProfile {
   notifications?: Notifications;
   blocked_users?: IBlockedUser[];
   friend_requests?: FriendRequests;
+  friends?: Friends;
 }
 
 type ModifiableProfileArgs = {
@@ -83,6 +85,12 @@ export default class Profile extends BaseModel<IProfile> {
         type: Backbone.Many,
         key: "friend_requests",
         collectionType: FriendRequests,
+        relatedModel: User,
+	  },
+	  {
+        type: Backbone.Many,
+        key: "friends",
+        collectionType: Friends,
         relatedModel: User,
       },
     ];

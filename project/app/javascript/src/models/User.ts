@@ -2,8 +2,8 @@ import Backbone from "backbone";
 import { BASE_ROOT } from "src/constants";
 import BaseModel from "src/lib/BaseModel";
 import { IProfile } from "./Profile";
-import FriendRequest from "./User";
 import FriendRequests from "src/collections/FriendRequests";
+import Friends from "src/collections/Friends";
 
 export default class User extends BaseModel<IProfile> {
   urlRoot = () => `${BASE_ROOT}/profile/`;
@@ -15,6 +15,12 @@ export default class User extends BaseModel<IProfile> {
         type: Backbone.Many,
         key: "friend_requests",
         collectionType: FriendRequests,
+        relatedModel: User,
+	  },
+	  {
+        type: Backbone.Many,
+        key: "friends",
+        collectionType: Friends,
         relatedModel: User,
       },
     ];

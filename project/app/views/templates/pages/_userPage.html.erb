@@ -3,7 +3,10 @@
     <div style="background-color:#115E59"
       class=" bg-teal-900 w-1/4 rounded-3xl flex flex-col flex-grow max-w-2xl hover:shadow-2xl transition-shadow ease-in-out duration-300">
 		<div class="text-center px-16 h-16 bg-teal-900 flex flex-row justify-center items-center text-3xl relative">
-			<div class="flex-1">
+			{{#is_current_user}}
+			<button id="friends-btn" style="text-decoration: underline; font-size:13px" type="button">{{ friends.length }} friends</button>
+			{{/is_current_user}}
+			<div class="flex-1" style="margin-left:75px">
 				{{name}}
 			</div>
 			{{^is_current_user}}

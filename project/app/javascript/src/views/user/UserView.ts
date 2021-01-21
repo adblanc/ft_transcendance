@@ -4,6 +4,7 @@ import moment from "moment";
 import User from "src/models/User";
 import BaseView from "src/lib/BaseView";
 import RequestsView from "./RequestsView";
+import FriendsView from "./FriendsView";
 import { eventBus } from "src/events/EventBus";
 import { currentUser } from "src/models/Profile";
 import { displaySuccess } from "src/utils";
@@ -29,6 +30,7 @@ export default class UserView extends BaseView {
 	  "click #add-friend": this.onAddFriend,
 	  "click #remove-friend": this.onRemoveFriend,
 	  "click #request-btn": "onRequestClicked",
+	  "click #friends-btn": "onFriendsClicked",
     };
   }
 
@@ -64,6 +66,15 @@ export default class UserView extends BaseView {
 
     requestsView.render();
   }
+
+  onFriendsClicked() {
+    const friendsView = new FriendsView({
+      model: this.user,
+    });
+
+    friendsView.render();
+  }
+
 
   onFetchError() {
     Backbone.history.navigate("/not-found", { trigger: true });
