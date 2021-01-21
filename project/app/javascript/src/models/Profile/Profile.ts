@@ -13,7 +13,7 @@ import {
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import { eventBus } from "src/events/EventBus";
-import Game from "./Game";
+import Game from "../Game";
 
 export interface IBlockedUser {
   login: string;
@@ -49,6 +49,7 @@ type ModifiableProfileArgs = {
 
 export default class Profile extends BaseModel<IProfile> {
   channel: ActionCable.Channel;
+  globalRoomsChannel: ActionCable.Channel = undefined;
   appearanceChannel: ActionCable.Channel;
   notifications: Notifications;
 
@@ -63,8 +64,8 @@ export default class Profile extends BaseModel<IProfile> {
         type: Backbone.One,
         key: "pending_guild",
         relatedModel: Guild,
-	  },
-	  {
+      },
+      {
         type: Backbone.One,
         key: "pendingGame",
         relatedModel: Game,
@@ -92,7 +93,7 @@ export default class Profile extends BaseModel<IProfile> {
       two_fact_auth: false,
       number: 0,
       guild_role: "none",
-	  admin: false,
+      admin: false,
     };
   }
 
@@ -129,6 +130,27 @@ export default class Profile extends BaseModel<IProfile> {
       eventBus.trigger("chat:other-user-dm-creation");
     }
   }
+
+  // connectGlobalRoomsConsumer() {
+  //   this.unsubscribeGlobalRoomsConsumer();
+
+  //   this.globalRoomsChannel = consumer.subscriptions.create(
+  //     { channel: "RoomsGlobalChannel" },
+  //     {
+  //       connected() {
+  //         console.log("connected to rooms global channel");
+  //       },
+  //       received(data: any) {
+  //         console.log("received rooms global", data);
+  //       },
+  //     }
+  //   );
+  // }
+
+  // unsubscribeGlobalRoomsConsumer() {
+  //   this.globalRoomsChannel?.unsubscribe();
+  //   this.globalRoomsChannel = undefined;
+  // }
 
   fetch(options?: ModelFetchOptions): JQueryXHR {
     return super.fetch({
@@ -200,6 +222,7 @@ const fetchCurrentUser = () => {
       console.log("we successfully fetched current user", memorizedUser);
       memorizedUser.channel = memorizedUser.createNotificationsConsumer();
       memorizedUser.appearanceChannel = createAppereanceConsumer();
+      // memorizedUser.connectGlobalRoomsConsumer();
     },
   });
 };

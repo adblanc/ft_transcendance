@@ -1,6 +1,9 @@
 class Room < ApplicationRecord
 	resourcify
 
+	after_destroy :notify_destruction_to_rooms_channel
+	before_destroy :notify_destruction_to_users
+
 	has_secure_password :password, validations: false
 
 	validates :name, presence: true, uniqueness: true, allow_blank: true, length: {minimum: 0, maximum: 16}
@@ -15,6 +18,20 @@ class Room < ApplicationRecord
 
 	has_many :bans
 	has_many :banned_users, :through => :bans
+
+	def notify_destruction_to_rooms_channel
+		payload = {
+			id: self.id,
+		}
+		ActionCable.server.broadcast("rooms_global", {"action" => "channel_deleted", "payload" => payload});
+	end
+
+	def notify_destruction_to_users
+		self.users.each do |user|
+			user.send_notification("Room #{self.name} has been deleted", "", "room_deleted")
+		end
+	end
+
 
 	def valid_update_role_action(action)
 		!action.blank? && (action === "promoted" || action === "demoted");
