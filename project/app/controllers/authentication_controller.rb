@@ -15,9 +15,14 @@ class AuthenticationController < ApplicationController
 	def loginGuest
 		if (User.exists?(login: params[:login]))
 			user = User.find_by_login(params[:login])
-			tfaTreatment(user)
+
+			if user.is_banned?
+				render :json => { :msg => "banned_user" }, :status => :unauthorized
+			else
+				tfaTreatment(user)
+			end
 		else
-			render :status => :unauthorized
+			render :json => { :msg => "unrecognized_user" }, :status => :unauthorized
 		end
 	end
 
@@ -48,9 +53,15 @@ class AuthenticationController < ApplicationController
 			user = user.first
 		end
 
-		tfaTreatment(user)
+		if user.is_banned?
+			render :json => { :msg => "banned_user", :user => user.login },
+				:status => :unauthorized
+		else
+			tfaTreatment(user)
+		end
 	rescue StandardError => error
-		render json: error, :status => :unauthorized
+		render :json => { :msg => "unrecognized_user", :user => user.login },
+			:status => :unauthorized
 	end
 
 	def loginTfa

@@ -124,6 +124,10 @@ class User < ApplicationRecord
 		return self.friendships.exists?(friend_id: user.id);
 	end
 
+	def is_banned?
+		return self.ban =! -1 || Time.now.to_i - self.ban < self.ban_duration
+	end
+
 	def pending_guild?
 		if self.pending_guild
 			return true

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_15_160004) do
+ActiveRecord::Schema.define(version: 2021_01_21_155636) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -180,6 +180,8 @@ ActiveRecord::Schema.define(version: 2021_01_15_160004) do
     t.integer "tfa_time", default: 0, null: false
     t.boolean "is_present", default: false
     t.string "appearing_on", default: "offline"
+    t.integer "ban_duration", default: -1
+    t.integer "ban", default: -1
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["name"], name: "index_users_on_name", unique: true
   end
