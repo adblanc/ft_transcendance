@@ -38,7 +38,7 @@ class GamesController < ApplicationController
 			@game.users.push(current_user)
 			@expire = 5
 			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game)
-			current_user.add_role(:player, @game);
+			current_user.add_role(:host, @game);
 			@game
         else
             render json: @game.errors, status: :unprocessable_entity

@@ -19,9 +19,11 @@ interface IGame {
   status?: "pending" | "started" | "finished" | "unanswered";
   game_type?: string;
   isSpectator?: boolean;
+  isHost?: boolean;
   users?: Profiles;
   spectators?: Spectators;
   war_time?: WarTime;
+  isTraining?: boolean;
 }
 
 export interface GameData {
@@ -39,7 +41,7 @@ export interface MovementData extends GameData {
 
 type CreatableGameArgs = Partial<Pick<IGame, "goal" | "level" | "game_type">>;
 
-type ConstructorArgs = Pick<IGame, "id">;
+type ConstructorArgs = Pick<IGame, "id" | "isTraining">;
 
 export default class Game extends BaseModel<IGame> {
   first: Number;
@@ -76,6 +78,7 @@ export default class Game extends BaseModel<IGame> {
     return {
       users: [],
       spectators: [],
+      level: "easy",
     };
   }
 

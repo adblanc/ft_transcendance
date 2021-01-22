@@ -147,6 +147,10 @@ class User < ApplicationRecord
 		self.games.started.present? || self.games.pending.present?
 	end
 
+	def is_host?(game)
+		self.has_role?(:host, game);
+	end
+
 	def send_notification(message, link, type)
 		@notification = Notification.create(recipient: self, message: message, link: link, notification_type: type)
 		ActionCable.server.broadcast("user_#{self.id}", @notification);

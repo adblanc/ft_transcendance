@@ -14,23 +14,25 @@ type Options = Backbone.ViewOptions<Game> & {
 
 export default class GameView extends BaseView<Game> {
   pong: Pong | undefined;
-  isTraining: boolean;
   spectatorsView: SpectatorsView;
 
   constructor(options: Options) {
     super(options);
 
     this.pong = undefined;
-    this.model = undefined;
+    this.model = new Game({
+      id: parseInt(options.gameId),
+      isTraining: options.isTraining,
+    });
+    this.spectatorsView = undefined;
 
     if (options.isTraining) {
-      this.isTraining = true;
       return;
-    } else {
-      this.isTraining = false;
     }
 
-    this.model = new Game({ id: parseInt(options.gameId) });
+    this.spectatorsView = new SpectatorsView({
+      spectators: this.model.get("spectators"),
+    });
 
     this.model.fetch({
       error: this.onFetchError,
@@ -38,10 +40,6 @@ export default class GameView extends BaseView<Game> {
         console.log("game model fetch success");
         this.model.connectToWS();
       },
-    });
-
-    this.spectatorsView = new SpectatorsView({
-      spectators: this.model.get("spectators"),
     });
 
     this.listenTo(eventBus, "pong:player_movement", this.moveOtherPlayer);
@@ -77,7 +75,7 @@ export default class GameView extends BaseView<Game> {
 
       this.pong.players[0].pos.y = this.pong.canvas.height * scale;
 
-      if (!this.isTraining) {
+      if (!this.model.get("isTraining")) {
         this.model.channel?.perform("player_movement", {
           playerId: currentUser().get("id"),
           posY: this.pong.players[0].pos.y,
@@ -87,25 +85,29 @@ export default class GameView extends BaseView<Game> {
   }
 
   onClick(e: JQuery.ClickEvent) {
-    if (this.pong && !this.model?.get("isSpectator")) {
+    if (this.pong && this.model.get("isHost")) {
       this.pong.start();
     }
   }
 
   renderSpectators() {
-    this.renderNested(this.spectatorsView, "#spectators");
+    if (this.spectatorsView) {
+      this.renderNested(this.spectatorsView, "#spectators");
+    }
   }
 
   render() {
-    const template = $("#playGameTemplate").html();
+    if (!this.model.get("isTraining") && !this.model.get("status")) {
+      return;
+    }
 
-    console.log("render gameview");
+    const template = $("#playGameTemplate").html();
 
     const html = Mustache.render(template, {
       ...this.model?.toJSON(),
-      isTraining: this.isTraining,
-      firstPlayerName: this.model?.get("users")?.first()?.get("name"),
-      secondPlayerName: this.model?.get("users")?.last()?.get("name"),
+      isTraining: this.model.get("isTraining"),
+      firstPlayerName: this.model.get("users")?.first()?.get("name"),
+      secondPlayerName: this.model.get("users")?.last()?.get("name"),
     });
     this.$el.html(html);
 
@@ -113,11 +115,7 @@ export default class GameView extends BaseView<Game> {
 
     const canvas = this.$("#pong")[0] as HTMLCanvasElement;
 
-    this.pong = new Pong(
-      canvas,
-      "easy",
-      this.isTraining ? "training" : "online"
-    );
+    this.pong = new Pong(canvas, this.model);
 
     return this;
   }

@@ -1,3 +1,4 @@
+import Game from "src/models/Game";
 import { getRandomFloat } from "src/utils";
 import Ball from "./classes/Ball";
 import Player from "./classes/Player";
@@ -60,18 +61,12 @@ export default class Pong {
   private ctx: CanvasRenderingContext2D;
   private ball: Ball;
   private chars: HTMLCanvasElement[];
-  private _difficulty: Difficulty;
-  private mode: Mode;
+  private game: Game;
 
-  constructor(
-    canvas: HTMLCanvasElement,
-    difficulty: Difficulty = "easy",
-    mode: Mode = "training"
-  ) {
+  constructor(canvas: HTMLCanvasElement, game: Game) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
-    this._difficulty = difficulty;
-    this.mode = mode;
+    this.game = game;
 
     this.ball = new Ball();
 
@@ -123,7 +118,7 @@ export default class Pong {
   }
 
   private get difficulty() {
-    return DIFFICULTIES[this._difficulty];
+    return DIFFICULTIES[this.game.get("level")];
   }
 
   update(dt: number) {
@@ -156,7 +151,7 @@ export default class Pong {
   }
 
   moveAI(dt: number) {
-    if (this.mode === "online") {
+    if (!this.game.get("isTraining")) {
       return;
     }
     if (
