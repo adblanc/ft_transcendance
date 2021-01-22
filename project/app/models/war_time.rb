@@ -15,6 +15,9 @@ class WarTime < ApplicationRecord
 			if self.end < war.start || self.end > war.end
 				errors.add :end, 'must be set within the time frame of the war'
 			end
+			if self.end == self.created_at
+				errors.add :end, 'cannot be right now'
+			end
 		end
 	end
 
