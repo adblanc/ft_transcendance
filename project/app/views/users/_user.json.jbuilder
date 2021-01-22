@@ -4,6 +4,7 @@ json.avatar_url url_for(user.avatar) if user.avatar.attached?
 json.guild_role user.guild_role?
 json.admin user.admin?
 json.ban user.is_banned?
+json.ban_time user.ban_time
 if user.guild_role?
 	json.guild do
 		json.id user.guild.id

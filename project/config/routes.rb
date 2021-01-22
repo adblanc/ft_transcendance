@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 	get "user/notifications", to: "users#show"
 	
 	get '/profile/:id', to: 'users#show_other_user'
+	put '/profile/:id/ban', to: 'users#ban_other_user'
+	put '/profile/:id/unban', to: 'users#unban_other_user'
 	put "/profile/:id/add_friend", to: "friendships#add";
 	put "/profile/:id/accept_friend", to: "friendships#accept";
 	put "/profile/:id/refuse_friend", to: "friendships#refuse";

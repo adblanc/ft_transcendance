@@ -214,7 +214,23 @@ export default class Profile extends BaseModel<IProfile> {
     );
   }
 
+	banUser(id: number) {
+		return this.asyncSave(
+		  {},
+		  {
+			url: `${BASE_ROOT}/profile/${id}/ban`,
+		  }
+		);
+	}
 
+	unbanUser(id: number) {
+		return this.asyncSave(
+		  {},
+		  {
+			url: `${BASE_ROOT}/profile/${id}/unban`,
+		  }
+		);
+	}
 }
 
 let memorizedUser: Profile = undefined;

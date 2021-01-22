@@ -21,6 +21,32 @@ class UsersController < ApplicationController
 	end
   end
 
+  def ban_other_user
+  	if @current_user.admin?
+		if (@other_user = User.find_by_id(params[:id]))
+			@other_user.update_attributes(:ban => Time.now.to_i)
+			render json: {}, status: :ok
+		else
+			render json: { "User": ["not found"] }, status: :not_found
+		end
+	else
+		render json: { "User": ["not allowed to do that"] }, status: :unauthorized
+	end
+  end
+
+  def unban_other_user
+  	if @current_user.admin?
+		if (@other_user = User.find_by_id(params[:id]))
+			@other_user.update_attributes(:ban => -1)
+			render json: {}, status: :ok
+		else
+			render json: { "User": ["not found"] }, status: :not_found
+		end
+	else
+		render json: { "User": ["not allowed to do that"] }, status: :unauthorized
+	end
+  end
+
   def update_room_role
 		@room = Room.find_by_id(params[:room_id])
 

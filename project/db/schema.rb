@@ -189,7 +189,6 @@ ActiveRecord::Schema.define(version: 2021_01_21_155636) do
     t.integer "tfa_time", default: 0, null: false
     t.boolean "is_present", default: false
     t.string "appearing_on", default: "offline"
-    t.integer "ban_duration", default: -1
     t.integer "ban", default: -1
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["name"], name: "index_users_on_name", unique: true

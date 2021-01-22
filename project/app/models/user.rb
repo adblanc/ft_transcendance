@@ -1,3 +1,5 @@
+require 'date'
+
 class User < ApplicationRecord
   rolify
   after_create :assign_default_role
@@ -145,8 +147,15 @@ class User < ApplicationRecord
 		return false
 	end
 
+	def ban_time
+		if self.is_banned?
+			return Time.at(self.ban).to_datetime.strftime("%d/%m/%Y")
+		end
+		"-1"
+	end
+
 	def is_banned?
-		return self.ban =! -1 || Time.now.to_i - self.ban < self.ban_duration
+		return self.ban != -1
 	end
 
 	def pending_guild?
