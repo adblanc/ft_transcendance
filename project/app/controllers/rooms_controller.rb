@@ -28,9 +28,10 @@ class RoomsController < ApplicationController
 
 		@room = Room.create(room_params)
 
+		@room.users.push(current_user)
+		current_user.add_role :owner, @room
+
 		if @room.save
-			@room.users.push(current_user)
-			current_user.add_role :owner, @room
 			@room
 		else
 			render json: @room.errors, status: :unprocessable_entity

@@ -10,6 +10,7 @@ export default class PublicRooms extends BaseRooms<PublicRoom> {
     this.model = PublicRoom;
 
     this.listenTo(eventBus, "chat:my-room-left", this.myRoomLeft);
+    this.listenTo(eventBus, "chat:rooms_global:created", this.fetch);
   }
 
   url = () => `${BASE_ROOT}/rooms`;

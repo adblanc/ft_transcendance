@@ -3,6 +3,7 @@ class Room < ApplicationRecord
 
 	after_destroy :notify_destruction_to_rooms_channel
 	before_destroy :notify_destruction_to_users
+	after_save		:notify_creation_to_rooms_channel
 
 	has_secure_password :password, validations: false
 
@@ -32,6 +33,11 @@ class Room < ApplicationRecord
 		end
 	end
 
+	def notify_creation_to_rooms_channel
+		if (!self.is_private && !self.is_dm)
+			ActionCable.server.broadcast("rooms_global", {"action" => "channel_created", "payload" => nil});
+		end
+	end
 
 	def valid_update_role_action(action)
 		!action.blank? && (action === "promoted" || action === "demoted");
