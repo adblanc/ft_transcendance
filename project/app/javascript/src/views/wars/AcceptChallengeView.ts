@@ -1,8 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
-import War from "src/models/War";
-import WarTime from "src/models/WarTime";
 import { displaySuccess, displayError } from "src/utils";
 import { currentUser } from "src/models/Profile";
 import Game from "src/models/Game";

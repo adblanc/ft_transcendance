@@ -4,6 +4,7 @@ import BaseView from "../../lib/BaseView";
 import Wars from "src/collections/Wars";
 import War from "src/models/War";
 import BoardItemView from "./BoardItemView";
+import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions & { collection: Wars };
 

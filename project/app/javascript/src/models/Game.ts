@@ -18,6 +18,8 @@ interface IGame {
   game_type?: string;
   users?: Profiles;
   war_time?: WarTime;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface GameData {
@@ -122,6 +124,9 @@ export default class Game extends BaseModel<IGame> {
 				displaySuccess(
 					"No one answered your War Time challenge! You have won the match."
 				);
+				Backbone.history.navigate(`/wars`, {
+					trigger: true,
+				});
 			}
             return this.unsubscribeChannelConsumer();
           }
