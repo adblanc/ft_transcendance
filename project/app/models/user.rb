@@ -27,7 +27,6 @@ class User < ApplicationRecord
 	validates :name, length: {minimum: 3, maximum: 32}
 	validates :login, presence: true, uniqueness: true
 	validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-	validates :two_fact_auth, inclusion: { in: [ true, false ] }
 
 	after_create :attach_avatar
 

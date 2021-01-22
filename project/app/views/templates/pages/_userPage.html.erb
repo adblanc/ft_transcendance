@@ -36,8 +36,18 @@
 				<button id="request-btn" style="text-decoration: underline; font-size:13px" type="button">{{ friend_requests.length }} new friend requests</button>
 			{{/is_current_user}}
 		</div>
-			<img class="w-40 h-40 rounded-full p-2 mx-auto mt-6" src={{avatar_url}} alt="User avatar"/>
-		<div class="pb-10 py-16 px-16 text-center">
+		<img class="w-40 h-40 rounded-full p-2 mx-auto mt-6" src={{avatar_url}} alt="User avatar"/>
+		{{#is_admin}}
+			<div class="flex justify-center items-center">
+				{{#ban}}
+					<button class="btn-primary mt-8" id="unban-user" type="button">Unban user</button>
+				{{/ban}}
+				{{^ban}}
+					<button class="btn-primary mt-8" id="ban-user" type="button">Ban user</button>
+				{{/ban}}
+			</div>
+		{{/is_admin}}
+		<div class="pb-10 pt-5 px-20 text-center">
 			<h2 class="text-2xl mb-2 font-semibold">Account:</h2>
 			<div>
 				<div><span class="font-bold">Name: </span>{{login}}</div>

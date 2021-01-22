@@ -3,6 +3,7 @@ json.is_present user == @current_user ? true : user.is_present
 json.avatar_url url_for(user.avatar) if user.avatar.attached?
 json.guild_role user.guild_role?
 json.admin user.admin?
+json.ban user.is_banned?
 if user.guild_role?
 	json.guild do
 		json.id user.guild.id

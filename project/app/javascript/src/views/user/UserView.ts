@@ -31,7 +31,17 @@ export default class UserView extends BaseView {
 	  "click #remove-friend": this.onRemoveFriend,
 	  "click #request-btn": "onRequestClicked",
 	  "click #friends-btn": "onFriendsClicked",
+	  "click #ban-user": this.onUserBan,
+	  "click #unban-user": this.onUserUnban,
     };
+  }
+
+  onUserBan() {
+  	console.log("ban user");
+  }
+
+  onUserUnban() {
+  	console.log("unban user");
   }
 
   onClickSendDm() {
@@ -90,6 +100,7 @@ export default class UserView extends BaseView {
 	  is_current_user: this.user.get("id") === currentUser().get("id"),
 	  no_relation: !this.user.get("is_friend") && !this.user.get("has_received_friend") && !this.user.get("has_requested_friend"),
 	  cur: currentUser().get("id"),
+	  is_admin: currentUser().get("admin"),
     });
     this.$el.html(html);
 
