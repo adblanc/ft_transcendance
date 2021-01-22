@@ -35,6 +35,7 @@ class WarsController < ApplicationController
 			@initiator.members.each do |member|
 				member.send_notification("Your guild has declared war to #{@recipient.name}", "/wars", "war")
 			end
+			ExpireWarJob.set(wait_until: @war.end).perform_later(@war)
 			@war
 		else
 			render json: @war.errors, status: :unprocessable_entity
