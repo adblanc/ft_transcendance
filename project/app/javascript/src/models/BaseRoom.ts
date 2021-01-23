@@ -17,7 +17,10 @@ export default class BaseRoom extends BaseModel<IRoom> {
   join() {
     return this.asyncFetch({
       url: `${BASE_ROOT}/join-room`,
-      data: { name: this.get("name") },
+      data: { name: this.get("name"),
+	    password: this.get("password"),
+	    is_private: this.get("is_private"),
+		},
     });
   }
 }

@@ -160,10 +160,10 @@ ActiveRecord::Schema.define(version: 2021_01_21_155636) do
   end
 
   create_table "rooms", force: :cascade do |t|
-    t.string "name"
+    t.string "name", default: ""
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "password_digest"
+    t.string "password", default: ""
     t.boolean "is_private", default: false
     t.boolean "is_dm", default: false
   end

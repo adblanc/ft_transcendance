@@ -5,11 +5,7 @@ class Room < ApplicationRecord
 	before_destroy :notify_destruction_to_users
 	after_save		:notify_creation_to_rooms_channel
 
-	has_secure_password :password, validations: false
-
 	validates :name, presence: true, uniqueness: true, allow_blank: true, length: {minimum: 0, maximum: 16}
-	validates :password, allow_blank: true, length: {minimum: 0}
-
 	has_many :room_messages, dependent: :destroy,
 						 inverse_of: :room
 	has_and_belongs_to_many :users

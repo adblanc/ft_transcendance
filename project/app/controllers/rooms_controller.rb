@@ -23,35 +23,47 @@ class RoomsController < ApplicationController
 
 	def create
 		if (room_params[:name].blank?)
-			render json: {"name" => ["can't be blank"]}, status: :unprocessable_entity	and return;
+			render json: {"name" => ["can't be blank"]}, status: :unprocessable_entity
+			return
+		elsif room_params[:is_private] and room_params[:password].blank?
+			render json: {"password" => ["can't be blank"]},
+				status: :unprocessable_entity
+			return
 		end
 
 		@room = Room.create(room_params)
 
 		@room.users.push(current_user)
 		current_user.add_role :owner, @room
+		@room.password = BCrypt::Password.create(room_params[:password]) if @room.is_private
 
 		if @room.save
 			@room
 		else
 			render json: @room.errors, status: :unprocessable_entity
-		  end
-	  end
+		end
+	end
 
 	  def update
+		if params[:password].empty?
+			render json: {"password" => ["can't be blank"]}, status: :not_found
+			return
+		end
 		@room = Room.find_by_id(params[:id])
+		unless @room
+			render json: {"room" => ["not found."]}, status: :not_found
+			return
+		end
 
-		if @room && !@current_user.is_room_owner?(@room)
+		if !@current_user.is_room_owner?(@room)
 			render json: {"you" => ["must be owner of this room."]}, status: :unprocessable_entity
-		elsif @room
-			@room.password = room_password;
+		else
+			@room.password = BCrypt::Password.create(params[:password])
 			if (@room.save)
 				@room
 			else
 				render json: @room.errors, status: :unprocessable_entity
 			end
-		else
-			render json: {"room" => ["not found."]}, status: :not_found
 		end
 	  end
 
@@ -61,19 +73,29 @@ class RoomsController < ApplicationController
 		end
 
 		@room = Room.find_by(name: room_params[:name])
+		unless @room
+			render json: {"name or password" => ["is incorrect."]},	status: :unprocessable_entity
+			return
+		end
 
-		if (@room && @current_user.is_room_ban?(@room))
+		if @current_user.is_room_ban?(@room)
 			render json: {"you" => ["are banned from this room."]}, status: :unprocessable_entity
-		elsif (@room && @room.is_dm)
+		elsif @room.is_dm
 			render json: {"you" => ["can't join this room."]}, status: :unprocessable_entity
-		elsif (@room && (!BCrypt::Password.valid_hash?(@room.password_digest) || @room.try(:authenticate, room_password)))
-			if (!current_user.rooms.exists?(@room.id))
-				@room.users.push(current_user)
+		else
+			if @room.is_private
+				if room_params[:password].blank?
+					render json: {"password" => ["can't be blank"]}, status: :unprocessable_entity
+					return
+				elsif BCrypt::Password.new(@room.password) != room_params[:password]
+					render json: {"name or password" => ["is incorrect."]},
+						status: :unprocessable_entity
+					return
+				end
 			end
+			@room.users.push(current_user) unless current_user.rooms.exists?(@room.id)
 			@room.send_room_notification("join", @current_user, @current_user, nil)
 			@room
-		else
-			render json: {"name or password" => ["is incorrect."]}, status: :unprocessable_entity
 		end
 	end
 
@@ -133,11 +155,6 @@ class RoomsController < ApplicationController
 	end
 
 	private
-
-	def room_password
-		params[:password].blank? ? EMPTY_PASSWORD : params[:password];
-	end
-
 	def room_params
 		params.permit(:name, :password, :is_private)
 	end
