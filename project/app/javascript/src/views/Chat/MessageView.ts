@@ -43,8 +43,23 @@ export default class MessageView extends Backbone.View<Message> {
   events() {
     return {
       "click .user-avatar": () =>
-        eventBus.trigger("chat:profile-clicked", this.model),
+		eventBus.trigger("chat:profile-clicked", this.model),
+		"click #accept": "onAccept",
     };
+  }
+
+  async onAccept(e: JQuery.Event) {
+	console.log("test");
+	e.preventDefault();
+  
+	const success = await this.game.acceptPlayChat();
+	if (success) {
+		this.gameSaved();
+	}
+  }
+
+  gameSaved() {
+	this.game.navigateToGame();
   }
 
   render() {
@@ -55,8 +70,6 @@ export default class MessageView extends Backbone.View<Message> {
     ).html();
 
 	const { day, time } = formatMessageDate(this.model.get("created_at"));
-
-	console.log(this.pending);
 
     const html = Mustache.render(template, {
       ...this.model.toJSON(),

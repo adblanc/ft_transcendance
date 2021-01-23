@@ -180,6 +180,7 @@ export default class Game extends BaseModel<IGame> {
   }
 
   acceptPlayChat() {
+	  console.log("test");
     return this.asyncSave(
 	  {},
       {

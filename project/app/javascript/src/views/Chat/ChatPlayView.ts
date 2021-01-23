@@ -40,6 +40,7 @@ export default class ChatPlayView extends ModalView<Game> {
 
   gameSaved() {
 	this.closeModal();
+	this.model.createChannelConsumer();
    	var content = `Let's play a game! Difficulty : ${this.level}. Points : ${this.goal}`;
 	const message = new Message({
 		content,
