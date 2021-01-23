@@ -33,6 +33,8 @@ export default class NodeView extends BaseView {
     const html = Mustache.render(template, {
 		war: war,
 		ang: this.guild.get("ang"),
+		curr : this.model.get("status") === "started",
+		tie : this.model.get("winner") === "tie",
 	});
 	this.$el.html(html);
 

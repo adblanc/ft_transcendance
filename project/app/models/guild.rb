@@ -65,7 +65,7 @@ class Guild < ApplicationRecord
 
 	def warInitiator?
 		self.wars.pending.each do |war|
-			return true if war.initiator == self
+			return true if war.initiator.id == self.id
 		end
 		return false
 	end
@@ -76,7 +76,7 @@ class Guild < ApplicationRecord
 
 	def war_request
 		wars.pending.each do |war|
-			return war if war.initiator == self
+			return war if war.initiator.id == self.id
 		end
 		return nil
 	end

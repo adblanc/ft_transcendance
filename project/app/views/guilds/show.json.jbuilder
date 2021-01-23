@@ -22,6 +22,7 @@ json.wars do
 		json.nb_games war.nb_games
 		json.nb_wartimes war.nb_wartimes
 		json.war_points war.war_points(@guild)
+		json.winner war.winner 
 		json.warOpponent do
 			json.id  @guild.warOpponent(war).id
 			json.ang  @guild.warOpponent(war).ang
