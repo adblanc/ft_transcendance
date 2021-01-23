@@ -45,6 +45,7 @@ json.pendingWars do
 			json.id  @guild.warOpponent(pendingWar).id
 			json.name  @guild.warOpponent(pendingWar).name
 			json.img_url url_for(@guild.warOpponent(pendingWar).img) if @guild.warOpponent(pendingWar).img.attached?
+			json.points  @guild.warOpponent(pendingWar).points
 		end
 	end
 end

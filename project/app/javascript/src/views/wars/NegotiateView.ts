@@ -94,6 +94,9 @@ export default class NegotiateView extends ModalView<War> {
 	if (this.$("#inc-tour").is(":checked"))
 		inc_tour = true;
 
+	console.log(this.model.get("warOpponent").get("points"));
+	console.log(this.guild.get("points"));
+
 	if (parseInt(prize) > this.model.get("warOpponent").get("points") || parseInt(prize) > this.guild.get("points")) {
 		displayError("One or both guilds cannot wager that many points");
 		return;
