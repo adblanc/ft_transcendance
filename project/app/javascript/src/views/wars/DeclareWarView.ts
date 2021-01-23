@@ -69,7 +69,6 @@ export default class DeclareWarView extends ModalView<War> {
   warSaved() {
     displaySuccess(`You declared war to ${this.guild.get("name")}`);
     this.closeModal();
-	this.model.fetch();
 	currentUser().fetch();
     Backbone.history.navigate(`/wars`, {
       trigger: true,

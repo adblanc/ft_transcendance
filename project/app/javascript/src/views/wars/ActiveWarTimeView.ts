@@ -25,11 +25,6 @@ export default class ActiveWarTimeView extends BaseView {
 
 	this.listenTo(this.war, "change", this.render);
 	this.listenTo(this.warTime, "change", this.render);
-
-	if (this.warTime.get("pendingGame")) {
-		var date = moment(this.warTime.get("pendingGame").get("created_at")).add(parseInt(this.war.get("time_to_answer"), 10), 'minutes');
-		this.time_left = moment(date).fromNow();
-	}
 	
   }
 
@@ -67,6 +62,11 @@ export default class ActiveWarTimeView extends BaseView {
   }
 
   render() {
+	if (this.warTime.get("pendingGame")) {
+		var date = moment(this.warTime.get("pendingGame").get("created_at")).add(parseInt(this.war.get("time_to_answer"), 10), 'minutes');
+		this.time_left = moment(date).fromNow();
+	}
+
 	const warTime = {
 		...this.warTime.toJSON(),
 		end: moment(this.warTime.get("end")).format(

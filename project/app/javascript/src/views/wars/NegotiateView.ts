@@ -78,7 +78,6 @@ export default class NegotiateView extends ModalView<War> {
     displaySuccess(
 		`You have successfully ${action}ed the proposition of war.`
 	);
-	this.model.fetch();
 	this.guild.fetch();
     this.closeModal();
   }
