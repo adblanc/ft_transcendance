@@ -18,10 +18,12 @@ Rails.application.routes.draw do
     resources :games do
 	member do
 		put :score
-	  	put :acceptChallenge
+		put :acceptChallenge
+		put :acceptPlayChat  
 		end
 	end
 	post "games/challenge", to: "games#challenge";
+	post "games/playChat", to: "games#playChat";
 
     put "/block/:id", to: "blocks#block";
     put "/unblock/:id", to: "blocks#unblock";

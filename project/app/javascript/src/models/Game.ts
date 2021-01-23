@@ -115,18 +115,18 @@ export default class Game extends BaseModel<IGame> {
             return this.unsubscribeChannelConsumer();
           } else if (data.event === "expired") {
 			currentUser().fetch();
-			if (this.get("game_type") != "war_time") {
-				displayError(
-				"We were not able to find an opponent. Please try different game settings."
-				);
-			}
-			else {
+			if (this.get("game_type") == "war_time") {
 				displaySuccess(
 					"No one answered your War Time challenge! You have won the match."
 				);
 				Backbone.history.navigate(`/wars`, {
 					trigger: true,
 				});
+			}
+			else if (this.get("game_type") != "chat") {
+				displayError(
+				"We were not able to find an opponent. Please try different game settings."
+				);
 			}
             return this.unsubscribeChannelConsumer();
           }
@@ -163,6 +163,18 @@ export default class Game extends BaseModel<IGame> {
 	  {},
       {
         url: `${this.baseGameRoot()}/acceptChallenge`,
+      }
+    );
+  }
+
+  playChat(level: string, goal: number) {
+    return this.asyncSave(
+      {
+		level: level,
+		goal: goal,
+      },
+      {
+        url: `${this.urlRoot()}/playChat`,
       }
     );
   }

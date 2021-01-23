@@ -28,14 +28,10 @@ export default class ChatPlayView extends ModalView<Game> {
 
 	this.level = this.$("#level").val() as string;
 	this.goal = this.$("#goal").val() as number;
-	var game_type = "friendly";
-	var warTimeId = null;
   
-	const success = await this.model.challenge(
+	const success = await this.model.playChat(
 		this.level,
 		this.goal,
-		game_type,
-		warTimeId,
 	);
 	if (success) {
 		this.gameSaved();
@@ -43,7 +39,8 @@ export default class ChatPlayView extends ModalView<Game> {
   }
 
   gameSaved() {
-   	var content = `Let's play a game! Difficulty : ${this.level}. Points ${this.goal}`;
+	this.closeModal();
+   	var content = `Let's play a game! Difficulty : ${this.level}. Points : ${this.goal}`;
 	const message = new Message({
 		content,
 		room_id: this.room_id,

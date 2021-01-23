@@ -12,6 +12,7 @@ class Game < ApplicationRecord
 
 	enum game_type: [
 		:friendly,
+		:chat,
 		:ladder,
 		:war_time,
 		:tournament

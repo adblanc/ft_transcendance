@@ -98,6 +98,27 @@ class GamesController < ApplicationController
 		@game
 	end
 
+	def playChat
+		@game = Game.create(game_params)
+		if @game.save
+			@game.update(game_type: :chat)
+			@game.users.push(current_user)
+			@expire = 5
+			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game)
+			@game
+		else
+			render json: @game.errors, status: :unprocessable_entity
+		end
+	end
+
+	def acceptPlayChat
+		@game = Game.find_by_id(params[:id])
+		@game.users.push(current_user)
+		@game.update(status: :started)
+		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
+		@game
+	end
+
 	private
     def game_params
         params.permit(:level, :goal, :game_type)
