@@ -3,6 +3,8 @@ import Mustache from "mustache";
 import Rooms from "src/collections/MyRooms";
 import BaseView from "src/lib/BaseView";
 import Message from "src/models/Message";
+import Game from "src/models/Game";
+import ChatPlayView from "./ChatPlayView";
 import _ from "underscore";
 
 type Options = Backbone.ViewOptions & {
@@ -21,8 +23,19 @@ export default class ChatInputView extends BaseView {
   events() {
     return {
       "keypress #send-message-input": this.onKeyPress,
-      "click #send-message-btn": this.sendMessage,
+	  "click #send-message-btn": this.sendMessage,
+	  "click #chat-play-btn": this.onPlay,
     };
+  }
+
+  onPlay() {
+	const game = new Game();
+	const chatPlayView = new ChatPlayView({
+		model: game,
+		room_id: this.rooms.selectedRoom.get("id"),
+	});
+  
+	chatPlayView.render();
   }
 
   async onKeyPress(e: JQuery.Event) {
