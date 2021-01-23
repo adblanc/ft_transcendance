@@ -82,8 +82,10 @@ ActiveRecord::Schema.define(version: 2021_01_21_155636) do
     t.integer "status", default: 0
     t.integer "game_type"
     t.bigint "war_time_id"
+    t.bigint "room_message_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["room_message_id"], name: "index_games_on_room_message_id"
     t.index ["war_time_id"], name: "index_games_on_war_time_id"
   end
 
@@ -151,10 +153,12 @@ ActiveRecord::Schema.define(version: 2021_01_21_155636) do
   create_table "room_messages", force: :cascade do |t|
     t.bigint "room_id", null: false
     t.bigint "user_id", null: false
+    t.bigint "game_id"
     t.text "content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "is_notification", default: false
+    t.index ["game_id"], name: "index_room_messages_on_game_id"
     t.index ["room_id"], name: "index_room_messages_on_room_id"
     t.index ["user_id"], name: "index_room_messages_on_user_id"
   end

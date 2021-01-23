@@ -178,4 +178,13 @@ export default class Game extends BaseModel<IGame> {
       }
     );
   }
+
+  acceptPlayChat() {
+    return this.asyncSave(
+	  {},
+      {
+        url: `${this.baseGameRoot()}/acceptPlayChat`,
+      }
+    );
+  }
 }

@@ -1,5 +1,7 @@
 import { BASE_ROOT } from "src/constants";
+import Backbone from "backbone";
 import BaseModel from "src/lib/BaseModel";
+import Game from "./Game";
 
 export interface IMessage {
   content: string;
@@ -10,11 +12,23 @@ export interface IMessage {
   avatar_url?: string;
   user_id?: number;
   pseudo?: string;
+  game_id?: number;
+  game?: Game;
   created_at?: string;
   updated_at?: string;
   ancient?: boolean;
 }
 
 export default class Message extends BaseModel<IMessage> {
-  url = () => `${BASE_ROOT}/room_messages`;
+	preinitialize() {
+		this.relations = [
+		  {
+			type: Backbone.One,
+			key: "game",
+			relatedModel: Game,
+		  },
+		];
+	}
+
+  	url = () => `${BASE_ROOT}/room_messages`;
 }

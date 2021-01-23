@@ -44,6 +44,7 @@ export default class ChatPlayView extends ModalView<Game> {
 	const message = new Message({
 		content,
 		room_id: this.room_id,
+		game_id: this.model.get("id"),
 	});
 
 	return message.asyncSave();
