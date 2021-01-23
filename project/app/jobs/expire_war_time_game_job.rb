@@ -5,10 +5,10 @@ class ExpireWarTimeGameJob < ApplicationJob
 	  return if game.started? || game.finished?
 	  game.update(status: :unanswered)
 	  guild.members.each do |member|
-		member.send_notification("#{opponent.name} has not answered #{user.name}'s' war time challenge!", "/wars", "war")
+		member.send_notification("#{opponent.name} has not answered #{user.name}'s' War Time challenge!", "/wars", "war")
 	  end
 	  opponent.members.each do |member|
-		member.send_notification("Your guild has not answered #{user.name}'s' war time challenge!", "/wars", "war")
+		member.send_notification("Your guild has not answered #{user.name}'s' War Time challenge!", "/wars", "war")
 	  end
 	  guild.war_score(10)
 	  ActionCable.server.broadcast("game_#{game.id}", {"event" => "expired"});

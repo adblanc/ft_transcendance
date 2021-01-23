@@ -23,6 +23,12 @@ export default class WarBoardView extends BaseView {
     this.listenTo(this.collection, "reset", this.render);
 	this.listenTo(this.collection, "change", this.render);
 	this.listenTo(this.collection, "add", this.render);
+	this.listenTo(eventBus, "wars:update", this.onUpdate);
+  }
+
+  onUpdate() {
+	  this.collection.fetch();
+	  this.render();
   }
 
   renderWar(war: War) {

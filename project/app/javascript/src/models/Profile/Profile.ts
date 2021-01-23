@@ -137,7 +137,8 @@ export default class Profile extends BaseModel<IProfile> {
           //console.log("connected to", user_id);
         },
         received: (notification: INotification) => {
-          this.checkDmCreationNotification(notification);
+		  this.checkDmCreationNotification(notification);
+		  this.checkWarEvent(notification);
           this.notifications.add(notification);
         },
       }
@@ -147,6 +148,12 @@ export default class Profile extends BaseModel<IProfile> {
   checkDmCreationNotification(notification: INotification) {
     if (!notification.ancient) {
       eventBus.trigger("chat:other-user-dm-creation");
+    }
+  }
+
+  checkWarEvent(notification: INotification) {
+    if (!notification.ancient && notification.notification_type == "war") {
+      eventBus.trigger("wars:update");
     }
   }
 

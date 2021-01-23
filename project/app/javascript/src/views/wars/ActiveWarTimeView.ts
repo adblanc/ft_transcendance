@@ -69,7 +69,7 @@ export default class ActiveWarTimeView extends BaseView {
   render() {
 	const warTime = {
 		...this.warTime.toJSON(),
-		end: moment(this.war.get("end")).format(
+		end: moment(this.warTime.get("end")).format(
 		  "MMM Do YY, h:mm a"
 		),
 		time_left: this.time_left,

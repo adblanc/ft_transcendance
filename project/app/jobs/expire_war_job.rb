@@ -6,6 +6,9 @@ class ExpireWarJob < ApplicationJob
 		war.initiator.members.each do | member |
 			member.send_notification("#{war.opponent(war.initiator).name} never answered you war declaration!", "/wars", "war")
 		end
+		war.opponent(war.initiator).members.each do | member |
+			member.send_notification("Your Guild has not answered #{war.initiator.name}'s War declaration!", "/wars", "war")
+		end
 		war.destroy
 	  end
 	end
