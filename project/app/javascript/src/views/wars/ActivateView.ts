@@ -4,7 +4,7 @@ import ModalView from "../ModalView";
 import War from "src/models/War";
 import { displaySuccess, displayError } from "src/utils";
 const flatpickr = require("flatpickr");
-require("flatpickr/dist/flatpickr.css")
+require("flatpickr/dist/flatpickr.css");
 
 export default class ActivateView extends ModalView<War> {
 	fp_end: typeof flatpickr;
@@ -37,6 +37,12 @@ export default class ActivateView extends ModalView<War> {
     this.model.fetch();
   }
 
+  dismiss = (e: JQuery.ClickEvent) => {
+    if ($(e.target).closest(".flatpickr-wrapper").length === 0) {
+		this.fp_end.close();
+    }
+  };
+
   render() {
     super.render();
     const template = $("#warTimeFormTemplate").html();
@@ -49,11 +55,9 @@ export default class ActivateView extends ModalView<War> {
 		minuteIncrement: 1,
 		static: true,
 		minDate: new Date(),
-		onChange: function(rawdate, altdate, FPOBJ) {
-			FPOBJ.close();
-			FPOBJ._input.blur();
-		}
 	});
+
+	this.$content.on("click", this.dismiss);
     return this;
   }
 }

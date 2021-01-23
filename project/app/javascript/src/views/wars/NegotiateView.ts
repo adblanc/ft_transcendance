@@ -5,7 +5,7 @@ import War, { WAR_ACTION } from "src/models/War";
 import { displaySuccess, displayError } from "src/utils";
 import Guild from "src/models/Guild";
 const flatpickr = require("flatpickr");
-require("flatpickr/dist/flatpickr.css")
+require("flatpickr/dist/flatpickr.css");
 import moment from "moment";
 import { currentUser } from "src/models/Profile";
 
@@ -109,6 +109,13 @@ export default class NegotiateView extends ModalView<War> {
     }
   }
 
+  dismiss = (e: JQuery.ClickEvent) => {
+    if ($(e.target).closest(".flatpickr-wrapper").length === 0) {
+		this.fp_start.close();
+		this.fp_end.close();
+    }
+  };
+
   render() {
 	const model = {
 		...this.model.toJSON(),
@@ -148,10 +155,6 @@ export default class NegotiateView extends ModalView<War> {
 		minuteIncrement: 1,
 		static: true,
 		minDate: new Date(),
-		onChange: function(rawdate, altdate, FPOBJ) {
-			FPOBJ.close();
-			FPOBJ._input.blur();
-		}
 	});
 	this.fp_end = flatpickr(this.$("#input-end-date"), {
 		enableTime: true,
@@ -159,14 +162,12 @@ export default class NegotiateView extends ModalView<War> {
 		minuteIncrement: 1,
 		static: true,
 		minDate: new Date(),
-		onChange: function(rawdate, altdate, FPOBJ) {
-			FPOBJ.close();
-			FPOBJ._input.blur();
-		}
 	});
 
 	if (this.model.get("inc_tour"))
 		this.$("#inc-tour").attr( 'checked', 'checked' );
+
+	this.$content.on("click", this.dismiss);
 
     return this;
   }
