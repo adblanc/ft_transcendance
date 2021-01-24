@@ -53,6 +53,7 @@ Rails.application.routes.draw do
     resources :room_messages
     resources :rooms, only: [:show, :index, :create, :update, :destroy]
     get 'my-rooms', to: 'rooms#my_rooms'
+    get 'admin-rooms', to: 'rooms#admin_rooms'
     get '/join-room', to: 'rooms#join'
     delete "/quit-room", to: 'rooms#quit'
     put "/direct_messages/:user_id", to: "rooms#init_direct_messages"

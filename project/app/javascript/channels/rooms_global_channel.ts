@@ -20,7 +20,9 @@ consumer.subscriptions.create(
         eventBus.trigger("chat:rooms_global:deleted", data);
       } else if (data.action === "channel_created") {
         eventBus.trigger("chat:rooms_global:created");
-      }
+      } else if (data.action === "admin_channel_created") {
+        eventBus.trigger("chat:rooms_global:admin_created");
+	  }
     },
     disconnected() {
       console.log("disconnected from rooms global channel");

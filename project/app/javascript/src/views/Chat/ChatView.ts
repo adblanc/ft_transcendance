@@ -6,6 +6,7 @@ import ChatHeaderView from "./Header/ChatHeaderView";
 import ChatInputView from "./ChatInputView";
 import CreateJoinChannelView from "./CreateJoinChannelView";
 import PublicRoomsView from "./PublicRoomsView";
+import AdminRoomsView from "./AdminRoomsView";
 import MyRoomsView from "./MyRoomsView";
 import DirectMessagesView from "./DirectMessagesView";
 import Room from "src/models/Room";
@@ -13,6 +14,7 @@ import Room from "src/models/Room";
 export default class ChatView extends BaseView {
   myRooms: MyRooms;
   publicRoomsView: PublicRoomsView;
+  adminRoomsView: AdminRoomsView;
   myRoomsView: MyRoomsView;
   directMessagesView: DirectMessagesView;
   createJoinChannelView: CreateJoinChannelView;
@@ -38,6 +40,7 @@ export default class ChatView extends BaseView {
     });
 
     this.publicRoomsView = new PublicRoomsView();
+	this.adminRoomsView = new AdminRoomsView();
 
     this.chatHeaderView = undefined;
     this.chatInputView = undefined;
@@ -54,6 +57,7 @@ export default class ChatView extends BaseView {
     this.myRoomsView.close();
     this.createJoinChannelView.close();
     this.publicRoomsView.close();
+	this.adminRoomsView.close();
     this.chatHeaderView?.close();
     this.chatInputView?.close();
   };
@@ -143,6 +147,7 @@ export default class ChatView extends BaseView {
     this.appendNested(this.directMessagesView, "#left-container-chat");
     this.appendNested(this.myRoomsView, "#left-container-chat");
     this.appendNested(this.publicRoomsView, "#left-container-chat");
+	this.appendNested(this.adminRoomsView, "#left-container-chat");
 
     return this;
   }

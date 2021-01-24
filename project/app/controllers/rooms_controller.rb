@@ -18,7 +18,11 @@ class RoomsController < ApplicationController
 	end
 
 	def my_rooms
-		@rooms =  @current_user.rooms.select { |room| !@current_user.is_room_ban?(room) }
+		@rooms = @current_user.rooms.select { |room| !@current_user.is_room_ban?(room) }
+	end
+
+	def admin_rooms
+		@admin_rooms = Room.all if @current_user.has_role? :admin
 	end
 
 	def create

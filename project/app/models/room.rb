@@ -3,7 +3,7 @@ class Room < ApplicationRecord
 
 	after_destroy :notify_destruction_to_rooms_channel
 	before_destroy :notify_destruction_to_users
-	after_save		:notify_creation_to_rooms_channel
+	after_save		:notify_room_creation
 
 	validates :name, presence: true, uniqueness: true, allow_blank: true, length: {minimum: 0, maximum: 16}
 	has_many :room_messages, dependent: :destroy,
@@ -29,10 +29,10 @@ class Room < ApplicationRecord
 		end
 	end
 
-	def notify_creation_to_rooms_channel
-		if (!self.is_private && !self.is_dm)
-			ActionCable.server.broadcast("rooms_global", {"action" => "channel_created", "payload" => nil});
-		end
+	def notify_room_creation
+		ActionCable.server.broadcast("rooms_global",
+			{"action" => if self.is_private or self.is_dm then
+				"admin_channel_created" else "channel_created" end, "payload" => nil});
 	end
 
 	def valid_update_role_action(action)
