@@ -4,6 +4,7 @@ import Game from "src/models/Game";
 import BaseView from "src/lib/BaseView";
 import CreateGameView from "./CreateGameView";
 import { currentUser } from "src/models/Profile";
+import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions & { disable: boolean };
 
@@ -14,8 +15,26 @@ export default class StartGameView extends BaseView {
 	super(options);
 
 	this.disable = options.disable;
-	this.listenTo(currentUser(), "change", this.render);
-  }
+	this.listenTo(eventBus, "chatplay:change", this.relaunch);
+	}
+
+	relaunch() {
+		currentUser().fetch({
+			success: () => {
+				if (currentUser().get("pendingGame") ) { 
+					if (currentUser().get("pendingGame").get("game_type") == "chat")
+						this.disable = true;
+					else 
+						this.disable = false;
+				}
+				else {
+					this.disable = false;
+				}
+				console.log(this.disable);
+				this.render();
+			}
+		});
+	}
   
   events() {
 	return {

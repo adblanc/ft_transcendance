@@ -11,7 +11,7 @@ class GamesController < ApplicationController
     end
 
 	def create
-		return head :unauthorized if current_user.inGame? || current_user.pendingGame?
+		return head :unauthorized if current_user.inGame? || current_user.pendingGame
 		@games = Game.where(status: :pending)
 		@games.to_ary.each do | game |
 			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type] 
@@ -19,6 +19,7 @@ class GamesController < ApplicationController
 				game.update(status: :started)
 				@game = game
 				ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
+				broadcast_game
 				return @game
 			end
 		end
@@ -26,14 +27,16 @@ class GamesController < ApplicationController
         if @game.save
 			@game.users.push(current_user)
 			@expire = 5
-			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, nil)
+			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, current_user, nil)
+			broadcast_game
 			@game
         else
             render json: @game.errors, status: :unprocessable_entity
-        end
+		end
+
 	end
 
-    def score
+    /def score
 		@game = Game.find_by_id(params[:id])
 		return head :not_found unless @game
 		@player = GameUser.where(id: params[:user_id])
@@ -41,7 +44,7 @@ class GamesController < ApplicationController
 		if @player.points == @game.goal
 			@game.update(status: :finished)
 		end
-	end
+	end/
 	
 	def challenge
 		@warTime = WarTime.find_by_id(params[:warTimeId])
@@ -67,6 +70,7 @@ class GamesController < ApplicationController
 				member.send_notification("#{current_user.name} has challenged your Guild to a War Time match! Answer the call!", "/wars", "war")
 			end
 			ExpireWarTimeGameJob.set(wait_until: DateTime.now + @war.time_to_answer.minutes).perform_later(@game, @guild, @opponent, @warTime, current_user)
+			broadcast_game
 			@game
 		else
 			render json: @game.errors, status: :unprocessable_entity
@@ -87,6 +91,7 @@ class GamesController < ApplicationController
 		@game.users.push(current_user)
 		@game.update(status: :started)
 		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
+		broadcast_game
 
 		/faire link vers match/
 		@guild.members.each do |member|
@@ -115,8 +120,8 @@ class GamesController < ApplicationController
 			@game.update(game_type: :chat)
 			@game.users.push(current_user)
 			@expire = 1
-			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, @room)
-			ActionCable.server.broadcast("room_#{@room.id}", {"event" => "playchat"});
+			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, current_user, @room)
+			broadcast_game
 			@game
 		else
 			render json: @game.errors, status: :unprocessable_entity
@@ -132,11 +137,20 @@ class GamesController < ApplicationController
 		@game.users.push(current_user)
 		@game.update(status: :started)
 		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
+		broadcast_game
 		@game
 	end
 
 	private
     def game_params
         params.permit(:level, :goal, :game_type)
+	end
+
+	def broadcast_game
+		if current_user.rooms.present?
+			current_user.rooms.each do |room|
+				ActionCable.server.broadcast("room_#{room.id}", {"event" => "playchat"});
+			end
+		end
 	end
 end

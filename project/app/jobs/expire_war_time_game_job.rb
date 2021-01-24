@@ -12,6 +12,7 @@ class ExpireWarTimeGameJob < ApplicationJob
 	  end
 	  guild.war_score(10)
 	  ActionCable.server.broadcast("game_#{game.id}", {"event" => "expired"});
+	  broadcast_game(user)
 	  
 	  warTime.increment!(:unanswered_calls, 1)
 	  if warTime.unanswered_calls == warTime.max_unanswered_calls
@@ -23,5 +24,15 @@ class ExpireWarTimeGameJob < ApplicationJob
 			member.send_notification("Too many unanswered match calls! War Time with #{guild.name} just ended!", "/wars", "war")
 		end
 	  end
+	end
+
+	private
+
+	def broadcast_game(current_user)
+		if current_user.rooms.present?
+			current_user.rooms.each do |room|
+				ActionCable.server.broadcast("room_#{room.id}", {"event" => "playchat"});
+			end
+		end
 	end
 end

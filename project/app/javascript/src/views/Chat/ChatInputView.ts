@@ -24,7 +24,7 @@ export default class ChatInputView extends BaseView {
 	this.disable = false;
 	this.disablePlay();
 	this.listenTo(eventBus, "chatplay:change", this.disablePlay);
-	this.listenTo(eventBus, "chatplay:toggle", this.render);
+	this.listenTo(eventBus, "chatplay:toggle", this.disablePlay);
   }
 
   events() {

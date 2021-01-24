@@ -96,7 +96,6 @@ export default class Room extends BaseRoom {
 			}
 			if (data.event === "playchat"){
 				eventBus.trigger("chatplay:change");
-				currentUser().fetch();
 			}
         },
       }
