@@ -7,6 +7,7 @@ import WarPendingView from "./WarPendingView";
 import WarConfirmedView from "./WarConfirmedView";
 import NoWarView from "./NoWarView";
 import WarWaitingView from "./WarWaitingView";
+import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions & { guild: Guild};
 
@@ -28,6 +29,12 @@ export default class MyWarView extends BaseView {
 	this.noWarView = undefined;
 
 	this.listenTo(this.guild, "change", this.render);
+	this.listenTo(eventBus, "wars:update", this.onUpdate);
+  }
+
+  onUpdate() {
+	this.guild.fetch();
+	this.render();
   }
 
   setundefined(view: string) {

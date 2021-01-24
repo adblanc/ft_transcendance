@@ -22,6 +22,7 @@ interface IWar {
   activeWarTime: WarTime;
   nb_games: number;
   nb_wartimes: number;
+  winner: string;
   created_at: string;
   updated_at: string;
 }

@@ -49,7 +49,7 @@ export default class WarHistoryView extends BaseView {
     var wars = this.collection.models.slice(this.count, this.count + this.max);
     if (wars.length) {
       wars.forEach(function (item) {
-		if (item.get("status") != "pending") {
+		if (item.get("status") != "pending" && item.get("status") != "confirmed") {
 			this.renderWar(item);
 		}
       }, this);
@@ -73,7 +73,7 @@ export default class WarHistoryView extends BaseView {
 
 	var wars = this.collection.first(this.max);
     wars.forEach(function (item) {
-		if (item.get("status") != "pending") {
+		if (item.get("status") != "pending" && item.get("status") != "confirmed") {
 			this.renderWar(item);
 		}
     }, this);

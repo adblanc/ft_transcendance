@@ -14,7 +14,7 @@ class War < ApplicationRecord
 
 	validates :start, presence: true
 	validates :end, presence: true
-	validates :prize, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
+	validates :prize, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 2 }
 	validates :time_to_answer, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
 	validates :max_unanswered_calls, allow_blank: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
 	validates_with WarDateValidator
@@ -39,6 +39,23 @@ class War < ApplicationRecord
 
 	def war_points(guild)
 		GuildWar.where(war: self, guild: guild).first.points
+	end
+
+	def winner
+		@points = 0
+		if self.ended?
+			self.guilds.each do | guild |
+				if @points < guild.war_points(self)
+					@winner = guild.ang
+					@points = guild.war_points(self)
+				elsif @points == guild.war_points(self)
+					@winner = "tie"
+				end
+			end
+			return @winner
+		else
+			return nil 
+		end
 	end
 
 end

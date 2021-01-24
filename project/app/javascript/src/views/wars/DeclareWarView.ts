@@ -69,12 +69,19 @@ export default class DeclareWarView extends ModalView<War> {
   warSaved() {
     displaySuccess(`You declared war to ${this.guild.get("name")}`);
     this.closeModal();
-	this.model.fetch();
 	currentUser().fetch();
     Backbone.history.navigate(`/wars`, {
       trigger: true,
     });
   }
+
+  dismiss = (e: JQuery.ClickEvent) => {
+    if ($(e.target).closest(".flatpickr-wrapper").length === 0) {
+		this.fp_start.close();
+		this.fp_end.close();
+    }
+  };
+
 
   render() {
     super.render();
@@ -88,22 +95,16 @@ export default class DeclareWarView extends ModalView<War> {
       minuteIncrement: 1,
       static: true,
       minDate: new Date(),
-      onChange: function (rawdate, altdate, FPOBJ) {
-        FPOBJ.close(); // Close datepicker on date select
-        FPOBJ._input.blur(); // Blur input field on date select
-      },
-    });
+    }, this);
     this.fp_end = flatpickr(this.$("#input-end-date"), {
       enableTime: true,
       dateFormat: "Y-m-d H:i",
       minuteIncrement: 1,
       static: true,
       minDate: new Date(),
-      onChange: function (rawdate, altdate, FPOBJ) {
-        FPOBJ.close(); // Close datepicker on date select
-        FPOBJ._input.blur(); // Blur input field on date select
-      },
-    });
+	});
+
+	this.$content.on("click", this.dismiss);
     return this;
   }
 }

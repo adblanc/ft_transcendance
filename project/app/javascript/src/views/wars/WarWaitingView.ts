@@ -33,8 +33,6 @@ export default class WarWaitingView extends BaseView {
 		)
 	};
 
-	var id = this.guild.get("warOpponent").get("id");
-
 	const template = $("#warWaitingTemplate").html();
 	const html = Mustache.render(template, { 
 		war: war,
@@ -43,6 +41,9 @@ export default class WarWaitingView extends BaseView {
 		url: `/guild/${this.guild.get("warOpponent").get("id")}`,
 	});
 	this.$el.html(html);
+
+	if (this.war.get("max_unanswered_calls"))
+		this.$("#max-calls").show();
 
     return this;
   }

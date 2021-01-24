@@ -57,8 +57,13 @@ class GamesController < ApplicationController
 		if @game.save
 			@game.update(war_time: @warTime)
 			@game.users.push(current_user)
+			@guild.members.each do |member|
+				if not member == current_user
+					member.send_notification("#{current_user.name} from your Guild has challenged #{@opponent.name} to a War Time match!", "/wars", "war")
+				end
+			end
 			@opponent.members.each do |member|
-				member.send_notification("#{current_user.name} has challenged your guild to a war time match! Answer the call!", "/wars", "war")
+				member.send_notification("#{current_user.name} has challenged your Guild to a War Time match! Answer the call!", "/wars", "war")
 			end
 			ExpireWarTimeGameJob.set(wait_until: DateTime.now + @war.time_to_answer.minutes).perform_later(@game, @guild, @opponent, @warTime, current_user)
 			@game
@@ -80,6 +85,16 @@ class GamesController < ApplicationController
 		@game.users.push(current_user)
 		@game.update(status: :started)
 		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
+
+		/faire link vers match/
+		@guild.members.each do |member|
+			if not member == current_user
+				member.send_notification("#{current_user.name} from your Guild has accepted a War Time challenge against #{@opponent.name} !", "/wars", "war")
+			end
+		end
+		@opponent.members.each do |member|
+			member.send_notification("#{current_user.name} has accepted your Guild's War Time challenge", "/wars", "war")
+		end
 		@game
 	end
 

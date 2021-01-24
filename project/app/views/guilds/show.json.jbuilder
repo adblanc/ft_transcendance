@@ -22,6 +22,7 @@ json.wars do
 		json.nb_games war.nb_games
 		json.nb_wartimes war.nb_wartimes
 		json.war_points war.war_points(@guild)
+		json.winner war.winner 
 		json.warOpponent do
 			json.id  @guild.warOpponent(war).id
 			json.ang  @guild.warOpponent(war).ang
@@ -44,6 +45,7 @@ json.pendingWars do
 			json.id  @guild.warOpponent(pendingWar).id
 			json.name  @guild.warOpponent(pendingWar).name
 			json.img_url url_for(@guild.warOpponent(pendingWar).img) if @guild.warOpponent(pendingWar).img.attached?
+			json.points  @guild.warOpponent(pendingWar).points
 		end
 	end
 end

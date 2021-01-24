@@ -4,6 +4,17 @@
 				<div class="column justify-center ml-5" style="float:left; text-align: center;">
 					<h1 style="font-size:13px" class="justify-center flex flex-row text-white">{{ang}} : {{war.war_points}} points </a>
 					<h1 style="font-size:13px" class="justify-center flex flex-row text-white">{{war.warOpponent.ang}} : {{war.warOpponent.war_points}} points</a>
+					{{^curr}}
+						{{#tie}}
+						<h1 style="font-size:13px" class="justify-center flex flex-row text-white"> TIE </h1>
+						{{/tie}}
+						{{^tie}}
+						<h1 style="font-size:13px" class="justify-center flex flex-row text-white"> Winner : {{war.winner}} </h1>
+						{{/tie}}
+					{{/curr}}
+					{{#curr}}
+					<h1 style="font-size:11px" class=" justify-center flex flex-row text-white">Ongoing</h1> 
+					{{/curr}}
 				</div>
 				<div class="column" style="float:left; text-align: center;margin-left:135px">
 					<h1 style="font-size:11px" class=" justify-center flex flex-row text-white">From {{war.start}} to {{war.end}} </h1> 
