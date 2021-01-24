@@ -33,6 +33,7 @@ export default class ChatPlayView extends ModalView<Game> {
 	const success = await this.model.playChat(
 		this.level,
 		this.goal,
+		this.room_id,
 	);
 	if (success) {
 		this.gameSaved();

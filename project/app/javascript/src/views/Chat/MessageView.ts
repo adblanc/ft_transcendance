@@ -40,13 +40,11 @@ export default class MessageView extends Backbone.View<Message> {
   fetchStatusUpdate() {
 	this.game.fetch();
 	this.pending = this.game.get("status") === "pending";
-	console.log(this.pending);
 	this.render();
   }
 
   statusUpdate() {
 	this.pending = this.game.get("status") === "pending";
-	console.log(this.pending);
 	this.render();
   }
 

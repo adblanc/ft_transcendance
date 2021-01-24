@@ -15,18 +15,15 @@ type Options = Backbone.ViewOptions & {
 
 export default class ChatInputView extends BaseView {
   rooms: Rooms;
-  room : Room;
   disable: boolean;
-  name: string;
 
   constructor(options?: Options) {
     super(options);
 
 	this.rooms = options.rooms;
-	this.room = undefined;
 	this.disable = false;
-	this.listenTo(eventBus, "chatplay:change", this.render);
-	this.listenTo(this.room, "change", this.render);
+	this.disablePlay();
+	this.listenTo(eventBus, "chatplay:change", this.disablePlay);
   }
 
   events() {
@@ -79,27 +76,34 @@ export default class ChatInputView extends BaseView {
 
   disablePlay() {
 	this.disable = false;
-	this.rooms.selectedRoom.get("messages").forEach(function (item) {
-		if (item.get("game") && item.get("game").get("status") == "pending")
-			this.disable = true;
-			this.name = item.get("user");
-	}, this);
-	this.rooms.selectedRoom.get("users").forEach(function (item) {
-		if (item.get("pendingGame")) {
-			this.disable = true;
-			this.name = item.get("name");
+	this.rooms.fetch({
+		success: () => {
+			this.rooms.selectedRoom.get("messages").forEach(function (item) {
+				if (item.get("game") && item.get("game").get("status") === "pending") {
+					this.disable = true;
+				}
+			}, this);
+			if (this.disable == false) {
+				this.rooms.selectedRoom.get("users").forEach(function (item) {
+					console.log(item);
+					if (item.get("pendingGame")) {
+						console.log("test2");
+						this.disable = true;
+					}
+					else if (item.get("inGame") == true) {
+						this.disable = true;
+					}
+				}, this);
+			}
+			console.log(this.disable);
+			this.render();
 		}
-		if (item.get("inGame") == true) {
-			this.disable = true;
-			this.name = item.get("name");
-		}
-	}, this);
+	});
   }
 
   render() {
-	this.disablePlay();
     const template = $("#chat-input-template").html();
-    const html = Mustache.render(template, {disable: this.disable, name: this.name});
+    const html = Mustache.render(template, {disable: this.disable});
 	this.$el.html(html);
 
     return this;

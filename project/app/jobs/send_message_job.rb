@@ -5,6 +5,6 @@ class SendMessageJob < ApplicationJob
 	  # Do something later
 	  msg = RoomMessage.create(user: user, room: room, content: content, game: game)
 
-	  ActionCable.server.broadcast("room_#{room.id}", msg);
+	  ActionCable.server.broadcast("room_#{room.id}", {"message" => msg});
 	end
   end

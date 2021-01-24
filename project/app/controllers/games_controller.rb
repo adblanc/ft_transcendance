@@ -26,7 +26,7 @@ class GamesController < ApplicationController
         if @game.save
 			@game.users.push(current_user)
 			@expire = 5
-			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game)
+			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, nil)
 			@game
         else
             render json: @game.errors, status: :unprocessable_entity
@@ -102,13 +102,14 @@ class GamesController < ApplicationController
 
 	def playChat
 		return head :unauthorized if current_user.inGame? || current_user.pendingGame
-
+		@room = Room.find_by_id(params[:room_id])
 		@game = Game.create(game_params)
 		if @game.save
 			@game.update(game_type: :chat)
 			@game.users.push(current_user)
 			@expire = 1
-			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game)
+			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, @room)
+			ActionCable.server.broadcast("room_#{@room.id}", {"event" => "playchat"});
 			@game
 		else
 			render json: @game.errors, status: :unprocessable_entity

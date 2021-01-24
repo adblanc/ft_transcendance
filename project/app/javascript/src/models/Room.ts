@@ -9,6 +9,12 @@ import Message, { IMessage } from "./Message";
 import { currentUser } from "./Profile";
 import RoomUser from "./RoomUser";
 
+export interface RoomData {
+	event: "playchat";
+  
+	message: IMessage;
+  }
+
 export default class Room extends BaseRoom {
   channel: ActionCable.Channel;
   messages: Messages;
@@ -57,35 +63,40 @@ export default class Room extends BaseRoom {
         connected: () => {
           console.log("connected to", room_id);
         },
-        received: (message: IMessage) => {
-          const blocked = currentUser()
-            .get("blocked_users")
-            .find((u) => u.id === message.user_id);
+        received: (data: RoomData) => {
+			if (data.message) {
+				const blocked = currentUser()
+					.get("blocked_users")
+					.find((u) => u.id === data.message.user_id);
 
-          if (
-            !message.ancient &&
-            message.content.includes(
-              `${currentUser().get("login")} has been banned`
-            )
-          ) {
-            return this.quit();
-          }
+				if (
+					!data.message.ancient &&
+					data.message.content.includes(
+					`${currentUser().get("login")} has been banned`
+					)
+				) {
+					return this.quit();
+				}
 
-          if (
-            !message.ancient &&
-            !this.get("users").find((u) => u.get("id") === message.user_id)
-          ) {
-            this.fetch();
-          }
+				if (
+					!data.message.ancient &&
+					!this.get("users").find((u) => u.get("id") === data.message.user_id)
+				) {
+					this.fetch();
+				}
 
-          if (!blocked) {
-            this.messages.add(
-              new Message({
-                ...message,
-                sent: currentUser().get("id") === message.user_id,
-              })
-            );
-          }
+				if (!blocked) {
+					this.messages.add(
+					new Message({
+						...data.message,
+						sent: currentUser().get("id") === data.message.user_id,
+					})
+					);
+				}
+			}
+			if (data.event === "playchat"){
+				eventBus.trigger("chatplay:change");
+			}
         },
       }
     );

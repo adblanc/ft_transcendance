@@ -123,10 +123,7 @@ export default class Game extends BaseModel<IGame> {
 					trigger: true,
 				});
 			}
-			else if (this.get("game_type") == "chat") {
-				eventBus.trigger("chatplay:change");
-			}
-			else {
+			else if (this.get("game_type") != "chat") {
 				displayError(
 				"We were not able to find an opponent. Please try different game settings."
 				);
@@ -170,11 +167,12 @@ export default class Game extends BaseModel<IGame> {
     );
   }
 
-  playChat(level: string, goal: number) {
+  playChat(level: string, goal: number, room_id: number) {
     return this.asyncSave(
       {
 		level: level,
 		goal: goal,
+		room_id: room_id,
       },
       {
         url: `${this.urlRoot()}/playChat`,
