@@ -5,6 +5,7 @@ json.isMute user.is_room_mute?(room)
 json.isBan user.is_room_ban?(room)
 json.isBlocked @current_user.is_blocked?(user)
 json.inGame user.inGame?
+json.inPendingGame user.inPendingGame?
 if user.pendingGame
 	json.pendingGame do
 		json.id user.pendingGame.id

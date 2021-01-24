@@ -86,7 +86,7 @@ export default class ChatInputView extends BaseView {
 			if (this.disable == false) {
 				this.rooms.selectedRoom.get("users").forEach(function (item) {
 					console.log(item);
-					if (item.get("pendingGame")) {
+					if (item.get("inPendingGame") == true) {
 						console.log("test2");
 						this.disable = true;
 					}
