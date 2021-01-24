@@ -18,14 +18,20 @@ export default class GameIndexView extends BaseView {
     const html = Mustache.render(template, {});
 	this.$el.html(html);
 	
-	if (currentUser().get("pendingGame")) { 
-		const waitingGameView = new WaitingGameView({
-			model: currentUser().get("pendingGame"),
-		});
-		this.renderNested(waitingGameView, "#game-index-container");
+	if (currentUser().get("pendingGame") ) { 
+		if (currentUser().get("pendingGame").get("game_type") != "chat") {
+			const waitingGameView = new WaitingGameView({
+				model: currentUser().get("pendingGame"),
+			});
+			this.renderNested(waitingGameView, "#game-index-container");
+		}
+		else {
+			const startGameView = new StartGameView({disable:true});
+			this.renderNested(startGameView, "#game-index-container");
+		}
 	}
 	else {
-		const startGameView = new StartGameView();
+		const startGameView = new StartGameView({disable:false});
 		this.renderNested(startGameView, "#game-index-container");
 	}
 

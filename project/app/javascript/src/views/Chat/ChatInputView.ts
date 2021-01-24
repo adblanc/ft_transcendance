@@ -85,9 +85,7 @@ export default class ChatInputView extends BaseView {
 			}, this);
 			if (this.disable == false) {
 				this.rooms.selectedRoom.get("users").forEach(function (item) {
-					console.log(item);
-					if (item.get("inPendingGame") == true) {
-						console.log("test2");
+					if (item.get("pendingGame")) {
 						this.disable = true;
 					}
 					else if (item.get("inGame") == true) {
@@ -95,7 +93,6 @@ export default class ChatInputView extends BaseView {
 					}
 				}, this);
 			}
-			console.log(this.disable);
 			this.render();
 		}
 	});

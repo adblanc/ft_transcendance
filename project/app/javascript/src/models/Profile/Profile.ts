@@ -44,7 +44,6 @@ export interface IProfile {
   guild?: Guild;
   pendingGame?: Game;
   inGame?: boolean;
-  inPendingGame?: boolean;
   notifications?: Notifications;
   blocked_users?: IBlockedUser[];
   friend_requests?: FriendRequests;

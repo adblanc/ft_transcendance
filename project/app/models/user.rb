@@ -182,10 +182,6 @@ class User < ApplicationRecord
 		games.where(status: [:pending]).first
 	end
 
-	def inPendingGame?
-		self.games.pending.present?
-	end
-
 	def inGame?
 		self.games.started.present?
 	end

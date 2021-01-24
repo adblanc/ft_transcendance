@@ -38,6 +38,8 @@ if user.pendingGame
 		json.status user.pendingGame.status
 		json.war_time user.pendingGame.war_time
 	end
+else
+	json.pendingGame nil
 end
 
 json.friends do
