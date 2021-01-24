@@ -5,13 +5,22 @@ import WaitingGameView from "./WaitingGameView";
 import StartGameView from "./StartGameView";
 import { displaySuccess } from "src/utils/toast";
 import { currentUser } from "src/models/Profile";
+import { eventBus } from "src/events/EventBus";
 
 export default class GameIndexView extends BaseView {
   constructor(options?: Backbone.ViewOptions) {
 	super(options);
 
-	this.listenTo(currentUser(), "change", this.render);
+	this.listenTo(eventBus, "game:expire", this.relaunch);
   }
+
+  relaunch() {
+	currentUser().fetch({
+		success: () => {
+			this.render();
+		}
+	});
+}
 
   render() {
     const template = $("#gameIndexTemplate").html();

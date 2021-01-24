@@ -114,7 +114,7 @@ export default class Game extends BaseModel<IGame> {
             this.navigateToGame();
             return this.unsubscribeChannelConsumer();
           } else if (data.event === "expired") {
-			currentUser().fetch();
+			eventBus.trigger("game:expire");
 			if (this.get("game_type") == "war_time") {
 				displaySuccess(
 					"No one answered your War Time challenge! You have won the match."

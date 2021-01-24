@@ -30,7 +30,6 @@ export default class StartGameView extends BaseView {
 				else {
 					this.disable = false;
 				}
-				console.log(this.disable);
 				this.render();
 			}
 		});
