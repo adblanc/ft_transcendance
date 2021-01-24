@@ -24,6 +24,7 @@ export default class ChatInputView extends BaseView {
 	this.disable = false;
 	this.disablePlay();
 	this.listenTo(eventBus, "chatplay:change", this.disablePlay);
+	this.listenTo(eventBus, "chatplay:toggle", this.render);
   }
 
   events() {
@@ -100,7 +101,7 @@ export default class ChatInputView extends BaseView {
 
   render() {
     const template = $("#chat-input-template").html();
-    const html = Mustache.render(template, {disable: this.disable});
+    const html = Mustache.render(template, {disable: this.disable, dm: this.rooms.selectedRoom.get("is_dm")});
 	this.$el.html(html);
 
     return this;
