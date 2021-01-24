@@ -183,7 +183,7 @@ class User < ApplicationRecord
 	end
 
 	def inGame?
-		self.games.started.present? || self.games.pending.present?
+		self.games.started.present?
 	end
 
 	def send_notification(message, link, type)

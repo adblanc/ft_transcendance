@@ -20,6 +20,12 @@ export default class Room extends BaseRoom {
         key: "users",
         collectionType: RoomUsers,
         relatedModel: RoomUser,
+	  },
+	  {
+        type: Backbone.Many,
+        key: "messages",
+        collectionType: Messages,
+        relatedModel: Message,
       },
     ];
   }

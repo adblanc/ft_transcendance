@@ -31,12 +31,22 @@ export default class MessageView extends Backbone.View<Message> {
 		this.req = false;
 	}
 
-	if (this.game != undefined)
+	if (this.game != undefined) {
 		this.listenTo(this.game, "change", this.statusUpdate);
+		this.listenTo(eventBus, "chatplay:change", this.fetchStatusUpdate);
+	}
+  }
+
+  fetchStatusUpdate() {
+	this.game.fetch();
+	this.pending = this.game.get("status") === "pending";
+	console.log(this.pending);
+	this.render();
   }
 
   statusUpdate() {
 	this.pending = this.game.get("status") === "pending";
+	console.log(this.pending);
 	this.render();
   }
 

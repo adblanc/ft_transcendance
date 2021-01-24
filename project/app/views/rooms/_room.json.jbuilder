@@ -6,3 +6,8 @@ json.users do
 		json.partial! "users/roomUser", user: user, room: room
 	end
 end
+json.messages do
+	json.array! room.room_messages do |message|
+		json.partial! "rooms/room_message", room_message: message
+	end
+end

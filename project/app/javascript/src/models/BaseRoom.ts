@@ -1,3 +1,4 @@
+import Messages from "src/collections/Messages";
 import RoomUsers from "src/collections/RoomUsers";
 import { BASE_ROOT } from "src/constants";
 import BaseModel from "src/lib/BaseModel";
@@ -11,6 +12,7 @@ export interface IRoom {
   id?: number;
   selected?: boolean;
   users?: RoomUsers;
+  messages?: Messages;
 }
 
 export default class BaseRoom extends BaseModel<IRoom> {

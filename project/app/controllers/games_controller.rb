@@ -11,7 +11,7 @@ class GamesController < ApplicationController
     end
 
 	def create
-		return head :unauthorized if current_user.inGame? 
+		return head :unauthorized if current_user.inGame? || current_user.pendingGame?
 		@games = Game.where(status: :pending)
 		@games.to_ary.each do | game |
 			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type] 
@@ -51,6 +51,7 @@ class GamesController < ApplicationController
 
 		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
 		return head :unauthorized if @warTime.activeGame || @warTime.pendingGame
+		return head :unauthorized if current_user.inGame? || current_user.pendingGame
 
 		@game = Game.create(game_params)
 
@@ -81,6 +82,7 @@ class GamesController < ApplicationController
 
 		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
 		return head :unauthorized if @warTime.activeGame
+		return head :unauthorized if current_user.inGame? || current_user.pendingGame
 
 		@game.users.push(current_user)
 		@game.update(status: :started)
@@ -99,11 +101,13 @@ class GamesController < ApplicationController
 	end
 
 	def playChat
+		return head :unauthorized if current_user.inGame? || current_user.pendingGame
+
 		@game = Game.create(game_params)
 		if @game.save
 			@game.update(game_type: :chat)
 			@game.users.push(current_user)
-			@expire = 5
+			@expire = 1
 			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game)
 			@game
 		else
@@ -112,7 +116,11 @@ class GamesController < ApplicationController
 	end
 
 	def acceptPlayChat
+		return head :unauthorized if current_user.inGame? || current_user.pendingGame
+
 		@game = Game.find_by_id(params[:id])
+		return head :unauthorized if not @game.pending?
+
 		@game.users.push(current_user)
 		@game.update(status: :started)
 		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});

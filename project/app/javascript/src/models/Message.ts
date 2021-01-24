@@ -2,6 +2,7 @@ import { BASE_ROOT } from "src/constants";
 import Backbone from "backbone";
 import BaseModel from "src/lib/BaseModel";
 import Game from "./Game";
+import User from "./User";
 
 export interface IMessage {
   content: string;
@@ -11,6 +12,7 @@ export interface IMessage {
   id?: number;
   avatar_url?: string;
   user_id?: number;
+  user?: User;
   pseudo?: string;
   game_id?: number;
   game?: Game;

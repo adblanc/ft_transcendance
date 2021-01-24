@@ -6,6 +6,8 @@ import Message from "src/models/Message";
 import Game from "src/models/Game";
 import ChatPlayView from "./ChatPlayView";
 import _ from "underscore";
+import Room from "src/models/Room";
+import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions & {
   rooms: Rooms;
@@ -13,11 +15,18 @@ type Options = Backbone.ViewOptions & {
 
 export default class ChatInputView extends BaseView {
   rooms: Rooms;
+  room : Room;
+  disable: boolean;
+  name: string;
 
   constructor(options?: Options) {
     super(options);
 
-    this.rooms = options.rooms;
+	this.rooms = options.rooms;
+	this.room = undefined;
+	this.disable = false;
+	this.listenTo(eventBus, "chatplay:change", this.render);
+	this.listenTo(this.room, "change", this.render);
   }
 
   events() {
@@ -34,7 +43,7 @@ export default class ChatInputView extends BaseView {
 		model: game,
 		room_id: this.rooms.selectedRoom.get("id"),
 	});
-  
+	
 	chatPlayView.render();
   }
 
@@ -68,10 +77,30 @@ export default class ChatInputView extends BaseView {
     this.$("#send-message-input").val("");
   }
 
+  disablePlay() {
+	this.disable = false;
+	this.rooms.selectedRoom.get("messages").forEach(function (item) {
+		if (item.get("game") && item.get("game").get("status") == "pending")
+			this.disable = true;
+			this.name = item.get("user");
+	}, this);
+	this.rooms.selectedRoom.get("users").forEach(function (item) {
+		if (item.get("pendingGame")) {
+			this.disable = true;
+			this.name = item.get("name");
+		}
+		if (item.get("inGame") == true) {
+			this.disable = true;
+			this.name = item.get("name");
+		}
+	}, this);
+  }
+
   render() {
+	this.disablePlay();
     const template = $("#chat-input-template").html();
-    const html = Mustache.render(template, {});
-    this.$el.html(html);
+    const html = Mustache.render(template, {disable: this.disable, name: this.name});
+	this.$el.html(html);
 
     return this;
   }

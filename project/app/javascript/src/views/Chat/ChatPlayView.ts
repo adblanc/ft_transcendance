@@ -3,6 +3,7 @@ import Mustache from "mustache";
 import ModalView from "../ModalView";
 import Message from "src/models/Message";
 import Game from "src/models/Game";
+import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions<Game> & {
 	room_id: number,
@@ -35,6 +36,7 @@ export default class ChatPlayView extends ModalView<Game> {
 	);
 	if (success) {
 		this.gameSaved();
+		eventBus.trigger("chatplay:change");
 	}
   }
 
@@ -47,7 +49,6 @@ export default class ChatPlayView extends ModalView<Game> {
 		room_id: this.room_id,
 		game_id: this.model.get("id"),
 	});
-
 	return message.asyncSave();
   }
 
