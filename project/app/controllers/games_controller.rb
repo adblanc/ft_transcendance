@@ -103,11 +103,18 @@ class GamesController < ApplicationController
 	def playChat
 		return head :unauthorized if current_user.inGame? || current_user.pendingGame
 		@room = Room.find_by_id(params[:room_id])
+
+		@room.room_messages.each do |msg|
+			if msg.game.present?
+				return head :unauthorized if msg.game.pending?
+			end
+		end
+
 		@game = Game.create(game_params)
 		if @game.save
 			@game.update(game_type: :chat)
 			@game.users.push(current_user)
-			@expire = 1
+			@expire = 5
 			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, @room)
 			ActionCable.server.broadcast("room_#{@room.id}", {"event" => "playchat"});
 			@game
