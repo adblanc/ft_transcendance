@@ -31,14 +31,12 @@ export default class AdminRoomView extends BaseView<AdminRoom> {
   }
 
   render() {
-  	console.log("V");
-	console.log(this.model.attributes.is_dm ? this.model.attributes.users : "not dm");
-  	console.log("A");
     const template = $("#roomTemplate").html();
     const html = Mustache.render(template, {
 		...this.model.toJSON(),
 		name: this.model.attributes.is_dm ?
-			this.model.attributes.users[0].login + " - " + this.model.attributes.users[1].login :
+			this.model.attributes.users.models[0].attributes.login + " - " +
+			this.model.attributes.users.models[1].attributes.login :
 			this.model.attributes.name,
 	});
     this.$el.html(html);
