@@ -10,10 +10,10 @@ import { currentUser } from "./Profile";
 import RoomUser from "./RoomUser";
 
 export interface RoomData {
-	event: "playchat";
-  
-	message: IMessage;
-  }
+  event: "playchat";
+
+  message: IMessage;
+}
 
 export default class Room extends BaseRoom {
   channel: ActionCable.Channel;
@@ -26,8 +26,8 @@ export default class Room extends BaseRoom {
         key: "users",
         collectionType: RoomUsers,
         relatedModel: RoomUser,
-	  },
-	  {
+      },
+      {
         type: Backbone.Many,
         key: "messages",
         collectionType: Messages,
@@ -64,39 +64,41 @@ export default class Room extends BaseRoom {
           console.log("connected to", room_id);
         },
         received: (data: RoomData) => {
-			if (data.message) {
-				const blocked = currentUser()
-					.get("blocked_users")
-					.find((u) => u.id === data.message.user_id);
+          if (data.message) {
+            const blocked = currentUser()
+              .get("blocked_users")
+              .find((u) => u.id === data.message.user_id);
 
-				if (
-					!data.message.ancient &&
-					data.message.content.includes(
-					`${currentUser().get("login")} has been banned`
-					)
-				) {
-					return this.quit();
-				}
+            if (
+              !data.message.ancient &&
+              data.message.content.includes(
+                `${currentUser().get("login")} has been banned`
+              )
+            ) {
+              return this.quit();
+            }
 
-				if (
-					!data.message.ancient &&
-					!this.get("users").find((u) => u.get("id") === data.message.user_id)
-				) {
-					this.fetch();
-				}
+            if (
+              !data.message.ancient &&
+              !this.get("users").find(
+                (u) => u.get("id") === data.message.user_id
+              )
+            ) {
+              this.fetch();
+            }
 
-				if (!blocked) {
-					this.messages.add(
-					new Message({
-						...data.message,
-						sent: currentUser().get("id") === data.message.user_id,
-					})
-					);
-				}
-			}
-			if (data.event === "playchat"){
-				eventBus.trigger("chatplay:change");
-			}
+            if (!blocked) {
+              this.messages.add(
+                new Message({
+                  ...data.message,
+                  sent: currentUser().get("id") === data.message.user_id,
+                })
+              );
+            }
+          }
+          if (data.event === "playchat") {
+            eventBus.trigger("chatplay:change");
+          }
         },
       }
     );

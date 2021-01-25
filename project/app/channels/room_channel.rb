@@ -7,7 +7,7 @@ class RoomChannel < ApplicationCable::Channel
 
     if (room && room.users.exists?(current_user.id) && !current_user.is_room_ban?(room))
       messages = RoomMessage.where(room_id: room_id).order(created_at: :asc).each do |message|
-        transmit(message.as_json(nil).merge(:ancient => true))
+        transmit({"message" => message.as_json(nil).merge(:ancient => true)})
       end
     end
   end
