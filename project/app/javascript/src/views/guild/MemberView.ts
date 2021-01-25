@@ -41,18 +41,20 @@ export default class MemberView extends BaseView {
 
   render() {
     const template = $("#memberTemplate").html();
+    console.log(this.model.toJSON());
     const html = Mustache.render(template, this.model.toJSON());
     this.$el.html(html);
 
     const $element = this.$("#manage-btn");
-    if ((currentUser().get("guild") &&
+    if (
+      (currentUser().get("guild") &&
         currentUser().get("guild").get("id") === this.guild.get("id") &&
         currentUser().get("guild_role") === "Owner" &&
-        currentUser().get("id") != this.model.get("id")) || (
-		currentUser().get("admin") &&
-	  	this.model.get("guild_role") != "Owner")) {
-        $element.show();
-	}
+        currentUser().get("id") != this.model.get("id")) ||
+      (currentUser().get("admin") && this.model.get("guild_role") != "Owner")
+    ) {
+      $element.show();
+    }
 
     return this;
   }
