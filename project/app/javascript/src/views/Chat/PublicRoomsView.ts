@@ -12,6 +12,7 @@ type Options = Backbone.ViewOptions & {
 const PUBLIC_ROOMS_VIEW_INFOS = {
   label: "Public channels list",
   id: "public-rooms-list",
+  title_id: "public-rooms-title",
 };
 
 export default class PublicRoomsView extends BaseView {

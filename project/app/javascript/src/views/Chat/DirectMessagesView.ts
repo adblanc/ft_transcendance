@@ -12,6 +12,7 @@ type Options = Backbone.ViewOptions & {
 const MY_ROOMS_VIEW_INFOS = {
   label: "Direct messages",
   id: "my-dms-list",
+  title_id: "my-dms-title",
 };
 
 export default class DirectMessagesView extends BaseView {

@@ -10,6 +10,7 @@ import AdminRoomsView from "./AdminRoomsView";
 import MyRoomsView from "./MyRoomsView";
 import DirectMessagesView from "./DirectMessagesView";
 import Room from "src/models/Room";
+import { currentUser } from "src/models/Profile";
 
 export default class ChatView extends BaseView {
   myRooms: MyRooms;
@@ -81,6 +82,7 @@ export default class ChatView extends BaseView {
   }
 
   toggleChat() {
+	currentUser().get("admin") ? $("#admin-rooms-title").show() : $("#admin-rooms-title").hide();
     this.$el.toggleClass("invisible");
   }
 

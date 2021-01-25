@@ -12,6 +12,7 @@ type Options = Backbone.ViewOptions & {
 const ADMIN_ROOMS_VIEW_INFOS = {
   label: "Admin channels list",
   id: "admin-rooms-list",
+  title_id: "admin-rooms-title",
 };
 
 export default class AdminRoomsView extends BaseView {
