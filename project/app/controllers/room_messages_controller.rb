@@ -4,7 +4,6 @@ class RoomMessagesController < ApplicationController
 	before_action :load_game
 
 	def create
-
 		if (!@room)
 			render json: {"room" => ["not found"]}, status: :unprocessable_entity
 		elsif (@current_user.is_room_mute?(@room))

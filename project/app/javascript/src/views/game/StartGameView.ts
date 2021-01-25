@@ -15,6 +15,7 @@ export default class StartGameView extends BaseView {
 	super(options);
 
 	this.disable = options.disable;
+
 	this.listenTo(eventBus, "chatplay:change", this.relaunch);
 	}
 

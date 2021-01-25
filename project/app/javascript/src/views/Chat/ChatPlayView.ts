@@ -37,11 +37,11 @@ export default class ChatPlayView extends ModalView<Game> {
 	);
 	if (success) {
 		this.gameSaved();
-		eventBus.trigger("chatplay:change");
 	}
   }
 
   gameSaved() {
+	console.log(this.model.get("id"));
 	this.closeModal();
 	this.model.createChannelConsumer();
    	var content = `Let's play a game! Difficulty : ${this.level}. Points : ${this.goal}`;

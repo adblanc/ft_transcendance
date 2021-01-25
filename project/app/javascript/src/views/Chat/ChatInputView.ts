@@ -15,16 +15,12 @@ type Options = Backbone.ViewOptions & {
 
 export default class ChatInputView extends BaseView {
   rooms: Rooms;
-  disable: boolean;
 
   constructor(options?: Options) {
     super(options);
 
 	this.rooms = options.rooms;
-	this.disable = false;
-	this.disablePlay();
-	this.listenTo(eventBus, "chatplay:change", this.disablePlay);
-	this.listenTo(eventBus, "chatplay:toggle", this.disablePlay);
+	this.listenTo(eventBus, "chatplay:toggle", this.render);
   }
 
   events() {
@@ -75,33 +71,9 @@ export default class ChatInputView extends BaseView {
     this.$("#send-message-input").val("");
   }
 
-  disablePlay() {
-	this.disable = false;
-	this.rooms.fetch({
-		success: () => {
-			this.rooms.selectedRoom.get("messages").forEach(function (item) {
-				if (item.get("game") && item.get("game").get("status") === "pending") {
-					this.disable = true;
-				}
-			}, this);
-			if (this.disable == false) {
-				this.rooms.selectedRoom.get("users").forEach(function (item) {
-					if (item.get("pendingGame")) {
-						this.disable = true;
-					}
-					else if (item.get("inGame") == true) {
-						this.disable = true;
-					}
-				}, this);
-			}
-			this.render();
-		}
-	});
-  }
-
   render() {
     const template = $("#chat-input-template").html();
-    const html = Mustache.render(template, {disable: this.disable, dm: this.rooms.selectedRoom.get("is_dm")});
+    const html = Mustache.render(template, {dm: this.rooms.selectedRoom.get("is_dm")});
 	this.$el.html(html);
 
     return this;

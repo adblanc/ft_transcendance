@@ -37,7 +37,6 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
   events() {
     return {
       ...super.events(),
-      "click #invite-to-play-user": this.inviteToPlay,
       "click #mute-list > option": (e) => this.performAction(e, "muted"),
       "click #ban-list > option": (e) => this.performAction(e, "banned"),
       "click #block-user": (e) => this.performAction(e, "blocked"),
@@ -48,10 +47,6 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
       "click #demote-user": (e) => this.performAction(e, "demoted"),
       "click #dm-user": this.sendDm,
     };
-  }
-
-  inviteToPlay() {
-    console.log("invite to play");
   }
 
   async performAction({ currentTarget }: JQuery.ClickEvent, action: Action) {

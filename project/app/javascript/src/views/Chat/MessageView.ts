@@ -20,7 +20,7 @@ export default class MessageView extends Backbone.View<Message> {
     if (!this.model) {
       throw Error("Please provide a Message model.");
 	}
-	
+
 	if (this.model.get("game_id")) {
 		var id = this.model.get("game_id");
 		this.game = new Game({ id });
@@ -57,7 +57,6 @@ export default class MessageView extends Backbone.View<Message> {
   }
 
   async onAccept(e: JQuery.Event) {
-	console.log("test");
 	e.preventDefault();
   
 	const success = await this.game.acceptPlayChat();
@@ -67,6 +66,7 @@ export default class MessageView extends Backbone.View<Message> {
   }
 
   gameSaved() {
+	  console.log("navigate");
 	this.game.navigateToGame();
   }
 
@@ -85,7 +85,8 @@ export default class MessageView extends Backbone.View<Message> {
 	  time,
 	  req: this.req,
 	  pending : this.pending,
-    });
+	});
+
     this.$el.html(html);
 
     return this;

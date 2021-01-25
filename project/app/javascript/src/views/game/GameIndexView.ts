@@ -11,6 +11,7 @@ export default class GameIndexView extends BaseView {
   constructor(options?: Backbone.ViewOptions) {
 	super(options);
 
+	this.listenTo(currentUser(), "change", this.render);
 	this.listenTo(eventBus, "game:expire", this.relaunch);
   }
 
