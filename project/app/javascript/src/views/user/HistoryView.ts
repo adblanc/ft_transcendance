@@ -15,8 +15,7 @@ export default class HistoryView extends BaseView {
   }
 
   render() {
-    const template = $("#historyTemplate").html();
-    
+    const template = $("#history").html();
     const html = Mustache.render(template, this.model.toJSON());
     this.$el.html(html);
     return this;
