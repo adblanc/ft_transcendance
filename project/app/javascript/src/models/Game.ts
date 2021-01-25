@@ -10,7 +10,7 @@ import { displaySuccess, displayError } from "src/utils/toast";
 import { eventBus } from "src/events/EventBus";
 import WarTime from "./WarTime";
 import Spectators from "src/collections/Spectators";
-import Spectator, { ISpectator } from "./Spectator";
+import Spectator from "./Spectator";
 
 interface IGame {
   id: number;

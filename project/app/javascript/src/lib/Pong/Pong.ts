@@ -1,8 +1,10 @@
+import consumer from "channels/consumer";
 import Game from "src/models/Game";
 import { getRandomFloat } from "src/utils";
 import Ball from "./classes/Ball";
 import Player from "./classes/Player";
 import Rect from "./classes/Rect";
+import Vec from "./classes/Vec";
 
 const CHARS = [
   "111101101101111",
@@ -26,6 +28,8 @@ interface IDifficultyOptions {
   paddleSpeedAi: number;
   ballDetectionRange: number;
 }
+
+type BallMovementData = ReturnType<typeof Ball.prototype.toJSON>;
 
 export type Difficulty = "easy" | "normal" | "hard";
 
@@ -62,11 +66,13 @@ export default class Pong {
   private ball: Ball;
   private chars: HTMLCanvasElement[];
   private game: Game;
+  private ballMovementChannel: ActionCable.Channel;
 
   constructor(canvas: HTMLCanvasElement, game: Game) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.game = game;
+    this.ballMovementChannel = this.createBallMovementChannel();
 
     this.ball = new Ball();
 
@@ -121,6 +127,29 @@ export default class Pong {
     return DIFFICULTIES[this.game.get("level")];
   }
 
+  createBallMovementChannel() {
+    const id = this.game.get("id");
+    return consumer.subscriptions.create(
+      { channel: "PongBallChannel", id },
+      {
+        connected: () => {
+          console.log("connected to the pong ball", id);
+        },
+        received: (data: BallMovementData) => {
+          if (!this.game.get("isHost")) {
+            // if (!this.game.get("isSpectator")) {
+            //   data.pos.x = -data.pos.x;
+            // }
+            this.ball.setJSON(data);
+          }
+        },
+        disconnected: () => {
+          console.log("ball movement disconnected", id);
+        },
+      }
+    );
+  }
+
   update(dt: number) {
     this.ball.pos.x += this.ball.vel.x * dt;
     this.ball.pos.y += this.ball.vel.y * dt;
@@ -140,6 +169,7 @@ export default class Pong {
 
     this.players.forEach((player) => this.collide(player, this.ball));
 
+    this.ballMovementChannel.perform("movement", this.ball.toJSON());
     this.draw();
   }
 
@@ -166,6 +196,9 @@ export default class Pong {
   }
 
   start() {
+    if (!this.game.get("isHost")) {
+      return;
+    }
     if (this.ball.vel.x === 0 && this.ball.vel.y === 0) {
       this.ball.vel.x = getRandomFloat(
         this.difficulty.initialBallSpeedMin,

@@ -120,7 +120,7 @@ class User < ApplicationRecord
 	end
 
 	def is_playing_in?(game)
-		return self.has_role?(:player, game);
+		return self.has_role?(:player, game) || self.has_role?(:host, game);
 	end
 
 	def is_spectating?(game)
