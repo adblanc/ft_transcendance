@@ -73,7 +73,6 @@ export default class AdminRoom extends BaseRoom {
 	}
 
 	select() {
-		//@ts-ignore
 		this.collection.setSelected(this);
 	}
 
