@@ -11,7 +11,7 @@ class GamesController < ApplicationController
     end
 
 	def create
-		return head :unauthorized if current_user.inGame? 
+		return head :unauthorized if current_user.inGame? || current_user.pendingGame
 		@games = Game.where(status: :pending)
 		@games.to_ary.each do | game |
 			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type] 
@@ -26,14 +26,15 @@ class GamesController < ApplicationController
         if @game.save
 			@game.users.push(current_user)
 			@expire = 5
-			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game)
+			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, nil)
 			@game
         else
             render json: @game.errors, status: :unprocessable_entity
-        end
+		end
+
 	end
 
-    def score
+    /def score
 		@game = Game.find_by_id(params[:id])
 		return head :not_found unless @game
 		@player = GameUser.where(id: params[:user_id])
@@ -41,7 +42,7 @@ class GamesController < ApplicationController
 		if @player.points == @game.goal
 			@game.update(status: :finished)
 		end
-	end
+	end/
 	
 	def challenge
 		@warTime = WarTime.find_by_id(params[:warTimeId])
@@ -51,6 +52,7 @@ class GamesController < ApplicationController
 
 		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
 		return head :unauthorized if @warTime.activeGame || @warTime.pendingGame
+		return head :unauthorized if current_user.inGame? || current_user.pendingGame
 
 		@game = Game.create(game_params)
 
@@ -81,6 +83,7 @@ class GamesController < ApplicationController
 
 		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
 		return head :unauthorized if @warTime.activeGame
+		return head :unauthorized if current_user.inGame? || current_user.pendingGame
 
 		@game.users.push(current_user)
 		@game.update(status: :started)
@@ -95,6 +98,51 @@ class GamesController < ApplicationController
 		@opponent.members.each do |member|
 			member.send_notification("#{current_user.name} has accepted your Guild's War Time challenge", "/wars", "war")
 		end
+		@game
+	end
+
+	def playChat
+		if current_user.inGame? || current_user.pendingGame
+			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
+			return
+		end
+
+		@room = Room.find_by_id(params[:room_id])
+		@room.room_messages.each do |msg|
+			if msg.game.present?
+				if msg.game.pending?
+					render json: {"Game" => ["already pending"]}, status: :unprocessable_entity
+					return
+				end
+			end
+		end
+
+		@game = Game.create(game_params)
+		if @game.save
+			@game.update(game_type: :chat)
+			@game.users.push(current_user)
+			@expire = 5
+			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, @room)
+			ActionCable.server.broadcast("room_#{@room.id}", {"event" => "playchat"});
+			@game
+		else
+			render json: @game.errors, status: :unprocessable_entity
+		end
+	end
+
+	def acceptPlayChat
+		if current_user.inGame? || current_user.pendingGame
+			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
+			return
+		end
+
+		@game = Game.find_by_id(params[:id])
+		return head :unauthorized if not @game.pending?
+
+		@game.users.push(current_user)
+		@game.update(status: :started)
+		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
+		ActionCable.server.broadcast("room_#{@game.room_message.room.id}", {"event" => "playchat"});
 		@game
 	end
 

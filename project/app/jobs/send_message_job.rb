@@ -1,10 +1,10 @@
 class SendMessageJob < ApplicationJob
 	queue_as :default
 
-	def perform(user, room, content)
+	def perform(user, room, content, game)
 	  # Do something later
-	  msg = RoomMessage.create(user: user, room: room, content: content)
+	  msg = RoomMessage.create(user: user, room: room, content: content, game: game)
 
-	  ActionCable.server.broadcast("room_#{room.id}", msg);
+	  ActionCable.server.broadcast("room_#{room.id}", {"message" => msg});
 	end
   end

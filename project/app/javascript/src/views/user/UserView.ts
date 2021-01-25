@@ -67,7 +67,8 @@ export default class UserView extends BaseView {
       displaySuccess(
         `Your invitation has been sent to ${this.user.get("login")}`
 	  );
-    }
+	  this.actualize();
+	}
   }
 
   async onRemoveFriend() {
@@ -77,7 +78,8 @@ export default class UserView extends BaseView {
       displaySuccess(
         `Your are no longer friend with ${this.user.get("login")}`
 	  );
-    }
+	  this.actualize();
+	}
   }
 
   onRequestClicked() {

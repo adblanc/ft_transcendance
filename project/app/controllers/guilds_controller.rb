@@ -1,4 +1,6 @@
 class GuildsController < ApplicationController
+	before_action :authenticate_user!
+
   def index
 	@guilds = Guild.all
   end

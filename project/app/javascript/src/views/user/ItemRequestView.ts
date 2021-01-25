@@ -16,6 +16,7 @@ export default class ItemRequestView extends BaseView {
 
 	this.model = options.model;
 	this.user = options.user;
+	console.log(this.model);
   }
 
   events() {
@@ -45,12 +46,12 @@ export default class ItemRequestView extends BaseView {
     switch (method) {
       case "accepted":
         displaySuccess(
-          `You accepted ${this.model.get("name")}'s friend request`
+          `You accepted ${this.model.get("login")}'s friend request`
         );
         break;
       case "refused":
         displaySuccess(
-          `You refused ${this.model.get("name")}'s friend request`
+          `You refused ${this.model.get("login")}'s friend request`
         );
         break;
     }

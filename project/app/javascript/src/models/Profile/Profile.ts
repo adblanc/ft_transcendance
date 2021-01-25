@@ -4,12 +4,7 @@ import Guild from "src/models/Guild";
 import Notifications from "src/collections/Notifications";
 import Notification, { INotification } from "src/models/Notification";
 import consumer from "channels/consumer";
-import {
-  AppearanceData,
-  clearAuthHeaders,
-  createAppereanceConsumer,
-  syncWithFormData,
-} from "src/utils";
+import { clearAuthHeaders, syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import { eventBus } from "src/events/EventBus";
@@ -23,6 +18,12 @@ export interface IBlockedUser {
   avatar_url: string;
   id: number;
 }
+
+export type AppearanceData = {
+  event: "disappear" | "appear";
+  user_id: number;
+  appearing_on: string;
+};
 
 export interface IProfile {
   login: string;
@@ -43,6 +44,7 @@ export interface IProfile {
   pending_guild?: Guild;
   guild?: Guild;
   pendingGame?: Game;
+  inGame?: boolean;
   notifications?: Notifications;
   blocked_users?: IBlockedUser[];
   friend_requests?: FriendRequests;
@@ -82,14 +84,14 @@ export default class Profile extends BaseModel<IProfile> {
         key: "notifications",
         collectionType: Notifications,
         relatedModel: Notification,
-	  },
-	  {
+      },
+      {
         type: Backbone.Many,
         key: "friend_requests",
         collectionType: FriendRequests,
         relatedModel: User,
-	  },
-	  {
+      },
+      {
         type: Backbone.Many,
         key: "friends",
         collectionType: Friends,
@@ -101,6 +103,7 @@ export default class Profile extends BaseModel<IProfile> {
   initialize() {
     this.notifications = new Notifications();
     //this.channel = this.createConsumer();
+
     this.listenTo(eventBus, "appeareance", this.reactToAppearance);
   }
 
@@ -118,16 +121,6 @@ export default class Profile extends BaseModel<IProfile> {
 
   urlRoot = () => `${BASE_ROOT}/user`;
 
-  reactToAppearance = ({ event, user_id, appearing_on }: AppearanceData) => {
-    console.log("profile react to appearance");
-    if (user_id === this.get("id")) {
-      this.set({
-        is_present: event === "appear" ? true : false,
-        appearing_on,
-      });
-    }
-  };
-
   createNotificationsConsumer() {
     const user_id = this.get("id");
     return consumer.subscriptions.create(
@@ -137,8 +130,8 @@ export default class Profile extends BaseModel<IProfile> {
           //console.log("connected to", user_id);
         },
         received: (notification: INotification) => {
-		  this.checkDmCreationNotification(notification);
-		  this.checkWarEvent(notification);
+          this.checkDmCreationNotification(notification);
+          this.checkWarEvent(notification);
           this.notifications.add(notification);
         },
       }
@@ -157,26 +150,35 @@ export default class Profile extends BaseModel<IProfile> {
     }
   }
 
-  // connectGlobalRoomsConsumer() {
-  //   this.unsubscribeGlobalRoomsConsumer();
+  createAppereanceConsumer() {
+    return consumer.subscriptions.create("AppearanceChannel", {
+      connected() {
+        console.log("Connected to appearance");
+      },
 
-  //   this.globalRoomsChannel = consumer.subscriptions.create(
-  //     { channel: "RoomsGlobalChannel" },
-  //     {
-  //       connected() {
-  //         console.log("connected to rooms global channel");
-  //       },
-  //       received(data: any) {
-  //         console.log("received rooms global", data);
-  //       },
-  //     }
-  //   );
-  // }
+      disconnected() {
+        // Called when the subscription has been terminated by the server
 
-  // unsubscribeGlobalRoomsConsumer() {
-  //   this.globalRoomsChannel?.unsubscribe();
-  //   this.globalRoomsChannel = undefined;
-  // }
+        console.log("Disconnected from appearance");
+      },
+
+      received: (data: AppearanceData) => {
+        if (this.get("friends").find((u) => u.get("id") === data.user_id)) {
+          eventBus.trigger("appeareance", data);
+        }
+        // Called when there's incoming data on the websocket for this channel
+      },
+    });
+  }
+
+  reactToAppearance({ event, user_id, appearing_on }: AppearanceData) {
+    if (user_id === this.get("id")) {
+      this.set({
+        is_present: event === "appear" ? true : false,
+        appearing_on,
+      });
+    }
+  }
 
   fetch(options?: ModelFetchOptions): JQueryXHR {
     return super.fetch({
@@ -221,23 +223,23 @@ export default class Profile extends BaseModel<IProfile> {
     );
   }
 
-	banUser(id: number) {
-		return this.asyncSave(
-		  {},
-		  {
-			url: `${BASE_ROOT}/profile/${id}/ban`,
-		  }
-		);
-	}
+  banUser(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/profile/${id}/ban`,
+      }
+    );
+  }
 
-	unbanUser(id: number) {
-		return this.asyncSave(
-		  {},
-		  {
-			url: `${BASE_ROOT}/profile/${id}/unban`,
-		  }
-		);
-	}
+  unbanUser(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/profile/${id}/unban`,
+      }
+    );
+  }
 }
 
 let memorizedUser: Profile = undefined;
@@ -246,8 +248,10 @@ const fetchCurrentUser = () => {
   memorizedUser.fetch({
     success: () => {
       console.log("we successfully fetched current user", memorizedUser);
+      memorizedUser.channel?.unsubscribe();
       memorizedUser.channel = memorizedUser.createNotificationsConsumer();
-      memorizedUser.appearanceChannel = createAppereanceConsumer();
+      memorizedUser.appearanceChannel?.unsubscribe();
+      memorizedUser.appearanceChannel = memorizedUser.createAppereanceConsumer();
       // memorizedUser.connectGlobalRoomsConsumer();
     },
   });

@@ -59,7 +59,8 @@ export default class MyRooms extends BaseRooms<Room> {
     }
     this.selectedRoom = room;
     this.selectedRoom.toggle();
-    console.log("set and toggle selectedRoom", room);
+	console.log("set and toggle selectedRoom", room);
+	eventBus.trigger("chatplay:toggle");
   }
 
   url = () => `${BASE_ROOT}/my-rooms`;

@@ -1,1 +1,0 @@
-json.extract! game_mouv, :game_id, :scale, :user_id

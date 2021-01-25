@@ -11,3 +11,8 @@ json.users do
 		end
 	end
 end
+json.messages do
+	json.array! room.room_messages do |message|
+		json.partial! "rooms/room_message", room_message: message
+	end
+end

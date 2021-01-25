@@ -17,6 +17,24 @@
     >
     <div class="text-xs font-semibold text-gray-800 underline tracking-tight">{{pseudo}}</div>
       {{content}}
-    </div>
+	</div>
+	{{#req}}
+		{{^sent}}
+			{{#pending}}
+			<button id="accept" class="mt-4 bg-teal-500 text-white rounded-lg shadow-lg py-1 px-2" type="button">Accept</button>
+			{{/pending}}	
+			{{^pending}}
+			<button class="btn-nego-disabled floated mt-4 bg-teal-500 text-white rounded-lg shadow-lg py-1 px-2" type="button">Expired</button>
+			{{/pending}}
+		{{/sent}}
+		{{#sent}}
+			{{#pending}}
+			<button class="btn-nego-disabled mt-4 bg-teal-500 text-white rounded-lg shadow-lg py-1 px-2" type="button">Waiting</button>
+			{{/pending}}	
+			{{^pending}}
+			<button class="btn-nego-disabled bg-teal-500 text-white rounded-lg shadow-lg py-1 px-2" type="button">Expired</button>
+			{{/pending}}
+		{{/sent}}
+	{{/req}}
   </div>
 </script>

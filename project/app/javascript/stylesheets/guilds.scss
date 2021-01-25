@@ -28,3 +28,8 @@ body {
 	color: #ffffff;
 	background-color: #808080;
 }
+
+.btn-play-disabled{
+    cursor: not-allowed;
+	pointer-events: none;
+}

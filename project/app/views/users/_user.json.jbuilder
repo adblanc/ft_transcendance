@@ -1,6 +1,8 @@
 json.extract! user, :id, :login, :email, :two_fact_auth, :name, :contribution, :appearing_on, :created_at, :updated_at
 json.is_present user == @current_user ? true : user.is_present
+json.is_friend @current_user.is_friend_of?(user);
 json.avatar_url url_for(user.avatar) if user.avatar.attached?
+json.inGame user.inGame?
 json.guild_role user.guild_role?
 json.admin user.admin?
 json.ban user.is_banned?
@@ -37,6 +39,8 @@ if user.pendingGame
 		json.status user.pendingGame.status
 		json.war_time user.pendingGame.war_time
 	end
+else
+	json.pendingGame nil
 end
 
 json.friends do

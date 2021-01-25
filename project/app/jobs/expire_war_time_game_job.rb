@@ -24,4 +24,6 @@ class ExpireWarTimeGameJob < ApplicationJob
 		end
 	  end
 	end
+
+	private
 end

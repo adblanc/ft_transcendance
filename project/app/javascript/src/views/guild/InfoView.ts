@@ -23,12 +23,12 @@ export default class InfoView extends BaseView {
       model: this.guild,
     });
 
-	currentUser().fetch();
+    currentUser().fetch();
 
     this.listenTo(this.guild, "change", this.render);
     this.listenTo(this.guild.get("members"), "update", this.render);
-	this.listenTo(currentUser(), "change", this.render);
-	this.listenTo(currentUser().get("guild"), "change", this.render);
+    this.listenTo(currentUser(), "change", this.render);
+    this.listenTo(currentUser().get("guild"), "change", this.render);
   }
 
   events() {
@@ -113,7 +113,7 @@ export default class InfoView extends BaseView {
       model: war,
       guild: this.guild,
     });
-	currentUser().fetch();
+    currentUser().fetch();
     declareWarView.render();
   }
 
@@ -141,8 +141,8 @@ export default class InfoView extends BaseView {
       }
     } else {
       $elementjoin.show();
-	}
-	
+    }
+
     if (this.guild.get("atWar")) {
       this.$("#war-btn").addClass("btn-war-disabled");
       this.$("#war-btn").html("This Guild is at war");

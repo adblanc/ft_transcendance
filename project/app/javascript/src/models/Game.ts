@@ -114,13 +114,8 @@ export default class Game extends BaseModel<IGame> {
             this.navigateToGame();
             return this.unsubscribeChannelConsumer();
           } else if (data.event === "expired") {
-			currentUser().fetch();
-			if (this.get("game_type") != "war_time") {
-				displayError(
-				"We were not able to find an opponent. Please try different game settings."
-				);
-			}
-			else {
+			eventBus.trigger("game:expire");
+			if (this.get("game_type") == "war_time") {
 				displaySuccess(
 					"No one answered your War Time challenge! You have won the match."
 				);
@@ -128,11 +123,19 @@ export default class Game extends BaseModel<IGame> {
 					trigger: true,
 				});
 			}
+			else if (this.get("game_type") == "chat") {
+				eventBus.trigger("chatplay:change");
+			}
+			else {
+				displayError(
+				"We were not able to find an opponent. Please try different game settings."
+				);
+			}
             return this.unsubscribeChannelConsumer();
           }
         },
         disconnected: () => {
-          console.log("disconnected to the game", gameId);
+          console.log("disconnected from the game", gameId);
         },
       }
     );
@@ -163,6 +166,28 @@ export default class Game extends BaseModel<IGame> {
 	  {},
       {
         url: `${this.baseGameRoot()}/acceptChallenge`,
+      }
+    );
+  }
+
+  playChat(level: string, goal: number, room_id: number) {
+    return this.asyncSave(
+      {
+		level: level,
+		goal: goal,
+		room_id: room_id,
+      },
+      {
+        url: `${this.urlRoot()}/playChat`,
+      }
+    );
+  }
+
+  acceptPlayChat() {
+    return this.asyncSave(
+	  {},
+      {
+        url: `${this.baseGameRoot()}/acceptPlayChat`,
       }
     );
   }

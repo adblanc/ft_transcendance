@@ -44,14 +44,15 @@ export default class MemberView extends BaseView {
     this.$el.html(html);
 
     const $element = this.$("#manage-btn");
-    if ((currentUser().get("guild") &&
+    if (
+      (currentUser().get("guild") &&
         currentUser().get("guild").get("id") === this.guild.get("id") &&
         currentUser().get("guild_role") === "Owner" &&
-        currentUser().get("id") != this.model.get("id")) || (
-		currentUser().get("admin") &&
-	  	this.model.get("guild_role") != "Owner")) {
-        $element.show();
-	}
+        currentUser().get("id") != this.model.get("id")) ||
+      (currentUser().get("admin") && this.model.get("guild_role") != "Owner")
+    ) {
+      $element.show();
+    }
 
     return this;
   }

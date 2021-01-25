@@ -1,1 +1,0 @@
-json.partial! "game_mouvs/game_mouv", game_mouv: @game_mouv

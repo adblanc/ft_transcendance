@@ -3,7 +3,11 @@ import Mustache from "mustache";
 import Rooms from "src/collections/MyRooms";
 import BaseView from "src/lib/BaseView";
 import Message from "src/models/Message";
+import Game from "src/models/Game";
+import ChatPlayView from "./ChatPlayView";
 import _ from "underscore";
+import Room from "src/models/Room";
+import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions & {
   rooms: Rooms;
@@ -15,14 +19,26 @@ export default class ChatInputView extends BaseView {
   constructor(options?: Options) {
     super(options);
 
-    this.rooms = options.rooms;
+	this.rooms = options.rooms;
+	this.listenTo(eventBus, "chatplay:toggle", this.render);
   }
 
   events() {
     return {
       "keypress #send-message-input": this.onKeyPress,
-      "click #send-message-btn": this.sendMessage,
+	  "click #send-message-btn": this.sendMessage,
+	  "click #chat-play-btn": this.onPlay,
     };
+  }
+
+  onPlay() {
+	const game = new Game();
+	const chatPlayView = new ChatPlayView({
+		model: game,
+		room_id: this.rooms.selectedRoom.get("id"),
+	});
+	
+	chatPlayView.render();
   }
 
   async onKeyPress(e: JQuery.Event) {
@@ -57,8 +73,8 @@ export default class ChatInputView extends BaseView {
 
   render() {
     const template = $("#chat-input-template").html();
-    const html = Mustache.render(template, {});
-    this.$el.html(html);
+    const html = Mustache.render(template, {dm: this.rooms.selectedRoom.get("is_dm")});
+	this.$el.html(html);
 
     return this;
   }

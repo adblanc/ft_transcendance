@@ -3,11 +3,38 @@ import Backbone from "backbone";
 import Game from "src/models/Game";
 import BaseView from "src/lib/BaseView";
 import CreateGameView from "./CreateGameView";
+import { currentUser } from "src/models/Profile";
+import { eventBus } from "src/events/EventBus";
+
+type Options = Backbone.ViewOptions & { disable: boolean };
 
 export default class StartGameView extends BaseView {
-  constructor(options?: Backbone.ViewOptions) {
+	disable: boolean;
+
+  constructor(options?: Options) {
 	super(options);
-  }
+
+	this.disable = options.disable;
+
+	this.listenTo(eventBus, "chatplay:change", this.relaunch);
+	}
+
+	relaunch() {
+		currentUser().fetch({
+			success: () => {
+				if (currentUser().get("pendingGame") ) { 
+					if (currentUser().get("pendingGame").get("game_type") == "chat")
+						this.disable = true;
+					else 
+						this.disable = false;
+				}
+				else {
+					this.disable = false;
+				}
+				this.render();
+			}
+		});
+	}
   
   events() {
 	return {
@@ -30,7 +57,14 @@ export default class StartGameView extends BaseView {
   render() {
     const template = $("#gameStartTemplate").html();
     const html = Mustache.render(template, {});
-    this.$el.html(html);
+	this.$el.html(html);
+	
+	if (this.disable == true) {
+		this.$("#friendly-btn").addClass("btn-disabled");
+		this.$("#ladder-btn").addClass("btn-disabled");
+		this.$("#tournament-btn").addClass("btn-disabled");
+		this.$("#chat-game").show();
+	}
     return this;
   }
 
