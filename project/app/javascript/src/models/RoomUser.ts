@@ -39,7 +39,7 @@ export default class RoomUser extends BaseModel<IRoomUser> {
   mute(room_id: number, time: MuteBanTime) {
     return this.asyncSave(
       {
-        mute_time: time,
+        room_mute_time: time,
       },
       {
         url: `${BASE_ROOT}/mute/${room_id}`,
@@ -59,7 +59,7 @@ export default class RoomUser extends BaseModel<IRoomUser> {
   ban(room_id: number, time: MuteBanTime) {
     return this.asyncSave(
       {
-        ban_time: time,
+        room_ban_time: time,
       },
       {
         url: `${BASE_ROOT}/ban/${room_id}`,

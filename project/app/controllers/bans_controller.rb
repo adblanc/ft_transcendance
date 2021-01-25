@@ -11,7 +11,7 @@ class BansController < ApplicationController
 		else
 			@ban = @room.bans.build(:banned_user_id => params[:id])
 			if (@ban.save)
-				@room.send_room_notification("ban", @current_user, @banned_user, params[:ban_time])
+				@room.send_room_notification("ban", @current_user, @banned_user, @formatted_time)
 				if (@time != "indefinitely")
 					UnbanRoomUserJob.set(wait: @time).perform_later(@ban)
 				end
@@ -29,7 +29,7 @@ class BansController < ApplicationController
 		if !(@ban = @room.bans.where(banned_user_id: params[:id]).take)
 			render json: {"User" => ["is not banned"]}, status: :unprocessable_entity
 		else
-			@room.send_room_notification("unban", @current_user, @banned_user, params[:ban_time])
+			@room.send_room_notification("unban", @current_user, @banned_user, @formatted_time)
 			UnbanRoomUserJob.perform_now(@ban)
 			@banned_user
 		end
@@ -64,7 +64,8 @@ class BansController < ApplicationController
 	def load_entities
 		@room = Room.find_by_id(params[:room_id]);
 		@banned_user = User.find_by_id(params[:id]);
-		@time = @room ? @room.correct_mute_or_ban_time(params[:ban_time]) : false;
+		@formatted_time = params[:room_ban_time];
+		@time = @room ? @room.correct_mute_or_ban_time(@formatted_time) : false;
 	end
 
   end

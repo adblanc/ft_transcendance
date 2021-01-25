@@ -12,7 +12,6 @@ type Options = Backbone.ViewOptions & {
 const MY_ROOMS_VIEW_INFOS = {
   label: "My channels list",
   id: "my-rooms-list",
-  title_id: "my-rooms-title",
 };
 
 export default class MyRoomsView extends BaseView {

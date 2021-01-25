@@ -81,7 +81,7 @@ class User < ApplicationRecord
 	end
 
 	def	is_room_owner?(room)
-		self.has_role?(:owner, room)
+		self.has_role?(:owner, room) || self.admin?
 	end
 
 	def is_room_administrator?(room)
@@ -118,8 +118,8 @@ class User < ApplicationRecord
 			return self.guild.ang;
 		end
 		return nil;
-	end 
-	
+	end
+
 	def friends
 		friends_array = friendships.map{|friendship| friendship.friend}
 		friends_array += inverse_friendships.map{|friendship| friendship.user}
