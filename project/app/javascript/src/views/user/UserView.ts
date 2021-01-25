@@ -132,12 +132,12 @@ export default class UserView extends BaseView {
 		}
   }
 
-  var games = this.user.get("games");
-  if(games.length) {
-    games.forEach(function (item_game) {
-      this.renderHistory(item_game);
-    }, this);
-}
+  // var games = this.user.get("games");
+  // if(games.length) {
+  //   games.forEach(function (item_game) {
+  //     this.renderHistory(item_game);
+  //   }, this);
+//}
 
      // this.count += games.length;
   // if (this.count == this.collection.length) {

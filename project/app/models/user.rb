@@ -191,26 +191,53 @@ class User < ApplicationRecord
 		ActionCable.server.broadcast("user_#{self.id}", @notification);
 	end
 
+	# def game_won?(g_id)
+	# 	if (GameUser.where(game_id: g_id).points == Game.where(game_id: g_id).goals)
+	# 		return true
+	# 	end
+	# 	return false
+	# end
+
 	def number_victory
-		return 34
+		# i = 0
+		# for each self.Game
+		# 	if (game_won?(Game.id))
+		# 		i += 1
+		# 	end
+		# end
+		return 15
 	end
 
 	def number_loss
-		return 43
+		self.games.length - self.number_victory
 	end
 
 	def ladder_level
+		#to_define par la contribution?
 		return 1818
 	end
 
 	def won_tournaments
+		#to ask
 		return 1789
 	end
 
-	def achievements
-		#10 first victories
-		#100 first victories
-		#if your guild is the first
-		return "no idea"
+	def bronze_medal?
+		return self.number_victory >= 10
 	end
+
+	def silver_medal?
+		return self.number_victory >= 100
+	end
+
+	def gold_medal?
+		return self.number_victory >= 1000
+	end
+
+	def best_guild?
+	# if Guild.sort_by(:points).first == self.Guild
+		return true
+	end
+
+	#if your guild is the first
 end

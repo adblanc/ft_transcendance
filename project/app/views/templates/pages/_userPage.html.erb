@@ -60,14 +60,20 @@
 			</div>
 			<div class="flex border border-gray-100 my-4"></div>
 			<h2 class="text-2xl mb-2 font-semibold">Stats:</h2>
-			<p>Nothing at the moment</p>
-			<p>Try</p>
 			<p>Number of victory {{statUser.number_victory}} </p>
 			<p>Number of loss {{statUser.number_loss}} </p>
 			<p>Ladder level {{statUser.ladder_level}} </p>
 			<p>Number of won tournaments {{statUser.won_tournaments}} </p>
-			<p>Achievements {{statUser.achievements}} </p>
-			<p>Other {{gameHistory.length}} </p>
+			<p class="text-2xl mb-2 font-semibold">Achievements: </p>
+			{{#statUser.bronze_medal}}<p>Bronze medal</p> {{/statUser.bronze_medal}}
+			{{#statUser.silver_medal}}<p>Silver medal</p> {{/statUser.silver_medal}}
+			{{#statUser.gold_medal}}<p>Gold medal </p>{{/statUser.gold_medal}}
+			{{#statUser.best_guild}} <p>Best Guild </p>{{/statUser.best_guild}}
+			<p class="text-2xl mb-2 font-semibold">Achievements to get: </p>
+			{{^statUser.bronze_medal}}<p> Bronze medal</p> {{/statUser.bronze_medal}}
+			{{^statUser.silver_medal}} <p>Silver medal</p> {{/statUser.silver_medal}}
+			{{^statUser.gold_medal}} <p>Gold medal </p>{{/statUser.gold_medal}}
+			{{^statUser.best_guild}} <p>Best Guild </p>{{/statUser.best_guild}}
 			{{#has_guild}}
 				<div class="flex border border-gray-100 my-4"></div>
 				<h2 class="text-2xl mb-2 font-semibold">Guild:</h2>
