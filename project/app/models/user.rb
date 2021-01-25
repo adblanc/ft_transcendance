@@ -190,4 +190,27 @@ class User < ApplicationRecord
 		@notification = Notification.create(recipient: self, message: message, link: link, notification_type: type)
 		ActionCable.server.broadcast("user_#{self.id}", @notification);
 	end
+
+	def number_victory
+		return 34
+	end
+
+	def number_loss
+		return 43
+	end
+
+	def ladder_level
+		return 1818
+	end
+
+	def won_tournaments
+		return 1789
+	end
+
+	def achievements
+		#10 first victories
+		#100 first victories
+		#if your guild is the first
+		return "no idea"
+	end
 end

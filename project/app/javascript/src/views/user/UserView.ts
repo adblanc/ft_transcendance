@@ -10,6 +10,8 @@ import { currentUser } from "src/models/Profile";
 import { displaySuccess } from "src/utils";
 import { BASE_ROOT } from "src/constants";
 import axios from "axios";
+import HistoryView from "./HistoryView";
+import Game from "src/models/Game";
 
 type Options = Backbone.ViewOptions & { userId: number };
 
@@ -101,6 +103,14 @@ export default class UserView extends BaseView {
     Backbone.history.navigate("/not-found", { trigger: true });
   }
  
+  renderHistory(game: Game)
+  {
+    var historyView = new HistoryView({
+      model: game,
+      });
+      this.$("#listing_game").append(historyView.render().el);
+  }
+
   render() {
     const template = $("#userPageTemplate").html();
     const html = Mustache.render(template, {
@@ -120,8 +130,19 @@ export default class UserView extends BaseView {
 		if (this.user.get("friend_requests").length > 0) {
 		  this.$("#request-btn").addClass("animate-bounce");
 		}
-	}
+  }
 
+  var games = this.user.get("games");
+  if(games.length) {
+    games.forEach(function (item_game) {
+      this.renderHistory(item_game);
+    }, this);
+}
+
+     // this.count += games.length;
+  // if (this.count == this.collection.length) {
+  //   this.$("#load-more").hide();
+  // }
     return this;
   }
 
