@@ -13,5 +13,24 @@ export default class AdminRooms extends BaseRooms<AdminRoom> {
     this.listenTo(eventBus, "chat:rooms_global:admin_created", this.fetch);
   }
 
+  constructor() {
+    super();
+
+    this.selectedRoom = undefined;
+    this.listenTo(eventBus, "chat:rooms_global:created", this.fetch);
+    this.listenTo(eventBus, "chat:rooms_global:admin_created", this.fetch);
+  }
+
+  setSelected(room: AdminRoom) {
+    if (
+      this.selectedRoom &&
+      this.find((r) => r.get("id") === this.selectedRoom.get("id"))
+    ) {
+      this.selectedRoom.toggle();
+    }
+    this.selectedRoom = room;
+    this.selectedRoom.toggle();
+  }
+
   url = () => `${BASE_ROOT}/admin-rooms`;
 }

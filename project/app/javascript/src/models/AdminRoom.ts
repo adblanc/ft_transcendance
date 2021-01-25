@@ -9,8 +9,6 @@ import { currentUser } from "./Profile";
 import BaseRoom from "./BaseRoom";
 import RoomUser from "./RoomUser";
 
-//OK//
-
 export default class AdminRoom extends BaseRoom {
 	channel: ActionCable.Channel;
 	messages: Messages;
@@ -30,7 +28,6 @@ export default class AdminRoom extends BaseRoom {
 		this.messages = new Messages();
 		this.channel = this.createConsumer();
 
-		//pas sur de ce que font les 2 lignes suivantes
 		this.listenTo(this, "change:id", this.updateChannel);
 		this.listenTo(eventBus, "global:logout", this.onLogout);
 	}
@@ -76,7 +73,6 @@ export default class AdminRoom extends BaseRoom {
 	}
 
 	select() {
-		//???
 		//@ts-ignore
 		this.collection.setSelected(this);
 	}

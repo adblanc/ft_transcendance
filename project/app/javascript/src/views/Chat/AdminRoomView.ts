@@ -2,9 +2,11 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "src/lib/BaseView";
 import AdminRoom from "src/models/AdminRoom";
-//import JoinAdminChannelView from "./JoinAdminChannelView";
+import RoomMessagesView from "./RoomMessagesView";
 
 export default class AdminRoomView extends BaseView<AdminRoom> {
+	roomMessagesView: RoomMessagesView;
+
   constructor(options?: Backbone.ViewOptions<AdminRoom>) {
     super(options);
 
@@ -13,7 +15,12 @@ export default class AdminRoomView extends BaseView<AdminRoom> {
     }
 
     this.listenTo(this.model, "change", this.render);
+	this.roomMessagesView = undefined;
   }
+
+  onClose = () => {
+  	this.roomMessagesView?.close();
+  };
 
   events() {
     return {
@@ -22,12 +29,17 @@ export default class AdminRoomView extends BaseView<AdminRoom> {
   }
 
   onClick() {
-    console.log("admin room clicked");
-   // const joinAdminChannelView = new JoinAdminChannelView({
-   //   model: this.model,
-   // });
+  	if (!this.model.get("selected")) {
+		this.model.select();
+	}
+  }
 
-   // joinAdminChannelView.render();
+  renderMessages() {
+    if (this.roomMessagesView) {
+      this.roomMessagesView.close();
+    }
+    this.roomMessagesView = new RoomMessagesView({ model: this.model });
+    this.roomMessagesView.render();
   }
 
   render() {
@@ -40,6 +52,10 @@ export default class AdminRoomView extends BaseView<AdminRoom> {
 			this.model.attributes.name,
 	});
     this.$el.html(html);
+
+	if (this.model.get("selected")) {
+		this.renderMessages();
+	}
 
     return this;
   }
