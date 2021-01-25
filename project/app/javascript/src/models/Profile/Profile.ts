@@ -17,6 +17,7 @@ import Game from "../Game";
 import User from "../User";
 import FriendRequests from "src/collections/FriendRequests";
 import Friends from "src/collections/Friends";
+import Games from "src/collections/Games";
 
 export interface IBlockedUser {
   login: string;
@@ -47,6 +48,8 @@ export interface IProfile {
   blocked_users?: IBlockedUser[];
   friend_requests?: FriendRequests;
   friends?: Friends;
+  game?: Game;
+  games?: Games;
 }
 
 type ModifiableProfileArgs = {

@@ -2,12 +2,13 @@ import Backbone from "backbone";
 import Game from "src/models/Game";
 
 export default class Games extends Backbone.Collection<Game> {
-  constructor(options) {
-	super(options);
+  constructor() {
+	super();
 	this.model = Game;
 	this.url = "/games";
-	this.comparator = function(model) {
-		return -model.get('points');
-	}
+	// this.comparator = function(model) {
+	// 	return -model.get('points');
+	// }
+	//sort by created
 }
 }
