@@ -207,21 +207,18 @@ class User < ApplicationRecord
 		self.game_users.where(game_id: game.id).first.points
 	end
 
-	# def game_won?(g_id)
-	# 	if (GameUser.where(game_id: g_id).points == Game.where(game_id: g_id).goals)
-	# 		return true
-	# 	end
-	# 	return false
-	# end
+	def game_won?(g_id)
+		return self.game_users.where(game_id: g_id).first.points == self.games.where(id: g_id).first.goal
+	end
 
 	def number_victory
-		# i = 0
-		# for each self.Game
-		# 	if (game_won?(Game.id))
-		# 		i += 1
-		# 	end
-		# end
-		return 15
+		i = 0
+		self.games.each do |game|
+			if self.game_won?(game.id)
+				i+= 1
+			end
+		end
+		return i
 	end
 
 	def number_loss
@@ -251,8 +248,10 @@ class User < ApplicationRecord
 	end
 
 	def best_guild?
-	# if Guild.sort_by(:points).first == self.Guild
+	 if Guild.order(:points).first == self.guild
 		return true
+	 end
+	 return false
 	end
 
 	#if your guild is the first
