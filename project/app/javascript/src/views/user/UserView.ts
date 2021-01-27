@@ -10,21 +10,34 @@ import { currentUser } from "src/models/Profile";
 import { displaySuccess } from "src/utils";
 import { BASE_ROOT } from "src/constants";
 import axios from "axios";
+import GameHistoryView from "./GameHistoryView";
+import Game from "src/models/Game";
+import Games from "src/collections/Games";
 
 type Options = Backbone.ViewOptions & { userId: number };
 
 export default class UserView extends BaseView {
   user: User;
+  gameHistoryView: GameHistoryView;
 
   constructor(options: Options) {
     super(options);
 
     this.user = new User({ id: options.userId, login: "" });
-    this.user.fetch({ error: this.onFetchError });
+	this.user.fetch({ 
+		error: this.onFetchError,
+		success: () => {
+			this.gameHistoryView = new GameHistoryView({
+				games: this.user.get("games"),
+			});
+			this.render();
+		}
+	 });
 	this.listenTo(currentUser(), "change", this.render);
 	this.listenTo(this.user, "change", this.render);
 	this.listenTo(eventBus, "user:change", this.render);
-    this.listenTo(eventBus, "profile:change", this.actualize);
+	this.listenTo(eventBus, "profile:change", this.actualize);
+
   }
 
   events() {
@@ -98,11 +111,11 @@ export default class UserView extends BaseView {
     friendsView.render();
   }
 
-
   onFetchError() {
     Backbone.history.navigate("/not-found", { trigger: true });
   }
- 
+
+
   render() {
     const template = $("#userPageTemplate").html();
     const html = Mustache.render(template, {
@@ -122,6 +135,13 @@ export default class UserView extends BaseView {
 		if (this.user.get("friend_requests").length > 0) {
 		  this.$("#request-btn").addClass("animate-bounce");
 		}
+  }
+
+  console.log(this.user.get("friend_requests"));
+
+  	if (this.gameHistoryView) {
+		  console.log("test1");
+		this.renderNested(this.gameHistoryView, "#gamehistory");
 	}
 
     return this;

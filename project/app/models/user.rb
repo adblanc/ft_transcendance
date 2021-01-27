@@ -206,4 +206,54 @@ class User < ApplicationRecord
 	def game_points(game)
 		self.game_users.where(game_id: game.id).first.points
 	end
+
+	# def game_won?(g_id)
+	# 	if (GameUser.where(game_id: g_id).points == Game.where(game_id: g_id).goals)
+	# 		return true
+	# 	end
+	# 	return false
+	# end
+
+	def number_victory
+		# i = 0
+		# for each self.Game
+		# 	if (game_won?(Game.id))
+		# 		i += 1
+		# 	end
+		# end
+		return 15
+	end
+
+	def number_loss
+		self.games.length - self.number_victory
+	end
+
+	def ladder_level
+		#to_define par la contribution?
+		return 1818
+	end
+
+	def won_tournaments
+		#to ask
+		return 1789
+	end
+
+	def bronze_medal?
+		return self.number_victory >= 10
+	end
+
+	def silver_medal?
+		return self.number_victory >= 100
+	end
+
+	def gold_medal?
+		return self.number_victory >= 1000
+	end
+
+	def best_guild?
+	# if Guild.sort_by(:points).first == self.Guild
+		return true
+	end
+
+	#if your guild is the first
 end
