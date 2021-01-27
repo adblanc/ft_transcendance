@@ -1,15 +1,25 @@
 class GamingChannel < ApplicationCable::Channel
   def subscribed
-    @id = params[:id]
-     stream_from "game_#{@id}"
+      @id = params[:id]
+      @game = Game.find_by_id(@id)
 
-    # mouv = GameMouv.where(game_id: game_id).order(created_at: :asc).each do |mouv|
-    #   transmit(mouv)
+      reject unless @game
+
+      stream_from "game_#{@id}"
   end
 
   def player_movement(data) # ici on recoit ce que un autre joueur perform
     # broadcast to all game users the movements
-     ActionCable.server.broadcast("game_#{@id}", data);
+     if (current_user.is_playing_in?(@game))
+      ActionCable.server.broadcast("game_#{@id}", data);
+     end
+  end
+
+  def player_score(data)
+    if (current_user.is_playing_in?(@game))
+      @game.player_score(data["playerId"]);
+      ActionCable.server.broadcast("game_#{@id}", data);
+     end
   end
 
   def unsubscribed

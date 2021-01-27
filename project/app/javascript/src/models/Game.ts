@@ -1,7 +1,6 @@
 import Backbone from "backbone";
 import _ from "underscore";
-import Profile, { currentUser } from "src/models/Profile";
-import Profiles from "src/collections/Profiles";
+import { currentUser } from "src/models/Profile";
 import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
@@ -9,6 +8,10 @@ import consumer from "channels/consumer";
 import { displaySuccess, displayError } from "src/utils/toast";
 import { eventBus } from "src/events/EventBus";
 import WarTime from "./WarTime";
+import Spectators from "src/collections/Spectators";
+import Spectator from "./Spectator";
+import Players from "src/lib/Pong/collections/Players";
+import Player from "src/lib/Pong/models/Player";
 
 interface IGame {
   id: number;
@@ -16,16 +19,22 @@ interface IGame {
   goal?: number;
   status?: "pending" | "started" | "finished" | "unanswered";
   game_type?: string;
-  users?: Profiles;
+  isSpectator?: boolean;
+  isHost?: boolean;
+  players?: Players;
+  spectators?: Spectators;
   war_time?: WarTime;
   created_at?: string;
   updated_at?: string;
+  isTraining?: boolean;
 }
 
 export interface GameData {
-  event: "started";
+  event: "started" | "expired";
 
-  action: "player_movement";
+  payload: any;
+
+  action: "player_movement" | "player_score";
   playerId: number;
 }
 
@@ -35,22 +44,28 @@ export interface MovementData extends GameData {
 
 type CreatableGameArgs = Partial<Pick<IGame, "goal" | "level" | "game_type">>;
 
-type ConstructorArgs = Pick<IGame, "id">;
+type ConstructorArgs = Pick<IGame, "id" | "isTraining">;
 
 export default class Game extends BaseModel<IGame> {
   first: Number;
-  second?: boolean;
   channel: ActionCable.Channel;
-  currentUserId?: Number;
+  spectatorsChannel?: ActionCable.Channel;
+
   preinitialize() {
     this.relations = [
       {
         type: Backbone.Many,
-        key: "users",
-        collectionType: Profiles,
-        relatedModel: Profile,
-	  },
-	  {
+        key: "players",
+        collectionType: Players,
+        relatedModel: Player,
+      },
+      {
+        type: Backbone.Many,
+        key: "spectators",
+        collectionType: Spectators,
+        relatedModel: Spectator,
+      },
+      {
         type: Backbone.One,
         key: "war_time",
         relatedModel: WarTime,
@@ -60,14 +75,13 @@ export default class Game extends BaseModel<IGame> {
 
   constructor(options?: ConstructorArgs) {
     super(options);
-
-    this.second = false;
-    this.currentUserId = undefined;
   }
 
   defaults() {
     return {
-	  users: [],
+      users: [],
+      spectators: [],
+      level: "easy",
     };
   }
 
@@ -82,8 +96,9 @@ export default class Game extends BaseModel<IGame> {
     return this.asyncSave(attrs, { url: this.urlRoot() });
   }
 
-  score(user_id: string) {
-    return this.asyncSave(user_id, { url: this.baseGameRoot() });
+  connectToWS() {
+    this.createChannelConsumer();
+    this.get("spectators").connectToSpectatorsChannel(this.get("id"));
   }
 
   unsubscribeChannelConsumer() {
@@ -102,43 +117,61 @@ export default class Game extends BaseModel<IGame> {
           console.log("connected to the game", gameId);
         },
         received: (data: GameData) => {
-          if (
-            data.action === "player_movement" &&
-            data.playerId !== currentUser().get("id")
-          ) {
-            console.log("received other player data", data);
-            eventBus.trigger("pong:player_movement", data);
-          }
-          if (data.event === "started") {
-            console.log("we navigate");
-            this.navigateToGame();
-            return this.unsubscribeChannelConsumer();
-          } else if (data.event === "expired") {
-			eventBus.trigger("game:expire");
-			if (this.get("game_type") == "war_time") {
-				displaySuccess(
-					"No one answered your War Time challenge! You have won the match."
-				);
-				Backbone.history.navigate(`/wars`, {
-					trigger: true,
-				});
-			}
-			else if (this.get("game_type") == "chat") {
-				eventBus.trigger("chatplay:change");
-			}
-			else {
-				displayError(
-				"We were not able to find an opponent. Please try different game settings."
-				);
-			}
-            return this.unsubscribeChannelConsumer();
-          }
+          //console.log("game received", data);
+          this.onScoreReceived(data);
+          this.onMovementReceived(data);
+          this.onGameStarted(data);
+          this.onGameExpired(data);
         },
         disconnected: () => {
           console.log("disconnected from the game", gameId);
         },
       }
     );
+  }
+
+  onScoreReceived(data: GameData) {
+    console.log(data);
+    if (data.action === "player_score") {
+      console.log("player scored", data);
+      eventBus.trigger("pong:player_scored", data);
+    }
+  }
+
+  onMovementReceived(data: GameData) {
+    if (
+      data.action === "player_movement" &&
+      data.playerId !== currentUser().get("id")
+    ) {
+      // console.log("received other player data", data);
+      eventBus.trigger("pong:player_movement", data);
+    }
+  }
+
+  onGameStarted(data: GameData) {
+    if (data.event === "started") {
+      console.log("we navigate");
+      this.navigateToGame();
+      return this.unsubscribeChannelConsumer();
+    }
+  }
+
+  onGameExpired(data: GameData) {
+    if (data.event == "expired") {
+      currentUser().fetch();
+      if (this.get("game_type") != "war_time") {
+        displayError(
+          "We were not able to find an opponent. Please try different game settings."
+        );
+      } else if (this.get("game_type") == "chat") {
+        eventBus.trigger("chatplay:change");
+      } else {
+        displaySuccess(
+          "No one answered your War Time challenge! You have won the match."
+        );
+      }
+      return this.unsubscribeChannelConsumer();
+    }
   }
 
   navigateToGame() {
@@ -150,10 +183,10 @@ export default class Game extends BaseModel<IGame> {
   challenge(level: string, goal: number, game_type: string, warTimeId: string) {
     return this.asyncSave(
       {
-		level: level,
-		goal: goal,
-		game_type: game_type,
-		warTimeId: warTimeId,
+        level: level,
+        goal: goal,
+        game_type: game_type,
+        warTimeId: warTimeId,
       },
       {
         url: `${this.urlRoot()}/challenge`,
@@ -163,7 +196,7 @@ export default class Game extends BaseModel<IGame> {
 
   acceptChallenge() {
     return this.asyncSave(
-	  {},
+      {},
       {
         url: `${this.baseGameRoot()}/acceptChallenge`,
       }
@@ -173,9 +206,9 @@ export default class Game extends BaseModel<IGame> {
   playChat(level: string, goal: number, room_id: number) {
     return this.asyncSave(
       {
-		level: level,
-		goal: goal,
-		room_id: room_id,
+        level: level,
+        goal: goal,
+        room_id: room_id,
       },
       {
         url: `${this.urlRoot()}/playChat`,
@@ -185,7 +218,7 @@ export default class Game extends BaseModel<IGame> {
 
   acceptPlayChat() {
     return this.asyncSave(
-	  {},
+      {},
       {
         url: `${this.baseGameRoot()}/acceptPlayChat`,
       }

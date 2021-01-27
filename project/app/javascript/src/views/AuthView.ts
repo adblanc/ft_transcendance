@@ -25,10 +25,12 @@ export default class AuthView extends BaseView {
         const { data: rsp } = await axios.get(
           `${BASE_ROOT}/auth/guest?login=${input}`
         );
-		if (!rsp.token) {
-			Backbone.history.navigate(`/tfa/${rsp.user}/${rsp.tfa}`, { trigger: true });
-			return ;
-		}
+        if (!rsp.token) {
+          Backbone.history.navigate(`/tfa/${rsp.user}/${rsp.tfa}`, {
+            trigger: true,
+          });
+          return;
+        }
         addAuthHeaders(rsp.token);
       } catch (ex) {
 		if (ex.response.data.msg == "banned_user") {
