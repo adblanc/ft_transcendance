@@ -28,8 +28,8 @@ class Game < ApplicationRecord
 		finished? && game_users.win.first.user
 	end
 
-	def looser
-		finished? && game_users.loose.first.user
+	def loser
+		finished? && game_users.lose.first.user
 	end
 
 	def finish
@@ -46,14 +46,14 @@ class Game < ApplicationRecord
 			end
 		end
 		if self.ladder?
-			self.ladder_swap if && winner.ladder_rank > looser.ladder_rank
+			self.ladder_swap if winner.ladder_rank > loser.ladder_rank
 		end
 	end
 
 	def swap_ladder
 		rank = winner.ladder_rank
-		winner.update(ladder_position: looser.ladder_rank)
-		looser.update(ladder_position: rank)
+		winner.update(ladder_rank: loser.ladder_rank)
+		loser.update(ladder_rank: rank)
 	end
 
 	def	spectators
@@ -65,7 +65,7 @@ class Game < ApplicationRecord
 		game_user.increment!(:points)
 		if game_user.points == self.goal
 			game_user.update(status: :win)
-			self.game_users.where.not(user_id: id).first.update(status: :loose)
+			self.game_users.where.not(user_id: id).first.update(status: :lose)
 			self.finish
 		end
 	end

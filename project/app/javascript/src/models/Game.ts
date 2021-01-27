@@ -224,4 +224,15 @@ export default class Game extends BaseModel<IGame> {
       }
     );
   }
+
+  ladderChallenge(opponent_id: number) {
+    return this.asyncSave(
+      {
+        opponent_id: opponent_id,
+      },
+      {
+        url: `${this.urlRoot()}/ladderChallenge`,
+      }
+    );
+  }
 }

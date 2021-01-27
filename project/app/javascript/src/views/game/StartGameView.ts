@@ -3,6 +3,7 @@ import Backbone from "backbone";
 import Game from "src/models/Game";
 import BaseView from "src/lib/BaseView";
 import CreateGameView from "./CreateGameView";
+import CreateLadderGameView from "./CreateLadderGameView";
 import { currentUser } from "src/models/Profile";
 import { eventBus } from "src/events/EventBus";
 
@@ -39,7 +40,7 @@ export default class StartGameView extends BaseView {
   events() {
 	return {
 	  "click #friendly-btn": () => this.startGame("friendly"),
-	  "click #ladder-btn": () => this.startGame("ladder"),
+	  "click #ladder-btn": () => this.startLadderGame(),
 	  "click #tournament-btn": () => this.startGame("tournament"),
 	};
   }
@@ -53,6 +54,14 @@ export default class StartGameView extends BaseView {
   
 	  createGameView.render();
    }
+
+   startLadderGame() {
+	const game = new Game();
+	const createLadderGameView = new CreateLadderGameView({
+		 model: game,
+   });
+   createLadderGameView.render();
+	}
 
   render() {
     const template = $("#gameStartTemplate").html();

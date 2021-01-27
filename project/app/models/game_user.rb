@@ -5,7 +5,7 @@ class GameUser < ApplicationRecord
 	enum status: [
 		:pending,
 		:win,
-		:loose
+		:lose
 	]
 
 end

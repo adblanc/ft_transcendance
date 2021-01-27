@@ -17,8 +17,6 @@ gem 'webpacker', '~> 4.0'
 gem 'jbuilder', '~> 2.7'
 #rolify
 gem 'rolify'
-#ranks
-gem 'ranked-model'
 
 # jobs background: https://github.com/mperham/sidekiq
 gem 'sidekiq'

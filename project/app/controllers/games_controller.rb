@@ -25,7 +25,6 @@ class GamesController < ApplicationController
 		@games = Game.where(status: :pending)
 
 		@games.to_ary.each do | game |
-			/&&current_user.ladder? > opponent.ladder?/
 			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type] 
 				game.users.push(current_user)
 				game.update(status: :started)
@@ -63,6 +62,7 @@ class GamesController < ApplicationController
 		if @game.save
 			@game.update(war_time: @warTime)
 			@game.users.push(current_user)
+			current_user.add_role(:host, @game);
 			@guild.members.each do |member|
 				if not member == current_user
 					member.send_notification("#{current_user.name} from your Guild has challenged #{@opponent.name} to a War Time match!", "/wars", "war")
@@ -91,6 +91,7 @@ class GamesController < ApplicationController
 
 		@game.users.push(current_user)
 		@game.update(status: :started)
+		current_user.add_role(:player, @game);
 		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
 
 		/faire link vers match/
@@ -125,6 +126,7 @@ class GamesController < ApplicationController
 		if @game.save
 			@game.update(game_type: :chat)
 			@game.users.push(current_user)
+			current_user.add_role(:host, @game);
 			@expire = 5
 			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, @room)
 			ActionCable.server.broadcast("room_#{@room.id}", {"event" => "playchat"});
@@ -145,8 +147,37 @@ class GamesController < ApplicationController
 
 		@game.users.push(current_user)
 		@game.update(status: :started)
+		current_user.add_role(:player, @game);
 		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
 		ActionCable.server.broadcast("room_#{@game.room_message.room.id}", {"event" => "playchat"});
+		@game
+	end
+
+	def ladderChallenge
+		if current_user.inGame? || current_user.pendingGame
+			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
+			return
+		end
+		return head :unauthorized if current_user.ladder_rank? > opponent.ladder_rank?
+
+		@game = Game.create(level: :normal, goal: :9, game_type: :ladder, status: :pending)
+		@game.users.push(current_user)
+		current_user.add_role(:host, @game);
+		@opponent= User.find_by_id(params[:opponent_id])
+		@game.users.push(@opponent)
+		@opponent.send_notification("#{current_user.name} has challenged you to a Ladder Game", "/play", "game")
+		@game
+	end
+
+	def acceptLadderChallenge
+		if current_user.inGame? || current_user.pendingGame
+			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
+			return
+		end
+		@game = Game.find_by_id(params[:id])
+		return head :unauthorized if not @game.pending?
+		@game.update(status: :started)
+		current_user.add_role(:player, @game);
 		@game
 	end
 
