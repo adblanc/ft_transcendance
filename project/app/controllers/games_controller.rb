@@ -45,16 +45,6 @@ class GamesController < ApplicationController
         end
 	end
 
-    def score
-		@game = Game.find_by_id(params[:id])
-		return head :not_found unless @game
-		@player = GameUser.where(id: params[:user_id])
-		@player.points.increment!
-		if @player.points == @game.goal
-			@game.update(status: :finished)
-		end
-	end
-
 	def challenge
 		@warTime = WarTime.find_by_id(params[:warTimeId])
 		@war = @warTime.war

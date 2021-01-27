@@ -6,9 +6,9 @@ json.spectators do
 		json.partial! "games/spectator", spectator: spectator
 	end
 end
-json.users do
+json.players do
 	json.array! game.users do |user|
-	   json.id user.id
-	   json.name user.name
+	   json.extract! user, :id, :name
+	   json.points user.game_points(game)
 	end
 end

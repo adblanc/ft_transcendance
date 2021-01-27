@@ -1,7 +1,6 @@
 import Backbone from "backbone";
 import _ from "underscore";
-import Profile, { currentUser } from "src/models/Profile";
-import Profiles from "src/collections/Profiles";
+import { currentUser } from "src/models/Profile";
 import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
@@ -11,6 +10,8 @@ import { eventBus } from "src/events/EventBus";
 import WarTime from "./WarTime";
 import Spectators from "src/collections/Spectators";
 import Spectator from "./Spectator";
+import Players from "src/lib/Pong/collections/Players";
+import Player from "src/lib/Pong/models/Player";
 
 interface IGame {
   id: number;
@@ -20,7 +21,7 @@ interface IGame {
   game_type?: string;
   isSpectator?: boolean;
   isHost?: boolean;
-  users?: Profiles;
+  players?: Players;
   spectators?: Spectators;
   war_time?: WarTime;
   isTraining?: boolean;
@@ -31,7 +32,7 @@ export interface GameData {
 
   payload: any;
 
-  action: "player_movement";
+  action: "player_movement" | "player_score";
   playerId: number;
 }
 
@@ -52,9 +53,9 @@ export default class Game extends BaseModel<IGame> {
     this.relations = [
       {
         type: Backbone.Many,
-        key: "users",
-        collectionType: Profiles,
-        relatedModel: Profile,
+        key: "players",
+        collectionType: Players,
+        relatedModel: Player,
       },
       {
         type: Backbone.Many,
@@ -93,10 +94,6 @@ export default class Game extends BaseModel<IGame> {
     return this.asyncSave(attrs, { url: this.urlRoot() });
   }
 
-  score(user_id: string) {
-    return this.asyncSave(user_id, { url: this.baseGameRoot() });
-  }
-
   connectToWS() {
     this.createChannelConsumer();
     this.get("spectators").connectToSpectatorsChannel(this.get("id"));
@@ -118,7 +115,8 @@ export default class Game extends BaseModel<IGame> {
           console.log("connected to the game", gameId);
         },
         received: (data: GameData) => {
-          console.log("game received", data);
+          //console.log("game received", data);
+          this.onScoreReceived(data);
           this.onMovementReceived(data);
           this.onGameStarted(data);
           this.onGameExpired(data);
@@ -130,12 +128,20 @@ export default class Game extends BaseModel<IGame> {
     );
   }
 
+  onScoreReceived(data: GameData) {
+    console.log(data);
+    if (data.action === "player_score") {
+      console.log("player scored", data);
+      eventBus.trigger("pong:player_scored", data);
+    }
+  }
+
   onMovementReceived(data: GameData) {
     if (
       data.action === "player_movement" &&
       data.playerId !== currentUser().get("id")
     ) {
-      console.log("received other player data", data);
+      // console.log("received other player data", data);
       eventBus.trigger("pong:player_movement", data);
     }
   }

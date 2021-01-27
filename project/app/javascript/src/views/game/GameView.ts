@@ -62,23 +62,23 @@ export default class GameView extends BaseView<Game> {
 
     if (this.model.get("isSpectator")) {
       index = this.model
-        .get("users")
+        .get("players")
         .findIndex((u) => u.get("id") === data.playerId);
     }
 
-    this.pong.players[index].pos.y = data.posY;
+    this.model.get("players").at(index).posY = data.posY;
   }
 
   onMouseMove(e: JQuery.MouseMoveEvent) {
     if (this.pong && !this.model?.get("isSpectator")) {
       const scale = e.offsetY / e.target.getBoundingClientRect().height;
 
-      this.pong.players[0].pos.y = this.pong.canvas.height * scale;
+      this.model.get("players").at(0).posY = this.pong.canvas.height * scale;
 
       if (!this.model.get("isTraining")) {
         this.model.channel?.perform("player_movement", {
           playerId: currentUser().get("id"),
-          posY: this.pong.players[0].pos.y,
+          posY: this.model.get("players").at(0).posY,
         });
       }
     }
@@ -106,8 +106,8 @@ export default class GameView extends BaseView<Game> {
     const html = Mustache.render(template, {
       ...this.model?.toJSON(),
       isTraining: this.model.get("isTraining"),
-      firstPlayerName: this.model.get("users")?.first()?.get("name"),
-      secondPlayerName: this.model.get("users")?.last()?.get("name"),
+      firstPlayerName: this.model.get("players")?.first()?.get("name"),
+      secondPlayerName: this.model.get("players")?.last()?.get("name"),
     });
     this.$el.html(html);
 

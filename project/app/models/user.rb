@@ -12,7 +12,7 @@ class User < ApplicationRecord
 	has_and_belongs_to_many :rooms
 
 	has_many :game_users
-	has_and_belongs_to_many :games, through: :game_user
+	has_many :games, through: :game_users
 
 	has_many :blocks
 	has_many :blocked_users, :through => :blocks
@@ -154,5 +154,9 @@ class User < ApplicationRecord
 	def send_notification(message, link, type)
 		@notification = Notification.create(recipient: self, message: message, link: link, notification_type: type)
 		ActionCable.server.broadcast("user_#{self.id}", @notification);
+	end
+
+	def game_points(game)
+		self.game_users.where(game_id: game.id).first.points
 	end
 end

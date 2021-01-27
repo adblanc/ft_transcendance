@@ -2,9 +2,8 @@ import consumer from "channels/consumer";
 import Game from "src/models/Game";
 import { getRandomFloat } from "src/utils";
 import Ball from "./classes/Ball";
-import Player from "./classes/Player";
+import Paddle from "./classes/Paddle";
 import Rect from "./classes/Rect";
-import Vec from "./classes/Vec";
 
 const CHARS = [
   "111101101101111",
@@ -61,7 +60,6 @@ const DIFFICULTIES: Record<Difficulty, IDifficultyOptions> = {
 
 export default class Pong {
   public canvas: HTMLCanvasElement;
-  public players: [Player, Player];
   private ctx: CanvasRenderingContext2D;
   private ball: Ball;
   private chars: HTMLCanvasElement[];
@@ -78,12 +76,12 @@ export default class Pong {
 
     this.reset();
 
-    this.players = [new Player(), new Player()];
+    this.game.get("players").at(0).posX = 40;
+    this.game.get("players").at(1).posX = this.canvas.width - 40;
 
-    this.players[0].pos.x = 40;
-    this.players[1].pos.x = this.canvas.width - 40;
-
-    this.players.forEach((player) => (player.pos.y = this.canvas.height / 2));
+    this.game
+      .get("players")
+      .forEach((player) => (player.posY = this.canvas.height / 2));
 
     let lastTime;
 
@@ -120,7 +118,7 @@ export default class Pong {
   }
 
   private get AI() {
-    return this.players[1];
+    return this.game.get("players").at(1).paddle;
   }
 
   private get difficulty() {
@@ -137,9 +135,9 @@ export default class Pong {
         },
         received: (data: BallMovementData) => {
           if (!this.game.get("isHost")) {
-            // if (!this.game.get("isSpectator")) {
-            //   data.pos.x = -data.pos.x;
-            // }
+            if (!this.game.get("isSpectator")) {
+              data.pos.x = this.canvas.width - data.pos.x;
+            }
             this.ball.setJSON(data);
           }
         },
@@ -155,9 +153,14 @@ export default class Pong {
     this.ball.pos.y += this.ball.vel.y * dt;
 
     if (this.ball.left < 0 || this.ball.right > this.canvas.width) {
-      let winnerId = this.ball.vel.x < 0 ? 1 : 0;
+      const playerIndex = this.ball.vel.x < 0 ? 1 : 0;
 
-      this.players[winnerId].score++;
+      const player = this.game.get("players").at(playerIndex);
+
+      const playerId = player.get("id");
+
+      player.score();
+      this.game.channel.perform("player_score", { playerId });
       this.reset();
     }
 
@@ -167,9 +170,17 @@ export default class Pong {
 
     this.moveAI(dt);
 
-    this.players.forEach((player) => this.collide(player, this.ball));
+    this.game
+      .get("players")
+      .forEach((player) => this.collide(player.paddle, this.ball));
+    if (
+      this.game.get("isHost") &&
+      this.ball.vel.x != 0 &&
+      this.ball.vel.y != 0
+    ) {
+      this.ballMovementChannel.perform("movement", this.ball.toJSON());
+    }
 
-    this.ballMovementChannel.perform("movement", this.ball.toJSON());
     this.draw();
   }
 
@@ -212,17 +223,17 @@ export default class Pong {
     }
   }
 
-  collide(player: Player, ball: Ball) {
+  collide(paddle: Paddle, ball: Ball) {
     if (
-      player.left < ball.right &&
-      player.right > ball.left &&
-      player.top < ball.bottom &&
-      player.bottom > ball.top
+      paddle.left < ball.right &&
+      paddle.right > ball.left &&
+      paddle.top < ball.bottom &&
+      paddle.bottom > ball.top
     ) {
       const len = ball.vel.len;
       ball.vel.x = -ball.vel.x;
 
-      ball.vel.y += 300 * (Math.random() - 0.5);
+      ball.vel.y += 100 * (Math.random() - 0.5);
       ball.vel.len = len * this.difficulty.ballSpeedFactor;
     }
   }
@@ -232,7 +243,7 @@ export default class Pong {
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.drawRect(this.ball);
-    this.players.forEach((player) => this.drawRect(player));
+    this.game.get("players").forEach((player) => this.drawRect(player.paddle));
 
     this.drawScore();
   }
@@ -245,8 +256,8 @@ export default class Pong {
   drawScore() {
     const align = this.canvas.width / 3;
     const CHAR_WIDTH = CHAR_PIXEL * 4;
-    this.players.forEach((player, i) => {
-      const chars = player.score.toString().split("");
+    this.game.get("players").forEach((player, i) => {
+      const chars = player.get("points").toString().split("");
       const offset =
         align * (i + 1) - (CHAR_WIDTH * chars.length) / 2 + CHAR_PIXEL / 2;
 

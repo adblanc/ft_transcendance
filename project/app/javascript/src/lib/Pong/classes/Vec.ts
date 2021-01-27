@@ -12,9 +12,11 @@ export default class Vec {
   }
 
   set len(value: number) {
-    const fact = value / this.len;
+    if (value !== 0) {
+      const fact = value / this.len;
 
-    this.x *= fact;
-    this.y *= fact;
+      this.x *= fact;
+      this.y *= fact;
+    }
   }
 }

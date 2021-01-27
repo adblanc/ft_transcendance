@@ -15,6 +15,13 @@ class GamingChannel < ApplicationCable::Channel
      end
   end
 
+  def player_score(data)
+    if (current_user.is_playing_in?(@game))
+      @game.player_score(data["playerId"]);
+      ActionCable.server.broadcast("game_#{@id}", data);
+     end
+  end
+
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
   end
