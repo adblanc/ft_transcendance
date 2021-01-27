@@ -13,7 +13,9 @@ class GamesController < ApplicationController
 	def create
 		return head :unauthorized if current_user.inGame? || current_user.pendingGame
 		@games = Game.where(status: :pending)
+
 		@games.to_ary.each do | game |
+			/&&current_user.ladder? > opponent.ladder?/
 			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type] 
 				game.users.push(current_user)
 				game.update(status: :started)
@@ -33,16 +35,6 @@ class GamesController < ApplicationController
 		end
 
 	end
-
-    /def score
-		@game = Game.find_by_id(params[:id])
-		return head :not_found unless @game
-		@player = GameUser.where(id: params[:user_id])
-		@player.points.increment!
-		if @player.points == @game.goal
-			@game.update(status: :finished)
-		end
-	end/
 	
 	def challenge
 		@warTime = WarTime.find_by_id(params[:warTimeId])

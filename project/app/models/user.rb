@@ -3,6 +3,9 @@ require 'date'
 class User < ApplicationRecord
   rolify
   after_create :assign_default_role
+  include RankedModel
+  ranks :ladder
+
 	has_one_attached :avatar
 	has_many :notifications, foreign_key: :recipient_id
 
@@ -14,7 +17,7 @@ class User < ApplicationRecord
 	has_and_belongs_to_many :rooms
 
 	has_many :game_users
-	has_and_belongs_to_many :games, through: :game_user
+	has_many :games, through: :game_users
 
 	has_many :blocks
 	has_many :blocked_users, :through => :blocks
@@ -190,4 +193,9 @@ class User < ApplicationRecord
 		@notification = Notification.create(recipient: self, message: message, link: link, notification_type: type)
 		ActionCable.server.broadcast("user_#{self.id}", @notification);
 	end
+
+	def ladder_rank?
+		ladder_rank
+	end
+
 end

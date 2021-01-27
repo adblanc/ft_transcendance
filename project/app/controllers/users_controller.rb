@@ -1,6 +1,16 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
 
+  def index
+    case params[:type]
+    when 'ladder'
+      @users = User.rank(:ladder).all
+
+    else
+      @users = User.all
+    end
+  end
+
   def show
     @current_user
   end
