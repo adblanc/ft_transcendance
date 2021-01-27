@@ -1,4 +1,6 @@
+import { eventBus } from "src/events/EventBus";
 import BaseModel from "src/lib/BaseModel";
+import Game from "src/models/Game";
 import Paddle from "../classes/Paddle";
 
 interface IPlayer {
@@ -12,6 +14,7 @@ export default class Player extends BaseModel<IPlayer> {
 
   initialize() {
     this._paddle = new Paddle();
+    this.listenTo(eventBus, "pong:player_scored", this.onPlayerScored);
   }
 
   get paddle() {
@@ -34,8 +37,28 @@ export default class Player extends BaseModel<IPlayer> {
     this._paddle.pos.y = value;
   }
 
+  private get game(): Game {
+    //@ts-ignore
+    return this.collection.parents[0];
+  }
+
+  private get channel(): ActionCable.Channel {
+    //@ts-ignore
+    return this.game.channel;
+  }
+
   score() {
     this.set({ points: this.get("points") + 1 });
+
+    if (this.game.get("isHost")) {
+      this.channel?.perform("player_score", { playerId: this.get("id") });
+    }
     console.log("score");
+  }
+
+  onPlayerScored(data: any) {
+    if (!this.game.get("isHost") && data.playerId === this.get("id")) {
+      this.set({ points: this.get("points") + 1 });
+    }
   }
 }
