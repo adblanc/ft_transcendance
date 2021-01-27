@@ -7,7 +7,7 @@ json.spectators do
 	end
 end
 json.players do
-	json.array! game.users do |user|
+	json.array! game.users.sort_by {|u| u.id === @current_user.id ? -1 : 1} do |user|
 	   json.extract! user, :id, :name
 	   json.points user.game_points(game)
 	end

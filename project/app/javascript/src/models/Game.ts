@@ -79,7 +79,7 @@ export default class Game extends BaseModel<IGame> {
 
   defaults() {
     return {
-      users: [],
+      players: [],
       spectators: [],
       level: "easy",
     };
@@ -131,7 +131,6 @@ export default class Game extends BaseModel<IGame> {
   }
 
   onScoreReceived(data: GameData) {
-    console.log(data);
     if (data.action === "player_score") {
       console.log("player scored", data);
       eventBus.trigger("pong:player_scored", data);
@@ -143,7 +142,6 @@ export default class Game extends BaseModel<IGame> {
       data.action === "player_movement" &&
       data.playerId !== currentUser().get("id")
     ) {
-      // console.log("received other player data", data);
       eventBus.trigger("pong:player_movement", data);
     }
   }
