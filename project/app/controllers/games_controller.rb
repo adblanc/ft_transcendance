@@ -1,13 +1,23 @@
 
 class GamesController < ApplicationController
+	before_action :authenticate_user!
 
 	def index
 		@games = Game.all
 	end
 
-    def show
-        @game = Game.find_by_id(params[:id])
-        return head :not_found unless @game
+	def show
+		@game = Game.find_by_id(params[:id])
+
+		if (!@game)
+			return head :not_found
+		end
+
+		if (!current_user.is_playing_in?(@game) && !current_user.is_spectating?(@game))
+				current_user.add_role(:spectator, @game);
+		end
+
+        @game
     end
 
 	def create
@@ -20,6 +30,7 @@ class GamesController < ApplicationController
 				game.users.push(current_user)
 				game.update(status: :started)
 				@game = game
+				current_user.add_role(:player, @game);
 				ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
 				return @game
 			end
@@ -29,6 +40,7 @@ class GamesController < ApplicationController
 			@game.users.push(current_user)
 			@expire = 5
 			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, nil)
+			current_user.add_role(:host, @game);
 			@game
         else
             render json: @game.errors, status: :unprocessable_entity

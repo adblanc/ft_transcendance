@@ -2,6 +2,7 @@ import Mustache from "mustache";
 import Backbone from "backbone";
 import BaseView from "src/lib/BaseView";
 import Game from "src/models/Game";
+import { currentUser } from "src/models/Profile";
 
 export default class StartGameView extends BaseView<Game> {
   constructor(options?: Backbone.ViewOptions<Game>) {
@@ -16,6 +17,13 @@ export default class StartGameView extends BaseView<Game> {
 		});
 		this.$el.html(html);
 		this.$("#war-time").show();
+	}
+	if (this.model.get("ladder")) {
+		const html = Mustache.render(template, {
+			rank: currentUser().get("ladder_rank")
+		});
+		this.$el.html(html);
+		this.$("#ladder").show();
 	}
 	else {
 		const html = Mustache.render(template, {});

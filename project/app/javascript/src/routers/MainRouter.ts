@@ -13,7 +13,6 @@ import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
 import TfaView from "../views/TfaView";
 import Guild from "src/models/Guild";
-import Game from "src/models/Game";
 import UserView from "../views/user/UserView";
 import WarIndexView from "../views/wars/WarIndexView";
 import { BASE_ROOT } from "src/constants";

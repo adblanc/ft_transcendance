@@ -254,6 +254,9 @@ const fetchCurrentUser = () => {
       memorizedUser.appearanceChannel = memorizedUser.createAppereanceConsumer();
       // memorizedUser.connectGlobalRoomsConsumer();
     },
+    error: () => {
+      logoutUser();
+    },
   });
 };
 
@@ -269,7 +272,6 @@ export const currentUser = (fetch = false): Profile => {
 };
 
 export const logoutUser = () => {
-  console.log("logout user");
   clearAuthHeaders();
   consumer.disconnect();
   memorizedUser?.off("appearance");

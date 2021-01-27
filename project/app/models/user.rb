@@ -29,7 +29,7 @@ class User < ApplicationRecord
 
 	validates :avatar, blob: { content_type: :image, size_range: 1..5.megabytes }
 	validates :name, presence: true
-	validates :name, length: {minimum: 3, maximum: 32}
+	validates :name, length: {minimum: 3, maximum: 32}, uniqueness: true
 	validates :login, presence: true, uniqueness: true
 	validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
 
@@ -169,6 +169,14 @@ class User < ApplicationRecord
 		end
 	end
 
+	def is_playing_in?(game)
+		return self.has_role?(:player, game) || self.has_role?(:host, game);
+	end
+
+	def is_spectating?(game)
+		return self.has_role?(:spectator, game);
+	end
+
 	def appear(appearing_on)
 		self.update_attributes(is_present: true, appearing_on: appearing_on);
 
@@ -189,6 +197,10 @@ class User < ApplicationRecord
 		self.games.started.present?
 	end
 
+	def is_host?(game)
+		self.has_role?(:host, game);
+	end
+
 	def send_notification(message, link, type)
 		@notification = Notification.create(recipient: self, message: message, link: link, notification_type: type)
 		ActionCable.server.broadcast("user_#{self.id}", @notification);
@@ -198,4 +210,7 @@ class User < ApplicationRecord
 		ladder_rank
 	end
 
+	def game_points(game)
+		self.game_users.where(game_id: game.id).first.points
+	end
 end
