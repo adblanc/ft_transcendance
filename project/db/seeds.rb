@@ -55,10 +55,10 @@ guild2.img.attach(
 	"content_type": "image/jpg",
 )
 
-game1 = Game.create(game_type: 1, level: "easy", goal: 3)
+game1 = Game.create(game_type: 1, status: "finished", level: "easy", goal: 3)
 game1.users << jeff
 game1.users << jack
-game2 = Game.create(game_type: 2, level: "hard", goal: 5)
+game2 = Game.create(game_type: 2, status: "finished", level: "hard", goal: 5)
 #game2.users << jeff
 #game2.users << bob
 

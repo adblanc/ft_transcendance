@@ -10,23 +10,34 @@ import { currentUser } from "src/models/Profile";
 import { displaySuccess } from "src/utils";
 import { BASE_ROOT } from "src/constants";
 import axios from "axios";
-import HistoryView from "./HistoryView";
+import GameHistoryView from "./GameHistoryView";
 import Game from "src/models/Game";
+import Games from "src/collections/Games";
 
 type Options = Backbone.ViewOptions & { userId: number };
 
 export default class UserView extends BaseView {
   user: User;
+  gameHistoryView: GameHistoryView;
 
   constructor(options: Options) {
     super(options);
 
     this.user = new User({ id: options.userId, login: "" });
-    this.user.fetch({ error: this.onFetchError });
+	this.user.fetch({ 
+		error: this.onFetchError,
+		success: () => {
+			this.gameHistoryView = new GameHistoryView({
+				games: this.user.get("games"),
+			});
+			this.render();
+		}
+	 });
 	this.listenTo(currentUser(), "change", this.render);
 	this.listenTo(this.user, "change", this.render);
 	this.listenTo(eventBus, "user:change", this.render);
-    this.listenTo(eventBus, "profile:change", this.actualize);
+	this.listenTo(eventBus, "profile:change", this.actualize);
+
   }
 
   events() {
@@ -98,18 +109,10 @@ export default class UserView extends BaseView {
     friendsView.render();
   }
 
-
   onFetchError() {
     Backbone.history.navigate("/not-found", { trigger: true });
   }
- 
-  renderHistory(game: Game)
-  {
-    var historyView = new HistoryView({
-      model: game,
-      });
-      this.$("#listing_game").append(historyView.render().el);
-  }
+
 
   render() {
     const template = $("#userPageTemplate").html();
@@ -132,17 +135,13 @@ export default class UserView extends BaseView {
 		}
   }
 
-  // var games = this.user.get("games");
-  // if(games.length) {
-  //   games.forEach(function (item_game) {
-  //     this.renderHistory(item_game);
-  //   }, this);
-//}
+  console.log(this.user.get("friend_requests"));
 
-     // this.count += games.length;
-  // if (this.count == this.collection.length) {
-  //   this.$("#load-more").hide();
-  // }
+  	if (this.gameHistoryView) {
+		  console.log("test1");
+		this.renderNested(this.gameHistoryView, "#gamehistory");
+	}
+
     return this;
   }
 
