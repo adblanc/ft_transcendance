@@ -18,6 +18,7 @@ export default class StartGameView extends BaseView {
 	this.disable = options.disable;
 
 	this.listenTo(eventBus, "chatplay:change", this.relaunch);
+	this.listenTo(currentUser(), "change", this.render);
 	}
 
 	relaunch() {
@@ -64,10 +65,15 @@ export default class StartGameView extends BaseView {
     const html = Mustache.render(template, {});
 	this.$el.html(html);
 	
-	if (this.disable == true) {
+	if (currentUser().get("pendingGameToAccept"))
+	{
 		this.$("#friendly-btn").addClass("btn-disabled");
 		this.$("#ladder-btn").addClass("btn-disabled");
-		this.$("#tournament-btn").addClass("btn-disabled");
+		this.$("#must-accept").show();
+	}
+	else if (this.disable == true) {
+		this.$("#friendly-btn").addClass("btn-disabled");
+		this.$("#ladder-btn").addClass("btn-disabled");
 		this.$("#chat-game").show();
 	}
     return this;

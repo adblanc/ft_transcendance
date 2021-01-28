@@ -4,6 +4,7 @@ import BaseView from "src/lib/BaseView";
 import LadderOpponentView from "./LadderOpponentView";
 import { currentUser } from "src/models/Profile";
 import RankedUsers from "src/collections/RankedUsers";
+import { displaySuccess } from "src/utils/toast";
 import User from "src/models/User";
 
 export default class LadderView extends BaseView {
@@ -26,9 +27,25 @@ export default class LadderView extends BaseView {
 
   events() {
     return {
-      "click #load-more": "onLoadMore",
+	  "click #load-more": "onLoadMore",
+	  "click #accept-btn": "onAccept",
     };
   }
+
+  async onAccept(e: JQuery.Event) {
+    e.preventDefault();
+    const success = await currentUser().get.("pendingGameToAccept").acceptLadderChallenge();
+    if (success) {
+      this.gameSaved();
+    }
+  }
+
+  gameSaved() {
+    displaySuccess(`Ladder Game accepted!`);
+	currentUser().fetch();
+	currentUser().get.("pendingGameToAccept").navigateToGame();
+  }
+
 
   renderOpponent(opponent: User) {
     var opponentView = new LadderOpponentView({
