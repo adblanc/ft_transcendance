@@ -41,7 +41,9 @@ export default class LadderView extends BaseView {
     var opponents = this.opponents.models.slice(this.count, this.count + this.max);
     if (opponents.length) {
 		opponents.forEach(function (item) {
-        this.renderOpponent(item);
+			if (item.get("id") != currentUser().get("id")) {
+				this.renderOpponent(item);
+			}
       }, this);
       this.count += opponents.length;
     }
@@ -55,24 +57,21 @@ export default class LadderView extends BaseView {
     const html = Mustache.render(template, currentUser().toJSON());
 	this.$el.html(html);
 
-	const $element = this.$("#list");
-
-	/*this.opponents.forEach(function (item) {
-			var opponentView = new LadderOpponentView({
-			model: item,
-			challengeable: item.get("ladder_rank") < currentUser().get("ladder_rank")
-			});
-			$element.append(opponentView.render().el);
-	});*/
-
 	var opponents = this.opponents.first(this.max);
     opponents.forEach(function (item) {
-      this.renderOpponent(item);
+		if (item.get("id") != currentUser().get("id")) {
+			this.renderOpponent(item);
+		}
     }, this);
     this.count = opponents.length;
     if (this.count == this.opponents.length) {
       this.$("#load-more").hide();
-    }
+	}
+	
+	if (currentUser().get("pendingGame"))
+	{
+		
+	}
 
 
     return this;

@@ -165,7 +165,7 @@ class GamesController < ApplicationController
 		current_user.add_role(:host, @game);
 		@opponent= User.find_by_id(params[:opponent_id])
 		@game.users.push(@opponent)
-		@opponent.send_notification("#{current_user.name} has challenged you to a Ladder Game", "/play", "game")
+		@opponent.send_notification("#{current_user.name} has challenged you to a Ladder Game", "/tournaments/ladder", "game")
 		@game
 	end
 
