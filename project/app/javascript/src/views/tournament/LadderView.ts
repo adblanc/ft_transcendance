@@ -97,7 +97,7 @@ export default class LadderView extends BaseView {
 		else
 			this.$("#unavailable").show();
 	}
-	else if (currentUser().get("pendingGameToAccept")) {
+	if (currentUser().get("pendingGameToAccept")) {
 		this.$("#accept").show();
 	}
 	else {
