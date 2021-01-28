@@ -10,12 +10,7 @@ json.ban user.is_banned?
 json.ban_time user.ban_time
 if user.guild_role?
 	json.guild do
-		json.id user.guild.id
-		json.name user.guild.name
-		json.points user.guild.points
-		json.img_url url_for(user.guild.img) if user.guild.img.attached?
-		json.atWar user.guild.atWar?
-		json.warInitiator user.guild.warInitiator?
+		json.partial! "guilds/guild", guild: user.guild
 	end
 else
 	json.guild nil

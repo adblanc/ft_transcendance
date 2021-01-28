@@ -139,7 +139,8 @@ export default class Profile extends BaseModel<IProfile> {
         received: (notification: INotification) => {
           this.checkDmCreationNotification(notification);
           this.checkWarEvent(notification);
-          this.notifications.add(notification);
+		  this.notifications.add(notification);
+		  this.fetch();
         },
       }
     );
