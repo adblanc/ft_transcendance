@@ -10,7 +10,7 @@ export default class RankedUsers extends Backbone.Collection<User> {
 	this.url = `${BASE_ROOT}/users`;
 	
 	this.comparator = function(model) {
-		return -model.get('ladder_rank');
+		return model.get('ladder_rank');
 	}
   }
 }

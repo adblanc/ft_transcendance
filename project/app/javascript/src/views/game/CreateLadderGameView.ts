@@ -1,7 +1,7 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
-import OpponentView from "./OpponentView";
+import SelectLadderView from "./SelectLadderView";
 import { displaySuccess } from "src/utils/toast";
 import Game from "src/models/Game";
 import { currentUser } from "src/models/Profile";
@@ -33,8 +33,8 @@ export default class CreateLadderGameView extends ModalView{
 	//console.log(this.opponents);
 
 	this.opponents.forEach(function (item) {
-		if (item.get("ladder_rank") > currentUser().get("ladder_rank")) {
-			var opponentView = new OpponentView({
+		if (item.get("ladder_rank") < currentUser().get("ladder_rank")) {
+			var opponentView = new SelectLadderView({
 			model: item,
 			});
 			$element.append(opponentView.render().el);

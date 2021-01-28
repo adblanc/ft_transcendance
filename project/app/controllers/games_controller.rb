@@ -158,7 +158,7 @@ class GamesController < ApplicationController
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
-		return head :unauthorized if current_user.ladder_rank? > opponent.ladder_rank?
+		return head :unauthorized if current_user.ladder_rank? < opponent.ladder_rank?
 
 		@game = Game.create(level: :normal, goal: :9, game_type: :ladder, status: :pending)
 		@game.users.push(current_user)

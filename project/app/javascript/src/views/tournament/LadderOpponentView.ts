@@ -7,16 +7,18 @@ import Game from "src/models/Game";
 import User from "src/models/User";
 import { eventBus } from "src/events/EventBus";
 
-type Options = Backbone.ViewOptions & { model: User};
+type Options = Backbone.ViewOptions & { model: User, challengeable: boolean};
 
-export default class OpponentView extends BaseView {
+export default class LadderOpponentView extends BaseView {
   model: User;
   game: Game;
+  challengeable: boolean;
 
   constructor(options?: Options) {
     super(options);
 
 	this.model = options.model;
+	this.challengeable = options.challengeable;
 
   }
 
@@ -28,8 +30,8 @@ export default class OpponentView extends BaseView {
 
   async onChallenge(e: JQuery.Event) {
     e.preventDefault();
-	const game = new Game();
-    const success = await game.ladderChallenge(this.model.get("id"));
+	this.game = new Game();
+    const success = await this.game.ladderChallenge(this.model.get("id"));
     if (success) {
       this.gameSaved();
     }
@@ -44,7 +46,7 @@ export default class OpponentView extends BaseView {
 
   render() {
     const template = $("#ladderOpponentTemplate").html();
-    const html = Mustache.render(template, this.model.toJSON());
+    const html = Mustache.render(template, {model: this.model.toJSON(), challengeable: this.challengeable});
     this.$el.html(html);
 
     return this;

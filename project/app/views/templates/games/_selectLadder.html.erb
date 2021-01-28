@@ -1,11 +1,11 @@
-<script type="text/html" id="ladderOpponentTemplate">
+<script type="text/html" id="selectLadderTemplate">
 <div class="row" >
 	<div style="padding:5px">
 		<table>
 		<tr>
 			<td> <img style="float:left" width="80" height="80" class="rounded-full p-2 ml-2" src="{{avatar_url}}" /></td>
 			<td style="padding:0 20px; text-decoration:underline;"><b class="m-auto ml-1"><a href='/user/{{id}}'>{{login}}</a></b></td>
-			<td style="padding:0 20px; text-decoration:underline;"><b class="m-auto ml-1"><a href='/user/{{id}}'>{{ladder_rank}}</a></b></td>
+			<td style="padding:0 20px; text-decoration:underline;"><b class="m-auto ml-1">{{ladder_rank}}</b></td>
 			<td>
 				<button id="challenge-ladder" class="btn-primary" type="button">Challenge</button>
 			</td>
