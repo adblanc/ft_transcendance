@@ -4,9 +4,12 @@ import BaseView from "src/lib/BaseView";
 import LadderOpponentView from "./LadderOpponentView";
 import { currentUser } from "src/models/Profile";
 import RankedUsers from "src/collections/RankedUsers";
+import User from "src/models/User";
 
 export default class LadderView extends BaseView {
 	opponents: RankedUsers;
+	max: number;
+	count: number;
 
   constructor(options?: Backbone.ViewOptions) {
 	super(options);
@@ -14,25 +17,63 @@ export default class LadderView extends BaseView {
 	this.opponents = new RankedUsers();
 	this.opponents.fetch();
 	this.opponents.sort();
+	this.max = 5;
 	
 	this.listenTo(this.opponents, "update", this.render);
 	this.listenTo(this.opponents, "sort", this.render);
   }
 
+  events() {
+    return {
+      "click #load-more": "onLoadMore",
+    };
+  }
+
+  renderOpponent(opponent: User) {
+    var opponentView = new LadderOpponentView({
+		model: opponent,
+		challengeable: opponent.get("ladder_rank") < currentUser().get("ladder_rank")
+	});
+    this.$("#list").append(opponentView.render().el);
+  }
+
+  onLoadMore() {
+    var opponents = this.opponents.models.slice(this.count, this.count + this.max);
+    if (opponents.length) {
+		opponents.forEach(function (item) {
+        this.renderOpponent(item);
+      }, this);
+      this.count += opponents.length;
+    }
+    if (this.count == this.opponents.length) {
+      this.$("#load-more").hide();
+    }
+  }
+
   render() {
     const template = $("#ladderTemplate").html();
-    const html = Mustache.render(template, {});
+    const html = Mustache.render(template, currentUser().toJSON());
 	this.$el.html(html);
 
 	const $element = this.$("#list");
 
-	this.opponents.forEach(function (item) {
+	/*this.opponents.forEach(function (item) {
 			var opponentView = new LadderOpponentView({
 			model: item,
 			challengeable: item.get("ladder_rank") < currentUser().get("ladder_rank")
 			});
 			$element.append(opponentView.render().el);
-	});
+	});*/
+
+	var opponents = this.opponents.first(this.max);
+    opponents.forEach(function (item) {
+      this.renderOpponent(item);
+    }, this);
+    this.count = opponents.length;
+    if (this.count == this.opponents.length) {
+      this.$("#load-more").hide();
+    }
+
 
     return this;
   }
