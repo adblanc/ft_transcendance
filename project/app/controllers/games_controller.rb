@@ -167,6 +167,8 @@ class GamesController < ApplicationController
 		@game.users.push(@opponent)
 		@opponent.game_users.where(game: @game).first.update(status: :pending)
 		@opponent.send_notification("#{current_user.name} has challenged you to a Ladder Game", "/tournaments/ladder", "game")
+		@expire = 1
+		ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, nil)
 		@game
 	end
 

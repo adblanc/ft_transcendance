@@ -158,21 +158,12 @@ export default class Game extends BaseModel<IGame> {
 
   onGameExpired(data: GameData) {
     if (data.event == "expired") {
-      if (this.get("game_type") == "war_time") {
-        displaySuccess(
-			"No one answered your War Time challenge! You have won the match."
-        );
-	  } 
-	  else if (this.get("game_type") == "ladder") {
-        displayError(
-			"Your ladder challenge was never answered. You moved up the ladder!"
-        );
-      } else if (this.get("game_type") != "chat") {
-        displayError(
-		  "We were not able to find an opponent. Please try different game settings."
-		);
-		currentUser().fetch(); //car pas de notif envoyée ni d'event
-      }
+		if (this.get("game_type") == "friendly") {
+			displayError(
+			"We were not able to find an opponent. Please try different game settings."
+			);
+			currentUser().fetch(); //car pas de notif envoyée ni d'event
+		}
       return this.unsubscribeChannelConsumer();
     }
   }
