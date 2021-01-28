@@ -1,18 +1,24 @@
 <script type="text/html" id="playGameTemplate">
-	<div class="relative flex flex-col page-height justify-center items-center">
-	{{^isFinished}}
+	<div class="relative flex flex-col page-height justify-center items-center text-center text-6xl font-semibold text-gray-800">
+
 	{{#isTraining}}
-		<h1 class="text-center text-2xl font-semibold text-gray-800">Training</h1>
+		<h1>Training</h1>
 	{{/isTraining}}
+
 	{{#firstPlayerName}}
-		<h1 class="text-center text-2xl font-semibold text-gray-800">{{firstPlayerName}} vs {{secondPlayerName}}</h1>
+		<h1>{{firstPlayerName}} vs {{secondPlayerName}}</h1>
 	{{/firstPlayerName}}
+
+	{{^isFinished}}
 		<canvas class="pong-canvas my-8" id="pong" width="600" height="400"></canvas>
 		<div id="spectators"></div>
 	{{/isFinished}}
 
 	{{#isFinished}}
-	<div>Partie terminee</div>
+		<div class="underline">Game finished</div>
+		{{#winner}}
+			<div>{{name}} won {{points}} - {{#looser}} {{points}} {{/looser}} </div>
+		{{/winner}}
 	{{/isFinished}}
 	</div>
 </script>

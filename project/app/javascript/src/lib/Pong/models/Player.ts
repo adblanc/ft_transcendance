@@ -7,6 +7,7 @@ interface IPlayer {
   id: number;
   name: string;
   points: number;
+  status?: "lose" | "won";
 }
 
 export default class Player extends BaseModel<IPlayer> {

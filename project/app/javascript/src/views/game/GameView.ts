@@ -110,11 +110,14 @@ export default class GameView extends BaseView<Game> {
       isTraining: this.model.get("isTraining"),
       firstPlayerName: this.model.get("players")?.first()?.get("name"),
       secondPlayerName: this.model.get("players")?.last()?.get("name"),
+      winner: this.model.winner?.toJSON(),
+      looser: this.model.looser?.toJSON(),
       isFinished,
     });
     this.$el.html(html);
 
     if (isFinished) {
+      console.log("finished", this.model.toJSON());
       return this;
     }
 

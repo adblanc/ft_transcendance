@@ -88,6 +88,14 @@ export default class Game extends BaseModel<IGame> {
   urlRoot = () => `${BASE_ROOT}/games`;
   baseGameRoot = () => `${this.urlRoot()}/${this.get("id")}`;
 
+  get winner() {
+    return this.get("players").find((p) => p.get("status") === "won");
+  }
+
+  get looser() {
+    return this.get("players").find((p) => p.get("status") === "lose");
+  }
+
   sync(method: string, model: Game, options: JQueryAjaxSettings): any {
     return syncWithFormData(method, model, options);
   }
@@ -176,6 +184,17 @@ export default class Game extends BaseModel<IGame> {
   onGameOver(data: GameData) {
     if (data.action === "game_over") {
       console.log(data, "game_oveeeeeeeeer");
+
+      const winner = this.get("players").find(
+        (p) => p.get("id") === data.payload.winnerId
+      );
+      const looser = this.get("players").find(
+        (p) => p.get("id") === data.payload.looserId
+      );
+
+      winner?.set({ status: "won" });
+      looser?.set({ status: "lose" });
+
       this.set({ status: "finished" });
     }
   }

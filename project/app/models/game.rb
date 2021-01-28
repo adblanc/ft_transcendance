@@ -39,15 +39,20 @@ class Game < ApplicationRecord
 		logger.debug("==== game_user points #{game_user.points} ====")
 		if (game_user.points >= self.goal)
 			self.update(status: :finished)
-			ActionCable.server.broadcast("game_#{self.id}", self.data_over);
+			game_user.update(status: :won)
+			looser = self.game_users.where.not(user_id: id).first
+
+			looser.update(status: :lose)
+			ActionCable.server.broadcast("game_#{self.id}", self.data_over(game_user.user_id, looser.user_id));
 		end
 	end
 
 	private
 
-	def data_over
+	def data_over(winner_id, looser_id)
 		res = {};
 		res["action"] = "game_over";
+		res["payload"] = {"winnerId" => winner_id, "looserId" => looser_id}
 
 		return res;
 	end

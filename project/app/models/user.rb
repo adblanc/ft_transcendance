@@ -206,4 +206,8 @@ class User < ApplicationRecord
 	def game_points(game)
 		self.game_users.where(game_id: game.id).first.points
 	end
+
+	def game_status(game)
+		self.game_users.where(game_id: game.id).first.status
+	end
 end
