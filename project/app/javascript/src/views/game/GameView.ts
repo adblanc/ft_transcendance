@@ -103,13 +103,20 @@ export default class GameView extends BaseView<Game> {
 
     const template = $("#playGameTemplate").html();
 
+    const isFinished = this.model.get("status") === "finished";
+
     const html = Mustache.render(template, {
       ...this.model?.toJSON(),
       isTraining: this.model.get("isTraining"),
       firstPlayerName: this.model.get("players")?.first()?.get("name"),
       secondPlayerName: this.model.get("players")?.last()?.get("name"),
+      isFinished,
     });
     this.$el.html(html);
+
+    if (isFinished) {
+      return this;
+    }
 
     this.renderSpectators();
 

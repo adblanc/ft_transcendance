@@ -34,7 +34,7 @@ export interface GameData {
 
   payload: any;
 
-  action: "player_movement" | "player_score";
+  action: "player_movement" | "player_score" | "game_over";
   playerId: number;
 }
 
@@ -122,6 +122,7 @@ export default class Game extends BaseModel<IGame> {
           this.onMovementReceived(data);
           this.onGameStarted(data);
           this.onGameExpired(data);
+          this.onGameOver(data);
         },
         disconnected: () => {
           console.log("disconnected from the game", gameId);
@@ -169,6 +170,13 @@ export default class Game extends BaseModel<IGame> {
         );
       }
       return this.unsubscribeChannelConsumer();
+    }
+  }
+
+  onGameOver(data: GameData) {
+    if (data.action === "game_over") {
+      console.log(data, "game_oveeeeeeeeer");
+      this.set({ status: "finished" });
     }
   }
 

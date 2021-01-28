@@ -1,5 +1,6 @@
 <script type="text/html" id="playGameTemplate">
 	<div class="relative flex flex-col page-height justify-center items-center">
+	{{^isFinished}}
 	{{#isTraining}}
 		<h1 class="text-center text-2xl font-semibold text-gray-800">Training</h1>
 	{{/isTraining}}
@@ -8,5 +9,10 @@
 	{{/firstPlayerName}}
 		<canvas class="pong-canvas my-8" id="pong" width="600" height="400"></canvas>
 		<div id="spectators"></div>
+	{{/isFinished}}
+
+	{{#isFinished}}
+	<div>Partie terminee</div>
+	{{/isFinished}}
 	</div>
 </script>
