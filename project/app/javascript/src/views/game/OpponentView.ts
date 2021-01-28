@@ -7,7 +7,7 @@ import Game from "src/models/Game";
 import User from "src/models/User";
 import { eventBus } from "src/events/EventBus";
 
-type Options = Backbone.ViewOptions & { model: User, game: Game };
+type Options = Backbone.ViewOptions & { model: User};
 
 export default class OpponentView extends BaseView {
   model: User;
@@ -17,21 +17,19 @@ export default class OpponentView extends BaseView {
     super(options);
 
 	this.model = options.model;
-	this.game = options.game;
 
   }
 
   events() {
-    return {
-      ...super.events(),
+	return {
 	  "click #challenge-ladder": "onChallenge",
-    };
+	};
   }
 
   async onChallenge(e: JQuery.Event) {
     e.preventDefault();
-
-    const success = await this.game.ladderChallenge(this.model.get("id"));
+	const game = new Game();
+    const success = await game.ladderChallenge(this.model.get("id"));
     if (success) {
       this.gameSaved();
     }

@@ -56,11 +56,8 @@ export default class StartGameView extends BaseView {
    }
 
    startLadderGame() {
-	const game = new Game();
-	const createLadderGameView = new CreateLadderGameView({
-		 model: game,
-   });
-   createLadderGameView.render();
+	const createLadderGameView = new CreateLadderGameView();
+   		createLadderGameView.render();
 	}
 
   render() {

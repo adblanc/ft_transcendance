@@ -8,16 +8,17 @@ import { currentUser } from "src/models/Profile";
 import RankedUsers from "src/collections/RankedUsers";
 import { eventBus } from "src/events/EventBus";
 
-export default class CreateLadderGameView extends ModalView<Game> {
+export default class CreateLadderGameView extends ModalView{
 	opponents: RankedUsers;
 
-  constructor(options?: Backbone.ViewOptions<Game>) {
+  constructor(options?: Backbone.ViewOptions) {
 	super(options);
 	
 	this.opponents = new RankedUsers();
 	this.opponents.fetch();
 	
 	this.listenTo(eventBus, "close:modal", this.closeModal);
+	this.listenTo(this.opponents, "update", this.render);
 
   }
 
@@ -35,7 +36,6 @@ export default class CreateLadderGameView extends ModalView<Game> {
 		if (item.get("ladder_rank") > currentUser().get("ladder_rank")) {
 			var opponentView = new OpponentView({
 			model: item,
-			game: this.model,
 			});
 			$element.append(opponentView.render().el);
 		}

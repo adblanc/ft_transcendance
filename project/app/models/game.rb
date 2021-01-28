@@ -50,7 +50,7 @@ class Game < ApplicationRecord
 		end
 	end
 
-	def swap_ladder
+	def ladder_swap
 		rank = winner.ladder_rank
 		winner.update(ladder_rank: loser.ladder_rank)
 		loser.update(ladder_rank: rank)
@@ -65,7 +65,7 @@ class Game < ApplicationRecord
 		game_user.increment!(:points)
 		if game_user.points == self.goal
 			game_user.update(status: :win)
-			self.game_users.where.not(user_id: id).first.update(status: :lose)
+			self.game_users.where.not(user_id: self.id).first.update(status: :lose)
 			self.finish
 		end
 	end
