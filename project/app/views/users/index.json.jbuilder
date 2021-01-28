@@ -1,3 +1,3 @@
 json.array! @users do |user|
-  json.partial! "users/user", user: user
+  json.partial! "users/userSnippet", user: user
 end

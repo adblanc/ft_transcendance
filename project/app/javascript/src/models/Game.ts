@@ -244,7 +244,7 @@ export default class Game extends BaseModel<IGame> {
       {
       },
       {
-        url: `${this.urlRoot()}/acceptLadderChallenge`,
+        url: `${this.baseGameRoot()}/acceptLadderChallenge`,
       }
     );
   }

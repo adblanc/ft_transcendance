@@ -6,11 +6,13 @@ import { currentUser } from "src/models/Profile";
 import RankedUsers from "src/collections/RankedUsers";
 import { displaySuccess } from "src/utils/toast";
 import User from "src/models/User";
+import Game from "src/models/Game";
 
 export default class LadderView extends BaseView {
 	opponents: RankedUsers;
 	max: number;
 	count: number;
+	game: Game;
 
   constructor(options?: Backbone.ViewOptions) {
 	super(options);
@@ -33,8 +35,11 @@ export default class LadderView extends BaseView {
   }
 
   async onAccept(e: JQuery.Event) {
-    e.preventDefault();
-    const success = await currentUser().get.("pendingGameToAccept").acceptLadderChallenge();
+	e.preventDefault();
+	//var id = currentUser().get("pendingGameToAccept").get("id");
+	//this.game = new Game({id});
+	//await this.game.fetch();
+    const success = await currentUser().get("pendingGameToAccept").acceptLadderChallenge();
     if (success) {
       this.gameSaved();
     }
@@ -43,7 +48,7 @@ export default class LadderView extends BaseView {
   gameSaved() {
     displaySuccess(`Ladder Game accepted!`);
 	currentUser().fetch();
-	currentUser().get.("pendingGameToAccept").navigateToGame();
+	currentUser().get("pendingGameToAccept").navigateToGame();
   }
 
 

@@ -140,7 +140,8 @@ export default class Profile extends BaseModel<IProfile> {
           this.checkDmCreationNotification(notification);
           this.checkWarEvent(notification);
 		  this.notifications.add(notification);
-		  this.fetch();
+		  if (!notification.ancient)
+		  	this.fetch();
         },
       }
     );
