@@ -32,7 +32,7 @@ export default class LadderView extends BaseView {
   renderOpponent(opponent: User) {
     var opponentView = new LadderOpponentView({
 		model: opponent,
-		challengeable: opponent.get("ladder_rank") < currentUser().get("ladder_rank")
+		challengeable: opponent.get("ladder_rank") < currentUser().get("ladder_rank") || !currentUser().get("pendingGame")
 	});
     this.$("#list").append(opponentView.render().el);
   }
@@ -70,7 +70,7 @@ export default class LadderView extends BaseView {
 	
 	if (currentUser().get("pendingGame"))
 	{
-		
+
 	}
 
 
