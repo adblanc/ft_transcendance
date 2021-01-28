@@ -183,17 +183,15 @@ export default class Game extends BaseModel<IGame> {
 
   onGameOver(data: GameData) {
     if (data.action === "game_over") {
-      console.log(data, "game_oveeeeeeeeer");
-
       const winner = this.get("players").find(
-        (p) => p.get("id") === data.payload.winnerId
+        (p) => p.get("id") === data.payload.winner.id
       );
       const looser = this.get("players").find(
-        (p) => p.get("id") === data.payload.looserId
+        (p) => p.get("id") === data.payload.looser.id
       );
 
-      winner?.set({ status: "won" });
-      looser?.set({ status: "lose" });
+      winner?.set(data.payload.winner);
+      looser?.set(data.payload.looser);
 
       this.set({ status: "finished" });
     }

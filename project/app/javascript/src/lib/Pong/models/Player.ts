@@ -54,7 +54,6 @@ export default class Player extends BaseModel<IPlayer> {
     if (this.game.get("isHost")) {
       this.channel?.perform("player_score", { playerId: this.get("id") });
     }
-    console.log("score");
   }
 
   onPlayerScored(data: any) {
