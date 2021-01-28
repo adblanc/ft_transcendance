@@ -187,8 +187,19 @@ class User < ApplicationRecord
 		ActionCable.server.broadcast("appearance_channel", event: "disappear", user_id: self.id);
 	end
 
+	def game_request
+		games.pending.each do |game|
+			return game if game.initiator.id == self.id
+		end
+		return nil
+	end
+
 	def pendingGame
-		games.where(status: [:pending]).first
+		games.pending.where(id: game_request).first
+	end
+
+	def pendingGameToAccept
+		games.pending.where.not(id: game_request).first
 	end
 
 	def inGame?

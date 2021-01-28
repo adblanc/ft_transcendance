@@ -70,4 +70,10 @@ class Game < ApplicationRecord
 		end
 	end
 
+	def initiator
+		if self.pending?
+			self.game_users.accepted.first.user
+		end
+	end
+
 end

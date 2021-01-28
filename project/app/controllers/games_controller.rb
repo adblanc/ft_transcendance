@@ -159,12 +159,13 @@ class GamesController < ApplicationController
 			return
 		end
 		@opponent = User.find_by_id(params[:opponent_id])
-		return head :unauthorized if current_user.ladder_rank? < @opponent.ladder_rank?
+		return head :unauthorized if current_user.ladder_rank < @opponent.ladder_rank
 
 		@game = Game.create(level: :normal, goal: 9, game_type: :ladder, status: :pending)
 		@game.users.push(current_user)
 		current_user.add_role(:host, @game);
 		@game.users.push(@opponent)
+		@opponent.game_users.where(game: @game).first.update(status: :pending)
 		@opponent.send_notification("#{current_user.name} has challenged you to a Ladder Game", "/tournaments/ladder", "game")
 		@game
 	end
@@ -178,6 +179,7 @@ class GamesController < ApplicationController
 		return head :unauthorized if not @game.pending?
 		@game.update(status: :started)
 		current_user.add_role(:player, @game);
+		current_user.game_users.where(game: @game).first.update(status: :accepted)
 		@game
 	end
 

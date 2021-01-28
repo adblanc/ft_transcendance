@@ -44,6 +44,18 @@ else
 	json.pendingGame nil
 end
 
+if user.pendingGameToAccept
+	json.pendingGameToAccept do
+		json.id user.pendingGameToAccept.id
+		json.game_type user.pendingGameToAccept.game_type
+		json.goal user.pendingGameToAccept.goal
+		json.level user.pendingGameToAccept.level
+		json.status user.pendingGameToAccept.status
+	end
+else
+	json.pendingGameToAccept nil
+end
+
 json.friends do
 	json.array! user.friends do |friend|
 		json.partial! "users/userSnippet", user: friend

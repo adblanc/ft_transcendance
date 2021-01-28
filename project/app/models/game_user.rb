@@ -4,6 +4,7 @@ class GameUser < ApplicationRecord
 
 	enum status: [
 		:pending,
+		:accepted,
 		:win,
 		:lose
 	]

@@ -19,7 +19,10 @@ export default class LadderOpponentView extends BaseView {
 
 	this.model = options.model;
 	this.challengeable = options.challengeable;
+	if (currentUser().get("pendingGame"))
+		this.challengeable = false;
 
+	this.listenTo(currentUser(), "change", this.render);
   }
 
   events() {

@@ -44,6 +44,7 @@ export interface IProfile {
   pending_guild?: Guild;
   guild?: Guild;
   pendingGame?: Game;
+  pendingGameToAccept?: Game;
   inGame?: boolean;
   ladder_rank?: number;
   notifications?: Notifications;
@@ -78,6 +79,11 @@ export default class Profile extends BaseModel<IProfile> {
       {
         type: Backbone.One,
         key: "pendingGame",
+        relatedModel: Game,
+	  },
+	  {
+        type: Backbone.One,
+        key: "pendingGameToAccept",
         relatedModel: Game,
       },
       {

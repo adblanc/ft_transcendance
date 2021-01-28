@@ -18,13 +18,16 @@
 			<h1 class="justify-center text-white flex flex-row"> If you win, you will take the rank of your opponent. </h1>
 			<h1 class="justify-center text-white flex flex-row"> If you fail to accept a ladder challenge within 2 days, you will automatically lose. </h1>
 			<h1 class="justify-center text-white flex flex-row"> You cannot start or accept any other type of match if you have a pending ladder challenge. </h1>
-			<h1 style="margin-top:15px; font-size:15px" class="justify-center text-white flex flex-row"><b> No one has challenged you </b></h1>
-			<div id="accept" style="text-align: center; margin-top:15px; font-size:15px">
+			<h1 id="default" style="margin-top:15px; font-size:15px; display:none" class="justify-center text-white flex flex-row"><b> You have no pending ladder challenge </b></h1>
+			<div id="accept" style="text-align: center; margin-top:15px; font-size:15px; display:none">
 				<h1 style="margin-top:10px" class="justify-center text-white flex flex-row"> {{opponent.login}}, rank {{opponent.ladder_rank}} has challenged you. </h1>
 				<button id="accept-btn" class="btn-primary mt-3 animate-bounce" type="button">Accept!</button>
 			</div>
-			<div id="waiting" style="text-align: center; margin-top:15px; font-size:15px">
+			<div id="waiting" style="text-align: center; margin-top:15px; font-size:15px; display:none">
 				<h1 style="margin-top:10px" class="justify-center text-white flex flex-row"> You are waiting for {{opponent.login}}, rank {{opponent.ladder_rank}} to accept your ladder challenge. </h1>
+			</div>
+			<div id="unavailable" style="text-align: center; margin-top:15px; font-size:15px; display:none">
+				<h1 style="margin-top:10px" class="justify-center text-white flex flex-row"> You must finish you {{game_type}} game pending before starting a ladder challenge. </h1>
 			</div>
 		</div>
 </script>
