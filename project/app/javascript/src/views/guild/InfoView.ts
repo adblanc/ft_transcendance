@@ -23,8 +23,6 @@ export default class InfoView extends BaseView {
       model: this.guild,
     });
 
-    currentUser().fetch();
-
     this.listenTo(this.guild, "change", this.render);
     this.listenTo(this.guild.get("members"), "update", this.render);
     this.listenTo(currentUser(), "change", this.render);

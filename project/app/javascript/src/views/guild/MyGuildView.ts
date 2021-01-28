@@ -18,8 +18,6 @@ export default class MyGuildView extends BaseView {
 
     this.collection = options.collection;
 
-	currentUser().fetch();
-
     this.listenTo(currentUser(), "change", this.render);
   }
 

@@ -4,13 +4,14 @@ class ExpireWarTimeGameJob < ApplicationJob
 	def perform(game, guild, opponent, warTime, user)
 	  return if game.started? || game.finished?
 	  game.update(status: :unanswered)
+	  user.game_users.where(game: game).update(status: :won)
+	  game.handle_points
 	  guild.members.each do |member|
 		member.send_notification("#{opponent.name} has not answered #{user.name}'s' War Time challenge!", "/wars", "war")
 	  end
 	  opponent.members.each do |member|
 		member.send_notification("Your guild has not answered #{user.name}'s' War Time challenge!", "/wars", "war")
 	  end
-	  guild.war_score(10)
 	  ActionCable.server.broadcast("game_#{game.id}", {"event" => "expired"});
 	  
 	  warTime.increment!(:unanswered_calls, 1)

@@ -60,10 +60,10 @@
 			</div>
 			<div class="flex border border-gray-100 my-4"></div>
 			<h2 class="text-2xl mb-2 font-semibold">Stats:</h2>
-			<p>Number of victory {{statUser.number_victory}} </p>
-			<p>Number of loss {{statUser.number_loss}} </p>
-			<p>Ladder level {{statUser.ladder_level}} </p>
-			<p>Number of won tournaments {{statUser.won_tournaments}} </p>
+			<p>Rank on permanent ladder : {{ladder_rank}}</p>
+			<p>Number of victory : {{statUser.number_victory}} </p>
+			<p>Number of loss : {{statUser.number_loss}} </p>
+			<p>Number of won tournaments : {{statUser.won_tournaments}} </p>
 			<p class="text-2xl mb-2 font-semibold">Achievements: </p>
 			{{#statUser.bronze_medal}}<p>Bronze medal</p> {{/statUser.bronze_medal}}
 			{{#statUser.silver_medal}}<p>Silver medal</p> {{/statUser.silver_medal}}
@@ -83,6 +83,7 @@
 					<img class="rounded-full p-2 w-16 h-16 mt-2 mx-auto" src={{guild.img_url}}/>
 					<p class="mb-2">{{guild.name}}</p>
 				</a>
+				<p><span class="font-bold">Guild contribution : {{contribution}}</span></p>
 			{{/has_guild}}
 			</div>
 		</div>

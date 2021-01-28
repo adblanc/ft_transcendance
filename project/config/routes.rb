@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
     resource :user, only: [:show, :update]
 	get "user/notifications", to: "users#show"
+	get "users", to: "users#index"
 
 	get '/profile/:id', to: 'users#show_other_user'
 	put '/profile/:id/ban', to: 'users#ban_other_user'
@@ -17,13 +18,14 @@ Rails.application.routes.draw do
 
     resources :games do
 	member do
-		put :score
 		put :acceptChallenge
 		put :acceptPlayChat  
+		put :acceptLadderChallenge
 		end
 	end
 	post "games/challenge", to: "games#challenge";
 	post "games/playChat", to: "games#playChat";
+	post "games/ladderChallenge", to: "games#ladderChallenge";
 
     put "/block/:id", to: "blocks#block";
     put "/unblock/:id", to: "blocks#unblock";

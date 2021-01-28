@@ -165,18 +165,12 @@ export default class Game extends BaseModel<IGame> {
 
   onGameExpired(data: GameData) {
     if (data.event == "expired") {
-      currentUser().fetch();
-      if (this.get("game_type") != "war_time") {
-        displayError(
-          "We were not able to find an opponent. Please try different game settings."
-        );
-      } else if (this.get("game_type") == "chat") {
-        eventBus.trigger("chatplay:change");
-      } else {
-        displaySuccess(
-          "No one answered your War Time challenge! You have won the match."
-        );
-      }
+		if (this.get("game_type") == "friendly") {
+			displayError(
+			"We were not able to find an opponent. Please try different game settings."
+			);
+			currentUser().fetch(); //car pas de notif envoyée ni d'event
+		}
       return this.unsubscribeChannelConsumer();
     }
   }
@@ -244,6 +238,27 @@ export default class Game extends BaseModel<IGame> {
       {},
       {
         url: `${this.baseGameRoot()}/acceptPlayChat`,
+      }
+    );
+  }
+
+  ladderChallenge(opponent_id: number) {
+    return this.asyncSave(
+      {
+        opponent_id: opponent_id,
+      },
+      {
+        url: `${this.urlRoot()}/ladderChallenge`,
+      }
+    );
+  }
+
+  acceptLadderChallenge() {
+    return this.asyncSave(
+      {
+      },
+      {
+        url: `${this.baseGameRoot()}/acceptLadderChallenge`,
       }
     );
   }

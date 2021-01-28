@@ -3,6 +3,7 @@ import Backbone from "backbone";
 import Game from "src/models/Game";
 import BaseView from "src/lib/BaseView";
 import CreateGameView from "./CreateGameView";
+import CreateLadderGameView from "./CreateLadderGameView";
 import { currentUser } from "src/models/Profile";
 import { eventBus } from "src/events/EventBus";
 
@@ -17,6 +18,7 @@ export default class StartGameView extends BaseView {
 	this.disable = options.disable;
 
 	this.listenTo(eventBus, "chatplay:change", this.relaunch);
+	this.listenTo(currentUser(), "change", this.render);
 	}
 
 	relaunch() {
@@ -39,8 +41,7 @@ export default class StartGameView extends BaseView {
   events() {
 	return {
 	  "click #friendly-btn": () => this.startGame("friendly"),
-	  "click #ladder-btn": () => this.startGame("ladder"),
-	  "click #tournament-btn": () => this.startGame("tournament"),
+	  "click #ladder-btn": () => this.startLadderGame(),
 	};
   }
 
@@ -54,15 +55,25 @@ export default class StartGameView extends BaseView {
 	  createGameView.render();
    }
 
+   startLadderGame() {
+	const createLadderGameView = new CreateLadderGameView();
+   		createLadderGameView.render();
+	}
+
   render() {
     const template = $("#gameStartTemplate").html();
     const html = Mustache.render(template, {});
 	this.$el.html(html);
 	
-	if (this.disable == true) {
+	if (currentUser().get("pendingGameToAccept"))
+	{
 		this.$("#friendly-btn").addClass("btn-disabled");
 		this.$("#ladder-btn").addClass("btn-disabled");
-		this.$("#tournament-btn").addClass("btn-disabled");
+		this.$("#must-accept").show();
+	}
+	else if (this.disable == true) {
+		this.$("#friendly-btn").addClass("btn-disabled");
+		this.$("#ladder-btn").addClass("btn-disabled");
 		this.$("#chat-game").show();
 	}
     return this;

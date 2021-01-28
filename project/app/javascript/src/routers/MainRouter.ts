@@ -9,6 +9,9 @@ import WarHistoryView from "../views/guild/WarHistoryView";
 import NotFoundView from "../views/NotFoundView";
 import GameView from "../views/game/GameView";
 import GameIndexView from "../views/game/GameIndexView";
+import TournamentIndexView from "../views/tournament/TournamentIndexView";
+import LadderView from "../views/tournament/LadderView";
+import TempTournamentView from "../views/tournament/TempTournamentView";
 import { addAuthHeaders } from "../utils";
 import AuthView from "../views/AuthView";
 import TfaView from "../views/TfaView";
@@ -34,7 +37,10 @@ export default class MainRouter extends Backbone.Router {
         "me/notifications": "notifShow",
         "user/:id": "userShow",
         "tfa/:user/:tfa": "twoFactAuth",
-        wars: "warsIndex",
+		wars: "warsIndex",
+		tournaments: "tournamentIndex",
+		"tournaments/ladder": "ladder",
+		"tournaments/temporary": "tempTournament",
         "*path": "notFound",
       },
     });
@@ -134,5 +140,20 @@ export default class MainRouter extends Backbone.Router {
   warsIndex() {
     const warIndexView = new WarIndexView();
     pagesHandler.showPage(warIndexView);
+  }
+
+  tournamentIndex() {
+    const tournamentIndexView = new TournamentIndexView();
+    pagesHandler.showPage(tournamentIndexView);
+  }
+
+  ladder() {
+    const ladderView = new LadderView();
+    pagesHandler.showPage(ladderView);
+  }
+
+  tempTournament() {
+    const tempTournamentView = new TempTournamentView();
+    pagesHandler.showPage(tempTournamentView);
   }
 }

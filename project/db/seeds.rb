@@ -14,14 +14,14 @@ bob.avatar.attach(
 	"content_type": "image/png",
 )
 
-bill = User.create(name: "bill", login: "bill", contribution: 10);
-ben = User.create(name: "ben", login: "ben", contribution: 15);
-boule = User.create(name: "boule", login: "boule", contribution: 0);
-babar = User.create(name: "babar", login: "babar", contribution: 5);
-billy = User.create(name: "billy", login: "billy", contribution: 1);
-jeff = User.create(name: "jeff", login: "jeff", contribution: 1);
-john = User.create(name: "john", login: "john", contribution: 1);
-jack = User.create(name: "jack", login: "jack", contribution: 1);
+bill = User.create(name: "bill", login: "bill", contribution: 10, ladder_rank: 2);
+ben = User.create(name: "ben", login: "ben", contribution: 20, ladder_rank: 2);
+boule = User.create(name: "boule", login: "boule", contribution: 0, ladder_rank: 2);
+babar = User.create(name: "babar", login: "babar", contribution: 10, ladder_rank: 4);
+billy = User.create(name: "billy", login: "billy", contribution: 30, ladder_rank: 6);
+jeff = User.create(name: "jeff", login: "jeff", contribution: 40);
+john = User.create(name: "john", login: "john", contribution: 10);
+jack = User.create(name: "jack", login: "jack", contribution: 10);
 
 User.all.each do |user|
 	user.update_attributes(:otp_secret_key => ROTP::Base32.random)
@@ -39,9 +39,9 @@ ben.avatar.attach(
 	"content_type": "image/png",
 )
 
-guild1 = Guild.create(name: 'The Best Guild', ang: "TBG", points: 18)
-guild2 = Guild.create(name: 'The Doom', ang: "TDM", points: 2)
-guild3 = Guild.create(name: 'The Blabla', ang: "BLB", points: 4)
+guild1 = Guild.create(name: 'The Best Guild', ang: "TBG", points: 20)
+guild2 = Guild.create(name: 'The Doom', ang: "TDM", points: 30)
+guild3 = Guild.create(name: 'The Blabla', ang: "BLB", points: 40)
 
 guild1.img.attach(
 	io: URI.open("https://i.pinimg.com/originals/1a/27/ff/1a27ff81c19e1c10583ea970b0f3827f.jpg"),

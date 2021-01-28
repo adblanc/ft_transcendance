@@ -5,6 +5,7 @@ class CreateUsers < ActiveRecord::Migration[6.0]
       t.string :login
 	  t.string :name
 	  t.integer :contribution, default: 0
+	  t.integer :ladder_rank, default: 5
       t.timestamps
     end
     add_index :users, :name, unique: true

@@ -45,7 +45,9 @@ export interface IProfile {
   pending_guild?: Guild;
   guild?: Guild;
   pendingGame?: Game;
+  pendingGameToAccept?: Game;
   inGame?: boolean;
+  ladder_rank?: number;
   notifications?: Notifications;
   blocked_users?: IBlockedUser[];
   friend_requests?: FriendRequests;
@@ -80,6 +82,11 @@ export default class Profile extends BaseModel<IProfile> {
       {
         type: Backbone.One,
         key: "pendingGame",
+        relatedModel: Game,
+	  },
+	  {
+        type: Backbone.One,
+        key: "pendingGameToAccept",
         relatedModel: Game,
       },
       {
@@ -135,7 +142,9 @@ export default class Profile extends BaseModel<IProfile> {
         received: (notification: INotification) => {
           this.checkDmCreationNotification(notification);
           this.checkWarEvent(notification);
-          this.notifications.add(notification);
+		  this.notifications.add(notification);
+		  if (!notification.ancient)
+		  	this.fetch();
         },
       }
     );

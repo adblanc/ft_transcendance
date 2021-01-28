@@ -3,6 +3,7 @@ require 'date'
 class User < ApplicationRecord
   rolify
   after_create :assign_default_role
+
 	has_one_attached :avatar
 	has_many :notifications, foreign_key: :recipient_id
 
@@ -158,6 +159,10 @@ class User < ApplicationRecord
 		return self.ban != -1
 	end
 
+	def guild?
+		guild.present?
+	end
+
 	def pending_guild?
 		if self.pending_guild
 			return true
@@ -186,8 +191,19 @@ class User < ApplicationRecord
 		ActionCable.server.broadcast("appearance_channel", event: "disappear", user_id: self.id);
 	end
 
+	def game_request
+		games.pending.each do |game|
+			return game if game.initiator.id == self.id
+		end
+		return nil
+	end
+
 	def pendingGame
-		games.where(status: [:pending]).first
+		games.pending.where(id: game_request).first
+	end
+
+	def pendingGameToAccept
+		games.pending.where.not(id: game_request).first
 	end
 
 	def inGame?
@@ -211,14 +227,10 @@ class User < ApplicationRecord
 		self.game_users.where(game_id: game.id).first.status
 	end
 
-	def game_won?(g_id)
-		return self.game_users.where(game_id: g_id).first.points == self.games.where(id: g_id).first.goal
-	end
-
 	def number_victory
 		i = 0
 		self.games.each do |game|
-			if self.game_won?(game.id)
+			if game.winner == self
 				i+= 1
 			end
 		end
@@ -227,11 +239,6 @@ class User < ApplicationRecord
 
 	def number_loss
 		self.games.length - self.number_victory
-	end
-
-	def ladder_level
-		#to_define par la contribution?
-		return 1818
 	end
 
 	def won_tournaments

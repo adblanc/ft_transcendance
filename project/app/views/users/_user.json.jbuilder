@@ -2,6 +2,7 @@ json.extract! user, :id, :login, :email, :two_fact_auth, :name, :contribution, :
 json.is_present user == @current_user ? true : user.is_present
 json.is_friend @current_user.is_friend_of?(user);
 json.avatar_url url_for(user.avatar) if user.avatar.attached?
+json.ladder_rank user.ladder_rank
 json.inGame user.inGame?
 json.guild_role user.guild_role?
 json.admin user.admin?
@@ -9,12 +10,7 @@ json.ban user.is_banned?
 json.ban_time user.ban_time
 if user.guild_role?
 	json.guild do
-		json.id user.guild.id
-		json.name user.guild.name
-		json.points user.guild.points
-		json.img_url url_for(user.guild.img) if user.guild.img.attached?
-		json.atWar user.guild.atWar?
-		json.warInitiator user.guild.warInitiator?
+		json.partial! "guilds/guild", guild: user.guild
 	end
 else
 	json.guild nil
@@ -36,11 +32,29 @@ if user.pendingGame
 		json.game_type user.pendingGame.game_type
 		json.goal user.pendingGame.goal
 		json.level user.pendingGame.level
-		json.status user.pendingGame.status
 		json.war_time user.pendingGame.war_time
+		if user.pendingGame.opponent(user)
+			json.opponent do
+				json.partial! "users/userSnippet", user: user.pendingGame.opponent(user)
+			end
+		end
 	end
 else
 	json.pendingGame nil
+end
+
+if user.pendingGameToAccept
+	json.pendingGameToAccept do
+		json.id user.pendingGameToAccept.id
+		json.game_type user.pendingGameToAccept.game_type
+		json.goal user.pendingGameToAccept.goal
+		json.level user.pendingGameToAccept.level
+		json.opponent do
+			json.partial! "users/userSnippet", user: user.pendingGameToAccept.opponent(user)
+		end
+	end
+else
+	json.pendingGameToAccept nil
 end
 
 json.friends do

@@ -17,31 +17,10 @@ export default class WarIndexView extends BaseView {
 	super(options);
 
 	this.wars = new Wars();
-	this.wars.fetch({
-		success: () => {
-			this.warBoardView = new WarBoardView({
-				collection: this.wars,
-			});
-			this.renderNested(this.warBoardView, "#board");
-		}
-	});
+	this.wars.fetch();
 
-	currentUser().fetch({
-		success: () => {
-			if (currentUser().get("guild")) {
-				var id = currentUser().get("guild").get("id");
-				var guild = new Guild({id});
-				guild.fetch({
-					success: () => {
-						this.myWarView = new MyWarView({
-							guild: guild,
-						})
-						this.renderNested(this.myWarView, "#mywar");
-					}
-				});
-			}
-		}
-	});
+	this.listenTo(this.wars, "update", this.render);
+	this.listenTo(currentUser(), "change", this.render);
 
   }
 
@@ -49,6 +28,18 @@ export default class WarIndexView extends BaseView {
     const template = $("#warIndexTemplate").html();
     const html = Mustache.render(template, {});
 	this.$el.html(html);
+
+	this.warBoardView = new WarBoardView({
+		collection: this.wars,
+	});
+	this.renderNested(this.warBoardView, "#board");
+
+	if (currentUser().get("guild")) {
+		this.myWarView = new MyWarView({
+			guild: currentUser().get("guild")
+		})
+		this.renderNested(this.myWarView, "#mywar");
+	}
 
     return this;
   }

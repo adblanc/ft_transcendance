@@ -24,8 +24,39 @@ class Game < ApplicationRecord
     validates :level,  presence: true
 	validates :goal, presence: true
 
-	def finish
-		logger.debug "test"
+	def winner
+		if self.finished? || self.unanswered?
+			self.game_users.won.first.user
+		end
+	end
+
+	def loser
+		if self.finished? || self.unanswered?
+			self.game_users.lose.first.user
+		end
+	end
+
+	def handle_points
+		if self.war_time?
+			self.winner.guild.war_score(10)
+		end
+		if self.winner.guild?
+			self.winner.guild.increment!(:points, 10)
+			self.winner.increment!(:contribution, 10)
+			/&& type de jeu pris en compte - inc tour etc.../
+			if self.winner.guild.atWar? && !self.war_time?
+				self.winner.guild.war_score(10)
+			end
+		end
+		if self.ladder?
+			self.ladder_swap if self.winner.ladder_rank > self.loser.ladder_rank
+		end
+	end
+
+	def ladder_swap
+		rank = self.winner.ladder_rank
+		self.winner.update(ladder_rank: self.loser.ladder_rank)
+		self.loser.update(ladder_rank: rank)
 	end
 
 	def	spectators
@@ -39,12 +70,24 @@ class Game < ApplicationRecord
 		ActionCable.server.broadcast("game_#{@id}", data);
 
 		if (game_user.points >= self.goal)
-			self.update(status: :finished)
 			game_user.update(status: :won)
 			looser = self.game_users.where.not(user_id: data["playerId"]).first
-
 			looser.update(status: :lose)
+			self.update(status: :finished)
+			self.handle_points
 			ActionCable.server.broadcast("game_#{self.id}", self.data_over(game_user, looser));
+		end
+	end
+
+	def initiator
+		if self.pending?
+			self.game_users.accepted.first.user
+		end
+	end
+
+	def opponent(user)
+		if self.users.count == 2
+			self.users.where.not(id: user.id).first
 		end
 	end
 
