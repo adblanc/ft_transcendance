@@ -17,8 +17,7 @@ class GamingChannel < ApplicationCable::Channel
 
   def player_score(data)
     if (current_user.is_playing_in?(@game))
-      @game.player_score(data["playerId"]);
-      ActionCable.server.broadcast("game_#{@id}", data);
+      @game.player_score(data);
      end
   end
 

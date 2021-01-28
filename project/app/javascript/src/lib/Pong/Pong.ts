@@ -1,6 +1,8 @@
 import consumer from "channels/consumer";
+import { eventBus } from "src/events/EventBus";
 import Game from "src/models/Game";
 import { getRandomFloat } from "src/utils";
+import BaseModel from "../BaseModel";
 import Ball from "./classes/Ball";
 import Paddle from "./classes/Paddle";
 import Rect from "./classes/Rect";
@@ -58,7 +60,7 @@ const DIFFICULTIES: Record<Difficulty, IDifficultyOptions> = {
   },
 } as const;
 
-export default class Pong {
+export default class Pong extends BaseModel {
   public canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private ball: Ball;
@@ -67,6 +69,9 @@ export default class Pong {
   private ballMovementChannel: ActionCable.Channel;
 
   constructor(canvas: HTMLCanvasElement, game: Game) {
+    super();
+
+    this.listenTo(eventBus, "pong:player_scored", this.onPlayerScored);
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.game = game;
@@ -117,6 +122,12 @@ export default class Pong {
     });
   }
 
+  onPlayerScored() {
+    if (!this.game.get("isHost")) {
+      this.reset();
+    }
+  }
+
   private get AI() {
     return this.game.get("players").at(1).paddle;
   }
@@ -157,10 +168,7 @@ export default class Pong {
 
       const player = this.game.get("players").at(playerIndex);
 
-      const playerId = player.get("id");
-
       player.score();
-      this.game.channel.perform("player_score", { playerId });
       this.reset();
     }
 

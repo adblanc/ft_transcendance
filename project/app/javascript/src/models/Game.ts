@@ -34,7 +34,7 @@ export interface GameData {
 
   payload: any;
 
-  action: "player_movement" | "player_score";
+  action: "player_movement" | "player_score" | "game_over";
   playerId: number;
 }
 
@@ -79,7 +79,7 @@ export default class Game extends BaseModel<IGame> {
 
   defaults() {
     return {
-      users: [],
+      players: [],
       spectators: [],
       level: "easy",
     };
@@ -87,6 +87,14 @@ export default class Game extends BaseModel<IGame> {
 
   urlRoot = () => `${BASE_ROOT}/games`;
   baseGameRoot = () => `${this.urlRoot()}/${this.get("id")}`;
+
+  get winner() {
+    return this.get("players").find((p) => p.get("status") === "won");
+  }
+
+  get looser() {
+    return this.get("players").find((p) => p.get("status") === "lose");
+  }
 
   sync(method: string, model: Game, options: JQueryAjaxSettings): any {
     return syncWithFormData(method, model, options);
@@ -122,6 +130,7 @@ export default class Game extends BaseModel<IGame> {
           this.onMovementReceived(data);
           this.onGameStarted(data);
           this.onGameExpired(data);
+          this.onGameOver(data);
         },
         disconnected: () => {
           console.log("disconnected from the game", gameId);
@@ -131,7 +140,6 @@ export default class Game extends BaseModel<IGame> {
   }
 
   onScoreReceived(data: GameData) {
-    console.log(data);
     if (data.action === "player_score") {
       console.log("player scored", data);
       eventBus.trigger("pong:player_scored", data);
@@ -143,7 +151,6 @@ export default class Game extends BaseModel<IGame> {
       data.action === "player_movement" &&
       data.playerId !== currentUser().get("id")
     ) {
-      // console.log("received other player data", data);
       eventBus.trigger("pong:player_movement", data);
     }
   }
@@ -171,6 +178,22 @@ export default class Game extends BaseModel<IGame> {
         );
       }
       return this.unsubscribeChannelConsumer();
+    }
+  }
+
+  onGameOver(data: GameData) {
+    if (data.action === "game_over") {
+      const winner = this.get("players").find(
+        (p) => p.get("id") === data.payload.winner.id
+      );
+      const looser = this.get("players").find(
+        (p) => p.get("id") === data.payload.looser.id
+      );
+
+      winner?.set(data.payload.winner);
+      looser?.set(data.payload.looser);
+
+      this.set({ status: "finished" });
     }
   }
 

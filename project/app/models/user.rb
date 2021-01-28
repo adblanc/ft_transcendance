@@ -207,6 +207,10 @@ class User < ApplicationRecord
 		self.game_users.where(game_id: game.id).first.points
 	end
 
+	def game_status(game)
+		self.game_users.where(game_id: game.id).first.status
+	end
+
 	def game_won?(g_id)
 		return self.game_users.where(game_id: g_id).first.points == self.games.where(id: g_id).first.goal
 	end
@@ -255,4 +259,5 @@ class User < ApplicationRecord
 	end
 
 	#if your guild is the first
+
 end
