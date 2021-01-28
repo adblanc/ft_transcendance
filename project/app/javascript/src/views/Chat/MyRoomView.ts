@@ -3,6 +3,7 @@ import Mustache from "mustache";
 import BaseView from "src/lib/BaseView";
 import Room from "src/models/Room";
 import RoomMessagesView from "./RoomMessagesView";
+import { eventBus } from "src/events/EventBus";
 
 export default class MyRoomView extends BaseView<Room> {
   roomMessagesView: RoomMessagesView;
@@ -14,7 +15,8 @@ export default class MyRoomView extends BaseView<Room> {
       throw Error("Please provide a Room model.");
     }
 
-    this.listenTo(this.model, "change", this.render);
+	this.listenTo(this.model, "change", this.render);
+	this.listenTo(eventBus, "message:received", this.renderMessageReceived);
 
     this.roomMessagesView = undefined;
   }
@@ -31,8 +33,9 @@ export default class MyRoomView extends BaseView<Room> {
 
   onClick() {
     if (!this.model.get("selected")) {
-      this.model.select();
-    }
+	  this.model.select();
+	}
+	this.$("#message-pending").hide();
   }
 
   renderMessages() {
@@ -42,6 +45,11 @@ export default class MyRoomView extends BaseView<Room> {
     }
     this.roomMessagesView = new RoomMessagesView({ model: this.model });
     this.roomMessagesView.render();
+  }
+
+  renderMessageReceived(id) {
+	if (id == this.model.get("id"))
+		this.$("#message-pending").show();
   }
 
   render() {

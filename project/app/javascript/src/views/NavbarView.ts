@@ -28,7 +28,8 @@ export default class NavbarView extends BaseView {
       "change",
       this.renderNotificationNumber
     );
-    this.listenTo(this.profile, "change:id", this.render);
+	this.listenTo(this.profile, "change:id", this.render);
+	this.listenTo(eventBus, "message:received", this.renderMessageReceived);
   }
 
   events() {
@@ -46,7 +47,8 @@ export default class NavbarView extends BaseView {
   }
 
   onClickMessage() {
-    eventBus.trigger("chat:toggle");
+	eventBus.trigger("chat:toggle");
+	this.$("#message-pending").hide();
   }
 
   onClickNotification(e: JQuery.Event) {
@@ -61,6 +63,10 @@ export default class NavbarView extends BaseView {
 
   renderNotificationNumber() {
     this.$("#notif-count").html(`${this.profile.notifications.getUnreadNb()}`);
+  }
+
+  renderMessageReceived() {
+	this.$("#message-pending").show();
   }
 
   render() {

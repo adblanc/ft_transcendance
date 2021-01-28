@@ -52,7 +52,6 @@ export interface IProfile {
   blocked_users?: IBlockedUser[];
   friend_requests?: FriendRequests;
   friends?: Friends;
-  game?: Game;
   games?: Games;
 }
 
