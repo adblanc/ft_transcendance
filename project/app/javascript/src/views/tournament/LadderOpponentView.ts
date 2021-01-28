@@ -38,7 +38,6 @@ export default class LadderOpponentView extends BaseView {
   }
 
   gameSaved() {
-	eventBus.trigger("close:modal");
     displaySuccess(`Waiting for ${this.model.get("login")}`);
 	currentUser().fetch();
 	this.game.createChannelConsumer();

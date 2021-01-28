@@ -158,12 +158,12 @@ class GamesController < ApplicationController
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
-		return head :unauthorized if current_user.ladder_rank? < opponent.ladder_rank?
+		@opponent = User.find_by_id(params[:opponent_id])
+		return head :unauthorized if current_user.ladder_rank? < @opponent.ladder_rank?
 
-		@game = Game.create(level: :normal, goal: :9, game_type: :ladder, status: :pending)
+		@game = Game.create(level: :normal, goal: 9, game_type: :ladder, status: :pending)
 		@game.users.push(current_user)
 		current_user.add_role(:host, @game);
-		@opponent= User.find_by_id(params[:opponent_id])
 		@game.users.push(@opponent)
 		@opponent.send_notification("#{current_user.name} has challenged you to a Ladder Game", "/tournaments/ladder", "game")
 		@game
