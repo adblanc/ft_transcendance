@@ -76,4 +76,10 @@ class Game < ApplicationRecord
 		end
 	end
 
+	def opponent(user)
+		if self.users.count == 2
+			self.users.where.not(id: user.id).first
+		end
+	end
+
 end

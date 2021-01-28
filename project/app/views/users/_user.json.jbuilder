@@ -37,8 +37,12 @@ if user.pendingGame
 		json.game_type user.pendingGame.game_type
 		json.goal user.pendingGame.goal
 		json.level user.pendingGame.level
-		json.status user.pendingGame.status
 		json.war_time user.pendingGame.war_time
+		if user.pendingGame.opponent(user)
+			json.opponent do
+				json.partial! "users/userSnippet", user: user.pendingGame.opponent(user)
+			end
+		end
 	end
 else
 	json.pendingGame nil
@@ -50,7 +54,9 @@ if user.pendingGameToAccept
 		json.game_type user.pendingGameToAccept.game_type
 		json.goal user.pendingGameToAccept.goal
 		json.level user.pendingGameToAccept.level
-		json.status user.pendingGameToAccept.status
+		json.opponent do
+			json.partial! "users/userSnippet", user: user.pendingGameToAccept.opponent(user)
+		end
 	end
 else
 	json.pendingGameToAccept nil
