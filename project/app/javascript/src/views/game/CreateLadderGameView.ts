@@ -30,7 +30,7 @@ export default class CreateLadderGameView extends ModalView{
 	
 	const $element = this.$("#listing");
 
-	console.log(this.opponents);
+	//console.log(this.opponents);
 
 	this.opponents.forEach(function (item) {
 		if (item.get("ladder_rank") > currentUser().get("ladder_rank")) {
