@@ -9,7 +9,7 @@ class CreateWars < ActiveRecord::Migration[6.0]
 		t.integer :max_unanswered_calls
 		t.integer :nb_games, default: 0
 		t.integer :nb_wartimes, default: 0
-		t.boolean :inc_tour, default: false
+		t.belongs_to :war_include
 
       t.timestamps
     end

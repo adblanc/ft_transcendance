@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_21_155636) do
+ActiveRecord::Schema.define(version: 2021_01_29_161054) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -208,6 +208,18 @@ ActiveRecord::Schema.define(version: 2021_01_21_155636) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  create_table "war_includes", force: :cascade do |t|
+    t.bigint "war_id"
+    t.boolean "inc_ladder", default: false
+    t.boolean "inc_tour", default: false
+    t.boolean "inc_friendly", default: false
+    t.boolean "level", default: [true, true, true], array: true
+    t.boolean "goal", default: [true, true, true], array: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["war_id"], name: "index_war_includes_on_war_id"
+  end
+
   create_table "war_times", force: :cascade do |t|
     t.bigint "war_id"
     t.datetime "start"
@@ -230,9 +242,10 @@ ActiveRecord::Schema.define(version: 2021_01_21_155636) do
     t.integer "max_unanswered_calls"
     t.integer "nb_games", default: 0
     t.integer "nb_wartimes", default: 0
-    t.boolean "inc_tour", default: false
+    t.bigint "war_include_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["war_include_id"], name: "index_wars_on_war_include_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

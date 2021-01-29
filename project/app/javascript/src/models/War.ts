@@ -6,6 +6,7 @@ import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import Guilds from "src/collections/Guilds";
 import { BASE_ROOT } from "src/constants";
+import IWarInclude from "./WarInclude";
 
 interface IWar {
   id: string;
@@ -47,7 +48,7 @@ export default class War extends BaseModel<IWar> {
         type: Backbone.One,
         key: "activeWarTime",
         relatedModel: WarTime,
-      },
+	  },
     ];
   }
 
@@ -68,7 +69,7 @@ export default class War extends BaseModel<IWar> {
     prize: string,
     answer_time: string,
 	max_calls: string,
-	inc_tour: boolean,
+	war_include: IWarInclude,
     initiator_id: string,
 	recipient_id: string
   ) {
@@ -79,7 +80,7 @@ export default class War extends BaseModel<IWar> {
         prize: prize,
         time_to_answer: answer_time,
 		max_unanswered_calls: max_calls,
-		inc_tour: inc_tour,
+		war_include: war_include,
         initiator_id: initiator_id,
         recipient_id: recipient_id,
       },

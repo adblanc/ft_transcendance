@@ -5,6 +5,7 @@ import Guild from "src/models/Guild";
 import { currentUser } from "src/models/Profile";
 import War from "src/models/War";
 import { displayError, displaySuccess } from "src/utils/toast";
+import IWarInclude from "src/models/WarInclude";
 const flatpickr = require("flatpickr");
 require("flatpickr/dist/flatpickr.css");
 
@@ -16,6 +17,7 @@ export default class DeclareWarView extends ModalView<War> {
   guild: Guild;
   fp_start: typeof flatpickr;
   fp_end: typeof flatpickr;
+  warInclude: IWarInclude;
 
   constructor(options?: Options) {
     super(options);
@@ -24,8 +26,35 @@ export default class DeclareWarView extends ModalView<War> {
   }
 
   events() {
-    return { ...super.events(), "click #input-war-submit": "onSubmit" };
-  }
+	return { ...super.events(), 
+		"click #input-war-submit": "onSubmit",
+		"change #inc-friendly": "onChange", };
+	  }
+	  
+  onChange(e: JQuery.Event) {
+	 e.preventDefault();
+	 if( this.$("#custom").is(":visible"))
+		 this.$("#custom").hide();
+	 else
+	 	this.$("#custom").show();
+	}
+	
+	getWarInclude() {
+		this.warInclude = {
+			inc_ladder: this.$("#inc-ladder").is(":checked"),
+			inc_tour: this.$("#inc-tour").is(":checked"),
+			inc_friendly: this.$("#inc-friendly").is(":checked"),
+			level: {easy: this.$("#inc-easy").is(":checked"),
+					normal: this.$("#inc-normal").is(":checked"),
+					hard: this.$("#inc-hard").is(":checked"),
+			},
+			goal: {three: this.$("#three-points").is(":checked"),
+					six: this.$("#six-points").is(":checked"),
+					nine: this.$("#nine-points").is(":checked"),
+			},
+		};
+	}
+
 
   async onSubmit(e: JQuery.Event) {
     e.preventDefault();
@@ -36,10 +65,15 @@ export default class DeclareWarView extends ModalView<War> {
     const end = dateTimeEnd;
     const prize = this.$("#input-prize").val() as string;
     const answer_time = this.$("#answer-time").val() as string;
-    const max_calls = this.$("#max-calls").val() as string;
-    var inc_tour = false;
-    if (this.$("#inc-tour").is(":checked")) inc_tour = true;
+	const max_calls = this.$("#max-calls").val() as string;
 
+	this.getWarInclude();
+	/*if ((!inc_easy && !inc_normal && !inc_hard) || (!three_points && !six_points && !nine_points)) {
+				displayError("You must select at least one difficulty and one max number of points.");
+				  return;
+			}
+	*/
+	console.log(this.warInclude);
     const initiator_id = currentUser().get("guild").get("id");
     const recipient_id = this.guild.get("id");
 
@@ -57,7 +91,7 @@ export default class DeclareWarView extends ModalView<War> {
       prize,
       answer_time,
       max_calls,
-      inc_tour,
+      this.warInclude,
       initiator_id,
       recipient_id
     );
@@ -69,7 +103,7 @@ export default class DeclareWarView extends ModalView<War> {
   warSaved() {
     displaySuccess(`You declared war to ${this.guild.get("name")}`);
     this.closeModal();
-	currentUser().fetch();
+	//currentUser().fetch();
     Backbone.history.navigate(`/wars`, {
       trigger: true,
     });

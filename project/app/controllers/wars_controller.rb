@@ -15,8 +15,9 @@ class WarsController < ApplicationController
 
 		return head :unauthorized unless current_user.guild_owner?(@initiator)
 		return head :unauthorized if @initiator.atWar? || @initiator.warInitiator? || @recipient.atWar?
-
 		@war = War.create(war_params)
+		@war_include = WarInclude.create(war_include_params)
+		@war.update(war_include: @war_include)
 
 		if @war.save
 			GuildWar.create!(guild: @initiator, war: @war, status: :accepted)
@@ -144,7 +145,10 @@ class WarsController < ApplicationController
 	private
 
 	def war_params
-		params.permit( :start, :end, :prize, :time_to_answer, :max_unanswered_calls, :inc_tour)
+		params.permit( :start, :end, :prize, :time_to_answer, :max_unanswered_calls)
+	end
+	def war_include_params
+		params.permit( :inc_ladder, :inc_tour, :inc_friendly, :level, :goal)
 	end
 
 end

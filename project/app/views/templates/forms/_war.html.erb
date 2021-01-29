@@ -50,13 +50,68 @@
                         id="max-calls"
                     />
 				</label>
-				<div style="text-align: center;" class="block" for="inc-tour">
-					<h1 class="text-gray-700">Check this box to include tournament games in the war effort :</h1>
+				<div style="text-align: center; font-size:11px" class="block mt-2" for="includes">
+					<h1 class="text-gray-700">Include ladder games in the war effort :
+                    <input
+                        type="checkbox"
+                        name="inc-ladder"
+                        id="inc-ladder"
+					/></h1>
+					<h1 class="text-gray-700 ">Include tournament games in the war effort :
                     <input
                         type="checkbox"
                         name="inc-tour"
                         id="inc-tour"
-                    />
+					/></h1>
+					<h1 class="text-gray-700">Include friendly games in the war effort :
+					<input
+						type="checkbox"
+						name="inc-friendly"
+						id="inc-friendly"
+					/></h1>
+					<div id="custom" style="display:none">
+						<h1 class="text-gray-700 m-2">Select all that apply :</h1>
+						<h1>
+							<span class="text-gray-700">Easy :</span>
+							<input
+								type="checkbox"
+								name="inc-easy"
+								id="inc-easy"
+							/>
+							<span class="text-gray-700">Normal :</span>
+							<input
+								type="checkbox"
+								name="inc-normal"
+								id="inc-normal"
+							/>
+							<span class="text-gray-700">Hard :</span>
+							<input
+								type="checkbox"
+								name="inc-hard"
+								id="inc-hard"
+							/>
+						</h1>
+						<h1>
+							<span class="text-gray-700">3 points:</span>
+							<input
+								type="checkbox"
+								name="three-points"
+								id="three-points"
+							/>
+							<span class="text-gray-700">6 points:</span>
+							<input
+								type="checkbox"
+								name="six-points"
+								id="six-points"
+							/>
+							<span class="text-gray-700">9 points:</span>
+							<input
+								type="checkbox"
+								name="nine-points"
+								id="nine-points"
+							/>
+						</h1>
+					</div>
 				</div>
                 <div class="flex justify-center items-center">
                     <button

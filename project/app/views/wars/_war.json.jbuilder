@@ -1,4 +1,4 @@
-json.extract! war, :id, :start, :end, :prize, :status, :time_to_answer, :max_unanswered_calls, :inc_tour, :nb_games, :nb_wartimes, :created_at, :updated_at
+json.extract! war, :id, :start, :end, :prize, :status, :time_to_answer, :max_unanswered_calls, :nb_games, :nb_wartimes, :created_at, :updated_at
 json.atWarTime war.atWarTime?
 if war.activeWarTime
 	json.activeWarTime do
@@ -11,3 +11,4 @@ if war.activeWarTime
 else
 	json.activeWarTime nil
 end
+json.partial! "wars/warinclude", war: war

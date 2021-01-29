@@ -12,9 +12,9 @@ if guild.activeWar
 		json.status guild.activeWar.status
 		json.time_to_answer guild.activeWar.time_to_answer
 		json.max_unanswered_calls guild.activeWar.max_unanswered_calls
-		json.inc_tour guild.activeWar.inc_tour
 		json.warPoints guild.activeWar.war_points(guild)
 		json.atWarTime guild.activeWar.atWarTime?
+		json.partial! "wars/warinclude", war: guild.activeWar
 		if guild.activeWar.activeWarTime
 			json.activeWarTime do
 				json.id guild.activeWar.activeWarTime.id
@@ -81,9 +81,6 @@ json.wars do
 		json.status war.status
 		json.start war.start
 		json.end war.end
-		json.time_to_answer war.time_to_answer
-		json.max_unanswered_calls war.max_unanswered_calls
-		json.atWarTime war.atWarTime?
 		json.nb_games war.nb_games
 		json.nb_wartimes war.nb_wartimes
 		json.war_points war.war_points(guild)
@@ -105,7 +102,7 @@ json.pendingWars do
 		json.end pendingWar.end
 		json.time_to_answer pendingWar.time_to_answer
 		json.max_unanswered_calls pendingWar.max_unanswered_calls
-		json.inc_tour pendingWar.inc_tour
+		json.partial! "wars/warinclude", war: pendingWar
 		json.warOpponent do
 			json.id  guild.warOpponent(pendingWar).id
 			json.name  guild.warOpponent(pendingWar).name

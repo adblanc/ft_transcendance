@@ -43,7 +43,6 @@ export default class NegotiateView extends ModalView<War> {
 	  "change #input-end-date": "onDateChange",
 	  "change #max-calls": "onChange",
 	  "change #answer-time": "onChange",
-	  "change #inc-tour": "onChange",
     };
   }
 

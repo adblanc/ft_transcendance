@@ -167,7 +167,7 @@ class GamesController < ApplicationController
 		@game = Game.find_by_id(params[:id])
 		return head :unauthorized if not @game.pending?
 		@game.update(status: :started)
-		current_user.add_role(:player, @game);
+		@game.add_player_role(current_user)
 		current_user.game_users.where(game: @game).first.update(status: :accepted)
 		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
 		@game
