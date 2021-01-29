@@ -97,12 +97,11 @@ class Game < ApplicationRecord
 	end
 
 	def add_second_player(player)
-		self.users.push(player)
 		player.remove_role(:spectator, self);
 		player.add_role(:player, self);
 
+		self.users.push(player)
 		self.update(status: :started)
-
 		self.broadcast({"event" => "started"});
 	end
 
