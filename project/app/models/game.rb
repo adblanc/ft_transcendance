@@ -10,7 +10,8 @@ class Game < ApplicationRecord
 		:pending,
 		:started,
 		:finished,
-		:unanswered
+		:unanswered,
+		:paused,
 	]
 
 	enum game_type: [

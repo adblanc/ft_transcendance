@@ -34,7 +34,7 @@ export interface GameData {
 
   payload: any;
 
-  action: "player_movement" | "player_score" | "game_over";
+  action: "player_movement" | "player_score" | "game_over" | "game_paused";
   playerId: number;
 }
 
@@ -131,6 +131,7 @@ export default class Game extends BaseModel<IGame> {
           this.onGameStarted(data);
           this.onGameExpired(data);
           this.onGameOver(data);
+          this.onGamePaused(data);
         },
         disconnected: () => {
           console.log("disconnected from the game", gameId);
@@ -165,12 +166,12 @@ export default class Game extends BaseModel<IGame> {
 
   onGameExpired(data: GameData) {
     if (data.event == "expired") {
-		if (this.get("game_type") == "friendly") {
-			displayError(
-			"We were not able to find an opponent. Please try different game settings."
-			);
-			currentUser().fetch(); //car pas de notif envoyée ni d'event
-		}
+      if (this.get("game_type") == "friendly") {
+        displayError(
+          "We were not able to find an opponent. Please try different game settings."
+        );
+        currentUser().fetch(); //car pas de notif envoyée ni d'event
+      }
       return this.unsubscribeChannelConsumer();
     }
   }
@@ -191,13 +192,24 @@ export default class Game extends BaseModel<IGame> {
     }
   }
 
+  onGamePaused(data: GameData) {
+    if (data.action === "game_paused") {
+      console.log("game paused");
+    }
+  }
+
   navigateToGame() {
     Backbone.history.navigate(`/game/${this.get("id")}`, {
       trigger: true,
     });
   }
 
-  challengeWT(level: string, goal: number, game_type: string, warTimeId: string) {
+  challengeWT(
+    level: string,
+    goal: number,
+    game_type: string,
+    warTimeId: string
+  ) {
     return this.asyncSave(
       {
         level: level,
@@ -255,8 +267,7 @@ export default class Game extends BaseModel<IGame> {
 
   acceptLadderChallenge() {
     return this.asyncSave(
-      {
-      },
+      {},
       {
         url: `${this.baseGameRoot()}/acceptLadderChallenge`,
       }
