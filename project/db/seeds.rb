@@ -14,11 +14,11 @@ bob.avatar.attach(
 	"content_type": "image/png",
 )
 
-bill = User.create(name: "bill", login: "bill", contribution: 10, ladder_rank: 2);
-ben = User.create(name: "ben", login: "ben", contribution: 20, ladder_rank: 2);
-boule = User.create(name: "boule", login: "boule", contribution: 0, ladder_rank: 2);
-babar = User.create(name: "babar", login: "babar", contribution: 10, ladder_rank: 4);
-billy = User.create(name: "billy", login: "billy", contribution: 30, ladder_rank: 6);
+bill = User.create(name: "bill", login: "bill", contribution: 10);
+ben = User.create(name: "ben", login: "ben", contribution: 20);
+boule = User.create(name: "boule", login: "boule", contribution: 0);
+babar = User.create(name: "babar", login: "babar", contribution: 10);
+billy = User.create(name: "billy", login: "billy", contribution: 30);
 jeff = User.create(name: "jeff", login: "jeff", contribution: 40);
 john = User.create(name: "john", login: "john", contribution: 10);
 jack = User.create(name: "jack", login: "jack", contribution: 10);

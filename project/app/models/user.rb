@@ -3,6 +3,7 @@ require 'date'
 class User < ApplicationRecord
   rolify
   after_create :assign_default_role
+  after_create :assign_ladder_rank
 
 	has_one_attached :avatar
 	has_many :notifications, foreign_key: :recipient_id
@@ -42,9 +43,13 @@ class User < ApplicationRecord
 	end
 
 	def assign_default_role
-		/global role - could be switched to admin/
 		self.add_role(:regular)
 	end
+
+	def assign_ladder_rank
+		self.update(ladder_rank: self.id)
+	end
+
 
 	def guild_owner?(guild)
 		self.has_role?(:owner, guild)
