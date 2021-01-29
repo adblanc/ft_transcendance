@@ -67,7 +67,7 @@ class Game < ApplicationRecord
 		game_user = self.game_users.where(user_id: data["playerId"], game_id: self.id).first
 		game_user.increment!(:points)
 
-		ActionCable.server.broadcast("game_#{@id}", data);
+		self.broadcast(data);
 
 		if (game_user.points >= self.goal)
 			game_user.update(status: :won)
@@ -75,7 +75,7 @@ class Game < ApplicationRecord
 			looser.update(status: :lose)
 			self.update(status: :finished)
 			self.handle_points
-			ActionCable.server.broadcast("game_#{self.id}", self.data_over(game_user, looser));
+			self.broadcast(self.data_over(game_user, looser))
 		end
 	end
 
@@ -91,6 +91,17 @@ class Game < ApplicationRecord
 		end
 	end
 
+	def add_second_player(player)
+		self.users.push(player)
+		player.remove_role(:spectator, self);
+		player.add_role(:player, self);
+		player.game_users.where(game: self).first.update(status: :accepted)
+
+		self.update(status: :started)
+
+		self.broadcast({"event" => "started"});
+	end
+
 	private
 
 	def data_over(winner, looser)
@@ -101,6 +112,10 @@ class Game < ApplicationRecord
 		res["payload"]["looser"] = {"id": looser.user_id, "points": looser.points, "status": :lose };
 
 		return res;
+	end
+
+	def broadcast(data)
+		ActionCable.server.broadcast("game_#{self.id}", data);
 	end
 
 end
