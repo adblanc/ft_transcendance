@@ -25,11 +25,11 @@ class GamesController < ApplicationController
 		@games = Game.where(status: :pending)
 
 		@games.to_ary.each do | game |
-			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type] 
+			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type]
 				game.users.push(current_user)
 				game.update(status: :started)
 				@game = game
-				current_user.add_role(:player, @game);
+				@game.add_player(current_user)
 				ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
 				return @game
 			end
@@ -46,7 +46,7 @@ class GamesController < ApplicationController
 		end
 
 	end
-	
+
 	def challenge
 		@warTime = WarTime.find_by_id(params[:warTimeId])
 		@war = @warTime.war
@@ -91,7 +91,7 @@ class GamesController < ApplicationController
 
 		@game.users.push(current_user)
 		@game.update(status: :started)
-		current_user.add_role(:player, @game);
+		@game.add_player(current_user)
 		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
 
 		/faire link vers match/
@@ -147,7 +147,7 @@ class GamesController < ApplicationController
 
 		@game.users.push(current_user)
 		@game.update(status: :started)
-		current_user.add_role(:player, @game);
+		@game.add_player(current_user)
 		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
 		ActionCable.server.broadcast("room_#{@game.room_message.room.id}", {"event" => "playchat"});
 		@game
@@ -180,7 +180,7 @@ class GamesController < ApplicationController
 		@game = Game.find_by_id(params[:id])
 		return head :unauthorized if not @game.pending?
 		@game.update(status: :started)
-		current_user.add_role(:player, @game);
+		@game.add_player(current_user)
 		current_user.game_users.where(game: @game).first.update(status: :accepted)
 		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
 		@game

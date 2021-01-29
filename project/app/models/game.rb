@@ -91,6 +91,11 @@ class Game < ApplicationRecord
 		end
 	end
 
+	def add_player(player)
+		player.remove_role(:spectator, self);
+		player.add_role(:player, self);
+	end
+
 	private
 
 	def data_over(winner, looser)
