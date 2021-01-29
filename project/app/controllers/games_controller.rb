@@ -127,7 +127,7 @@ class GamesController < ApplicationController
 			@game.update(game_type: :chat)
 			@game.users.push(current_user)
 			current_user.add_role(:host, @game);
-			@expire = 5
+			@expire = 1
 			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, @room)
 			ActionCable.server.broadcast("room_#{@room.id}", {"event" => "playchat"});
 			@game

@@ -13,6 +13,7 @@ export default class GameIndexView extends BaseView {
 
 	this.listenTo(currentUser(), "change", this.render);
 	this.listenTo(eventBus, "game:expire", this.relaunch);
+	this.listenTo(eventBus, "playchat:change", this.relaunch);
   }
 
   relaunch() {
