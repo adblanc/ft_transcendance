@@ -91,6 +91,11 @@ class Game < ApplicationRecord
 		end
 	end
 
+	def add_host(player)
+		self.users.push(player)
+		player.add_role(:host, self);
+	end
+
 	def add_second_player(player)
 		self.users.push(player)
 		player.remove_role(:spectator, self);
