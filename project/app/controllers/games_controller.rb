@@ -20,7 +20,7 @@ class GamesController < ApplicationController
         @game
     end
 
-	def create
+	def createFriendly
 		return head :unauthorized if current_user.inGame? || current_user.pendingGame
 		@games = Game.where(status: :pending)
 
@@ -47,7 +47,7 @@ class GamesController < ApplicationController
 
 	end
 	
-	def challenge
+	def challengeWT
 		@warTime = WarTime.find_by_id(params[:warTimeId])
 		@war = @warTime.war
 		@guild = Guild.find_by_id(current_user.guild.id)
@@ -78,7 +78,7 @@ class GamesController < ApplicationController
 		end
 	end
 
-	def acceptChallenge
+	def acceptChallengeWT
 		@game = Game.find_by_id(params[:id])
 		@warTime = @game.war_time
 		@war = @warTime.war
@@ -127,7 +127,7 @@ class GamesController < ApplicationController
 			@game.update(game_type: :chat)
 			@game.users.push(current_user)
 			current_user.add_role(:host, @game);
-			@expire = 1
+			@expire = 5
 			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, @room)
 			ActionCable.server.broadcast("room_#{@room.id}", {"event" => "playchat"});
 			@game

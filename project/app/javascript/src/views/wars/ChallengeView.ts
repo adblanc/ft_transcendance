@@ -32,7 +32,7 @@ export default class ChallengeView extends ModalView<Game> {
 	var game_type = "war_time";
 	var warTimeId = this.warTime.get("id");
   
-	const success = await this.model.challenge(
+	const success = await this.model.challengeWT(
 		level,
 		goal,
 		game_type,

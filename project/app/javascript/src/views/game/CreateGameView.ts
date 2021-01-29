@@ -33,7 +33,7 @@ export default class CreateGameView extends ModalView<Game> {
 	  game_type: this.type,
     };
 
-    const success = await this.model.createGame(attrs);
+    const success = await this.model.createFriendly(attrs);
     if (success) {
       this.gameSaved();
     }

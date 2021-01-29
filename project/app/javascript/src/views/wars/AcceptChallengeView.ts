@@ -19,7 +19,7 @@ export default class AcceptChallengeView extends ModalView<Game> {
   async onSubmit(e: JQuery.Event) {
 	e.preventDefault();
   
-	const success = await this.model.acceptChallenge();
+	const success = await this.model.acceptChallengeWT();
 	if (success) {
 		this.gameSaved();
 	}

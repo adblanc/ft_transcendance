@@ -100,8 +100,8 @@ export default class Game extends BaseModel<IGame> {
     return syncWithFormData(method, model, options);
   }
 
-  createGame(attrs: CreatableGameArgs) {
-    return this.asyncSave(attrs, { url: this.urlRoot() });
+  createFriendly(attrs: CreatableGameArgs) {
+    return this.asyncSave(attrs, { url: `${this.urlRoot()}/createFriendly` });
   }
 
   connectToWS() {
@@ -197,7 +197,7 @@ export default class Game extends BaseModel<IGame> {
     });
   }
 
-  challenge(level: string, goal: number, game_type: string, warTimeId: string) {
+  challengeWT(level: string, goal: number, game_type: string, warTimeId: string) {
     return this.asyncSave(
       {
         level: level,
@@ -206,16 +206,16 @@ export default class Game extends BaseModel<IGame> {
         warTimeId: warTimeId,
       },
       {
-        url: `${this.urlRoot()}/challenge`,
+        url: `${this.urlRoot()}/challengeWT`,
       }
     );
   }
 
-  acceptChallenge() {
+  acceptChallengeWT() {
     return this.asyncSave(
       {},
       {
-        url: `${this.baseGameRoot()}/acceptChallenge`,
+        url: `${this.baseGameRoot()}/acceptChallengeWT`,
       }
     );
   }

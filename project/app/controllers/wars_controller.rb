@@ -56,7 +56,7 @@ class WarsController < ApplicationController
 
 		@guild.wars.where(status: :pending).each do |war|
 			war.opponent(@guild).members.each do |member|
-				member.send_notification("#{@guild.name} rejected your guild's war declaration", "/wars", "war")
+				member.send_notification("#{@guild.name} rejected your guild's war declaration", "/wars", "wars")
 			end
 			war.destroy
 		end
