@@ -95,7 +95,6 @@ class Game < ApplicationRecord
 		self.users.push(player)
 		player.remove_role(:spectator, self);
 		player.add_role(:player, self);
-		player.game_users.where(game: self).first.update(status: :accepted)
 
 		self.update(status: :started)
 

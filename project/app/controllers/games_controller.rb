@@ -26,7 +26,6 @@ class GamesController < ApplicationController
 
 		@games.to_ary.each do | game |
 			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type]
-				game.update(status: :started)
 				@game = game
 				@game.add_second_player(current_user)
 				return @game
@@ -172,7 +171,9 @@ class GamesController < ApplicationController
 		@game = Game.find_by_id(params[:id])
 		return head :unauthorized if not @game.pending?
 		@game.update(status: :started)
-		@game.add_second_player(current_user)
+		current_user.game_users.where(game: @game).first.update(status: :accepted)
+		current_user.remove_role(:spectator, @game);
+		current_user.add_role(:player, @game);
 		@game
 	end
 
