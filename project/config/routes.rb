@@ -18,12 +18,13 @@ Rails.application.routes.draw do
 
     resources :games do
 	member do
-		put :acceptChallenge
+		put :acceptChallengeWT
 		put :acceptPlayChat  
 		put :acceptLadderChallenge
 		end
 	end
-	post "games/challenge", to: "games#challenge";
+	post "games/createFriendly", to: "games#createFriendly";
+	post "games/challengeWT", to: "games#challengeWT";
 	post "games/playChat", to: "games#playChat";
 	post "games/ladderChallenge", to: "games#ladderChallenge";
 

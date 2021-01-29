@@ -7,18 +7,19 @@ import { currentUser } from "src/models/Profile";
 export default class StartGameView extends BaseView<Game> {
   constructor(options?: Backbone.ViewOptions<Game>) {
 	super(options);
+
   }
 
   render() {
 	const template = $("#waitingOpponentTemplate").html();
-	if (this.model.get("war_time")) {
+	if (this.model.get("game_type") == "war_time") {
 		const html = Mustache.render(template, {
 			time: this.model.get("war_time").get("time_to_answer")
 		});
 		this.$el.html(html);
 		this.$("#war-time").show();
 	}
-	if (this.model.get("game_type") == "ladder") {
+	else if (this.model.get("game_type") == "ladder") {
 		const html = Mustache.render(template, {});
 		this.$el.html(html);
 		this.$("#ladder").show();

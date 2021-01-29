@@ -156,7 +156,7 @@ export default class Profile extends BaseModel<IProfile> {
   }
 
   checkWarEvent(notification: INotification) {
-    if (!notification.ancient && notification.notification_type == "war") {
+    if (!notification.ancient && notification.notification_type == "wars") {
       eventBus.trigger("wars:update");
     }
   }
