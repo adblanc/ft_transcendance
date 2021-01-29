@@ -69,11 +69,7 @@
 			{{#statUser.silver_medal}}<p>Silver medal</p> {{/statUser.silver_medal}}
 			{{#statUser.gold_medal}}<p>Gold medal </p>{{/statUser.gold_medal}}
 			{{#statUser.best_guild}} <p>Best Guild </p>{{/statUser.best_guild}}
-			<p class="text-2xl mb-2 font-semibold">Achievements to get: </p>
-			{{^statUser.bronze_medal}}<p> Bronze medal</p> {{/statUser.bronze_medal}}
-			{{^statUser.silver_medal}} <p>Silver medal</p> {{/statUser.silver_medal}}
-			{{^statUser.gold_medal}} <p>Gold medal </p>{{/statUser.gold_medal}}
-			{{^statUser.best_guild}} <p>Best Guild </p>{{/statUser.best_guild}}
+			{{#statUser.high_rank}} <p>Highest Ladder Rank </p>{{/statUser.high_rank}}
 			{{#has_guild}}
 				<div class="flex border border-gray-100 my-4"></div>
 				<h2 class="text-2xl mb-2 font-semibold">Guild:</h2>

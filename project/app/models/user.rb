@@ -270,6 +270,8 @@ class User < ApplicationRecord
 	 return false
 	end
 
-	#if your guild is the first
+	def high_rank?
+		ladder_rank == 1
+	end
 
 end

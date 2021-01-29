@@ -8,4 +8,5 @@ json.statUser do
   json.silver_medal user.silver_medal?
   json.gold_medal user.gold_medal?
   json.best_guild user.best_guild?
+  json.high_rank user.high_rank?
 end

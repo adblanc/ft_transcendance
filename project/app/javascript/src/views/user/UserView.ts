@@ -137,8 +137,6 @@ export default class UserView extends BaseView {
 		}
   }
 
-  console.log(this.user.get("friend_requests"));
-
   	if (this.gameHistoryView) {
 		  console.log("test1");
 		this.renderNested(this.gameHistoryView, "#gamehistory");
