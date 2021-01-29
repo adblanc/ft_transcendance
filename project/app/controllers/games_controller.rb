@@ -34,10 +34,9 @@ class GamesController < ApplicationController
 		end
 		@game = Game.create(game_params)
         if @game.save
-			@game.users.push(current_user)
 			@expire = 5
 			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, nil)
-			current_user.add_role(:host, @game);
+			@game.add_host(current_user)
 			@game
         else
             render json: @game.errors, status: :unprocessable_entity
@@ -59,8 +58,7 @@ class GamesController < ApplicationController
 
 		if @game.save
 			@game.update(war_time: @warTime)
-			@game.users.push(current_user)
-			current_user.add_role(:host, @game);
+			@game.add_host(current_user)
 			@guild.members.each do |member|
 				if not member == current_user
 					member.send_notification("#{current_user.name} from your Guild has challenged #{@opponent.name} to a War Time match!", "/wars", "war")
@@ -120,8 +118,7 @@ class GamesController < ApplicationController
 		@game = Game.create(game_params)
 		if @game.save
 			@game.update(game_type: :chat)
-			@game.users.push(current_user)
-			current_user.add_role(:host, @game);
+			@game.add_host(current_user)
 			@expire = 1
 			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, @room)
 			ActionCable.server.broadcast("room_#{@room.id}", {"event" => "playchat"});
@@ -154,8 +151,7 @@ class GamesController < ApplicationController
 		return head :unauthorized if current_user.ladder_rank < @opponent.ladder_rank
 
 		@game = Game.create(level: :normal, goal: 9, game_type: :ladder, status: :pending)
-		@game.users.push(current_user)
-		current_user.add_role(:host, @game);
+		@game.add_host(current_user)
 		@game.users.push(@opponent)
 		@opponent.game_users.where(game: @game).first.update(status: :pending)
 		@opponent.send_notification("#{current_user.name} has challenged you to a Ladder Game", "/tournaments/ladder", "game")
