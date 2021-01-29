@@ -91,9 +91,15 @@ class Game < ApplicationRecord
 		end
 	end
 
-	def add_player(player)
+	def add_second_player(player)
+		self.users.push(player)
 		player.remove_role(:spectator, self);
 		player.add_role(:player, self);
+		player.game_users.where(game: self).first.update(status: :accepted)
+
+		self.update(status: :started)
+
+		self.broadcast({"event" => "started"});
 	end
 
 	private
