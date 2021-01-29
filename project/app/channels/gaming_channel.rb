@@ -23,6 +23,7 @@ class GamingChannel < ApplicationCable::Channel
 
   def unsubscribed
     if (current_user.is_playing_in?(@game) && @game.started?)
+      @game.update(status: :paused);
       ActionCable.server.broadcast("game_#{@id}", {"action" => "game_paused"});
      end
   end
