@@ -230,11 +230,7 @@ ActiveRecord::Schema.define(version: 2021_01_21_155636) do
     t.integer "max_unanswered_calls"
     t.integer "nb_games", default: 0
     t.integer "nb_wartimes", default: 0
-    t.boolean "inc_ladder", default: false
-    t.boolean "inc_tour", default: false
-    t.boolean "inc_friendly", default: false
-    t.string "level"
-    t.string "goal"
+    t.string "includes"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

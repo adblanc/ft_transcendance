@@ -88,19 +88,13 @@ export default class NegotiateView extends ModalView<War> {
 	const prize = this.$("#input-prize").val() as string;
 	const answer_time = this.$("#answer-time").val() as string;
 	const max_calls = this.$("#max-calls").val() as string;
-	var inc_tour = false;
-	if (this.$("#inc-tour").is(":checked"))
-		inc_tour = true;
-
-	console.log(this.model.get("warOpponent").get("points"));
-	console.log(this.guild.get("points"));
 
 	if (parseInt(prize) > this.model.get("warOpponent").get("points") || parseInt(prize) > this.guild.get("points")) {
 		displayError("One or both guilds cannot wager that many points");
 		return;
 	}
 
-    const success = await this.model.modifyWar(start, end, prize, answer_time, max_calls, inc_tour);
+    const success = await this.model.modifyWar(start, end, prize, answer_time, max_calls);
 
     if (success) {
       displaySuccess("You have successfully proposed new terms.");
@@ -165,8 +159,8 @@ export default class NegotiateView extends ModalView<War> {
 		minDate: new Date(),
 	});
 
-	if (this.model.get("inc_tour"))
-		this.$("#inc-tour").attr( 'checked', 'checked' );
+	/*if (this.model.get("inc_tour"))
+		this.$("#inc-tour").attr( 'checked', 'checked' );*/
 
 	this.$content.on("click", this.dismiss);
 

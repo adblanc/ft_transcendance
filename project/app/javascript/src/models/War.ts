@@ -19,6 +19,14 @@ export interface GoalHash {
 	nine: boolean,
 };
 
+export interface IncludesHash {
+	inc_ladder: boolean;
+	inc_tour: boolean;
+	inc_friendly: boolean;
+	level: LevelHash;
+	goal: GoalHash;
+}
+
 interface IWar {
   id: string;
   start: Date;
@@ -34,11 +42,7 @@ interface IWar {
   nb_games: number;
   nb_wartimes: number;
   winner: string;
-  inc_ladder: boolean;
-  inc_tour: boolean;
-  inc_friendly: boolean;
-  level: LevelHash;
-  goal: GoalHash;
+  includes: IncludesHash;
   created_at: string;
   updated_at: string;
 }
@@ -84,11 +88,7 @@ export default class War extends BaseModel<IWar> {
     prize: string,
     time_to_answer: string,
 	max_unanswered_calls: string,
-	inc_ladder: boolean,
-	inc_tour: boolean,
-	inc_friendly: boolean,
-	level: LevelHash,
-	goal: GoalHash,
+	includes: IncludesHash,
     initiator_id: string,
 	recipient_id: string
   ) {
@@ -99,11 +99,7 @@ export default class War extends BaseModel<IWar> {
         prize: prize,
         time_to_answer: time_to_answer,
 		max_unanswered_calls: max_unanswered_calls,
-		inc_ladder: inc_ladder,
-		inc_tour: inc_tour,
-		inc_friendly: inc_friendly,
-		level: JSON.stringify(level),
-		goal: JSON.stringify(goal),
+		includes: JSON.stringify(includes),
         initiator_id: initiator_id,
         recipient_id: recipient_id,
       },
@@ -119,7 +115,6 @@ export default class War extends BaseModel<IWar> {
 	prize: string,
     answer_time: string,
 	max_calls: string,
-	inc_tour: boolean
   ) {
     return this.asyncSave(
       {
@@ -128,7 +123,6 @@ export default class War extends BaseModel<IWar> {
         prize: prize,
         time_to_answer: answer_time,
 		max_unanswered_calls: max_calls,
-		inc_tour: inc_tour
       },
       {
         url: this.baseWarRoot(),
