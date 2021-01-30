@@ -48,12 +48,12 @@ class Game < ApplicationRecord
 		@goal << (@war.inc_nine ? 9 : 0)
 
 		@score = false
-		@level.each | level |
+		@level.each do | level |
 			if level == self.level
 				@score = true
 			end
 		end
-		@goal.each | goal |
+		@goal.each do | goal |
 			if goal == self.goal && @score
 				self.winner.guild.war_score(10)
 			end
