@@ -233,8 +233,8 @@ ActiveRecord::Schema.define(version: 2021_01_21_155636) do
     t.boolean "inc_ladder", default: false
     t.boolean "inc_tour", default: false
     t.boolean "inc_friendly", default: false
-    t.boolean "level", default: true
-    t.boolean "goal", default: true
+    t.string "level"
+    t.string "goal"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

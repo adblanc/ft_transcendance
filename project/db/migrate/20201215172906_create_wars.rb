@@ -12,8 +12,8 @@ class CreateWars < ActiveRecord::Migration[6.0]
 		t.boolean :inc_ladder, default: false
 		t.boolean :inc_tour, default: false
 		t.boolean :inc_friendly, default: false
-		t.boolean :level, hash: true, default: { "easy" => false, "normal" => false, "hard" => false }
-		t.boolean :goal, hash: true, default: { "three" => false, "six" => false, "nine" => false }
+		t.string :level
+		t.string :goal
       t.timestamps
     end
   end

@@ -2,8 +2,8 @@ class War < ApplicationRecord
 	has_many :guild_wars
 	has_many :guilds, through: :guild_wars, source: :guild, foreign_key: :guild_id, dependent: :destroy
 	accepts_nested_attributes_for :guilds
-	serialize :level, Hash
-	serialize :goal, Hash
+	serialize :level, JSON
+	serialize :goal, JSON
 
 	has_many :war_times
 
