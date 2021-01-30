@@ -119,6 +119,15 @@ export default class War extends BaseModel<IWar> {
 	prize: string,
     answer_time: string,
 	max_calls: string,
+	inc_ladder: boolean,
+	inc_tour: boolean,
+	inc_friendly: boolean,
+	inc_easy: boolean,
+	inc_normal: boolean,
+	inc_hard: boolean,
+	inc_three: boolean,
+	inc_six: boolean,
+	inc_nine: boolean,
   ) {
     return this.asyncSave(
       {
@@ -127,6 +136,15 @@ export default class War extends BaseModel<IWar> {
         prize: prize,
         time_to_answer: answer_time,
 		max_unanswered_calls: max_calls,
+		inc_ladder: inc_ladder,
+		inc_tour: inc_tour,
+		inc_friendly: inc_friendly,
+		inc_easy: inc_easy,
+		inc_normal: inc_normal,
+		inc_hard: inc_hard,
+		inc_three: inc_three,
+		inc_six: inc_six,
+		inc_nine: inc_nine,
       },
       {
         url: this.baseWarRoot(),
