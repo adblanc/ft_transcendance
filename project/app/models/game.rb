@@ -36,6 +36,55 @@ class Game < ApplicationRecord
 		end
 	end
 
+	def handle_friendly_game
+		@level = []
+		@goal = []
+		@scorelvl = false
+		@scoregl = false
+		if @war.inc_easy
+			@level.push("easy")
+		end
+		if @war.inc_normal
+			@level.push("normal")
+		end
+		if @war.inc_hard
+			@level.push("hard")
+		end
+		if @war.inc_three
+			@goal.push(3)
+		end
+		if @war.inc_six
+			@goal.push(6)
+		end
+		if @war.inc_nine
+			@goal.push(6)
+		end
+		@level.each | level |
+			if level == self.level
+				@scorelvl = true
+			end
+		end
+		@goal.each | goal |
+			if goal == self.goal
+				@scoregl = true
+			end
+		end
+		if @scorelvl && @scoregl
+			self.winner.guild.war_score(10)
+		end
+	end
+
+	def handle_war_points
+		@war = self.winner.guild.startedWar
+		if self.ladder? && @war.inc_ladder
+			self.winner.guild.war_score(10)
+		elsif self.tournament? && @war.inc_ladder
+			self.winner.guild.war_score(10)
+		elsif self.friendly? && @war.inc_friendly
+			self.handle_friendly_game
+		end
+	end
+
 	def handle_points
 		if self.war_time?
 			self.winner.guild.war_score(10)
@@ -43,9 +92,8 @@ class Game < ApplicationRecord
 		if self.winner.guild?
 			self.winner.guild.increment!(:points, 10)
 			self.winner.increment!(:contribution, 10)
-			/&& type de jeu pris en compte - inc tour etc.../
-			if self.winner.guild.atWar? && !self.war_time?
-				self.winner.guild.war_score(10)
+			if self.winner.guild.startedWar && !self.war_time?
+				self.handle_war_points
 			end
 		end
 		if self.ladder?

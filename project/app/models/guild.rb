@@ -85,6 +85,10 @@ class Guild < ApplicationRecord
 		wars.where(status: [:started, :confirmed]).first
 	end
 
+	def startedWar
+		wars.where(status: [:started]).first
+	end
+
 	def waitingWar
 		wars.pending.where(id: war_request).first
 	end
