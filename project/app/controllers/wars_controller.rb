@@ -143,7 +143,8 @@ class WarsController < ApplicationController
 	private
 
 	def war_params
-		params.permit( :start, :end, :prize, :time_to_answer, :max_unanswered_calls, :includes)
+		params.permit( :start, :end, :prize, :time_to_answer, :max_unanswered_calls, :inc_ladder, :inc_tour, :inc_friendly,
+		:inc_easy, :inc_normal, :inc_hard, :inc_three, :inc_six, :inc_nine)
 	end
 
 end

@@ -7,26 +7,6 @@ import BaseModel from "src/lib/BaseModel";
 import Guilds from "src/collections/Guilds";
 import { BASE_ROOT } from "src/constants";
 
-export interface LevelHash {
-	easy: boolean,
-	normal: boolean,
-	hard: boolean,
-};
-
-export interface GoalHash {
-	three: boolean,
-	six: boolean,
-	nine: boolean,
-};
-
-export interface IncludesHash {
-	inc_ladder: boolean;
-	inc_tour: boolean;
-	inc_friendly: boolean;
-	level: LevelHash;
-	goal: GoalHash;
-}
-
 interface IWar {
   id: string;
   start: Date;
@@ -42,7 +22,15 @@ interface IWar {
   nb_games: number;
   nb_wartimes: number;
   winner: string;
-  includes: IncludesHash;
+  inc_ladder: boolean;
+  inc_tour: boolean;
+  inc_friendly: boolean;
+  inc_easy: boolean;
+  inc_normal: boolean;
+  inc_hard: boolean;
+  inc_three: boolean;
+  inc_six: boolean;
+  inc_nine: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -88,7 +76,15 @@ export default class War extends BaseModel<IWar> {
     prize: string,
     time_to_answer: string,
 	max_unanswered_calls: string,
-	includes: IncludesHash,
+	inc_ladder: boolean,
+	inc_tour: boolean,
+	inc_friendly: boolean,
+	inc_easy: boolean,
+	inc_normal: boolean,
+	inc_hard: boolean,
+	inc_three: boolean,
+	inc_six: boolean,
+	inc_nine: boolean,
     initiator_id: string,
 	recipient_id: string
   ) {
@@ -99,7 +95,15 @@ export default class War extends BaseModel<IWar> {
         prize: prize,
         time_to_answer: time_to_answer,
 		max_unanswered_calls: max_unanswered_calls,
-		includes: JSON.stringify(includes),
+		inc_ladder: inc_ladder,
+		inc_tour: inc_tour,
+		inc_friendly: inc_friendly,
+		inc_easy: inc_easy,
+		inc_normal: inc_normal,
+		inc_hard: inc_hard,
+		inc_three: inc_three,
+		inc_six: inc_six,
+		inc_nine: inc_nine,
         initiator_id: initiator_id,
         recipient_id: recipient_id,
       },
