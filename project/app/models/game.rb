@@ -37,40 +37,26 @@ class Game < ApplicationRecord
 	end
 
 	def handle_friendly_game
+		@war = self.winner.guild.startedWar
 		@level = []
 		@goal = []
-		@scorelvl = false
-		@scoregl = false
-		if @war.inc_easy
-			@level.push("easy")
-		end
-		if @war.inc_normal
-			@level.push("normal")
-		end
-		if @war.inc_hard
-			@level.push("hard")
-		end
-		if @war.inc_three
-			@goal.push(3)
-		end
-		if @war.inc_six
-			@goal.push(6)
-		end
-		if @war.inc_nine
-			@goal.push(6)
-		end
+		@level << (@war.inc_easy ? "easy" : "")
+		@level << (@war.inc_normal ? "normal" : "")
+		@level << (@war.inc_hard ? "hard" : "")
+		@goal << (@war.inc_three ? 3 : 0)
+		@goal << (@war.inc_six ? 6 : 0)
+		@goal << (@war.inc_nine ? 9 : 0)
+
+		@score = false
 		@level.each | level |
 			if level == self.level
-				@scorelvl = true
+				@score = true
 			end
 		end
 		@goal.each | goal |
-			if goal == self.goal
-				@scoregl = true
+			if goal == self.goal && @score
+				self.winner.guild.war_score(10)
 			end
-		end
-		if @scorelvl && @scoregl
-			self.winner.guild.war_score(10)
 		end
 	end
 
