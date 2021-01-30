@@ -10,5 +10,31 @@
 	<h1 style="font-size: 12px;" class="justify-center flex flex-row text-white"> End: {{war.end}} </h1>
 	<h1 style="font-size: 12px;" class="justify-center flex flex-row text-white"> Time to answer War Time Calls: {{war.time_to_answer}} minutes </h1>
 	<h1 style="font-size: 12px; display:none" class="justify-center flex flex-row text-white"> Max tolerable unanswered war time calls: {{war.max_unanswered_calls}} </h1>
-	<h1 style="font-size: 12px;" class="justify-center flex flex-row text-white mb-5"> Include tournament games: {{war.inc_tour}} </h1>
+	<h1 style="font-size: 12px;" class="justify-center flex flex-row text-white mt-2"> Include ladder games: {{war.inc_ladder}} </h1>
+	<h1 style="font-size: 12px;" class="justify-center flex flex-row text-white"> Include tournament games: {{war.inc_tour}} </h1>
+	<h1 style="font-size: 12px;" class="justify-center flex flex-row text-white"> Include friendly games: {{war.inc_friendly}} </h1>
+	{{#war.inc_friendly}}
+		<h1 style="font-size: 12px;" class="justify-center flex flex-row text-white"> Friendly Games levels:
+			{{#war.inc_easy}}
+				easy
+			{{/war.inc_easy}}
+			{{#war.inc_normal}}
+				normal
+			{{/war.inc_normal}}
+			{{#war.inc_hard}}
+				hard
+			{{/war.inc_hard}}
+		</h1>
+		<h1 style="font-size: 12px;" class="justify-center flex flex-row text-white"> Friendly Games maximum points:
+			{{#war.inc_three}}
+				3
+			{{/war.inc_three}}
+			{{#war.inc_six}}
+				6
+			{{/war.inc_six}}
+			{{#war.inc_nine}}
+				9
+			{{/war.inc_nine}}
+		</h1>
+	{{/war.inc_friendly}}
 </script>
