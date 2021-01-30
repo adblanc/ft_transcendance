@@ -72,13 +72,10 @@ class Game < ApplicationRecord
 	end
 
 	def handle_points
-		if self.war_time?
-			self.winner.guild.war_score(10)
-		end
 		if self.winner.guild?
 			self.winner.guild.increment!(:points, 10)
 			self.winner.increment!(:contribution, 10)
-			if !self.war_time? && self.loser.guild?
+			if self.loser.guild?
 				if self.winner.guild.startedWar && self.loser.guild.startedWar
 					if self.winner.guild != self.loser.guild && self.winner.guild.startedWar == self.loser.guild.startedWar
 						self.handle_war_points
@@ -89,6 +86,12 @@ class Game < ApplicationRecord
 		if self.ladder?
 			self.ladder_swap if self.winner.ladder_rank > self.loser.ladder_rank
 		end
+	end
+
+	def handle_points_wt
+		self.winner.guild.war_score(10)
+		self.winner.guild.increment!(:points, 10)
+		self.winner.increment!(:contribution, 10)
 	end
 
 	def ladder_swap
@@ -112,7 +115,11 @@ class Game < ApplicationRecord
 			looser = self.game_users.where.not(user_id: data["playerId"]).first
 			looser.update(status: :lose)
 			self.update(status: :finished)
-			self.handle_points
+			if self.war_time?
+				self.handle_points_wt
+			else
+				self.handle_points
+			end
 			self.broadcast(self.data_over(game_user, looser))
 		end
 	end
