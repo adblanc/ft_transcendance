@@ -3,9 +3,8 @@ import Mustache from "mustache";
 import ModalView from "../ModalView";
 import Guild from "src/models/Guild";
 import { currentUser } from "src/models/Profile";
-import War from "src/models/War";
+import War, {GoalHash, LevelHash}  from "src/models/War";
 import { displayError, displaySuccess } from "src/utils/toast";
-import IWarInclude from "src/models/WarInclude";
 const flatpickr = require("flatpickr");
 require("flatpickr/dist/flatpickr.css");
 
@@ -17,7 +16,7 @@ export default class DeclareWarView extends ModalView<War> {
   guild: Guild;
   fp_start: typeof flatpickr;
   fp_end: typeof flatpickr;
-  warInclude: IWarInclude;
+
 
   constructor(options?: Options) {
     super(options);
@@ -38,23 +37,6 @@ export default class DeclareWarView extends ModalView<War> {
 	 else
 	 	this.$("#custom").show();
 	}
-	
-	getWarInclude() {
-		this.warInclude = {
-			inc_ladder: this.$("#inc-ladder").is(":checked"),
-			inc_tour: this.$("#inc-tour").is(":checked"),
-			inc_friendly: this.$("#inc-friendly").is(":checked"),
-			level: {easy: this.$("#inc-easy").is(":checked"),
-					normal: this.$("#inc-normal").is(":checked"),
-					hard: this.$("#inc-hard").is(":checked"),
-			},
-			goal: {three: this.$("#three-points").is(":checked"),
-					six: this.$("#six-points").is(":checked"),
-					nine: this.$("#nine-points").is(":checked"),
-			},
-		};
-	}
-
 
   async onSubmit(e: JQuery.Event) {
     e.preventDefault();
@@ -67,23 +49,28 @@ export default class DeclareWarView extends ModalView<War> {
     const answer_time = this.$("#answer-time").val() as string;
 	const max_calls = this.$("#max-calls").val() as string;
 
-	this.getWarInclude();
-	/*if ((!inc_easy && !inc_normal && !inc_hard) || (!three_points && !six_points && !nine_points)) {
-				displayError("You must select at least one difficulty and one max number of points.");
-				  return;
-			}
-	*/
-	console.log(this.warInclude);
+	const inc_ladder = this.$("#inc-ladder").is(":checked");
+	const inc_tour = this.$("#inc-tour").is(":checked");
+	const inc_friendly = this.$("#inc-friendly").is(":checked");
+	const level: LevelHash = {easy: this.$("#inc-easy").is(":checked"),
+		normal: this.$("#inc-normal").is(":checked"),
+		hard: this.$("#inc-hard").is(":checked"),
+  	};
+	const goal: GoalHash = {three: this.$("#three-points").is(":checked"),
+		six: this.$("#six-points").is(":checked"),
+		nine: this.$("#nine-points").is(":checked"),
+	};
+
     const initiator_id = currentUser().get("guild").get("id");
     const recipient_id = this.guild.get("id");
 
-    if (
+    /*if (
       parseInt(prize) > currentUser().get("guild").get("points") ||
       parseInt(prize) > this.guild.get("points")
     ) {
       displayError("One or both guilds cannot wager that many points");
       return;
-    }
+    }*/
 
     const success = await this.model.createWar(
       start,
@@ -91,7 +78,11 @@ export default class DeclareWarView extends ModalView<War> {
       prize,
       answer_time,
       max_calls,
-      this.warInclude,
+	  inc_ladder,
+	  inc_tour,
+	  inc_friendly,
+	  level, 
+	  goal,
       initiator_id,
       recipient_id
     );

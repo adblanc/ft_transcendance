@@ -15,9 +15,11 @@ class WarsController < ApplicationController
 
 		return head :unauthorized unless current_user.guild_owner?(@initiator)
 		return head :unauthorized if @initiator.atWar? || @initiator.warInitiator? || @recipient.atWar?
+		File.open("file2", "w") do | file | 
+			file.puts war_params[:level].to_yaml
+			file.puts "blabla"
+		end
 		@war = War.create(war_params)
-		@war_include = WarInclude.create(war_include_params)
-		@war.update(war_include: @war_include)
 
 		if @war.save
 			GuildWar.create!(guild: @initiator, war: @war, status: :accepted)
@@ -145,10 +147,7 @@ class WarsController < ApplicationController
 	private
 
 	def war_params
-		params.permit( :start, :end, :prize, :time_to_answer, :max_unanswered_calls)
-	end
-	def war_include_params
-		params.permit( :inc_ladder, :inc_tour, :inc_friendly, :level, :goal)
+		params.permit( :start, :end, :prize, :time_to_answer, :max_unanswered_calls, :inc_ladder, :inc_tour, :inc_friendly, :level => {:easy, :normal, :hard}, :goal => {:three, :six, :nine})
 	end
 
 end
