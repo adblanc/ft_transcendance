@@ -1,7 +1,7 @@
 class Game < ApplicationRecord
 	resourcify
 
-	has_many :game_users
+	has_many :game_users, dependent: :destroy
 	has_many :users, through: :game_users
 	belongs_to :war_time, optional: true
 	has_one :room_message
