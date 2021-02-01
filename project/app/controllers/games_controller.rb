@@ -89,11 +89,11 @@ class GamesController < ApplicationController
 		/faire link vers match/
 		@guild.members.each do |member|
 			if not member == current_user
-				member.send_notification("#{current_user.name} from your Guild has accepted a War Time challenge against #{@opponent.name} !", "/wars", "war")
+				member.send_notification("#{current_user.name} from your Guild has accepted a War Time challenge against #{@opponent.name}. Click to watch the game!", "/game/#{@game.id}", "war")
 			end
 		end
 		@opponent.members.each do |member|
-			member.send_notification("#{current_user.name} has accepted your Guild's War Time challenge", "/wars", "war")
+			member.send_notification("#{current_user.name} has accepted your Guild's War Time challenge. Click to watch the game!", "/game/#{@game.id}", "war")
 		end
 		@game
 	end
