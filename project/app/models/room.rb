@@ -3,6 +3,7 @@ class Room < ApplicationRecord
 
 	after_destroy :notify_destruction_to_rooms_channel
 	before_destroy :notify_destruction_to_users
+	before_destroy :unset_games
 	after_save		:notify_room_creation
 
 	validates :name, presence: true, uniqueness: true, allow_blank: true, length: {minimum: 0, maximum: 16}
@@ -26,6 +27,15 @@ class Room < ApplicationRecord
 	def notify_destruction_to_users
 		self.users.each do |user|
 			user.send_notification("Room #{self.name} has been deleted", "", "room_deleted")
+		end
+	end
+
+	def unset_games
+		self.room_messages.each do |msg|
+			if msg.game.present? && msg.game.pending?
+				msg.game.update(status: :unanswered)
+				ActionCable.server.broadcast("game_#{msg.game.id}", {"event" => "expired"});
+			end
 		end
 	end
 
