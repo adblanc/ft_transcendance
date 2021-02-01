@@ -109,6 +109,24 @@ class Game < ApplicationRecord
 		player.add_role(:player, self);
 	end
 
+	def user_paused(user)
+		player = self.game_users.where(user_id: user.id).first
+		player.update(status: :paused);
+		self.update(status: :paused);
+		self.broadcast({"action" => "game_paused"});
+	end
+
+	def user_subscribed(user)
+		player = self.game_users.where(user_id: user.id).first
+
+		if (player.paused?)
+			player.update(status: :accepted);
+			self.update(status: :started);
+
+			self.broadcast({"action" => "game_continue"});
+		end
+	end
+
 	private
 
 	def data_over(winner, looser)

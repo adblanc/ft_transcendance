@@ -17,7 +17,7 @@ interface IGame {
   id: number;
   level?: string;
   goal?: number;
-  status?: "pending" | "started" | "finished" | "unanswered";
+  status?: "pending" | "started" | "finished" | "unanswered" | "paused";
   game_type?: string;
   isSpectator?: boolean;
   isHost?: boolean;
@@ -34,7 +34,12 @@ export interface GameData {
 
   payload: any;
 
-  action: "player_movement" | "player_score" | "game_over" | "game_paused";
+  action:
+    | "player_movement"
+    | "player_score"
+    | "game_over"
+    | "game_paused"
+    | "game_continue";
   playerId: number;
 }
 
@@ -132,6 +137,7 @@ export default class Game extends BaseModel<IGame> {
           this.onGameExpired(data);
           this.onGameOver(data);
           this.onGamePaused(data);
+          this.onGameContinue(data);
         },
         disconnected: () => {
           console.log("disconnected from the game", gameId);
@@ -194,10 +200,15 @@ export default class Game extends BaseModel<IGame> {
 
   onGamePaused(data: GameData) {
     if (data.action === "game_paused") {
-      console.log("game paused");
+      this.set({ status: "paused" });
     }
   }
 
+  onGameContinue(data: GameData) {
+    if (data.action === "game_continue") {
+      this.set({ status: "started" });
+    }
+  }
   navigateToGame() {
     Backbone.history.navigate(`/game/${this.get("id")}`, {
       trigger: true,

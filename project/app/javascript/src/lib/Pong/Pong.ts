@@ -91,7 +91,9 @@ export default class Pong extends BaseModel {
     let lastTime;
 
     const callback = (ms: number) => {
-      if (lastTime) {
+      if (this.game.get("status") === "paused" && lastTime) {
+        this.drawPause();
+      } else if (lastTime) {
         this.update((ms - lastTime) / 1000);
       }
       lastTime = ms;
@@ -156,6 +158,21 @@ export default class Pong extends BaseModel {
           console.log("ball movement disconnected", id);
         },
       }
+    );
+  }
+
+  drawPause() {
+    this.ctx.fillStyle = "#000";
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.ctx.font = "30px Arial";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.fillStyle = "#fff";
+    this.ctx.fillText(
+      `Game paused`,
+      this.canvas.width / 2,
+      this.canvas.height / 2
     );
   }
 

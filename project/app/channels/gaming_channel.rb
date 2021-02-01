@@ -6,6 +6,10 @@ class GamingChannel < ApplicationCable::Channel
       reject unless @game
 
       stream_from "game_#{@id}"
+
+      if (current_user.is_playing_in?(@game) && @game.paused?)
+        @game.user_subscribed(current_user);
+      end
   end
 
   def player_movement(data) # ici on recoit ce que un autre joueur perform
@@ -23,8 +27,7 @@ class GamingChannel < ApplicationCable::Channel
 
   def unsubscribed
     if (current_user.is_playing_in?(@game) && @game.started?)
-      @game.update(status: :paused);
-      ActionCable.server.broadcast("game_#{@id}", {"action" => "game_paused"});
+      @game.user_paused(current_user);
      end
   end
 end
