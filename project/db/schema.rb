@@ -81,6 +81,8 @@ ActiveRecord::Schema.define(version: 2021_01_21_155636) do
     t.string "level"
     t.integer "goal"
     t.integer "status", default: 0
+    t.datetime "last_pause"
+    t.integer "pause_duration", default: 30
     t.integer "game_type"
     t.bigint "war_time_id"
     t.bigint "room_message_id"

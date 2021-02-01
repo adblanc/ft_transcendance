@@ -3,10 +3,12 @@ class CreateGames < ActiveRecord::Migration[6.0]
     create_table :games do |t|
       t.string :level
       t.integer :goal
-	  t.integer :status, default: 0
-	  t.integer :game_type
-	  t.belongs_to :war_time, index: true
-	  t.belongs_to :room_message
+      t.integer :status, default: 0
+      t.datetime :last_pause
+      t.integer :pause_duration, default: 30
+      t.integer :game_type
+      t.belongs_to :war_time, index: true
+      t.belongs_to :room_message
       t.timestamps
     end
   end

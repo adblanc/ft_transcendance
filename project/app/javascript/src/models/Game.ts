@@ -5,7 +5,7 @@ import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import consumer from "channels/consumer";
-import { displaySuccess, displayError } from "src/utils/toast";
+import { displayError } from "src/utils/toast";
 import { eventBus } from "src/events/EventBus";
 import WarTime from "./WarTime";
 import Spectators from "src/collections/Spectators";
@@ -18,6 +18,8 @@ interface IGame {
   level?: string;
   goal?: number;
   status?: "pending" | "started" | "finished" | "unanswered" | "paused";
+  last_pause?: number;
+  pause_duration?: number;
   game_type?: string;
   isSpectator?: boolean;
   isHost?: boolean;
