@@ -22,15 +22,15 @@ export default class LadderView extends BaseView {
 	this.opponents.sort();
 	this.max = 5;
 	
-	//this.listenTo(this.opponents, "update", this.render);
-	//this.listenTo(this.opponents, "sort", this.render);
+	this.listenTo(this.opponents, "update", this.render);
+	this.listenTo(this.opponents, "sort", this.render);
 	this.listenTo(currentUser(), "change", this.update);
   }
 
   update() {
 	this.opponents.fetch();
 	this.opponents.sort();
-	this.render();
+	//this.render();
   }
 
   events() {
