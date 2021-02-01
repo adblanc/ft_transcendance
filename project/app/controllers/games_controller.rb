@@ -147,7 +147,11 @@ class GamesController < ApplicationController
 			return
 		end
 		@opponent = User.find_by_id(params[:opponent_id])
-		return head :unauthorized if current_user.ladder_rank < @opponent.ladder_rank
+
+		if current_user.ladder_rank < @opponent.ladder_rank
+			render json: {"This" => [" user must have moved down the ladder while you were choosing. Please refresh to choose an opponent that is ranked higher than you. "]}, status: :unprocessable_entity
+			return
+		end
 
 		@game = Game.create(level: :normal, goal: 9, game_type: :ladder, status: :pending)
 		@game.add_host(current_user)
