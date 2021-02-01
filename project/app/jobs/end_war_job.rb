@@ -23,7 +23,7 @@ class EndWarJob < ApplicationJob
 	def send_winner(war, winner)
 		war.guilds.each do |guild|
 			guild.members.each do |member|
-				member.send_notification("War with #{war.opponent(guild).name} just ended ! #{winner.name} won #{war.prize} points!", "/wars", "war")
+				member.send_notification("War with #{war.opponent(guild).name} just ended ! #{winner.name} won #{war.prize} points!", "/wars", "wars")
 			end
 		end
 	end
@@ -31,7 +31,7 @@ class EndWarJob < ApplicationJob
 	def send_tie(war)
 		war.guilds.each do |guild|
 			guild.members.each do |member|
-				member.send_notification("War with #{war.opponent(guild).name} just ended ! It's a tie! Prize was split into two!", "/wars", "war")
+				member.send_notification("War with #{war.opponent(guild).name} just ended ! It's a tie! Prize was split into two!", "/wars", "wars")
 			end
 		end
 	end

@@ -64,9 +64,9 @@ class Game < ApplicationRecord
 		@war = self.winner.guild.startedWar
 		if self.ladder? && @war.inc_ladder
 			self.winner.guild.war_score(10)
-		elsif self.tournament? && @war.inc_ladder
+		elsif self.tournament? && @war.inc_tournament
 			self.winner.guild.war_score(10)
-		elsif self.friendly? && @war.inc_friendly
+		elsif (self.friendly? || self.chat?) && @war.inc_friendly
 			self.handle_friendly_game
 		end
 	end
@@ -76,8 +76,8 @@ class Game < ApplicationRecord
 			self.winner.guild.increment!(:points, 10)
 			self.winner.increment!(:contribution, 10)
 			if self.loser.guild?
-				if self.winner.guild.startedWar && self.loser.guild.startedWar
-					if self.winner.guild != self.loser.guild && self.winner.guild.startedWar == self.loser.guild.startedWar
+				if (self.winner.guild != self.loser.guild) && self.winner.guild.startedWar && self.loser.guild.startedWar
+					if self.winner.guild.startedWar == self.loser.guild.startedWar
 						self.handle_war_points
 					end
 				end
