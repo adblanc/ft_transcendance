@@ -70,8 +70,8 @@ export default class Pong extends BaseModel {
 
   constructor(canvas: HTMLCanvasElement, game: Game) {
     super();
-
     this.listenTo(eventBus, "pong:player_scored", this.onPlayerScored);
+    this.listenTo(eventBus, "visibility:change", this.onVisibilityChange);
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.game = game;
@@ -124,9 +124,22 @@ export default class Pong extends BaseModel {
     });
   }
 
+  close() {
+    this.stopListening(eventBus, "pong:player_scored", this.onPlayerScored);
+    this.stopListening(eventBus, "visibility:change", this.onVisibilityChange);
+  }
+
   onPlayerScored() {
     if (!this.game.get("isHost")) {
       this.reset();
+    }
+  }
+
+  onVisibilityChange(hidden: boolean) {
+    if (hidden) {
+      this.game.channel.perform("game_paused", {});
+    } else {
+      this.game.channel.perform("game_continue", {});
     }
   }
 

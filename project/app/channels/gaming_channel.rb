@@ -7,9 +7,7 @@ class GamingChannel < ApplicationCable::Channel
 
       stream_from "game_#{@id}"
 
-      if (current_user.is_playing_in?(@game) && @game.paused?)
-        @game.user_subscribed(current_user);
-      end
+     self.game_continue
   end
 
   def player_movement(data) # ici on recoit ce que un autre joueur perform
@@ -25,9 +23,19 @@ class GamingChannel < ApplicationCable::Channel
      end
   end
 
-  def unsubscribed
+  def game_continue
+    if (current_user.is_playing_in?(@game) && @game.paused?)
+      @game.check_user_paused(current_user);
+    end
+  end
+
+  def game_paused
     if (current_user.is_playing_in?(@game) && @game.started?)
       @game.user_paused(current_user);
      end
+  end
+
+  def unsubscribed
+      self.game_paused
   end
 end

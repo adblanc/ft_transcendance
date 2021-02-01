@@ -116,7 +116,7 @@ class Game < ApplicationRecord
 		self.broadcast({"action" => "game_paused"});
 	end
 
-	def user_subscribed(user)
+	def check_user_paused(user)
 		player = self.game_users.where(user_id: user.id).first
 
 		if (player.paused?)

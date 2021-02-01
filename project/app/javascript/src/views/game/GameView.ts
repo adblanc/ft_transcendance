@@ -123,10 +123,17 @@ export default class GameView extends BaseView<Game> {
 
     this.renderSpectators();
 
+    this.renderPong();
+
+    return this;
+  }
+
+  renderPong() {
+    if (this.pong) {
+      this.pong.close();
+    }
     const canvas = this.$("#pong")[0] as HTMLCanvasElement;
 
     this.pong = new Pong(canvas, this.model);
-
-    return this;
   }
 }
