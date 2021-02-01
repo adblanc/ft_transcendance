@@ -33,8 +33,8 @@ class Room < ApplicationRecord
 	def unset_games
 		self.room_messages.each do |msg|
 			if msg.game.present? && msg.game.pending?
-				msg.game.update(status: :unanswered)
 				ActionCable.server.broadcast("game_#{msg.game.id}", {"event" => "expired"});
+				msg.game.destroy
 			end
 		end
 	end
