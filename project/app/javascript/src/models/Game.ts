@@ -101,6 +101,10 @@ export default class Game extends BaseModel<IGame> {
     return this.get("players").find((p) => p.get("status") === "lose");
   }
 
+  get paused() {
+    return this.get("status") === "paused";
+  }
+
   sync(method: string, model: Game, options: JQueryAjaxSettings): any {
     return syncWithFormData(method, model, options);
   }
@@ -177,11 +181,11 @@ export default class Game extends BaseModel<IGame> {
   }
 
   onGamePaused() {
-    this.set({ status: "paused" });
+    this.set({ status: "paused" }, { silent: true });
   }
 
   onGameContinue() {
-    this.set({ status: "started" });
+    this.set({ status: "started" }, { silent: true });
   }
 
   onPlayerMovement(data: GameData) {

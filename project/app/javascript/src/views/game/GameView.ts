@@ -70,7 +70,7 @@ export default class GameView extends BaseView<Game> {
   }
 
   onMouseMove(e: JQuery.MouseMoveEvent) {
-    if (this.pong && !this.model?.get("isSpectator")) {
+    if (this.pong && !this.model?.get("isSpectator") && !this.model?.paused) {
       const scale = e.offsetY / e.target.getBoundingClientRect().height;
 
       this.model.get("players").at(0).posY = this.pong.canvas.height * scale;

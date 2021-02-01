@@ -10,15 +10,14 @@ class GamingChannel < ApplicationCable::Channel
      self.game_continue
   end
 
-  def player_movement(data) # ici on recoit ce que un autre joueur perform
-    # broadcast to all game users the movements
-     if (current_user.is_playing_in?(@game))
+  def player_movement(data)
+     if (current_user.is_playing_in?(@game) && @game.started?)
       ActionCable.server.broadcast("game_#{@id}", data);
      end
   end
 
   def player_score(data)
-    if (current_user.is_playing_in?(@game))
+    if (current_user.is_playing_in?(@game) && @game.started?)
       @game.player_score(data);
      end
   end

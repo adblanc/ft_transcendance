@@ -91,7 +91,7 @@ export default class Pong extends BaseModel {
     let lastTime;
 
     const callback = (ms: number) => {
-      if (this.game.get("status") === "paused" && lastTime) {
+      if (this.game.paused && lastTime) {
         this.drawPause();
       } else if (lastTime) {
         this.update((ms - lastTime) / 1000);
