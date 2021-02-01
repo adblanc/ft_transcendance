@@ -184,6 +184,7 @@ ActiveRecord::Schema.define(version: 2021_01_21_155636) do
     t.string "name"
     t.integer "contribution", default: 0
     t.integer "ladder_rank"
+    t.integer "ladder_unchallengeable", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "email", default: "ft.transcendance@gmail.com"

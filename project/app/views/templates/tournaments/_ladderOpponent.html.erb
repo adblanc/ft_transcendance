@@ -15,6 +15,9 @@
 			<td>
 				<button class="btn-disabled" type="button">Challenge</button>
 			</td>
+			{{#justlost}}
+				<tr><h1 style="padding:0 20px; font-size:11px;">You just lost to this player. Challenge someone else before trying again.</tr>
+			{{/justlost}}
 			{{/challengeable}}
 		</tr>
 		</table>

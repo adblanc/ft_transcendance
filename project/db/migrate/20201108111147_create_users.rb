@@ -6,6 +6,7 @@ class CreateUsers < ActiveRecord::Migration[6.0]
 	  t.string :name
 	  t.integer :contribution, default: 0
 	  t.integer :ladder_rank
+	  t.integer :ladder_unchallengeable, default: 0
       t.timestamps
     end
     add_index :users, :name, unique: true

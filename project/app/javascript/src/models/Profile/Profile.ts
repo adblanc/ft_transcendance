@@ -52,6 +52,7 @@ export interface IProfile {
   blocked_users?: IBlockedUser[];
   friend_requests?: FriendRequests;
   friends?: Friends;
+  ladder_unchallengeable?: number;
   games?: Games;
 }
 

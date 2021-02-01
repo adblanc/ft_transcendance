@@ -84,7 +84,13 @@ class Game < ApplicationRecord
 			end
 		end
 		if self.ladder?
-			self.ladder_swap if self.winner.ladder_rank > self.loser.ladder_rank
+			self.winner.update(ladder_unchallengeable: 0)
+			self.loser.update(ladder_unchallengeable: 0)
+			if self.winner.ladder_rank > self.loser.ladder_rank
+				self.ladder_swap 
+			else
+				self.loser.update(ladder_unchallengeable: self.winner.id)
+			end
 		end
 	end
 

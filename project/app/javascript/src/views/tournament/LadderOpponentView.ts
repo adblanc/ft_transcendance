@@ -13,6 +13,7 @@ export default class LadderOpponentView extends BaseView {
   model: User;
   game: Game;
   challengeable: boolean;
+  justLost: boolean;
 
   constructor(options?: Options) {
     super(options);
@@ -21,6 +22,10 @@ export default class LadderOpponentView extends BaseView {
 	this.challengeable = options.challengeable;
 	if (currentUser().get("pendingGame"))
 		this.challengeable = false;
+	if (this.model.get("id") == currentUser().get("ladder_unchallengeable")) {
+		this.challengeable = false;
+		this.justLost = true;
+	}
 
 	this.listenTo(currentUser(), "change", this.render);
   }
@@ -48,7 +53,7 @@ export default class LadderOpponentView extends BaseView {
 
   render() {
     const template = $("#ladderOpponentTemplate").html();
-    const html = Mustache.render(template, {model: this.model.toJSON(), challengeable: this.challengeable});
+    const html = Mustache.render(template, {model: this.model.toJSON(), challengeable: this.challengeable, justlost: this.justLost});
     this.$el.html(html);
 
     return this;
