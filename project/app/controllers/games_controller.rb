@@ -33,7 +33,7 @@ class GamesController < ApplicationController
 		end
 		@game = Game.create(game_params)
         if @game.save
-			@expire = 5
+			@expire = 1
 			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, nil)
 			@game.add_host(current_user)
 			@game
