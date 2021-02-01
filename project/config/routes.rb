@@ -64,6 +64,13 @@ Rails.application.routes.draw do
     post "/direct_messages/:user_id", to: "rooms#init_direct_messages"
     put "/:room_id/:user_id/update_role", to: "users#update_room_role"
 
+	resources :tournaments do
+	  member do
+		put :cancel
+		put :register
+		put :unregister
+	  end
+	end
 
     resources :wars do
       member do

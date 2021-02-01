@@ -26,6 +26,9 @@ class User < ApplicationRecord
 	has_many :friendships
   	has_many :inverse_friendships, :class_name => "Friendship", :foreign_key => "friend_id"
 
+	has_many :tournament_users, dependent: :destroy
+	has_many :tournaments, through: :tournament_users
+
 	validates :avatar, blob: { content_type: :image, size_range: 1..5.megabytes }
 	validates :name, presence: true
 	validates :name, length: {minimum: 3, maximum: 32}, uniqueness: true
