@@ -14,8 +14,8 @@ class ExpireGameJob < ApplicationJob
 		@loser.send_notification("You failed to answer a Ladder Challenge! You moved down the Ladder", "/tournaments/ladder", "game")
 	  else
 		game.update(status: :unanswered)
-	  end 
-	  ActionCable.server.broadcast("game_#{game.id}", {"event" => "expired"});
+	  end
+	  game.broadcast({"action" => "expired"})
 	  if room
 		  ActionCable.server.broadcast("room_#{room.id}", {"event" => "playchat"});
 	  end

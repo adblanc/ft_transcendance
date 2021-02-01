@@ -12,8 +12,8 @@ class ExpireWarTimeGameJob < ApplicationJob
 	  opponent.members.each do |member|
 		member.send_notification("Your guild has not answered #{user.name}'s' War Time challenge!", "/wars", "war")
 	  end
-	  ActionCable.server.broadcast("game_#{game.id}", {"event" => "expired"});
-	  
+	  game.broadcast({"action" => "expired"})
+
 	  warTime.increment!(:unanswered_calls, 1)
 	  if warTime.unanswered_calls == warTime.max_unanswered_calls
 		warTime.update(status: :inactive)

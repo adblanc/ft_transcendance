@@ -170,7 +170,7 @@ class GamesController < ApplicationController
 		@game.update(status: :started)
 		@game.add_player_role(current_user)
 		current_user.game_users.where(game: @game).first.update(status: :accepted)
-		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
+		@game.broadcast({"action" => "started"})
 		@game
 	end
 

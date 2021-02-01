@@ -101,7 +101,7 @@ class Game < ApplicationRecord
 		self.add_player_role(player)
 		self.users.push(player)
 		self.update(status: :started)
-		self.broadcast({"event" => "started"});
+		self.broadcast({"action" => "started"});
 	end
 
 	def add_player_role(player)
@@ -127,6 +127,10 @@ class Game < ApplicationRecord
 		end
 	end
 
+	def broadcast(data)
+		ActionCable.server.broadcast("game_#{self.id}", data);
+	end
+
 	private
 
 	def data_over(winner, looser)
@@ -137,10 +141,6 @@ class Game < ApplicationRecord
 		res["payload"]["looser"] = {"id": looser.user_id, "points": looser.points, "status": :lose };
 
 		return res;
-	end
-
-	def broadcast(data)
-		ActionCable.server.broadcast("game_#{self.id}", data);
 	end
 
 end

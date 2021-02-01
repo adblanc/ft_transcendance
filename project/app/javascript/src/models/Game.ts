@@ -30,11 +30,11 @@ interface IGame {
 }
 
 export interface GameData {
-  event: "started" | "expired";
-
   payload: any;
 
   action:
+    | "started"
+    | "expired"
     | "player_movement"
     | "player_score"
     | "game_over"
@@ -130,14 +130,29 @@ export default class Game extends BaseModel<IGame> {
           console.log("connected to the game", gameId);
         },
         received: (data: GameData) => {
-          //console.log("game received", data);
-          this.onScoreReceived(data);
-          this.onMovementReceived(data);
-          this.onGameStarted(data);
-          this.onGameExpired(data);
-          this.onGameOver(data);
-          this.onGamePaused(data);
-          this.onGameContinue(data);
+          switch (data.action) {
+            case "started":
+              this.onGameStarted();
+              break;
+            case "expired":
+              this.onGameExpired();
+              break;
+            case "game_paused":
+              this.onGamePaused();
+              break;
+            case "game_continue":
+              this.onGameContinue();
+              break;
+            case "player_movement":
+              this.onPlayerMovement(data);
+              break;
+            case "player_score":
+              this.onPlayerScore(data);
+              break;
+            case "game_over":
+              this.onGameOver(data);
+              break;
+          }
         },
         disconnected: () => {
           console.log("disconnected from the game", gameId);
@@ -146,69 +161,53 @@ export default class Game extends BaseModel<IGame> {
     );
   }
 
-  onScoreReceived(data: GameData) {
-    if (data.action === "player_score") {
-      console.log("player scored", data);
-      eventBus.trigger("pong:player_scored", data);
-    }
+  onGameStarted() {
+    this.navigateToGame();
+    this.unsubscribeChannelConsumer();
   }
 
-  onMovementReceived(data: GameData) {
-    if (
-      data.action === "player_movement" &&
-      data.playerId !== currentUser().get("id")
-    ) {
+  onGameExpired() {
+    if (this.get("game_type") == "friendly") {
+      displayError(
+        "We were not able to find an opponent. Please try different game settings."
+      );
+      currentUser().fetch(); //car pas de notif envoyée ni d'event
+    }
+    this.unsubscribeChannelConsumer();
+  }
+
+  onGamePaused() {
+    this.set({ status: "paused" });
+  }
+
+  onGameContinue() {
+    this.set({ status: "started" });
+  }
+
+  onPlayerMovement(data: GameData) {
+    if (data.playerId !== currentUser().get("id")) {
       eventBus.trigger("pong:player_movement", data);
     }
   }
 
-  onGameStarted(data: GameData) {
-    if (data.event === "started") {
-      console.log("we navigate");
-      this.navigateToGame();
-      return this.unsubscribeChannelConsumer();
-    }
-  }
-
-  onGameExpired(data: GameData) {
-    if (data.event == "expired") {
-      if (this.get("game_type") == "friendly") {
-        displayError(
-          "We were not able to find an opponent. Please try different game settings."
-        );
-        currentUser().fetch(); //car pas de notif envoyée ni d'event
-      }
-      return this.unsubscribeChannelConsumer();
-    }
+  onPlayerScore(data: GameData) {
+    eventBus.trigger("pong:player_scored", data);
   }
 
   onGameOver(data: GameData) {
-    if (data.action === "game_over") {
-      const winner = this.get("players").find(
-        (p) => p.get("id") === data.payload.winner.id
-      );
-      const looser = this.get("players").find(
-        (p) => p.get("id") === data.payload.looser.id
-      );
+    const winner = this.get("players").find(
+      (p) => p.get("id") === data.payload.winner.id
+    );
+    const looser = this.get("players").find(
+      (p) => p.get("id") === data.payload.looser.id
+    );
 
-      winner?.set(data.payload.winner);
-      looser?.set(data.payload.looser);
+    winner?.set(data.payload.winner);
+    looser?.set(data.payload.looser);
 
-      this.set({ status: "finished" });
-    }
+    this.set({ status: "finished" });
   }
 
-  onGamePaused(data: GameData) {
-    if (data.action === "game_paused") {
-      this.set({ status: "paused" });
-    }
-  }
-
-  onGameContinue(data: GameData) {
-    if (data.action === "game_continue") {
-      this.set({ status: "started" });
-    }
-  }
   navigateToGame() {
     Backbone.history.navigate(`/game/${this.get("id")}`, {
       trigger: true,
