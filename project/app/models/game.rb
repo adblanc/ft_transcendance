@@ -25,6 +25,11 @@ class Game < ApplicationRecord
     validates :level,  presence: true
 	validates :goal, presence: true
 
+	def my_logger
+		@@my_logger ||= Logger.new("#{Rails.root}/log/my.log")
+	  end
+
+
 	def winner
 		if self.finished? || self.unanswered?
 			self.game_users.won.first.user
@@ -92,6 +97,12 @@ class Game < ApplicationRecord
 		end
 	end
 
+	def game_user_opponent(user)
+		if self.game_users.count == 2
+			self.game_users.where.not(id: user.id).first
+		end
+	end
+
 	def add_host(player)
 		self.users.push(player)
 		player.remove_role(:spectator, self);
@@ -99,6 +110,7 @@ class Game < ApplicationRecord
 	end
 
 	def add_second_player(player)
+		my_logger.debug("==== add_second_player #{player.id} ====")
 		self.add_player_role(player)
 		self.users.push(player)
 		self.update(status: :started)
@@ -117,8 +129,8 @@ class Game < ApplicationRecord
 
 		duration = pause_duration_sec(player.pause_nbr)
 		pause_time = DateTime.now
-		player.update(status: :paused);
-		self.update(status: :paused, pause_duration: duration, last_pause: pause_time);
+		player.update(status: :paused, pause_duration: duration, last_pause: pause_time);
+		self.update(status: :paused);
 		self.broadcast(self.data_paused(duration, pause_time));
 		PauseGameJob.set(wait: duration.seconds).perform_later(self, player)
 	end
@@ -127,9 +139,13 @@ class Game < ApplicationRecord
 		player = self.game_users.where(user_id: user.id).first
 
 		if (player.paused?)
+		my_logger.debug(" === player is paused ===")
 			player.update(status: :accepted);
 		end
-		if (self.game_users.paused.size == 0)
+		my_logger.debug("=== check_user_paused game status ? #{self.status} ===")
+		my_logger.debug("=== check_user_paused paused players size #{self.game_users.paused.size}")
+		if (self.game_users.paused.size == 0 && self.paused?)
+			my_logger.debug("=== check_user_paused on repasse en started continue ===")
 			self.update(status: :started);
 			self.broadcast({"action" => "game_continue"});
 		end

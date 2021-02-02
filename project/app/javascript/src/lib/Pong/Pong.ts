@@ -138,7 +138,9 @@ export default class Pong extends BaseModel {
   onVisibilityChange(hidden: boolean) {
     if (hidden) {
       this.game.channel.perform("game_paused", {});
-    } else {
+    } else if (this.game.paused) {
+      console.log("on trigger ca continue", this.game.paused);
+      console.log(this.game.toJSON());
       this.game.channel.perform("game_continue", {});
     }
   }

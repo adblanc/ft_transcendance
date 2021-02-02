@@ -34,13 +34,7 @@ export default class GameView extends BaseView<Game> {
       spectators: this.model.get("spectators"),
     });
 
-    this.model.fetch({
-      error: this.onFetchError,
-      success: () => {
-        console.log("game model fetch success");
-        this.model.connectToWS();
-      },
-    });
+    this.model.fetch();
 
     this.listenTo(eventBus, "pong:player_movement", this.moveOtherPlayer);
     this.listenTo(this.model, "change", this.render);
@@ -51,10 +45,6 @@ export default class GameView extends BaseView<Game> {
       "mousemove #pong": this.onMouseMove,
       "click #pong": this.onClick,
     };
-  }
-
-  onFetchError() {
-    Backbone.history.navigate("/not-found", { trigger: true });
   }
 
   moveOtherPlayer(data: MovementData) {

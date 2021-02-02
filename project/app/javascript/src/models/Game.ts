@@ -107,8 +107,27 @@ export default class Game extends BaseModel<IGame> {
     return this.get("status") === "paused";
   }
 
-  sync(method: string, model: Game, options: JQueryAjaxSettings): any {
-    return syncWithFormData(method, model, options);
+  fetch() {
+    return super.fetch({
+      success: () => {
+        this.connectToWS();
+        if (this.paused) {
+          const startDate = new Date(this.get("last_pause"));
+          const endDate = new Date();
+
+          const seconds = (endDate.getTime() - startDate.getTime()) / 1000;
+
+          this.set({
+            pause_duration: this.get("pause_duration") - Math.ceil(seconds),
+          });
+
+          this.startPauseTimer();
+        }
+      },
+      error: () => {
+        Backbone.history.navigate("/not-found", { trigger: true });
+      },
+    });
   }
 
   createFriendly(attrs: CreatableGameArgs) {
@@ -189,7 +208,6 @@ export default class Game extends BaseModel<IGame> {
   }
 
   startPauseTimer() {
-    console.log("start pause timer");
     this._timerInterval = setInterval(() => {
       if (this.get("pause_duration") <= 0) {
         return clearInterval(this._timerInterval);
@@ -227,6 +245,7 @@ export default class Game extends BaseModel<IGame> {
     winner?.set(data.payload.winner);
     looser?.set(data.payload.looser);
 
+    clearInterval(this._timerInterval);
     this.set({ status: "finished" });
   }
 
