@@ -5,7 +5,7 @@ class PauseGameJob < ApplicationJob
 	  if game.started? || game.finished?
 		return
 	  end
-		@winner = game.game_users.where.not(user_id: player.id).first
+		@winner = game.game_users.where.not(user_id: player.user_id).first
 		@loser = player
 		@winner.update(status: :won)
 		@loser.update(status: :lose)

@@ -94,6 +94,7 @@ class Game < ApplicationRecord
 
 	def add_host(player)
 		self.users.push(player)
+		player.remove_role(:spectator, self);
 		player.add_role(:host, self);
 	end
 
@@ -116,14 +117,10 @@ class Game < ApplicationRecord
 
 		duration = pause_duration_sec(player.pause_nbr)
 		pause_time = DateTime.now
-		if (duration != 0)
-			player.update(status: :paused);
-			self.update(status: :paused, pause_duration: duration, last_pause: pause_time);
-			self.broadcast(self.data_paused(duration, pause_time));
-			PauseGameJob.set(wait: duration.seconds).perform_later(self, player)
-		else
-			logger.debug("==== make winner the other person ====")
-		end
+		player.update(status: :paused);
+		self.update(status: :paused, pause_duration: duration, last_pause: pause_time);
+		self.broadcast(self.data_paused(duration, pause_time));
+		PauseGameJob.set(wait: duration.seconds).perform_later(self, player)
 	end
 
 	def check_user_paused(user)
@@ -168,17 +165,16 @@ class Game < ApplicationRecord
 	end
 
 	def pause_duration_sec(pause_nbr)
-		30
-		# case pause_nbr
-		# when 1
-		# 	30
-		# when 2
-		# 	15
-		# when 3
-		# 	10
-		# else
-		# 	0
-		# end
+		case pause_nbr
+		when 1
+			30
+		when 2
+			15
+		when 3
+			10
+		else
+			0
+		end
 	end
 
 end
