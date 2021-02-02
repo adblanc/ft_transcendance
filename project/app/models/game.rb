@@ -128,8 +128,9 @@ class Game < ApplicationRecord
 
 		if (player.paused?)
 			player.update(status: :accepted);
+		end
+		if (self.game_users.paused.size == 0)
 			self.update(status: :started);
-
 			self.broadcast({"action" => "game_continue"});
 		end
 	end

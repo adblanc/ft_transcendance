@@ -117,7 +117,6 @@ export default class GameView extends BaseView<Game> {
     this.$el.html(html);
 
     if (isFinished) {
-      console.log("finished", this.model.toJSON());
       return this;
     }
 
