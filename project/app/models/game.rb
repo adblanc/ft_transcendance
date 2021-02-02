@@ -120,6 +120,7 @@ class Game < ApplicationRecord
 			player.update(status: :paused);
 			self.update(status: :paused, pause_duration: duration, last_pause: pause_time);
 			self.broadcast(self.data_paused(duration, pause_time));
+			PauseGameJob.set(wait: duration.seconds).perform_later(self, player)
 		else
 			logger.debug("==== make winner the other person ====")
 		end
@@ -134,6 +135,10 @@ class Game < ApplicationRecord
 
 			self.broadcast({"action" => "game_continue"});
 		end
+	end
+
+	def broadcast_end(winner, looser)
+		self.broadcast(self.data_over(winner, looser))
 	end
 
 	def broadcast(data)
@@ -163,16 +168,17 @@ class Game < ApplicationRecord
 	end
 
 	def pause_duration_sec(pause_nbr)
-		case pause_nbr
-		when 1
-			30
-		when 2
-			15
-		when 3
-			10
-		else
-			0
-		end
+		30
+		# case pause_nbr
+		# when 1
+		# 	30
+		# when 2
+		# 	15
+		# when 3
+		# 	10
+		# else
+		# 	0
+		# end
 	end
 
 end

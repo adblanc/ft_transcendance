@@ -54,9 +54,9 @@ type CreatableGameArgs = Partial<Pick<IGame, "goal" | "level" | "game_type">>;
 type ConstructorArgs = Pick<IGame, "id" | "isTraining">;
 
 export default class Game extends BaseModel<IGame> {
-  first: Number;
   channel: ActionCable.Channel;
   spectatorsChannel?: ActionCable.Channel;
+  private _timerInterval: any;
 
   preinitialize() {
     this.relations = [
@@ -184,10 +184,25 @@ export default class Game extends BaseModel<IGame> {
 
   onGamePaused(data: GameData) {
     console.log("paused", data);
-    this.set({ status: "paused" }, { silent: true });
+    this.set({ status: "paused", ...data.payload }, { silent: true });
+    this.startPauseTimer();
+  }
+
+  startPauseTimer() {
+    console.log("start pause timer");
+    this._timerInterval = setInterval(() => {
+      if (this.get("pause_duration") <= 0) {
+        return clearInterval(this._timerInterval);
+      }
+      this.set(
+        { pause_duration: this.get("pause_duration") - 1 },
+        { silent: true }
+      );
+    }, 1000);
   }
 
   onGameContinue() {
+    clearInterval(this._timerInterval);
     this.set({ status: "started" }, { silent: true });
   }
 

@@ -183,9 +183,15 @@ export default class Pong extends BaseModel {
     this.ctx.textBaseline = "middle";
     this.ctx.fillStyle = "#fff";
     this.ctx.fillText(
-      `Game paused`,
+      "Waiting for player...",
       this.canvas.width / 2,
       this.canvas.height / 2
+    );
+
+    this.ctx.fillText(
+      `${this.game.get("pause_duration")}s before game's end`,
+      this.canvas.width / 2,
+      this.canvas.height / 2 + 45
     );
   }
 
