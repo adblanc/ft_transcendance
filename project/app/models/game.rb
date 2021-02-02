@@ -111,9 +111,18 @@ class Game < ApplicationRecord
 
 	def user_paused(user)
 		player = self.game_users.where(user_id: user.id).first
-		player.update(status: :paused);
-		self.update(status: :paused);
-		self.broadcast({"action" => "game_paused"});
+
+		player.increment!(:pause_nbr, 1)
+
+		duration = pause_duration_sec(player.pause_nbr)
+		pause_time = DateTime.now
+		if (duration != 0)
+			player.update(status: :paused);
+			self.update(status: :paused, pause_duration: duration, last_pause: pause_time);
+			self.broadcast(self.data_paused(duration, pause_time));
+		else
+			logger.debug("==== make winner the other person ====")
+		end
 	end
 
 	def check_user_paused(user)
@@ -141,6 +150,29 @@ class Game < ApplicationRecord
 		res["payload"]["looser"] = {"id": looser.user_id, "points": looser.points, "status": :lose };
 
 		return res;
+	end
+
+	def data_paused(duration, pause_time)
+		res = {};
+		res["action"] = "game_paused";
+		res["payload"] = {};
+		res["payload"]["pause_duration"] = duration;
+		res["payload"]["last_pause"] = pause_time;
+
+		return res;
+	end
+
+	def pause_duration_sec(pause_nbr)
+		case pause_nbr
+		when 1
+			30
+		when 2
+			15
+		when 3
+			10
+		else
+			0
+		end
 	end
 
 end

@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(version: 2021_01_21_155636) do
     t.bigint "user_id"
     t.integer "points", default: 0
     t.integer "status", default: 1
+    t.integer "pause_nbr", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["game_id"], name: "index_game_users_on_game_id"

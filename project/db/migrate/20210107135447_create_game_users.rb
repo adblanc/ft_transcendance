@@ -5,6 +5,7 @@ class CreateGameUsers < ActiveRecord::Migration[6.0]
       t.belongs_to :user, index: true, foreign_key: true
       t.integer :points, default: 0
       t.integer :status, default: 1
+      t.integer :pause_nbr, default: 0
       t.timestamps
     end
   end

@@ -144,7 +144,7 @@ export default class Game extends BaseModel<IGame> {
               this.onGameExpired();
               break;
             case "game_paused":
-              this.onGamePaused();
+              this.onGamePaused(data);
               break;
             case "game_continue":
               this.onGameContinue();
@@ -182,7 +182,8 @@ export default class Game extends BaseModel<IGame> {
     this.unsubscribeChannelConsumer();
   }
 
-  onGamePaused() {
+  onGamePaused(data: GameData) {
+    console.log("paused", data);
     this.set({ status: "paused" }, { silent: true });
   }
 
