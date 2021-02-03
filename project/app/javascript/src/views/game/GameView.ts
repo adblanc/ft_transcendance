@@ -44,7 +44,12 @@ export default class GameView extends BaseView<Game> {
     return {
       "mousemove #pong": this.onMouseMove,
       "click #pong": this.onClick,
+      "click #btn-ready": this.onReady,
     };
+  }
+
+  onReady() {
+    this.model.ready();
   }
 
   moveOtherPlayer(data: MovementData) {
@@ -91,11 +96,12 @@ export default class GameView extends BaseView<Game> {
       return;
     }
 
-    const template = $("#playGameTemplate").html();
+    const isFinished =
+      this.model.get("status") === "finished" ||
+      this.model.get("status") === "unanswered";
+    const isMatched = this.model.get("status") === "matched";
 
-    const isFinished = this.model.get("status") === "finished";
-
-    const html = Mustache.render(template, {
+    const html = Mustache.render(this.template(), {
       ...this.model?.toJSON(),
       isTraining: this.model.get("isTraining"),
       firstPlayerName: this.model.get("players")?.first()?.get("name"),
@@ -103,10 +109,11 @@ export default class GameView extends BaseView<Game> {
       winner: this.model.winner?.toJSON(),
       looser: this.model.looser?.toJSON(),
       isFinished,
+      isMatched,
     });
     this.$el.html(html);
 
-    if (isFinished) {
+    if (isFinished || isMatched) {
       return this;
     }
 
@@ -117,7 +124,17 @@ export default class GameView extends BaseView<Game> {
     return this;
   }
 
+  template() {
+    switch (this.model?.get("status")) {
+      case "matched":
+        return $("#game-matched-template").html();
+      default:
+        return $("#playGameTemplate").html();
+    }
+  }
+
   renderPong() {
+    console.log("render pong");
     if (this.pong) {
       this.pong.close();
     }

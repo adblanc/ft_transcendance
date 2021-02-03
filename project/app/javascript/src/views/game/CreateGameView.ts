@@ -43,7 +43,7 @@ export default class CreateGameView extends ModalView<Game> {
     this.closeModal();
     displaySuccess("Matching you with another player...");
     currentUser().fetch();
-    if (this.model.get("status") === "started") {
+    if (this.model.get("status") === "matched") {
       this.model.navigateToGame();
     } else {
       this.model.createChannelConsumer();

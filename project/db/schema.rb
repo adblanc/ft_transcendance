@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(version: 2021_01_21_155636) do
     t.bigint "game_id"
     t.bigint "user_id"
     t.integer "points", default: 0
-    t.integer "status", default: 1
+    t.integer "status", default: 5
     t.integer "pause_nbr", default: 0
     t.datetime "last_pause"
     t.integer "pause_duration", default: 30

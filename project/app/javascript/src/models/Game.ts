@@ -1,7 +1,6 @@
 import Backbone from "backbone";
 import _ from "underscore";
 import { currentUser } from "src/models/Profile";
-import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import consumer from "channels/consumer";
@@ -17,7 +16,13 @@ interface IGame {
   id: number;
   level?: string;
   goal?: number;
-  status?: "pending" | "started" | "finished" | "unanswered" | "paused";
+  status?:
+    | "pending"
+    | "started"
+    | "finished"
+    | "unanswered"
+    | "paused"
+    | "matched";
   last_pause?: number;
   pause_duration?: number;
   game_type?: string;
@@ -35,6 +40,7 @@ export interface GameData {
   payload: any;
 
   action:
+    | "matched"
     | "started"
     | "expired"
     | "player_movement"
@@ -151,6 +157,9 @@ export default class Game extends BaseModel<IGame> {
         },
         received: (data: GameData) => {
           switch (data.action) {
+            case "matched":
+              this.onGameMatched();
+              break;
             case "started":
               this.onGameStarted();
               break;
@@ -186,16 +195,19 @@ export default class Game extends BaseModel<IGame> {
     this.channel = undefined;
   }
 
-  onGameStarted() {
+  onGameMatched() {
     this.navigateToGame();
   }
 
   navigateToGame() {
-    console.log("navigate to game");
     this.unsubscribeChannelConsumer();
     Backbone.history.navigate(`/game/${this.get("id")}`, {
       trigger: true,
     });
+  }
+
+  onGameStarted() {
+    this.set({ status: "started" });
   }
 
   onGameExpired() {
@@ -322,6 +334,15 @@ export default class Game extends BaseModel<IGame> {
       {},
       {
         url: `${this.baseGameRoot()}/acceptLadderChallenge`,
+      }
+    );
+  }
+
+  ready() {
+    return this.asyncSave(
+      {},
+      {
+        url: `${this.urlRoot()}/ready/${currentUser().get("id")}`,
       }
     );
   }

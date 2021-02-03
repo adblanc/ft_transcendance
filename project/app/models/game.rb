@@ -12,6 +12,7 @@ class Game < ApplicationRecord
 		:finished,
 		:unanswered,
 		:paused,
+		:matched
 	]
 
 	enum game_type: [
@@ -87,7 +88,7 @@ class Game < ApplicationRecord
 
 	def initiator
 		if self.pending?
-			self.game_users.accepted.first.user
+			self.game_users.matched.first.user
 		end
 	end
 
@@ -113,8 +114,8 @@ class Game < ApplicationRecord
 		my_logger.debug("==== add_second_player #{player.id} ====")
 		self.add_player_role(player)
 		self.users.push(player)
-		self.update(status: :started)
-		self.broadcast({"action" => "started"});
+		self.update(status: :matched)
+		self.broadcast({"action" => "matched"});
 	end
 
 	def add_player_role(player)
