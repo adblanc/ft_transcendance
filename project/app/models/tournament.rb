@@ -20,6 +20,16 @@ class Tournament < ApplicationRecord
 	validates_with RegistrationDateValidator
 	validates :trophy, blob: { content_type: :image, size_range: 1..5.megabytes }
 
+	after_create :attach_trophy
+
+	def attach_trophy
+		self.trophy.attach(
+			io: File.open("default/trophy.jpg", "r"),
+			filename: "trophy.jpg",
+			"content_type": "image/jpeg",
+		) if !self.trophy.attached?
+	end
+
 	def owner
 		User.all.each do | user |
 			if user.has_role?(:owner, self)
