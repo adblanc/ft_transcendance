@@ -4,15 +4,17 @@ import BaseView from "../../lib/BaseView";
 import Tournament from "src/models/Tournament";
 import moment from "moment";
 
-type Options = Backbone.ViewOptions & { model: Tournament };
+type Options = Backbone.ViewOptions & { model: Tournament, mine: boolean };
 
 export default class TourListView extends BaseView {
   model: Tournament;
+  mine: boolean;
 
   constructor(options?: Options) {
     super(options);
 
 	this.model = options.model;
+	this.mine = options.mine;
   }
 
   render() {
@@ -29,7 +31,8 @@ export default class TourListView extends BaseView {
     const template = $("#tourListTemplate").html();
     const html = Mustache.render(template, {
 		tour : tour,
-		open : this.model.get("status") == "registration"
+		open : this.model.get("status") == "registration",
+		mine: this.mine,
 	});
 	this.$el.html(html);
 

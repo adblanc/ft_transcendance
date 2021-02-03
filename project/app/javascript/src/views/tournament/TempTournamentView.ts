@@ -9,6 +9,7 @@ import { currentUser } from "src/models/Profile";
 
 export default class TempTournamentView extends BaseView {
 	collection: Tournaments;
+	current: Tournaments;
 
   constructor(options?: Backbone.ViewOptions) {
 	super(options);
@@ -20,6 +21,8 @@ export default class TempTournamentView extends BaseView {
     this.listenTo(this.collection, "sort", this.render);
     this.collection.fetch();
 	this.collection.sort();
+
+	this.current = currentUser().get("current_tournaments");
 
   }
 
@@ -46,17 +49,44 @@ export default class TempTournamentView extends BaseView {
 	});
 	this.$el.html(html);
 
-	this.collection.slice(0, 5).forEach(function (item) {
+	if (this.current != undefined && this.current.length == 0) {
+		this.$("#no-part").show();
+	}
+	else if (this.current != undefined) {
+		this.current.forEach(function (item) {
+			var tourListView = new TourListView({
+				model: item,
+				mine: true,
+			});
+			this.$("#my-participations").append(tourListView.render().el);
+		}, this);
+	}
+
+	var pend = 0;
+	var reg = 0;
+	this.collection.forEach(function (item) {
 		if (item.get("status") == "registration" || item.get("status") == "pending") {
 			var tourListView = new TourListView({
 			model: item,
+			mine: false,
 			});
-			if (item.get("status") == "registration")
+			if (item.get("status") == "registration") {
 				this.$("#list-open").append(tourListView.render().el);
-			else 
+				reg++;
+			}
+			else {
 				this.$("#list-upcoming").append(tourListView.render().el);
+				pend++;
+			}
 		}
 	}, this);
+
+	if (reg == 0) {
+		this.$("#none-open").show();
+	}
+	if (pend == 0) {
+		this.$("#none-upcoming").show();
+	}
 
     return this;
   }

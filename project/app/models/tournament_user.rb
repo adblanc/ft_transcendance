@@ -3,7 +3,7 @@ class TournamentUser < ApplicationRecord
 	belongs_to :tournament
 
 	enum status: [
-		:playing,
+		:competing,
 		:eliminated,
 		:winner
 	]

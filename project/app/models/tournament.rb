@@ -43,5 +43,4 @@ class Tournament < ApplicationRecord
 		registration_start <= DateTime.now && DateTime.now <= registration_end
 	end
 
-
 end

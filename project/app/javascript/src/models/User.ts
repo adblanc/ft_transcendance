@@ -6,6 +6,8 @@ import FriendRequests from "src/collections/FriendRequests";
 import Friends from "src/collections/Friends";
 import Game from "src/models/Game";
 import Games from "src/collections/Games";
+import Tournament from "./Tournament";
+import Tournaments from "src/collections/Tournaments";
 
 export default class User extends BaseModel<IProfile> {
   urlRoot = () => `${BASE_ROOT}/profile/`;
@@ -30,6 +32,12 @@ export default class User extends BaseModel<IProfile> {
         key: "games",
         collectionType: Games,
         relatedModel: Game,
+	  },
+	  {
+        type: Backbone.Many,
+        key: "tournaments",
+        collectionType: Tournaments,
+        relatedModel: Tournament,
       },
     ];
   }

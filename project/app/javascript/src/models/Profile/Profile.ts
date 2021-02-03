@@ -55,7 +55,8 @@ export interface IProfile {
   friend_requests?: FriendRequests;
   friends?: Friends;
   ladder_unchallengeable?: number;
-  tournaments?: Tournaments;
+  tournaments?: Tournaments; //only fetched for user page
+  current_tournaments?: Tournaments; //only for profile
   games?: Games;
 }
 
@@ -112,7 +113,7 @@ export default class Profile extends BaseModel<IProfile> {
 	  },
 	  {
         type: Backbone.Many,
-        key: "tournaments",
+        key: "current_tournaments",
         collectionType: Tournaments,
         relatedModel: Tournament,
       },
@@ -134,7 +135,8 @@ export default class Profile extends BaseModel<IProfile> {
       two_fact_auth: false,
       number: 0,
       guild_role: "none",
-      admin: false,
+	  admin: false,
+	  current_tournaments: [],
     };
   }
 

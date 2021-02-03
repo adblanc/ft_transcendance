@@ -80,3 +80,9 @@ json.blocked_users do
 	end
 end
 
+json.current_tournaments do
+	json.array! user.current_tournaments do |tour|
+		json.partial! "tournaments/tournament", tournament: tour
+		json.tournament_status user.tournament_status(tour)
+	end
+end

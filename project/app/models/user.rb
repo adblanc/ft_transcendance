@@ -277,4 +277,11 @@ class User < ApplicationRecord
 		ladder_rank == 1
 	end
 
+	def current_tournaments
+		tournaments.where.not(status: :finished)
+	end
+
+	def tournament_status(tournament)
+		self.tournament_users.where(tournament_id: tournament.id).first.status
+	end
 end
