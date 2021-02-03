@@ -84,9 +84,11 @@ ActiveRecord::Schema.define(version: 2021_02_01_175713) do
     t.integer "game_type"
     t.bigint "war_time_id"
     t.bigint "room_message_id"
+    t.bigint "tournament_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["room_message_id"], name: "index_games_on_room_message_id"
+    t.index ["tournament_id"], name: "index_games_on_tournament_id"
     t.index ["war_time_id"], name: "index_games_on_war_time_id"
   end
 
