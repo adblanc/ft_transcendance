@@ -13,18 +13,18 @@ export default class TournamentView extends BaseView {
 
     this.tournament = options.tournament;
 
-    /*this.tournament.fetch({
+    this.tournament.fetch({
       error: () => {
         Backbone.history.navigate("/not-found", { trigger: true });
       },
-	});*/
+	});
 	
     this.listenTo(this.tournament, "change", this.render);
   }
 
   render() {
     const template = $("#tournamentShowTemplate").html();
-    const html = Mustache.render(template, {});
+    const html = Mustache.render(template, this.tournament.toJSON());
 	this.$el.html(html);
 	
 	//if user is winner, add class winner
