@@ -230,3 +230,8 @@ $chatInputHeight: 4rem;
 	visibility: visible;
 	opacity: 1;
   }
+
+  .puce::before {content: "•"; color: white;
+	width: 10px;
+	margin-right: 5px;
+	}

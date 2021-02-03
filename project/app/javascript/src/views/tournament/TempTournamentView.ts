@@ -56,7 +56,7 @@ export default class TempTournamentView extends BaseView {
 			else 
 				this.$("#list-upcoming").append(tourListView.render().el);
 		}
-	  });
+	}, this);
 
     return this;
   }
