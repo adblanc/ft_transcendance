@@ -48,9 +48,11 @@ export default class UserView extends BaseView {
 	  "click #request-btn": "onRequestClicked",
 	  "click #friends-btn": "onFriendsClicked",
 	  "click #ban-user": this.onUserBan,
-	  "click #unban-user": this.onUserUnban,
+    "click #unban-user": this.onUserUnban,
     };
   }
+ 
+ 
 
   async onUserBan() {
 	const success = await currentUser().banUser(this.user.get("id"))

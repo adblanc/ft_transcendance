@@ -2,9 +2,13 @@
 <div class="row">
   <div class="column" style="padding: 10px; height:90px">
 	<div style="padding:30px">
-		<h1 style="float:left;" class="counter text-white">
-		<a style=" text-decoration: underline;" class="text-white"> Game </a>
-		<h1 style="float:right" class="text-white">  points</h1>
+		<h1 class="counter text-white">
+		<a class="text-white"> Game {{game_type}}  </a>
+		{{#won}} <p>Won</p>{{/won}}
+		{{^won}} <p>Lost</p>{{/won}}
+		<h1 style="text-align:right;border-spacing:30px" class="text-white">level : {{level}}</h1>
+		<h1 style="text-align:right;border-spacing:30px;" class="text-white">goal : {{goal}}</h1>
+		<h1 style="text-align:right;border-spacing:30px;" class="text-white">opponent : {{opponent}}</h1>
 	</div>
 	<div class="line flex" style="border: 1px solid; color: #14B8A6; margin:auto;"></div>
   </div>

@@ -232,6 +232,13 @@ class User < ApplicationRecord
 		self.game_users.where(game_id: game.id).first.status
 	end
 
+	def game_won?(game)
+		if game.winner == self
+			return true
+		end
+		return false
+	end
+
 	def number_victory
 		i = 0
 		self.games.each do |game|

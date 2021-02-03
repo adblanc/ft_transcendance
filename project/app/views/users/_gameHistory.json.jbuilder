@@ -4,9 +4,10 @@ json.games do
      json.game_id game.id
 	 json.game_type game.game_type
      json.game_level game.level
-	 #json.game_won game.game_won?
-     #json.game_enemy game.game_enemy?
-     #json.game_points game.points?
+	  json.won user.game_won?(game)
+     json.opponent game.opponent(user).login
+     json.goal game.goal
+     json.winner game.winner
 	 json.created_at game.created_at
   end
 end
