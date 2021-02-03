@@ -32,8 +32,8 @@ class TournamentsController < ApplicationController
 
 	private
 
-	def war_params
-		params.permit((:name, :registration_start, :registration_end, :trophy)
+	def tournament_params
+		params.permit(:name, :registration_start, :registration_end, :trophy)
 	end
 
 end

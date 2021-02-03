@@ -1,4 +1,4 @@
-json.extract! tournament, :id, :name, :status, :registration_start, :registration_end, :created_at, :updated_at
+json.extract! tournament, :id, :name, :status, :registration_start, :registration_end, :owner, :created_at, :updated_at
 json.trophy_url url_for(tournament.img) if tournament.trophy.attached?
 if tournament.games
 	json.games do

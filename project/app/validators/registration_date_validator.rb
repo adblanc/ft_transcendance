@@ -1,4 +1,4 @@
-class WarDateValidator < ActiveModel::Validator
+class RegistrationDateValidator < ActiveModel::Validator
 	def validate(record)
 	  if record.registration_start.present? && record.registration_end.present?
 		if record.registration_end < record.registration_start

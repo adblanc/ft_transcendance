@@ -19,5 +19,13 @@ class Tournament < ApplicationRecord
 	validates_with RegistrationDateValidator
 	validates :trophy, blob: { content_type: :image }
 
+	def owner
+		User.all.each do | user |
+			if user.has_role?(:owner, self)
+				return user
+			end
+		end
+		return nil
+	end
 
 end
