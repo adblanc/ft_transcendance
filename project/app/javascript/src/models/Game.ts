@@ -139,11 +139,6 @@ export default class Game extends BaseModel<IGame> {
     this.get("spectators").connectToSpectatorsChannel(this.get("id"));
   }
 
-  unsubscribeChannelConsumer() {
-    this.channel?.unsubscribe();
-    this.channel = undefined;
-  }
-
   createChannelConsumer() {
     this.unsubscribeChannelConsumer();
     const gameId = this.get("id");
@@ -186,9 +181,21 @@ export default class Game extends BaseModel<IGame> {
     );
   }
 
+  unsubscribeChannelConsumer() {
+    this.channel?.unsubscribe();
+    this.channel = undefined;
+  }
+
   onGameStarted() {
     this.navigateToGame();
+  }
+
+  navigateToGame() {
+    console.log("navigate to game");
     this.unsubscribeChannelConsumer();
+    Backbone.history.navigate(`/game/${this.get("id")}`, {
+      trigger: true,
+    });
   }
 
   onGameExpired() {
@@ -247,12 +254,6 @@ export default class Game extends BaseModel<IGame> {
 
     clearInterval(this._timerInterval);
     this.set({ status: "finished" });
-  }
-
-  navigateToGame() {
-    Backbone.history.navigate(`/game/${this.get("id")}`, {
-      trigger: true,
-    });
   }
 
   challengeWT(

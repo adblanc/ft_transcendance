@@ -75,7 +75,7 @@ export default class Pong extends BaseModel {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.game = game;
-    this.ballMovementChannel = this.createBallMovementChannel();
+    this.createBallMovementChannel();
 
     this.ball = new Ball();
 
@@ -127,6 +127,8 @@ export default class Pong extends BaseModel {
   close() {
     this.stopListening(eventBus, "pong:player_scored", this.onPlayerScored);
     this.stopListening(eventBus, "visibility:change", this.onVisibilityChange);
+    this.unsubscribeBallMovement();
+    this.unbind();
   }
 
   onPlayerScored() {
@@ -154,8 +156,12 @@ export default class Pong extends BaseModel {
   }
 
   createBallMovementChannel() {
+    console.log("create pong ball movement");
     const id = this.game.get("id");
-    return consumer.subscriptions.create(
+
+    this.unsubscribeBallMovement();
+
+    this.ballMovementChannel = consumer.subscriptions.create(
       { channel: "PongBallChannel", id },
       {
         connected: () => {
@@ -174,6 +180,11 @@ export default class Pong extends BaseModel {
         },
       }
     );
+  }
+
+  unsubscribeBallMovement() {
+    this.ballMovementChannel?.unsubscribe();
+    this.ballMovementChannel = undefined;
   }
 
   drawPause() {

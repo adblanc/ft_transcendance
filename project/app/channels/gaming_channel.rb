@@ -30,6 +30,7 @@ class GamingChannel < ApplicationCable::Channel
   end
 
   def game_continue
+    @game.reload
     my_logger.debug("=== game_continue  #{@game.status} player: #{current_user.id} ====")
     if (current_user.is_playing_in?(@game) && @game.paused?)
       @game.check_user_paused(current_user);
@@ -37,6 +38,7 @@ class GamingChannel < ApplicationCable::Channel
   end
 
   def game_paused
+    @game.reload
     my_logger.debug("=== game_paused #{@game.status} player: #{current_user.id} ====")
     if (current_user.is_playing_in?(@game) && @game.started?)
       @game.user_paused(current_user);

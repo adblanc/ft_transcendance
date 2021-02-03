@@ -2,6 +2,10 @@
 class GamesController < ApplicationController
 	before_action :authenticate_user!
 
+	def my_logger
+		@@my_logger ||= Logger.new("#{Rails.root}/log/my.log")
+	  end
+
 	def index
 		@games = Game.all
 	end
@@ -16,6 +20,8 @@ class GamesController < ApplicationController
 		if (!current_user.is_playing_in?(@game) && !current_user.is_spectating?(@game))
 				current_user.add_role(:spectator, @game);
 		end
+
+		my_logger.info("on envoie la game #{@game.id} avec status #{@game.status}")
 
         @game
     end

@@ -82,8 +82,8 @@ export default class Profile extends BaseModel<IProfile> {
         type: Backbone.One,
         key: "pendingGame",
         relatedModel: Game,
-	  },
-	  {
+      },
+      {
         type: Backbone.One,
         key: "pendingGameToAccept",
         relatedModel: Game,
@@ -141,9 +141,8 @@ export default class Profile extends BaseModel<IProfile> {
         received: (notification: INotification) => {
           this.checkDmCreationNotification(notification);
           this.checkWarEvent(notification);
-		  this.notifications.add(notification);
-		  if (!notification.ancient)
-		  	this.fetch();
+          this.notifications.add(notification);
+          if (!notification.ancient) this.fetch();
         },
       }
     );
@@ -163,21 +162,10 @@ export default class Profile extends BaseModel<IProfile> {
 
   createAppereanceConsumer() {
     return consumer.subscriptions.create("AppearanceChannel", {
-      connected() {
-        console.log("Connected to appearance");
-      },
-
-      disconnected() {
-        // Called when the subscription has been terminated by the server
-
-        console.log("Disconnected from appearance");
-      },
-
       received: (data: AppearanceData) => {
         if (this.get("friends").find((u) => u.get("id") === data.user_id)) {
           eventBus.trigger("appeareance", data);
         }
-        // Called when there's incoming data on the websocket for this channel
       },
     });
   }
@@ -258,7 +246,6 @@ let memorizedUser: Profile = undefined;
 const fetchCurrentUser = () => {
   memorizedUser.fetch({
     success: () => {
-      console.log("we successfully fetched current user", memorizedUser);
       memorizedUser.channel?.unsubscribe();
       memorizedUser.channel = memorizedUser.createNotificationsConsumer();
       memorizedUser.appearanceChannel?.unsubscribe();

@@ -17,7 +17,6 @@ class PagesHandler {
   }
 
   addNavbar() {
-    console.log("add navbar");
     this.removeNavbar();
     this.navbarView = new NavbarView();
 
@@ -33,7 +32,6 @@ class PagesHandler {
   }
 
   removeNavbar() {
-    console.log("remove navbar");
     if (this.navbarView) {
       this.navbarView.close();
       this.navbarView = undefined;
