@@ -1,7 +1,6 @@
 class TournamentsController < ApplicationController
 	def index
-		/see if i need all or just pending/
-		@tournaments = Tournament.where(status: :pending)
+		@tournaments = Tournament.all
 	end
 
 	def show
