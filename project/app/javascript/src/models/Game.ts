@@ -12,6 +12,7 @@ import Spectators from "src/collections/Spectators";
 import Spectator from "./Spectator";
 import Players from "src/lib/Pong/collections/Players";
 import Player from "src/lib/Pong/models/Player";
+import Tournament from "src/models/Tournament";
 
 interface IGame {
   id: number;
@@ -27,6 +28,7 @@ interface IGame {
   created_at?: string;
   updated_at?: string;
   isTraining?: boolean;
+  tournament?: Tournament;
 }
 
 export interface GameData {
@@ -69,6 +71,11 @@ export default class Game extends BaseModel<IGame> {
         type: Backbone.One,
         key: "war_time",
         relatedModel: WarTime,
+	  },
+	  {
+        type: Backbone.One,
+        key: "tournament",
+        relatedModel: Tournament,
       },
     ];
   }

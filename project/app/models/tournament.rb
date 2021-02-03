@@ -17,7 +17,7 @@ class Tournament < ApplicationRecord
 	validates :registration_start, presence: true
 	validates :registration_end, presence: true
 	validates_with RegistrationDateValidator
-	validates :trophy, blob: { content_type: :image }
+	validates :trophy, blob: { content_type: :image, size_range: 1..5.megabytes }
 
 	def owner
 		User.all.each do | user |

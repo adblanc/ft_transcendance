@@ -5,6 +5,7 @@ class Game < ApplicationRecord
 	has_many :users, through: :game_users
 	belongs_to :war_time, optional: true
 	has_one :room_message
+	has_one :tournament
 
 	enum status: [
 		:pending,

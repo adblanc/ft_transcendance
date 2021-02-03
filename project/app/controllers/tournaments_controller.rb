@@ -16,10 +16,10 @@ class TournamentsController < ApplicationController
 		if @tournament.save
 			current_user.add_role :owner, @tournament
 			@tournament
+			StartRegistrationJob.set(wait_until: @tournament.registration_start).perform_later(@tournament)
 		else
 			render json: @tournament.errors, status: :unprocessable_entity
 		end
-		StartRegistrationJob.set(wait_until: @tournament.registration_start).perform_later(@tournament)
 	end
 
 	def register
