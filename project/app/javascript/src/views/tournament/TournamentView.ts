@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import Tournament from "src/models/Tournament";
 import BaseView from "src/lib/BaseView";
+import moment from "moment";
 
 type Options = Backbone.ViewOptions & { tournament: Tournament };
 
@@ -23,8 +24,19 @@ export default class TournamentView extends BaseView {
   }
 
   render() {
+
+	const tour = {
+		...this.tournament.toJSON(),
+		registration_start: moment(this.tournament.get("registration_start")).format(
+			"MMM Do YY, h:mm a"
+		),
+		registration_end: moment(this.tournament.get("registration_end")).format(
+		  "MMM Do YY, h:mm a"
+		),
+	};
+
     const template = $("#tournamentShowTemplate").html();
-    const html = Mustache.render(template, this.tournament.toJSON());
+    const html = Mustache.render(template, tour);
 	this.$el.html(html);
 	
 	//if user is winner, add class winner

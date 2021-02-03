@@ -16,15 +16,15 @@
   .bracket-container{
 	display: flex;
 	flex-direction: row;
-	height: 90%;
+	height: 100%;
 	width: 40%;
 	margin-top: 50px;
 	border-width:1px;
  	border-style: solid;
 	border-color:#0D9488;
 	border-radius: 6px;
-	padding: 5px;
-	margin-left:40px;
+	padding: 15px;
+	margin-left:70px;
 	float:left;
 	@apply shadow-lg;
   }
@@ -103,7 +103,7 @@
   .info-container{
 	display: flex;
 	flex-direction: column;
-	height: 90%;
+	height: 100%;
 	width: 40%;
 	margin-top: 50px;
 	border-width:1px;
@@ -112,7 +112,7 @@
 	border-radius: 6px;
 	padding: 5px;
 	float:right;
-	margin-right: 40px;
+	margin-right: 70px;
 	@apply shadow-lg;
 	@apply bg-teal-900;
   }
