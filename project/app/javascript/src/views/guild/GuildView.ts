@@ -28,9 +28,6 @@ export default class GuildView extends BaseView {
         Backbone.history.navigate("/not-found", { trigger: true });
       },
     });
-    //displaySuccess(
-    // `You have successfully transferred ownership to ${this.guild.get(
-    //    "name")}. You are now an officer.`);
 
     this.listenTo(this.guild, "change", this.render);
   }

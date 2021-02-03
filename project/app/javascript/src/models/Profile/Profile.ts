@@ -12,7 +12,9 @@ import Game from "../Game";
 import User from "../User";
 import FriendRequests from "src/collections/FriendRequests";
 import Friends from "src/collections/Friends";
+import Tournaments from "src/collections/Tournaments";
 import Games from "src/collections/Games";
+import Tournament from "../Tournament";
 
 export interface IBlockedUser {
   login: string;
@@ -53,6 +55,7 @@ export interface IProfile {
   friend_requests?: FriendRequests;
   friends?: Friends;
   ladder_unchallengeable?: number;
+  tournaments?: Tournaments;
   games?: Games;
 }
 
@@ -106,6 +109,12 @@ export default class Profile extends BaseModel<IProfile> {
         key: "friends",
         collectionType: Friends,
         relatedModel: User,
+	  },
+	  {
+        type: Backbone.Many,
+        key: "tournaments",
+        collectionType: Tournaments,
+        relatedModel: Tournament,
       },
     ];
   }

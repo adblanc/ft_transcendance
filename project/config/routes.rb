@@ -66,7 +66,6 @@ Rails.application.routes.draw do
 
 	resources :tournaments do
 	  member do
-		put :cancel
 		put :register
 		put :unregister
 	  end

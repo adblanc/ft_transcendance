@@ -2,17 +2,22 @@ class Tournament < ApplicationRecord
 	has_many :tournament_users, dependent: :destroy
 	has_many :users, through: :tournament_users
 	has_many :games, dependent: :destroy
+	has_one_attached :trophy
 
 	enum status: [
 		:pending,
-		:started,
+		:registration,
+		:round_one,
+		:round_two,
+		:round_three,
 		:finished
 	]
 
+	validates :name, presence: true
 	validates :registration_start, presence: true
 	validates :registration_end, presence: true
-	/Validators for dates/
+	validates_with RegistrationDateValidator
+	validates :trophy, blob: { content_type: :image }
 
-	/define max nb of users in controller for registration/
 
 end

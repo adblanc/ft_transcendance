@@ -181,6 +181,7 @@ ActiveRecord::Schema.define(version: 2021_02_01_175713) do
   create_table "tournament_users", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "tournament_id"
+    t.integer "status", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["tournament_id"], name: "index_tournament_users_on_tournament_id"
@@ -188,7 +189,10 @@ ActiveRecord::Schema.define(version: 2021_02_01_175713) do
   end
 
   create_table "tournaments", force: :cascade do |t|
+    t.string "name"
     t.integer "status", default: 0
+    t.datetime "registration_start"
+    t.datetime "registration_end"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

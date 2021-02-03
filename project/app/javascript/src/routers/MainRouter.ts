@@ -20,6 +20,8 @@ import UserView from "../views/user/UserView";
 import WarIndexView from "../views/wars/WarIndexView";
 import { BASE_ROOT } from "src/constants";
 import { displayError } from "../utils/toast";
+import Tournament from "src/models/Tournament";
+import TournamentView from "../views/tournament/TournamentView";
 
 export default class MainRouter extends Backbone.Router {
   constructor() {
@@ -41,6 +43,7 @@ export default class MainRouter extends Backbone.Router {
 		tournaments: "tournamentIndex",
 		"tournaments/ladder": "ladder",
 		"tournaments/temporary": "tempTournament",
+		"tournaments/:id": "tournamentShow",
         "*path": "notFound",
       },
     });
@@ -155,5 +158,10 @@ export default class MainRouter extends Backbone.Router {
   tempTournament() {
     const tempTournamentView = new TempTournamentView();
     pagesHandler.showPage(tempTournamentView);
+  }
+
+  tournamentShow(id: number) {
+	const tournamentView = new TournamentView({ tournament: new Tournament({ id }) });
+    pagesHandler.showPage(tournamentView);
   }
 }
