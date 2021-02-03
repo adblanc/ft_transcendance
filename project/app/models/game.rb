@@ -11,7 +11,8 @@ class Game < ApplicationRecord
 		:pending,
 		:started,
 		:finished,
-		:unanswered
+		:unanswered,
+		:waiting_tournament,
 	]
 
 	enum game_type: [
@@ -20,6 +21,13 @@ class Game < ApplicationRecord
 		:ladder,
 		:war_time,
 		:tournament
+	]
+
+	enum tournament_round: [
+		:not_applicable,
+		:quarter,
+		:semi,
+		:final
 	]
 
     validates :level,  presence: true

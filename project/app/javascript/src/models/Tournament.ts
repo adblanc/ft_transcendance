@@ -16,7 +16,9 @@ interface ITournament {
   registration_end: Date;
   trophy_url?: string;
   users: Profiles;
-  games: Games;
+  round_one_games: Games;
+  round_two_games: Games;
+  round_three_games: Games;
 }
 
 type CreatableTournamentArgs = Partial<Pick<ITournament, "name" | "registration_start" | "registration_end" | "trophy_url">>;
@@ -33,8 +35,20 @@ export default class Tournament extends BaseModel<ITournament> {
       },
 	  {
         type: Backbone.Many,
-        key: "games",
+        key: "round_one_games",
         collectionType: Games,
+        relatedModel: Game,
+	  },
+	  {
+        type: Backbone.Many,
+        key: "round_two_games",
+        collectionType: Games,
+        relatedModel: Game,
+	  },
+	  {
+        type: Backbone.Many,
+		key: "round_three_games",
+		collectionType: Games,
         relatedModel: Game,
 	  }
     ];
@@ -47,7 +61,9 @@ export default class Tournament extends BaseModel<ITournament> {
   defaults() {
     return {
 	  users: [],
-	  games: [],
+	  round_one_games: [],
+	  round_two_games: [],
+	  round_three_games: [],
     };
   }
 

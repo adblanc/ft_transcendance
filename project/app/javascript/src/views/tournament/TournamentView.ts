@@ -5,6 +5,7 @@ import BaseView from "src/lib/BaseView";
 import moment from "moment";
 import { displaySuccess } from "src/utils";
 import { currentUser } from "src/models/Profile";
+import RoundView from "./RoundView";
 
 type Options = Backbone.ViewOptions & { tournament: Tournament };
 
@@ -62,8 +63,22 @@ export default class TournamentView extends BaseView {
     const html = Mustache.render(template, tour);
 	this.$el.html(html);
 	
-	//if user is winner, add class winner
-	//to display score : add score class - comment je track si un jeu est gagné?
+
+	var roundOneView = new RoundView({
+		collection: this.tournament.get("round_one_games"),
+		round: "One",
+	});
+	this.renderNested(roundOneView, "#round1");
+	var roundTwoView = new RoundView({
+		collection: this.tournament.get("round_two_games"),
+		round: "Two",
+	});
+	this.renderNested(roundTwoView, "#round2");
+	var roundThreeView = new RoundView({
+		collection: this.tournament.get("round_three_games"),
+		round: "Three",
+	});
+	this.renderNested(roundThreeView, "#round3");
 
     return this;
   }

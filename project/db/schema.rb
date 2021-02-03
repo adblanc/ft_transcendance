@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(version: 2021_02_01_175713) do
     t.integer "goal"
     t.integer "status", default: 0
     t.integer "game_type"
+    t.integer "tournament_round", default: 0
     t.bigint "war_time_id"
     t.bigint "room_message_id"
     t.bigint "tournament_id"

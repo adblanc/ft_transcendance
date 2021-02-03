@@ -43,4 +43,17 @@ class Tournament < ApplicationRecord
 		registration_start <= DateTime.now && DateTime.now <= registration_end
 	end
 
+	def round_one_games
+		games.quarter
+	end
+
+	def round_two_games
+		games.semi
+	end
+
+	def round_three_games
+		games.final
+	end
+
+
 end
