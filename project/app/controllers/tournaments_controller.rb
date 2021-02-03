@@ -1,12 +1,12 @@
 class TournamentsController < ApplicationController
 	def index
 		/see if i need all or just pending/
-		@tournaments = War.where(status: :pending)
+		@tournaments = Tournament.where(status: :pending)
 	end
 
 	def show
-		@war = War.find_by_id(params[:id])
-		return head :not_found unless @war
+		@tournament = Tournament.find_by_id(params[:id])
+		return head :not_found unless @tournament
 	end
 
 	def create
