@@ -17,14 +17,14 @@
 	display: flex;
 	flex-direction: row;
 	height: 90%;
-	width: 50%;
+	width: 40%;
 	margin-top: 50px;
 	border-width:1px;
  	border-style: solid;
 	border-color:#0D9488;
 	border-radius: 6px;
 	padding: 5px;
-	margin-left:10px;
+	margin-left:40px;
 	float:left;
 	@apply shadow-lg;
   }
@@ -104,15 +104,15 @@
 	display: flex;
 	flex-direction: row;
 	height: 90%;
-	width: 50%;
+	width: 40%;
 	margin-top: 50px;
 	border-width:1px;
  	border-style: solid;
 	border-color:#0D9488;
 	border-radius: 6px;
 	padding: 5px;
-	margin-left:10px;
 	float:right;
+	margin-right: 40px;
 	@apply shadow-lg;
 	@apply bg-teal-900;
   }
