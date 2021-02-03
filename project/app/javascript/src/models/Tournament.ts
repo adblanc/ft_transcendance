@@ -70,13 +70,4 @@ export default class Tournament extends BaseModel<ITournament> {
       }
     );
   }
-
-  unregister() {
-    return this.asyncSave(
-      {},
-      {
-        url: `${this.baseGuildRoot()}/unregister`,
-      }
-    );
-  }
 }

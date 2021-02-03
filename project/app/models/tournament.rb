@@ -39,4 +39,9 @@ class Tournament < ApplicationRecord
 		return nil
 	end
 
+	def open_registration?
+		registration_start <= DateTime.now && DateTime.now <= registration_end
+	end
+
+
 end

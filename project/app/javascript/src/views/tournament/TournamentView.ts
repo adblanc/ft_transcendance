@@ -3,6 +3,8 @@ import Mustache from "mustache";
 import Tournament from "src/models/Tournament";
 import BaseView from "src/lib/BaseView";
 import moment from "moment";
+import { displaySuccess } from "src/utils";
+import { currentUser } from "src/models/Profile";
 
 type Options = Backbone.ViewOptions & { tournament: Tournament };
 
@@ -21,6 +23,27 @@ export default class TournamentView extends BaseView {
 	});
 	
     this.listenTo(this.tournament, "change", this.render);
+  }
+
+  events() {
+    return {
+      "click #register-btn": "onRegisterClicked",
+    };
+  }
+
+  async onRegisterClicked() {
+    const success = await this.tournament.register();
+    if (success) {
+      this.registered();
+    }
+  }
+
+  registered() {
+    displaySuccess(
+      `You have registered to the ${this.tournament.get("name")} tournament. `
+    );
+    this.tournament.fetch();
+    currentUser().fetch();
   }
 
   render() {

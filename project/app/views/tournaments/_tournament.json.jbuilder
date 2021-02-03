@@ -1,5 +1,6 @@
 json.extract! tournament, :id, :name, :status, :registration_start, :registration_end, :created_at, :updated_at
 json.trophy_url url_for(tournament.trophy) if tournament.trophy.attached?
+json.open_registration tournament.open_registration?
 if tournament.games
 	json.games do
 		json.array! tournament.games do |game|

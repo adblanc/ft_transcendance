@@ -1,4 +1,5 @@
 class TournamentsController < ApplicationController
+
 	def index
 		@tournaments = Tournament.all
 	end
@@ -22,11 +23,19 @@ class TournamentsController < ApplicationController
 	end
 
 	def register
-		/not if max/
-		/not if already registered to the tournament/
-	end
+		@tournament = Tournament.find(params[:id])
 
-	def unregister
+		return head :unauthorized unless @tournament.open_registration?
+
+		if @tournament.users.count >= 8
+			render json: {"Tournament" => ["is full"]}, status: :unprocessable_entity
+			return
+		elsif @tournament.tournament_users.where(user_id: current_user.id).first
+			render json: {"You are already" => ["registered"]}, status: :unprocessable_entity
+			return
+		end
+      	@tournament.users.push(current_user)
+		@tournament
 	end
 
 	private
