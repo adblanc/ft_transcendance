@@ -23,6 +23,7 @@ export default class TempTournamentView extends BaseView {
 	this.collection.sort();
 
 	this.current = currentUser().get("current_tournaments");
+	this.listenTo(currentUser(), "change", this.render);
 
   }
 

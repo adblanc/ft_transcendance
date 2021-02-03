@@ -17,11 +17,13 @@
 	<div style="background-color:#115E59; margin-top:40px;"
 		class=" bg-teal-900 w-1/3 rounded-3xl flex flex-col flex-grow max-w-2xl max-h-2xl hover:shadow-2xl transition-shadow ease-in-out duration-300"
 	>
-		<div style="background-color:#134E4A; height:50px; text-align: center;" class=" text-white px-32 py-5">My Current Participations</div>
-		<div class="py-2" id="my-participations"></div>
+		<div style="background-color:#134E4A; height:50px; text-align: center;" class=" text-white px-32 py-5">My Tournament Board</div>
+		<h1 class="justify-center text-white flex flex-row mt-1" style="text-align: center; text-decoration:underline"> My Current Participations </h1>
+		<div class="py-2 mt-3" id="my-participations"></div>
 		<h1 id="no-part" class="justify-center flex flex-row  text-white mt-3 mb-3" style="font-size:11px; display:none">You are not registered to any tournaments.</h1>
 		{{#admin}}
-			<h1 class="justify-center text-white flex flex-row mt-3" style="text-align: center; text-decoration:underline"> Admin Section </h1>
+			<div class="flex border border-gray my-2" style="margin-left:50px; margin-right:50px"></div>
+			<h1 class="justify-center text-white flex flex-row mt-1" style="text-align: center; text-decoration:underline"> Admin Section </h1>
 			<div style="text-align: center">
 				<button id="create-tour-btn" class="btn-primary mt-3 mb-3" type="button">Create new tournament</button>
 			</div>
