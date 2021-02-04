@@ -24,6 +24,9 @@ RUN gem install bundler -v 2.1.2 && bundle _2.1.2_ install --jobs 20 --retry 5
 COPY ./project/package.json ./
 RUN yarn install --check-files
 
+#needed to run crontab command
+RUN apk add bash
+
 #copy over our entire current directory and place the files in the docker image's work dictory
 COPY ./project ./
 
