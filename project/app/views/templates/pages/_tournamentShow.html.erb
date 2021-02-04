@@ -19,7 +19,9 @@
 	{{^user_status}}
 		{{#full}}
 		<button id="register-btn" class="btn-primary mt-3 btn-disabled" type="button">Register</button>
+		{{#registration}}
 		<h1 class="justify-center text-white flex flex-row" style="font-size:11px; text-align: center;">This tournament is full. It will start {{countStart}}.</h1>
+		{{/registration}}
 		{{/full}}
 		{{^full}}
 		<div style="text-align: center">
@@ -33,7 +35,9 @@
 		<h1 class="justify-center text-white flex flex-row mt-2" style="font-size:11px; text-align: center;">You are registered to this tournament.</h1>
 		<h1 class="justify-center text-white flex flex-row mt-2" style="font-size:11px; text-align: center;">Status: {{user_status}}</h1>
 		{{#full}}
+		{{#registration}}
 		<h1 class="justify-center text-white flex flex-row" style="font-size:11px; text-align: center;">This tournament is full. It will start {{countStart}}.</h1>
+		{{/registration}}
 		{{/full}}
 	</div>
 	{{/user_status}}

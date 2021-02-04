@@ -75,6 +75,7 @@ export default class TournamentView extends BaseView {
 		  "MMM Do YY, h:mm a"
 		),
 		countStart: moment(this.tournament.get("registration_end")).fromNow(),
+		registration: this.tournament.get("status") === "registration",
 	};
 
     const template = $("#tournamentShowTemplate").html();
