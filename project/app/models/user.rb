@@ -284,4 +284,12 @@ class User < ApplicationRecord
 	def tournament_status(tournament)
 		self.tournament_users.where(tournament_id: tournament.id).first.status
 	end
+
+	def winner(game)
+		if game.finished?
+			game.winner == self
+		else
+			return nil
+		end
+	end
 end
