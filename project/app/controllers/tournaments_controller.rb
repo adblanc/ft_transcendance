@@ -50,6 +50,7 @@ class TournamentsController < ApplicationController
 	def tournament_params
 		params.permit(:name, :registration_start, :registration_end, :trophy)
 	end
+
 	def create_games(tournament)
 		tournament.games.push(Game.create(level: :hard, goal: 9, game_type: :tournament, status: :waiting_tournament, tournament_round: :quarter))
 		tournament.games.push(Game.create(level: :hard, goal: 9, game_type: :tournament, status: :waiting_tournament, tournament_round: :quarter))

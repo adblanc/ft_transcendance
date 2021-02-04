@@ -2,7 +2,7 @@ set :output, "/app/log/cron.log"
 set :environment, "development"
 
 every '* * * * *' do
-	command "Before crontab function call"
-	runner "Scheduler.make_test"
-	command "After crontab function call"
+	command "echo Before crontab function call"
+	runner "TournamentCreator.create_tournament"
+	command "echo After crontab function call"
 end
