@@ -75,5 +75,3 @@ guild1.members << jack
 guild1.members << john
 
 john.add_role :admin
-
-

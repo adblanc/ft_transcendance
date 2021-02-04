@@ -67,6 +67,7 @@ Rails.application.routes.draw do
 	resources :tournaments do
 	  member do
 		put :register
+		put :seed_for_test
 	  end
 	end
 
