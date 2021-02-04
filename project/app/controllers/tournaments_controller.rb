@@ -1,5 +1,4 @@
 class TournamentsController < ApplicationController
-
 	def index
 		@tournaments = Tournament.all
 	end
@@ -14,10 +13,11 @@ class TournamentsController < ApplicationController
 
 		@tournament = Tournament.create(tournament_params)
 		if @tournament.save
-			create_games(@tournament)
+			TournamentCreator.create_tournament_games(@tournament)
 			current_user.add_role :owner, @tournament
+			StartRegistrationJob.set(wait_until: @tournament.registration_start)
+				.perform_later(@tournament)
 			@tournament
-			StartRegistrationJob.set(wait_until: @tournament.registration_start).perform_later(@tournament)
 		else
 			render json: @tournament.errors, status: :unprocessable_entity
 		end
@@ -46,21 +46,7 @@ class TournamentsController < ApplicationController
 	end
 
 	private
-
 	def tournament_params
 		params.permit(:name, :registration_start, :registration_end, :trophy)
 	end
-
-	def create_games(tournament)
-		tournament.games.push(Game.create(level: :hard, goal: 9, game_type: :tournament, status: :waiting_tournament, tournament_round: :quarter))
-		tournament.games.push(Game.create(level: :hard, goal: 9, game_type: :tournament, status: :waiting_tournament, tournament_round: :quarter))
-		tournament.games.push(Game.create(level: :hard, goal: 9, game_type: :tournament, status: :waiting_tournament, tournament_round: :quarter))
-		tournament.games.push(Game.create(level: :hard, goal: 9, game_type: :tournament, status: :waiting_tournament, tournament_round: :quarter))
-
-		tournament.games.push(Game.create(level: :hard, goal: 9, game_type: :tournament, status: :waiting_tournament, tournament_round: :semi))
-		tournament.games.push(Game.create(level: :hard, goal: 9, game_type: :tournament, status: :waiting_tournament, tournament_round: :semi))
-
-		tournament.games.push(Game.create(level: :hard, goal: 9, game_type: :tournament, status: :waiting_tournament, tournament_round: :final))
-	end
-
 end
