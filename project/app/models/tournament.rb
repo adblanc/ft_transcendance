@@ -55,5 +55,15 @@ class Tournament < ApplicationRecord
 		games.final
 	end
 
+	def full?
+		users.count == 8
+	end
 
+	def user_status(user)
+		if self.tournament_users.where(user_id: user.id).first
+			return self.tournament_users.where(user_id: user.id).first.status
+		else
+			return nil
+		end
+	end
 end
