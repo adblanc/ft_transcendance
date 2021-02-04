@@ -15,8 +15,8 @@
 	<h1 class="justify-center text-white flex flex-row mt-2" style="font-size:11px; text-align: center;">Organized by: &nbsp<a style=" text-decoration: underline;" href="/user/{{owner.id}}"> {{owner.name}}</a></h1>
 	{{^user_status}}
 		{{#full}}
-		<button id="register-btn" class="btn-primary mt-3 mb-3 btn-disabled" type="button">Register</button>
-		<h1 class="justify-center text-white flex flex-row mt-2" style="font-size:11px; text-align: center;">This tournament is full.</h1>
+		<button id="register-btn" class="btn-primary mt-3 btn-disabled" type="button">Register</button>
+		<h1 class="justify-center text-white flex flex-row" style="font-size:11px; text-align: center;">This tournament is full. It will start {{countStart}}.</h1>
 		{{/full}}
 		{{^full}}
 		<div style="text-align: center">
@@ -29,6 +29,9 @@
 		<button id="register-btn" class="btn-primary mt-3 btn-disabled" type="button">Register</button>
 		<h1 class="justify-center text-white flex flex-row mt-2" style="font-size:11px; text-align: center;">You are registered to this tournament.</h1>
 		<h1 class="justify-center text-white flex flex-row mt-2" style="font-size:11px; text-align: center;">Status: {{user_status}}</h1>
+		{{#full}}
+		<h1 class="justify-center text-white flex flex-row" style="font-size:11px; text-align: center;">This tournament is full. It will start {{countStart}}.</h1>
+		{{/full}}
 	</div>
 	{{/user_status}}
 	<h1 class="justify-center text-white flex flex-row mt-2" style="font-size:11px; text-align: center;" > Tournaments matches are of hard difficulty and are played in 9 points. </h1>
