@@ -11,7 +11,7 @@ class EndRegistrationJob < ApplicationJob
 		return
 	  end
 	  tournament.update(status: :round_one)
-	  tournament.games.each do | game |
+	  tournament.games.quarter.each do | game |
 		game.update(status: :pending)
 	  end
 	  User.all.each do |user|
