@@ -1,8 +1,28 @@
 <script type="text/html" id="matchTemplate">
 <div class="player">
-  <div class="player-name">{{users.0.name}}</div><div class="score">0</div>
+	{{^finished}}
+		<div class="player-name">{{users.0.name}}</div><div class="score">0</div>
+	{{/finished}}
+	{{#finished}}
+		{{#winner}}
+		<div class="player-name winner">{{users.0.name}}</div><div class="score">0</div>
+		{{/winner}}
+		{{^winner}}
+		<div class="player-name loser">{{users.0.name}}</div><div class="score">0</div>
+		{{/winner}}
+	{{/finished}}
 </div>
 <div class="player">
-  <div class="player-name">{{users.1.name}}</div><div class="score">0</div>
+	{{^finished}}
+		<div class="player-name">{{users.1.name}}</div><div class="score">0</div>
+	{{/finished}}
+	{{#finished}}
+		{{#winner}}
+		<div class="player-name winner">{{users.1.name}}</div><div class="score">0</div>
+		{{/winner}}
+		{{^winner}}
+		<div class="player-name loser">{{users.1.name}}</div><div class="score">0</div>
+		{{/winner}}
+	{{/finished}}
 </div>
 </script>

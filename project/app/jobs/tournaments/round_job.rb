@@ -9,7 +9,7 @@ class RoundJob < ApplicationJob
 		end
 		return
 	  end
-	  /deal with games that are not done/
+	  /deal with games + games that are not done/
 	  cur_round = tournament.status
       cur_round += 1
       tournament.update(status: cur_round) 
@@ -17,6 +17,6 @@ class RoundJob < ApplicationJob
 		user.send_notification("#{tournament.name} : Round #{cur_round - 1} is starting!", "tournaments/temporary", "tournaments")
 	  end
 	  @round_length = 1
-	  RoundJob(wait_until: DateTime.now + @round_length.days).perform_later(tournament)
+	  RoundJob.set(wait_until: DateTime.now + @round_length.days).perform_later(tournament)
 	end
 end

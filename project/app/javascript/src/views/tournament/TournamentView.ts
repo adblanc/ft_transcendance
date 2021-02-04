@@ -23,7 +23,8 @@ export default class TournamentView extends BaseView {
       },
 	});
 	
-    this.listenTo(this.tournament, "change", this.render);
+	this.listenTo(this.tournament, "change", this.render);
+	this.listenTo(currentUser(), "change", this.render);
   }
 
   events() {
@@ -57,6 +58,7 @@ export default class TournamentView extends BaseView {
 		registration_end: moment(this.tournament.get("registration_end")).format(
 		  "MMM Do YY, h:mm a"
 		),
+		countStart: moment(this.tournament.get("registration_end")).fromNow(),
 	};
 
     const template = $("#tournamentShowTemplate").html();

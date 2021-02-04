@@ -20,15 +20,17 @@ export default class MatchView extends BaseView {
   }
 
   render() {
+
+	const game = {
+		...this.model.toJSON(),
+		finished: this.model.get("status") === "finished",
+	};
+
     const template = $(`#matchTemplate`).html();
-    const html = Mustache.render(template, this.model.toJSON());
+    const html = Mustache.render(template, game);
 	this.$el.html(html);
 	
-	//if user is winner, add class winner
-	//to display score : add score class - comment je track si un jeu est gagné?
-
-	//besoin d'une round view
-	//J'ai les 4 jeux, j'itere dessus, et si empty
+	
 
     return this;
   }
