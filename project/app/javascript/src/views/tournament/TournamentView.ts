@@ -29,7 +29,8 @@ export default class TournamentView extends BaseView {
 
   events() {
     return {
-      "click #register-btn": "onRegisterClicked",
+	  "click #register-btn": "onRegisterClicked",
+	  "click #seed-for-test": "onSeedClicked",
     };
   }
 
@@ -48,6 +49,21 @@ export default class TournamentView extends BaseView {
     currentUser().fetch();
   }
 
+  async onSeedClicked() {
+    const success = await this.tournament.seed_for_test();
+    if (success) {
+      this.registered();
+    }
+  }
+
+  seeded() {
+    displaySuccess(
+      `Users seeded for test `
+    );
+    this.tournament.fetch();
+    currentUser().fetch();
+  }
+
   render() {
 
 	const tour = {
@@ -59,6 +75,9 @@ export default class TournamentView extends BaseView {
 		  "MMM Do YY, h:mm a"
 		),
 		countStart: moment(this.tournament.get("registration_end")).fromNow(),
+		registration: this.tournament.get("status") === "registration",
+		pending: this.tournament.get("status") === "pending",
+		countRegistration: moment(this.tournament.get("registration_start")).fromNow(),
 	};
 
     const template = $("#tournamentShowTemplate").html();

@@ -27,19 +27,15 @@ export default class RoundView extends BaseView {
     const html = Mustache.render(template, {});
 	this.$el.html(html);
 	
-	var nb = 1;
+	var nb = 1; 
 	this.collection.forEach(function (item) {
 		var matchView = new MatchView({
 			model: item,
+			nb: nb,
 		});
 		this.$(`#game-${nb}`).append(matchView.render().el);
 		nb++;
 	}, this);
-	//if user is winner, add class winner
-	//to display score : add score class - comment je track si un jeu est gagné?
-
-	//besoin d'une round view
-	//J'ai les 4 jeux, j'itere dessus, et si empty
 
     return this;
   }
