@@ -74,7 +74,7 @@ class Game < ApplicationRecord
 		@war = self.winner.guild.startedWar
 		if self.ladder? && @war.inc_ladder
 			self.winner.guild.war_score(10)
-		elsif self.tournament? && @war.inc_tournament
+		elsif self.tournament? && @war.inc_tour
 			self.winner.guild.war_score(10)
 		elsif (self.friendly? || self.chat?) && @war.inc_friendly
 			self.handle_friendly_game

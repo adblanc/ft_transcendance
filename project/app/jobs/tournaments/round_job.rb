@@ -11,7 +11,7 @@ class RoundJob < ApplicationJob
 	  handle_games(tournament) 
 	  change_round(tournament)
 
-	  @round_length = 5
+	  @round_length = 1
 	  RoundJob.set(wait_until: DateTime.now + @round_length.minutes).perform_later(tournament)
 	end
 
@@ -64,6 +64,7 @@ class RoundJob < ApplicationJob
 	def handle_forfeit(winner, game, tournament, forfeit)
 		finish_game(winner, game)
 		push_next_round(tournament, game.winner)
+		game.handle_points
 		set_tournament_user(tournament, nil, game.loser)
 		forfeit_notif(tournament, game.winner, game.loser, forfeit)
 	end
