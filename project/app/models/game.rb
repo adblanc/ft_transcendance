@@ -13,6 +13,7 @@ class Game < ApplicationRecord
 		:finished,
 		:unanswered,
 		:waiting_tournament,
+		:abandon,
 	]
 
 	enum game_type: [

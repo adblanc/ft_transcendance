@@ -4,12 +4,12 @@
 		<div class="player-name">{{players.0.name}}</div><div class="score">0</div>
 	{{/finished}}
 	{{#finished}}
-		{{#winner}}
-		<div class="player-name winner">{{players.0.name}}</div><div class="score">0</div>
-		{{/winner}}
-		{{^winner}}
-		<div class="player-name loser">{{players.0.name}}</div><div class="score">0</div>
-		{{/winner}}
+		{{#players.0.winner}}
+		<div class="player-name winner">{{players.0.name}}</div><div class="score winner">0</div>
+		{{/players.0.winner}}
+		{{^players.0.winner}}
+		<div class="player-name loser">{{players.0.name}}</div><div class="score loser">0</div>
+		{{/players.0.winner}}
 	{{/finished}}
 </div>
 <div class="player">
@@ -17,12 +17,12 @@
 		<div class="player-name">{{players.1.name}}</div><div class="score">0</div>
 	{{/finished}}
 	{{#finished}}
-		{{#winner}}
-		<div class="player-name winner">{{players.1.name}}</div><div class="score">0</div>
-		{{/winner}}
-		{{^winner}}
-		<div class="player-name loser">{{players.1.name}}</div><div class="score">0</div>
-		{{/winner}}
+		{{#players.1.winner}}
+		<div class="player-name winner">{{players.1.name}}</div><div class="score winner">0</div>
+		{{/players.1.winner}}
+		{{^players.1.winner}}
+		<div class="player-name loser">{{players.1.name}}</div><div class="score loser">0</div>
+		{{/players.1.winner}}
 	{{/finished}}
 </div>
 </script>

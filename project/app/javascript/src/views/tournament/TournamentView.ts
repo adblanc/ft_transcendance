@@ -52,7 +52,7 @@ export default class TournamentView extends BaseView {
   async onSeedClicked() {
     const success = await this.tournament.seed_for_test();
     if (success) {
-      this.registered();
+      this.seeded();
     }
   }
 
@@ -77,6 +77,7 @@ export default class TournamentView extends BaseView {
 		countStart: moment(this.tournament.get("registration_end")).fromNow(),
 		registration: this.tournament.get("status") === "registration",
 		pending: this.tournament.get("status") === "pending",
+		finished: this.tournament.get("status") === "finished",
 		countRegistration: moment(this.tournament.get("registration_start")).fromNow(),
 	};
 

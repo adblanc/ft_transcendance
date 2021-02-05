@@ -8,9 +8,9 @@ class Tournament < ApplicationRecord
 	enum status: [
 		:pending,
 		:registration,
-		:round_one,
-		:round_two,
-		:round_three,
+		:quarter,
+		:semi,
+		:final,
 		:finished
 	]
 
@@ -85,6 +85,16 @@ class Tournament < ApplicationRecord
 			return self.tournament_users.where(user_id: user.id).first.status
 		else
 			return nil
+		end
+	end
+
+	def winner
+		if self.finished?
+			if self.tournament_users.won.first.user.present?
+				self.tournament_users.won.first.user
+			else 
+				return nil
+			end
 		end
 	end
 end
