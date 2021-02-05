@@ -11,12 +11,9 @@ class TournamentsController < ApplicationController
 	def create
 		return head :unauthorized if not current_user.admin?
 
-		@tournament = Tournament.create(tournament_params)
+		@tournament = Tournament.new(tournament_params)
 		if @tournament.save
-			TournamentCreator.create_tournament_games(@tournament)
 			current_user.add_role :owner, @tournament
-			StartRegistrationJob.set(wait_until: @tournament.registration_start)
-				.perform_later(@tournament)
 			@tournament
 		else
 			render json: @tournament.errors, status: :unprocessable_entity

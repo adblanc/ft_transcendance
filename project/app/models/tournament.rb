@@ -20,7 +20,30 @@ class Tournament < ApplicationRecord
 	validates_with RegistrationDateValidator
 	validates :trophy, blob: { content_type: :image, size_range: 1..5.megabytes }
 
-	after_create :attach_trophy
+	after_create do
+		attach_trophy
+		create_tournament_games
+		StartRegistrationJob.set(wait_until: registration_start)
+			.perform_later(self)
+	end
+
+	def create_tournament_games
+	    create_games(:quarter, 4)
+	    create_games(:semi, 2)
+	    create_games(:final, 1)
+	end
+	
+	def create_games(round, number)
+	    number.times do
+	        games.push(Game.create(
+	            level: :hard,
+	            goal: 9,
+	            game_type: :tournament,
+	            status: :waiting_tournament,
+	            tournament_round: round
+	        ))
+	    end
+	end
 
 	def attach_trophy
 		self.trophy.attach(

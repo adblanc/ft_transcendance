@@ -24,7 +24,7 @@ class Game < ApplicationRecord
 	]
 
 	enum tournament_round: [
-		:not_applicable,
+		:unapplicable,
 		:quarter,
 		:semi,
 		:final
