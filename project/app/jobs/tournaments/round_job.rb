@@ -11,7 +11,7 @@ class RoundJob < ApplicationJob
 	  handle_games(tournament) 
 	  change_round(tournament)
 
-	  @round_length = 1
+	  @round_length = 5
 	  RoundJob.set(wait_until: DateTime.now + @round_length.minutes).perform_later(tournament)
 	end
 

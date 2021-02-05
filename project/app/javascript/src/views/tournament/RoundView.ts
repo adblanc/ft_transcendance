@@ -31,9 +31,10 @@ export default class RoundView extends BaseView {
 	this.collection.forEach(function (item) {
 		var matchView = new MatchView({
 			model: item,
+			round: this.round,
 			nb: nb,
 		});
-		this.$(`#game-${nb}`).append(matchView.render().el);
+		this.$(`#round-${this.round}-game-${nb}`).append(matchView.render().el);
 		nb++;
 	}, this);
 

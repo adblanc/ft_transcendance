@@ -88,17 +88,17 @@ export default class TournamentView extends BaseView {
 
 	var roundOneView = new RoundView({
 		collection: this.tournament.get("round_one_games"),
-		round: "One",
+		round: "one",
 	});
 	this.renderNested(roundOneView, "#round1");
 	var roundTwoView = new RoundView({
 		collection: this.tournament.get("round_two_games"),
-		round: "Two",
+		round: "two",
 	});
 	this.renderNested(roundTwoView, "#round2");
 	var roundThreeView = new RoundView({
 		collection: this.tournament.get("round_three_games"),
-		round: "Three",
+		round: "three",
 	});
 	this.renderNested(roundThreeView, "#round3");
 

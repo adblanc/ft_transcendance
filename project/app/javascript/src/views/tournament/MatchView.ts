@@ -7,19 +7,21 @@ import moment from "moment";
 import { displaySuccess } from "src/utils";
 import { currentUser } from "src/models/Profile";
 
-type Options = Backbone.ViewOptions & { model: Game, nb: number };
+type Options = Backbone.ViewOptions & { model: Game, round: string, nb: number};
 
 export default class MatchView extends BaseView {
   model: Game;
+  round: string;
   nb: number;
 
   constructor(options?: Options) {
     super(options);
 
 	this.model = options.model;
+	this.round = options.round;
 	this.nb = options.nb;
 
-	const button = document.querySelector(`#game-${this.nb}`);
+	const button = document.querySelector(`#round-${this.round}-game-${this.nb}`);
 
 	button.addEventListener('click', event => {
 		this.onPlayClicked(event);
@@ -44,9 +46,10 @@ export default class MatchView extends BaseView {
 	
 	if (this.model.get("status") === "pending") {
 		this.model.get("players").forEach(function(item) {
-
+			console.log(currentUser().get("id"));
+			console.log(item.get("id"));
 			if (currentUser().get("id") == item.get("id")) {
-				$(`#game-${this.nb}`).addClass("play");
+				$(`#round-${this.round}-game-${this.nb}`).addClass("play");
 				$(`#game-to-play`).show();
 			}
 		}, this);
