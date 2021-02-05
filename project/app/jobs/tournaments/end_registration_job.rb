@@ -2,6 +2,7 @@ class EndRegistrationJob < ApplicationJob
 	queue_as :default
 
 	def perform(tournament)
+		return if not tournament.registration?
 	  if tournament.users.count != 8
 		tournament.update(registration_end: DateTime.now + 12.hours)
 		EndRegistrationJob.set(wait_until: tournament.registration_end).perform_later(tournament)

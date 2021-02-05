@@ -2,6 +2,7 @@ class EndWarJob < ApplicationJob
 	queue_as :default
 
 	def perform(war)
+	  return if not war.started?
 	  war.update(status: :ended)
 	  if war.guilds.first.war_points(war) > war.guilds.second.war_points(war)
 		war.guilds.first.win_score(war.prize)

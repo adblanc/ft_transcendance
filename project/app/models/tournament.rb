@@ -23,8 +23,6 @@ class Tournament < ApplicationRecord
 	after_create do
 		attach_trophy
 		create_tournament_games
-		StartRegistrationJob.set(wait_until: registration_start)
-			.perform_later(self)
 	end
 
 	def create_tournament_games

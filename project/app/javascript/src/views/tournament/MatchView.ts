@@ -19,17 +19,20 @@ export default class MatchView extends BaseView {
 	this.model = options.model;
 	this.nb = options.nb;
 
-	/*$(`#game-${this.nb}`).click(function(){
-		this.onPlayClicked();
-	}, this);*/
+	const button = document.querySelector(`#game-${this.nb}`);
+
+	button.addEventListener('click', event => {
+		this.onPlayClicked(event);
+	});
   }
 
-  /*async onPlayClicked() {
-    console.log("test");
-  }*/
+  async onPlayClicked(e: Event) {
+	if ($(`#game-${this.nb}`).hasClass("play")) {
+		console.log("test");
+	}
+  }
 
   render() {
-
 	const game = {
 		...this.model.toJSON(),
 		finished: this.model.get("status") === "finished",
