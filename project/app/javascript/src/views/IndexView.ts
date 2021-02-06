@@ -1,16 +1,19 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "src/lib/BaseView";
-import BoardView from "./guild/BoardView";
+import IndexBoardView from "./guild/IndexBoardView";
+import IndexLadderView from "./tournament/IndexLadderView";
 
 export default class IndexView extends BaseView {
-  boardView: Backbone.View;
+  indexBoardView: Backbone.View;
+  indexLadderView: Backbone.View;
   messages: Backbone.Collection;
 
   constructor(options?: Backbone.ViewOptions) {
     super(options);
 
-    this.boardView = new BoardView();
+	this.indexBoardView = new IndexBoardView();
+	this.indexLadderView = new IndexLadderView();
   }
 
   render() {
@@ -18,7 +21,8 @@ export default class IndexView extends BaseView {
     const html = Mustache.render(template, {});
     this.$el.html(html);
 
-    this.renderNested(this.boardView, "#board");
+	this.renderNested(this.indexBoardView, "#guild-board");
+	this.renderNested(this.indexLadderView, "#ladder-board");
 
     return this;
   }

@@ -42,6 +42,8 @@ ben.avatar.attach(
 guild1 = Guild.create(name: 'The Best Guild', ang: "TBG", points: 20)
 guild2 = Guild.create(name: 'The Doom', ang: "TDM", points: 30)
 guild3 = Guild.create(name: 'The Blabla', ang: "BLB", points: 40)
+guild4 = Guild.create(name: 'The Pandemic', ang: "BLB", points: 40)
+guild5 = Guild.create(name: 'The Symetry', ang: "BLB", points: 40)
 
 guild1.img.attach(
 	io: URI.open("https://i.pinimg.com/originals/1a/27/ff/1a27ff81c19e1c10583ea970b0f3827f.jpg"),
@@ -63,8 +65,8 @@ boule.add_role(:owner, guild2)
 guild2.members << babar
 guild3.members << billy
 billy.add_role(:owner, guild3)
-guild1.members << jeff
-guild1.members << jack
-guild1.members << john
+guild4.members << jeff
+guild4.members << jack
+guild5.members << john
 
 john.add_role :admin
