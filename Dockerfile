@@ -25,7 +25,7 @@ COPY ./project/package.json ./
 RUN yarn install --check-files
 
 #needed to run crontab command
-RUN apk add bash
+RUN apk add bash && apk add vim
 
 #copy over our entire current directory and place the files in the docker image's work dictory
 COPY ./project ./

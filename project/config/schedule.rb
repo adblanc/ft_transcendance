@@ -1,6 +1,6 @@
 set :output, '/app/log/cron.log'
 set :environment, "development"
 
-every '* * * * *' do
-	runner "TournamentCreator.cron_create"
+every '0 12 * * 1' do
+	runner "Tournament.cron_create"
 end
