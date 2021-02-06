@@ -2,6 +2,14 @@ json.extract! tournament, :id, :name, :status, :registration_start, :registratio
 json.trophy_url url_for(tournament.trophy) if tournament.trophy.attached?
 json.open_registration tournament.open_registration?
 json.full tournament.full?
+if json.winner 
+	json.winner do
+		json.id tournament.winner.id
+		json.name tournament.winner.name
+	end
+else
+	json.winner nil
+end
 json.round_one_games do
 	json.array! tournament.round_one_games do |game|
 		json.partial! "games/game_tournament", game: game

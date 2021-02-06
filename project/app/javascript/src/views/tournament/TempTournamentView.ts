@@ -65,29 +65,32 @@ export default class TempTournamentView extends BaseView {
 
 	var pend = 0;
 	var reg = 0;
+	var fin = 0;
 	this.collection.forEach(function (item) {
-		if (item.get("status") == "registration" || item.get("status") == "pending") {
-			var tourListView = new TourListView({
+		var tourListView = new TourListView({
 			model: item,
 			mine: false,
-			});
-			if (item.get("status") == "registration") {
-				this.$("#list-open").append(tourListView.render().el);
-				reg++;
-			}
-			else {
-				this.$("#list-upcoming").append(tourListView.render().el);
-				pend++;
-			}
+		});
+		if (item.get("status") == "registration") {
+			this.$("#list-open").append(tourListView.render().el);
+			reg++;
+		}
+		else if (item.get("status") == "pending") {
+			this.$("#list-upcoming").append(tourListView.render().el);
+			pend++;
+		}
+		else if (item.get("status") != "finished") {
+			this.$("#list-raging").append(tourListView.render().el);
+			fin++;
 		}
 	}, this);
 
-	if (reg == 0) {
+	if (reg == 0)
 		this.$("#none-open").show();
-	}
-	if (pend == 0) {
+	if (pend == 0)
 		this.$("#none-upcoming").show();
-	}
+	if (fin == 0)
+		this.$("#none-raging").show();
 
     return this;
   }

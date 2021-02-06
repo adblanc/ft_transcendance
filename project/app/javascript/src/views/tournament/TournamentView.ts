@@ -52,7 +52,7 @@ export default class TournamentView extends BaseView {
   async onSeedClicked() {
     const success = await this.tournament.seed_for_test();
     if (success) {
-      this.registered();
+      this.seeded();
     }
   }
 
@@ -77,6 +77,7 @@ export default class TournamentView extends BaseView {
 		countStart: moment(this.tournament.get("registration_end")).fromNow(),
 		registration: this.tournament.get("status") === "registration",
 		pending: this.tournament.get("status") === "pending",
+		finished: this.tournament.get("status") === "finished",
 		countRegistration: moment(this.tournament.get("registration_start")).fromNow(),
 	};
 
@@ -87,17 +88,17 @@ export default class TournamentView extends BaseView {
 
 	var roundOneView = new RoundView({
 		collection: this.tournament.get("round_one_games"),
-		round: "One",
+		round: "one",
 	});
 	this.renderNested(roundOneView, "#round1");
 	var roundTwoView = new RoundView({
 		collection: this.tournament.get("round_two_games"),
-		round: "Two",
+		round: "two",
 	});
 	this.renderNested(roundTwoView, "#round2");
 	var roundThreeView = new RoundView({
 		collection: this.tournament.get("round_three_games"),
-		round: "Three",
+		round: "three",
 	});
 	this.renderNested(roundThreeView, "#round3");
 
