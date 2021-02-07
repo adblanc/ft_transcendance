@@ -55,7 +55,7 @@ export interface IProfile {
   friend_requests?: FriendRequests;
   friends?: Friends;
   ladder_unchallengeable?: number;
-  tournaments?: Tournaments; //only fetched for user page
+  won_tournaments?: Tournaments; //only fetched for user page
   current_tournaments?: Tournaments; //only for profile
   games?: Games;
 }

@@ -10,15 +10,15 @@ import Game from "src/models/Game";
 
 interface ITournament {
   id: string;
-  name: string;
-  status: string;
-  registration_start: Date;
-  registration_end: Date;
+  name?: string;
+  status?: string;
+  registration_start?: Date;
+  registration_end?: Date;
   trophy_url?: string;
-  users: Profiles;
-  round_one_games: Games;
-  round_two_games: Games;
-  round_three_games: Games;
+  users?: Profiles;
+  round_one_games?: Games;
+  round_two_games?: Games;
+  round_three_games?: Games;
 }
 
 type CreatableTournamentArgs = Partial<Pick<ITournament, "name" | "registration_start" | "registration_end" | "trophy_url">>;

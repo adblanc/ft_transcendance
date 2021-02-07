@@ -130,3 +130,8 @@
 	@apply bg-teal-900;
   }
 
+
+  .trophies-container {
+	display: flex; 
+	flex-flow: row wrap;
+ }

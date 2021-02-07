@@ -90,8 +90,8 @@ class Tournament < ApplicationRecord
 
 	def winner
 		if self.finished?
-			if self.tournament_users.won.first.user.present?
-				self.tournament_users.won.first.user
+			if self.tournament_users.winner.first.present?
+				self.tournament_users.winner.first.user
 			else 
 				return nil
 			end

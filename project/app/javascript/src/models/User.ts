@@ -35,7 +35,7 @@ export default class User extends BaseModel<IProfile> {
 	  },
 	  {
         type: Backbone.Many,
-        key: "tournaments",
+        key: "won_tournaments",
         collectionType: Tournaments,
         relatedModel: Tournament,
       },

@@ -11,6 +11,7 @@ import { displaySuccess } from "src/utils";
 import { BASE_ROOT } from "src/constants";
 import axios from "axios";
 import GameHistoryView from "./GameHistoryView";
+import TrophiesView from "./TrophiesView";
 import Game from "src/models/Game";
 import Games from "src/collections/Games";
 
@@ -18,23 +19,16 @@ type Options = Backbone.ViewOptions & { userId: number };
 
 export default class UserView extends BaseView {
   user: User;
-  gameHistoryView: GameHistoryView;
 
   constructor(options: Options) {
     super(options);
 
-    this.user = new User({ id: options.userId, login: "" });
-	this.user.fetch({ 
-		error: this.onFetchError,
-		success: () => {
-			this.gameHistoryView = new GameHistoryView({
-				games: this.user.get("games"),
-			});
-			this.render();
-		}
-	 });
+	this.user = new User({ id: options.userId, login: "" });
+	this.user.fetch();
 	this.listenTo(currentUser(), "change", this.render);
 	this.listenTo(this.user, "change", this.render);
+	this.listenTo(this.user.get("games"), "update", this.render);
+	this.listenTo(this.user.get("won_tournaments"), "update", this.render);
 	this.listenTo(eventBus, "user:change", this.render);
 	this.listenTo(eventBus, "profile:change", this.actualize);
 
@@ -48,9 +42,11 @@ export default class UserView extends BaseView {
 	  "click #request-btn": "onRequestClicked",
 	  "click #friends-btn": "onFriendsClicked",
 	  "click #ban-user": this.onUserBan,
-	  "click #unban-user": this.onUserUnban,
+    "click #unban-user": this.onUserUnban,
     };
   }
+ 
+ 
 
   async onUserBan() {
 	const success = await currentUser().banUser(this.user.get("id"))
@@ -135,12 +131,22 @@ export default class UserView extends BaseView {
 		if (this.user.get("friend_requests").length > 0) {
 		  this.$("#request-btn").addClass("animate-bounce");
 		}
-  }
-
-  	if (this.gameHistoryView) {
-		  console.log("test1");
-		this.renderNested(this.gameHistoryView, "#gamehistory");
 	}
+
+	if (this.user.get("won_tournaments") && this.user.get("won_tournaments").length != 0) {
+		var trophiesView = new TrophiesView({
+			tournaments: this.user.get("won_tournaments"),
+		});
+		this.renderNested(trophiesView, "#trophies");
+	  }
+	  else {
+		  this.$("#tour-trophies").hide();
+	  }
+
+	var gameHistoryView = new GameHistoryView({
+		user: this.user,
+	});
+	this.renderNested(gameHistoryView, "#gamehistory");
 
     return this;
   }

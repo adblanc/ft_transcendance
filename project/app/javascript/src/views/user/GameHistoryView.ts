@@ -14,37 +14,73 @@ import HistoryItemView from "./HistoryItemView";
 import Game from "src/models/Game";
 import Games from "src/collections/Games";
 
-type Options = Backbone.ViewOptions & { games: Games };
+type Options = Backbone.ViewOptions & { user: User };
 
 export default class GameHistoryView extends BaseView {
+  user: User;
   games: Games;
+  count: number = 0;
+  max: number = 5;
 
   constructor(options: Options) {
     super(options);
 
-	this.games = options.games;
-
-	console.log(this.games);
+	this.user = options.user;
+	this.games = this.user.get("games");
   
+  }
+
+  events() {
+    return {
+      'click #load-more-game': "LoadMoreGame",
+    };
+  }
+
+
+  LoadMoreGame() {
+    var games = this.games.models.slice(this.count, this.count + this.max);
+	  if(games.length) {
+			games.forEach(function (item) {
+      var historyItemView = new HistoryItemView({
+        model: item,
+      });
+      const $element = this.$("#listing_game");
+      $element.append(historyItemView.render().el);
+      this.count += 1; // UNdefined ???
+			}, this);
+	  } 
+	  if (this.count == this.games.length) {
+		  this.$("#load-more-game").hide();
+	  }
   }
 
   render() {
 	const template = $("#gameHistoryTemplate").html();
 	const html = Mustache.render(template, {});
     this.$el.html(html);
-
 	const $element = this.$("#listing_game");
 
-	console.log("test");
-
-	//if finished
-    this.games.forEach(function (item) {
-		console.log("test");
-      var historyItemView = new HistoryItemView({
-        model: item,
-      });
-      $element.append(historyItemView.render().el);
-    });
+	if (this.games == undefined || this.games.length == 0)
+	{
+		this.$("#no-history").show();
+		this.$("#load-more-game").hide();
+	}
+	else {
+		var games = this.games.first(this.max);
+		games.forEach(function (item) {
+			if (item.get("status") == "finished" || item.get("status") == "unanswered") {
+				var historyItemView = new HistoryItemView({
+					model: item,
+				});
+				$element.append(historyItemView.render().el);
+			}
+		});
+		
+		this.count += games.length;
+		if (this.count == this.games.length) {
+			this.$("#load-more-game").hide();
+		}
+	}
 
     return this;
   }

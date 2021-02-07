@@ -33,7 +33,7 @@
 	{{/pending}}
 	{{#finished}}
 		{{#winner}}
-		<h1 class="justify-center text-white flex flex-row" style="font-size:13px; text-align: center;">Winner :<a style="margin-top:5px; text-decoration: underline;" href="/user/{{winner.id}}">{{winner.name}}</a></h1>
+		<h1 class="justify-center text-white flex flex-row" style="font-size:13px; text-align: center;">Winner : &nbsp<a style="text-decoration: underline;" href="/user/{{winner.id}}">{{winner.name}}</a></h1>
 		{{/winner}}
 		{{^winner}}
 		<h1 class="justify-center text-white flex flex-row" style="font-size:13px; text-align: center;">Winner : The final was not played.</h1>

@@ -235,6 +235,13 @@ class User < ApplicationRecord
 		self.game_users.where(game_id: game.id).first.status
 	end
 
+	def game_won?(game)
+		if game.winner == self
+			return true
+		end
+		return false
+	end
+
 	def number_victory
 		i = 0
 		self.games.each do |game|
@@ -247,11 +254,6 @@ class User < ApplicationRecord
 
 	def number_loss
 		self.games.length - self.number_victory
-	end
-
-	def won_tournaments
-		#to ask
-		return 1789
 	end
 
 	def bronze_medal?
@@ -267,7 +269,7 @@ class User < ApplicationRecord
 	end
 
 	def best_guild?
-	 if Guild.order(:points).first == self.guild
+	 if Guild.order(:points).reverse_order.first == self.guild
 		return true
 	 end
 	 return false
@@ -283,6 +285,14 @@ class User < ApplicationRecord
 
 	def tournament_status(tournament)
 		self.tournament_users.where(tournament_id: tournament.id).first.status
+	end
+
+	def won_tournaments
+		@arr = []
+		tournaments.finished.each do | tour |
+			@arr << tour if self.tournament_status(tour) == "winner" 
+		end
+		return @arr
 	end
 
 	def winner(game)

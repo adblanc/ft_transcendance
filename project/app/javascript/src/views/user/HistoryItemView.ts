@@ -12,13 +12,17 @@ export default class HistoryItemView extends BaseView {
   constructor(options?: Options) {
     super(options);
 	this.model = options.model;
-
-	console.log(this.model);
   }
 
   render() {
+
+	const model = {
+		...this.model.toJSON(),
+		unanswered: this.model.get("status") === "unanswered",
+	}
+
     const template = $("#historyItem").html();
-    const html = Mustache.render(template, this.model.toJSON());
+    const html = Mustache.render(template, model);
     this.$el.html(html);
     return this;
   }

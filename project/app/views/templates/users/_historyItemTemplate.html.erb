@@ -1,12 +1,16 @@
 <script type="text/html" id="historyItem">
 <div class="row">
-  <div class="column" style="padding: 10px; height:90px">
-	<div style="padding:30px">
-		<h1 style="float:left;" class="counter text-white">
-		<a style=" text-decoration: underline;" class="text-white"> Game </a>
-		<h1 style="float:right" class="text-white">  points</h1>
+  <div class="column">
+	<div style="padding:10px">
+		<h1 style="float:left;" class="counter text-white">{{game_type}} game against <a class="underline" href="user/{{opponentid}}"> {{opponentname}}</a> - </h1>
+		<h1 style="float:left;" class="text-white">
+		{{#won}} <p>&nbsp Won </p>{{/won}}
+		{{^won}} <p>&nbsp Lost </p>{{/won}}
+		</h1>
+		{{#unanswered}}<span class="text-white" style="font-size:10px">&nbsp(by forfeit)</span>{{/unanswered}}
+		<h1 style="float:right; font-size:12px" class="text-white mt-1">level : {{level}}, goal : {{goal}}</h1>
 	</div>
-	<div class="line flex" style="border: 1px solid; color: #14B8A6; margin:auto;"></div>
+	<div class="line flex mb-2" style="border: 1px solid; color: #14B8A6; margin-right:14px; margin-left:15px"></div>
   </div>
 </div>
 </script>
