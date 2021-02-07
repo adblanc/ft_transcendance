@@ -23,6 +23,21 @@ class Tournament < ApplicationRecord
 	after_create do
 		attach_trophy
 		create_tournament_games
+		StartRegistrationJob.set(wait_until: registration_start)
+			.perform_later(self)
+	end
+
+	def self.cron_create
+		date = DateTime.now
+		begin
+			self.create!(
+				name: date.strftime("Week %W"),
+				registration_start: date,
+				registration_end: date + 1.days,
+			)
+		rescue => e
+			puts "Failed to add new cron-tournament: #{e.inspect}"
+		end
 	end
 
 	def create_tournament_games

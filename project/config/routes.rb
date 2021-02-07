@@ -1,3 +1,6 @@
+require 'sidekiq/web'
+require 'sidekiq-scheduler/web'
+
 Rails.application.routes.draw do
   scope "/api" do
     get '/auth/42', to: 'authentication#login42', format: false
@@ -80,8 +83,12 @@ Rails.application.routes.draw do
     end
   end
 
+	### Developement purpose ###
+	mount Sidekiq::Web => '/sidekiq'
+
   root to: "application#index"
   match '*path', via: [:get, :post], to: "application#index", constraints: lambda { |req|
     req.path.exclude? 'rails/active_storage'
   }
+
 end

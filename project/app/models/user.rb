@@ -296,7 +296,7 @@ class User < ApplicationRecord
 	end
 
 	def winner(game)
-		if game.finished?
+		if game.finished? || game.unanswered?
 			game.winner == self
 		else
 			return nil
