@@ -71,6 +71,9 @@ export default class MessageView extends Backbone.View<Message> {
   }
 
   render() {
+
+	console.log("test");
+
     const isNotification = this.model.get("is_notification");
 
     const template = $(

@@ -152,7 +152,7 @@ class GamesController < ApplicationController
 		if @game.save
 			@game.update(game_type: :chat)
 			@game.add_host(current_user)
-			@expire = 2
+			@expire = 1
 			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, @room)
 			ActionCable.server.broadcast("room_#{@room.id}", {"event" => "playchat"});
 			@game
@@ -188,15 +188,12 @@ class GamesController < ApplicationController
 			return
 		end
 
-		@game = Game.create(level: :normal, goal: 9, game_type: :ladder, status: :matched)
+		@game = Game.create(level: :normal, goal: 9, game_type: :ladder, status: :pending)
 		@game.add_host(current_user)
 		@game.users.push(@opponent)
-		@game.add_player_role(current_user)
-		@game.broadcast({"action" => "matched"})
 		@opponent.send_notification("#{current_user.name} has challenged you to a Ladder Game", "/tournaments/ladder", "game")
 		@expire = 1
-		/ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, nil)/
-		/expire job spécifique/
+		ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, nil)
 		@game
 	end
 
@@ -207,8 +204,9 @@ class GamesController < ApplicationController
 		end
 		@game = Game.find_by_id(params[:id])
 		return head :unauthorized if not @game.pending?
-		/sert à dire si ready ou non -> le bouton renvoie vers la page jeu/
-
+		@game.update(status: :matched)
+		@game.add_player_role(current_user)
+		@game.broadcast({"action" => "matched"})
 		@game
 	end
 
