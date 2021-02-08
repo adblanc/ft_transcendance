@@ -9,4 +9,6 @@ json.statUser do
   json.gold_medal user.gold_medal?
   json.best_guild user.best_guild?
   json.high_rank user.high_rank?
+  json.war_won user.war_won?
+  json.lucky_man user.lucky_man?
 end
