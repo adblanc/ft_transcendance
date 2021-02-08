@@ -1,27 +1,28 @@
 <script type="text/html" id="ladderOpponentTemplate">
-<div class="row" >
-	<div style="padding:5px">
-		<table>
-		<tr>
-			<td> <img style="float:left" width="80" height="80" class="rounded-full p-2 ml-2" src="{{model.avatar_url}}" /></td>
-			<td style="padding:0 20px; text-decoration:underline;"><b class="m-auto ml-1"><a href='/user/{{model.id}}'>{{model.login}}</a></b></td>
-			<td style="padding:0 20px;"><b class="m-auto ml-1">Rank : {{model.ladder_rank}}</b></td>
+<div class="row">
+  <div class="column" style="padding: 10px; height:90px">
+  <img style="float:left" width="80" height="80" class="rounded-full p-2" src="{{model.avatar_url}}" />
+	<div style="padding:30px">
+		<h1 class="text-black">
+			<a style="float:left; text-decoration: underline;" class="text-black ml-4" href="/user/{{model.id}}"><b>{{model.login}}</b></a>
+			<h1 style="float:middle" class="text-black"><b>&nbsp&nbsp&nbsp Rank : {{model.ladder_rank}}</b></h1>
+			</h1>
 			{{#challengeable}}
-			<td>
-				<button id="challenge-ladder" class="btn-primary" type="button">Challenge</button>
-			</td>
+				<div style="float:right; margin-top:-30px">
+					<button id="challenge-ladder" class="btn-primary" type="button">Challenge</button>
+				</div>
 			{{/challengeable}}
 			{{^challengeable}}
-			<td>
-				<button class="btn-disabled" type="button">Challenge</button>
-			</td>
-			{{#justlost}}
-				<tr><h1 style="padding:0 20px; font-size:11px;">You just lost to this player. Challenge someone else before trying again.</tr>
-			{{/justlost}}
+				<div style="float:right; margin-top:-30px">
+					<button class="btn-primary--disabled-ladder" type="button">Challenge</button>
+				</div>
+				{{#justlost}}
+					<h1 style="padding:0 20px; font-size:11px;">You just lost to this player. Challenge someone else before trying again.
+				{{/justlost}}
 			{{/challengeable}}
-		</tr>
-		</table>
-		<div class="line flex" style="border: 1px solid; color: #14B8A6; margin:auto;"></div>
+		</h1>
 	</div>
+	<div class="line flex" style="border: 1px solid; color: #14B8A6; margin:auto;"></div>
+  </div>
 </div>
 </script>
