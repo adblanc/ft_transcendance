@@ -60,9 +60,9 @@ class GamesController < ApplicationController
 			return render json: {"you" => ["can't start an other player game"]}, status: :unprocessable_entity
 		end
 
-		player.update(status: :accepted);
+		player.update(status: :ready);
 
-		if (@game.game_users.matched.size == 0)
+		if (@game.game_users.accepted.size == 0)
 			@game.update(status: :started)
 			@game.broadcast({"action" => "started"})
 		end
@@ -195,7 +195,6 @@ class GamesController < ApplicationController
 		return head :unauthorized if not @game.pending?
 		@game.update(status: :matched)
 		@game.add_player_role(current_user)
-		current_user.game_users.where(game: @game).first.update(status: :matched)
 		@game.broadcast({"action" => "matched"})
 		@game
 	end

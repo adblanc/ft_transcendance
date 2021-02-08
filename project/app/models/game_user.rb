@@ -8,7 +8,7 @@ class GameUser < ApplicationRecord
 		:won,
 		:lose,
 		:paused,
-		:matched
+		:ready
 	]
 
 end
