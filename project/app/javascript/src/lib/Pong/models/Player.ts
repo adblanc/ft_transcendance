@@ -49,9 +49,8 @@ export default class Player extends BaseModel<IPlayer> {
   }
 
   score() {
-    this.set({ points: this.get("points") + 1 });
-
     if (this.game.get("isHost")) {
+      this.set({ points: this.get("points") + 1 });
       this.channel?.perform("player_score", { playerId: this.get("id") });
     }
   }

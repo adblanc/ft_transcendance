@@ -23,7 +23,6 @@ export default class Spectators extends Backbone.Collection<Spectator> {
           console.log("connected to spectators", gameId);
         },
         received: ({ action, payload }: SpectatorData) => {
-          console.log("received", action, payload);
           if (
             action === "spectator_joined" &&
             !this.find((s) => s.get("id") === payload.id)

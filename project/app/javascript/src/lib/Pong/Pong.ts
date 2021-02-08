@@ -70,12 +70,12 @@ export default class Pong extends BaseModel {
 
   constructor(canvas: HTMLCanvasElement, game: Game) {
     super();
-
     this.listenTo(eventBus, "pong:player_scored", this.onPlayerScored);
+    this.listenTo(eventBus, "visibility:change", this.onVisibilityChange);
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.game = game;
-    this.ballMovementChannel = this.createBallMovementChannel();
+    this.createBallMovementChannel();
 
     this.ball = new Ball();
 
@@ -91,7 +91,9 @@ export default class Pong extends BaseModel {
     let lastTime;
 
     const callback = (ms: number) => {
-      if (lastTime) {
+      if (this.game.paused && lastTime) {
+        this.drawPause();
+      } else if (lastTime) {
         this.update((ms - lastTime) / 1000);
       }
       lastTime = ms;
@@ -122,9 +124,26 @@ export default class Pong extends BaseModel {
     });
   }
 
+  close() {
+    this.stopListening(eventBus, "pong:player_scored", this.onPlayerScored);
+    this.stopListening(eventBus, "visibility:change", this.onVisibilityChange);
+    this.unsubscribeBallMovement();
+    this.unbind();
+  }
+
   onPlayerScored() {
     if (!this.game.get("isHost")) {
       this.reset();
+    }
+  }
+
+  onVisibilityChange(hidden: boolean) {
+    if (hidden) {
+      this.game.channel.perform("game_paused", {});
+    } else if (this.game.paused) {
+      console.log("on trigger ca continue", this.game.paused);
+      console.log(this.game.toJSON());
+      this.game.channel.perform("game_continue", {});
     }
   }
 
@@ -137,8 +156,12 @@ export default class Pong extends BaseModel {
   }
 
   createBallMovementChannel() {
+    console.log("create pong ball movement");
     const id = this.game.get("id");
-    return consumer.subscriptions.create(
+
+    this.unsubscribeBallMovement();
+
+    this.ballMovementChannel = consumer.subscriptions.create(
       { channel: "PongBallChannel", id },
       {
         connected: () => {
@@ -156,6 +179,32 @@ export default class Pong extends BaseModel {
           console.log("ball movement disconnected", id);
         },
       }
+    );
+  }
+
+  unsubscribeBallMovement() {
+    this.ballMovementChannel?.unsubscribe();
+    this.ballMovementChannel = undefined;
+  }
+
+  drawPause() {
+    this.ctx.fillStyle = "#000";
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.ctx.font = "30px Arial";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.fillStyle = "#fff";
+    this.ctx.fillText(
+      "Waiting for player...",
+      this.canvas.width / 2,
+      this.canvas.height / 2
+    );
+
+    this.ctx.fillText(
+      `${this.game.get("pause_duration")}s before game's end`,
+      this.canvas.width / 2,
+      this.canvas.height / 2 + 45
     );
   }
 

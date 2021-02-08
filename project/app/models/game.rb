@@ -14,6 +14,8 @@ class Game < ApplicationRecord
 		:unanswered,
 		:waiting_tournament,
 		:abandon,
+		:paused,
+		:matched
 	]
 
 	enum game_type: [
@@ -97,7 +99,7 @@ class Game < ApplicationRecord
 			self.winner.update(ladder_unchallengeable: 0)
 			self.loser.update(ladder_unchallengeable: 0)
 			if self.winner.ladder_rank > self.loser.ladder_rank
-				self.ladder_swap 
+				self.ladder_swap
 			else
 				self.loser.update(ladder_unchallengeable: self.winner.id)
 			end
@@ -152,21 +154,66 @@ class Game < ApplicationRecord
 		end
 	end
 
+	def game_user_opponent(user)
+		if self.game_users.count == 2
+			self.game_users.where.not(id: user.id).first
+		end
+	end
+
 	def add_host(player)
 		self.users.push(player)
+		player.remove_role(:spectator, self);
 		player.add_role(:host, self);
 	end
 
 	def add_second_player(player)
 		self.add_player_role(player)
 		self.users.push(player)
-		self.update(status: :started)
-		self.broadcast({"event" => "started"});
+		self.update(status: :matched)
+		self.broadcast({"action" => "matched"});
 	end
 
 	def add_player_role(player)
 		player.remove_role(:spectator, self);
 		player.add_role(:player, self);
+	end
+
+	def user_paused(user)
+		player = self.game_users.where(user_id: user.id).first
+
+		player.increment!(:pause_nbr, 1)
+
+		duration = pause_duration_sec(player.pause_nbr)
+		pause_time = DateTime.now
+		player.update(status: :paused, pause_duration: duration, last_pause: pause_time);
+		self.update(status: :paused);
+		self.broadcast(self.data_paused(duration, pause_time));
+
+		if (duration == 0)
+			PauseGameJob.perform_now(self, player)
+		else
+			PauseGameJob.set(wait: duration.seconds).perform_later(self, player)
+		end
+	end
+
+	def check_user_paused(user)
+		player = self.game_users.where(user_id: user.id).first
+
+		if (player.paused?)
+			player.update(status: :accepted);
+		end
+		if (self.game_users.paused.size == 0 && self.paused?)
+			self.update(status: :started);
+			self.broadcast({"action" => "game_continue"});
+		end
+	end
+
+	def broadcast_end(winner, looser)
+		self.broadcast(self.data_over(winner, looser))
+	end
+
+	def broadcast(data)
+		ActionCable.server.broadcast("game_#{self.id}", data);
 	end
 
 	private
@@ -181,8 +228,27 @@ class Game < ApplicationRecord
 		return res;
 	end
 
-	def broadcast(data)
-		ActionCable.server.broadcast("game_#{self.id}", data);
+	def data_paused(duration, pause_time)
+		res = {};
+		res["action"] = "game_paused";
+		res["payload"] = {};
+		res["payload"]["pause_duration"] = duration;
+		res["payload"]["last_pause"] = pause_time;
+
+		return res;
+	end
+
+	def pause_duration_sec(pause_nbr)
+		case pause_nbr
+		when 1
+			30
+		when 2
+			15
+		when 3
+			10
+		else
+			0
+		end
 	end
 
 end

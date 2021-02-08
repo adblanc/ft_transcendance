@@ -5,4 +5,5 @@ export * from "./navigation";
 export * from "./backbone";
 export * from "./errors";
 export * from "./dates";
+export * from "./visibility";
 export * from "./misc";

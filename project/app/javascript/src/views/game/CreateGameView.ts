@@ -6,22 +6,22 @@ import Game from "src/models/Game";
 import { currentUser } from "src/models/Profile";
 
 type Options = Backbone.ViewOptions<Game> & {
-	type: string;
-  };
+  type: string;
+};
 
 export default class CreateGameView extends ModalView<Game> {
-	type: string; 
+  type: string;
 
   constructor(options?: Options) {
-	super(options);
-	
-	this.type = options.type;
+    super(options);
+
+    this.type = options.type;
   }
 
   events() {
     return {
       ...super.events(),
-	  "click #input-game-submit": "onSubmit",
+      "click #input-game-submit": "onSubmit",
     };
   }
 
@@ -29,8 +29,8 @@ export default class CreateGameView extends ModalView<Game> {
     e.preventDefault();
     const attrs = {
       level: this.$("#level").val() as string,
-	  goal: this.$("#goal").val() as number,
-	  game_type: this.type,
+      goal: this.$("#goal").val() as number,
+      game_type: this.type,
     };
 
     const success = await this.model.createFriendly(attrs);
@@ -42,8 +42,8 @@ export default class CreateGameView extends ModalView<Game> {
   gameSaved() {
     this.closeModal();
     displaySuccess("Matching you with another player...");
-	currentUser().fetch();
-    if (this.model.get("status") === "started") {
+    currentUser().fetch();
+    if (this.model.get("status") === "matched") {
       this.model.navigateToGame();
     } else {
       this.model.createChannelConsumer();
