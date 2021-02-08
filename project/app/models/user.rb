@@ -302,4 +302,11 @@ class User < ApplicationRecord
 			return nil
 		end
 	end
+
+	def achievement?
+		if (high_rank? || best_guild? || gold_medal? || silver_medal? || bronze_medal?)
+			return true
+		end
+		return false
+	end
 end
