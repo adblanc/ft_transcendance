@@ -13,8 +13,8 @@ class GamesController < ApplicationController
 			return head :not_found
 		end
 
-		if (!current_user.is_playing_in?(@game) && !current_user.is_spectating?(@game))
-				current_user.add_role(:spectator, @game);
+		if (!@current_user.is_playing_in?(@game) && !@current_user.is_spectating?(@game))
+				@current_user.add_role(:spectator, @game);
 		end
         @game
     end

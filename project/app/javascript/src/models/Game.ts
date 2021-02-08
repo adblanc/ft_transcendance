@@ -113,7 +113,7 @@ export default class Game extends BaseModel<IGame> {
     return this.get("status") === "paused";
   }
 
-  fetch() {
+  fetchAndConnect() {
     return super.fetch({
       success: () => {
         this.connectToWS();
@@ -208,6 +208,7 @@ export default class Game extends BaseModel<IGame> {
 
   onGameStarted() {
     this.set({ status: "started" });
+    this.channel?.perform("game_started", {});
   }
 
   onGameExpired() {

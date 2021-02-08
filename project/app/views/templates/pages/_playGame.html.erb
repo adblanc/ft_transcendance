@@ -9,16 +9,33 @@
 		<h1>{{firstPlayerName}} vs {{secondPlayerName}}</h1>
 	{{/firstPlayerName}}
 
-	{{^isFinished}}
-		<canvas class="pong-canvas my-8" id="pong" width="600" height="400"></canvas>
-		<div id="spectators"></div>
-	{{/isFinished}}
+	{{#isMatched}}
+		{{^isSpectator}}
+		<div class="flex flex-row">
+			<button id="btn-ready" class="btn-primary" type="button">Ready</button>
+		</div>
+		{{/isSpectator}}
 
-	{{#isFinished}}
-		<div class="underline">Game finished</div>
-		{{#winner}}
-			<div>{{name}} won {{points}} - {{#looser}} {{points}} {{/looser}} </div>
-		{{/winner}}
-	{{/isFinished}}
+		{{#isSpectator}}
+			<div>
+				Players are not ready yet
+			</div>
+		{{/isSpectator}}
+	{{/isMatched}}
+
+	{{^isMatched}}
+		{{^isFinished}}
+			<canvas class="pong-canvas my-8" id="pong" width="600" height="400"></canvas>
+			<div id="spectators"></div>
+		{{/isFinished}}
+
+		{{#isFinished}}
+			<div class="underline">Game finished</div>
+			{{#winner}}
+				<div>{{name}} won {{points}} - {{#looser}} {{points}} {{/looser}} </div>
+			{{/winner}}
+		{{/isFinished}}
+
+	{{/isMatched}}
 	</div>
 </script>

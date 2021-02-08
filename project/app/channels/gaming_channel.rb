@@ -45,6 +45,10 @@ class GamingChannel < ApplicationCable::Channel
     end
   end
 
+  def game_started
+    @game.reload
+  end
+
   def unsubscribed
     my_logger.debug("=== on unsubscribe game status #{@game.status} player: #{current_user.id} ====")
       self.game_paused

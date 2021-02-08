@@ -34,7 +34,7 @@ export default class GameView extends BaseView<Game> {
       spectators: this.model.get("spectators"),
     });
 
-    this.model.fetch();
+    this.model.fetchAndConnect();
 
     this.listenTo(eventBus, "pong:player_movement", this.moveOtherPlayer);
     this.listenTo(this.model, "change", this.render);
@@ -110,6 +110,7 @@ export default class GameView extends BaseView<Game> {
       looser: this.model.looser?.toJSON(),
       isFinished,
       isMatched,
+      isSpectator: this.model.get("isSpectator"),
     });
     this.$el.html(html);
 
@@ -125,12 +126,7 @@ export default class GameView extends BaseView<Game> {
   }
 
   template() {
-    switch (this.model?.get("status")) {
-      case "matched":
-        return $("#game-matched-template").html();
-      default:
-        return $("#playGameTemplate").html();
-    }
+    return $("#playGameTemplate").html();
   }
 
   renderPong() {
