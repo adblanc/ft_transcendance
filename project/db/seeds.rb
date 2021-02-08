@@ -70,25 +70,3 @@ guild4.members << jack
 guild5.members << john
 
 john.add_role :admin
-
-tournament1 = Tournament.create!(
-	name: "trophy_test",
-	registration_start: DateTime.now - 2.hours,
-	registration_end: DateTime.now - 1.hours,
-	status: :finished,
-)
-tournament2 = Tournament.create!(
-	name: "trt",
-	registration_start: DateTime.now - 2.hours,
-	registration_end: DateTime.now - 1.hours,
-	status: :finished,
-)
-tournament3 = Tournament.create!(
-	name: "trteee",
-	registration_start: DateTime.now - 2.hours,
-	registration_end: DateTime.now - 1.hours,
-	status: :finished,
-)
-TournamentUser.create(user: bill, tournament: tournament1, status: :winner)
-TournamentUser.create(user: bill, tournament: tournament2, status: :winner)
-TournamentUser.create(user: bill, tournament: tournament3, status: :winner)

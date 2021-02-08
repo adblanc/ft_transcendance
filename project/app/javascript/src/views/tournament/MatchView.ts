@@ -44,7 +44,7 @@ export default class MatchView extends BaseView {
     const html = Mustache.render(template, game);
 	this.$el.html(html);
 	
-	if (this.model.get("status") === "pending") {
+	if (this.model.get("status") === "matched") {
 		this.model.get("players").forEach(function(item) {
 			console.log(currentUser().get("id"));
 			console.log(item.get("id"));

@@ -2,7 +2,7 @@ class ExpireWarTimeGameJob < ApplicationJob
 	queue_as :default
 
 	def perform(game, guild, opponent, warTime, user)
-	  return if game.started? || game.finished?
+	  return if game.started? || game.finished? || game.matched?
 	  game.update(status: :unanswered)
 	  user.game_users.where(game: game).update(status: :won)
 	  game.handle_points_wt

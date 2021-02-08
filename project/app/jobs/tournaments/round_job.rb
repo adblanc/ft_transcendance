@@ -24,7 +24,7 @@ class RoundJob < ApplicationJob
 			tournament.update(status: :final)
 		end
 		tournament.games.where(tournament_round: tournament.status).each do | game |
-			game.update(status: :pending)
+			game.update(status: :matched)
 		end
 		tournament.tournament_users.competing.each do | t_user |
 		  t_user.user.send_notification("#{tournament.name} : #{tournament.status} games are up!", "tournaments/#{tournament.id}", "tournaments")

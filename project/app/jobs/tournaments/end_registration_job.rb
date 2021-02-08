@@ -13,7 +13,7 @@ class EndRegistrationJob < ApplicationJob
 	  end
 	  tournament.update(status: :quarter)
 	  tournament.games.quarter.each do | game |
-		game.update(status: :pending)
+		game.update(status: :matched)
 	  end
 	  User.all.each do |user|
 		user.send_notification("Registrations are closed for #{tournament.name} tournament ! Play your opening matches!", "tournaments/#{tournament.id}", "tournaments")

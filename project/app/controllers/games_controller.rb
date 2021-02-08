@@ -20,7 +20,7 @@ class GamesController < ApplicationController
     end
 
 	def createFriendly
-		return head :unauthorized if current_user.inGame? || current_user.pendingGame
+		return head :unauthorized if current_user.inGame? || current_user.pendingGame 
 		@games = Game.where(status: :pending)
 
 		@games.to_ary.each do | game |
@@ -78,7 +78,10 @@ class GamesController < ApplicationController
 
 		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
 		return head :unauthorized if @warTime.activeGame || @warTime.pendingGame
-		return head :unauthorized if current_user.inGame? || current_user.pendingGame
+		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
+			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
+			return
+		end
 
 		@game = Game.create(game_params)
 
@@ -109,8 +112,12 @@ class GamesController < ApplicationController
 
 		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
 		return head :unauthorized if @warTime.activeGame
-		return head :unauthorized if current_user.inGame? || current_user.pendingGame
+		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
+			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
+			return
+		end
 
+		@game.update(status: :matched)
 		@game.add_second_player(current_user)
 
 		/faire link vers match/
@@ -126,7 +133,7 @@ class GamesController < ApplicationController
 	end
 
 	def playChat
-		if current_user.inGame? || current_user.pendingGame
+		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
@@ -145,7 +152,7 @@ class GamesController < ApplicationController
 		if @game.save
 			@game.update(game_type: :chat)
 			@game.add_host(current_user)
-			@expire = 5
+			@expire = 2
 			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, @room)
 			ActionCable.server.broadcast("room_#{@room.id}", {"event" => "playchat"});
 			@game
@@ -155,7 +162,7 @@ class GamesController < ApplicationController
 	end
 
 	def acceptPlayChat
-		if current_user.inGame? || current_user.pendingGame
+		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
@@ -163,13 +170,14 @@ class GamesController < ApplicationController
 		@game = Game.find_by_id(params[:id])
 		return head :unauthorized if not @game.pending?
 
+		@game.update(status: :matched)
 		@game.add_second_player(current_user)
 		ActionCable.server.broadcast("room_#{@game.room_message.room.id}", {"event" => "playchat"});
 		@game
 	end
 
 	def ladderChallenge
-		if current_user.inGame? || current_user.pendingGame
+		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
@@ -180,26 +188,27 @@ class GamesController < ApplicationController
 			return
 		end
 
-		@game = Game.create(level: :normal, goal: 9, game_type: :ladder, status: :pending)
+		@game = Game.create(level: :normal, goal: 9, game_type: :ladder, status: :matched)
 		@game.add_host(current_user)
 		@game.users.push(@opponent)
-		@opponent.game_users.where(game: @game).first.update(status: :pending)
+		@game.add_player_role(current_user)
+		@game.broadcast({"action" => "matched"})
 		@opponent.send_notification("#{current_user.name} has challenged you to a Ladder Game", "/tournaments/ladder", "game")
 		@expire = 1
-		ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, nil)
+		/ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, nil)/
+		/expire job spécifique/
 		@game
 	end
 
 	def acceptLadderChallenge
-		if current_user.inGame? || current_user.pendingGame
+		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
 		@game = Game.find_by_id(params[:id])
 		return head :unauthorized if not @game.pending?
-		@game.update(status: :matched)
-		@game.add_player_role(current_user)
-		@game.broadcast({"action" => "matched"})
+		/sert à dire si ready ou non -> le bouton renvoie vers la page jeu/
+
 		@game
 	end
 

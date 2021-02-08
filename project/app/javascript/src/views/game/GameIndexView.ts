@@ -29,7 +29,10 @@ export default class GameIndexView extends BaseView {
     const html = Mustache.render(template, {});
 	this.$el.html(html);
 	
-	if (currentUser().get("pendingGame") ) { 
+	if (currentUser().get("matchedGame")) {
+		Backbone.history.navigate(`/game/${currentUser().get("matchedGame")}`, { trigger: true });
+	}
+	else if (currentUser().get("pendingGame") ) { 
 		if (currentUser().get("pendingGame").get("game_type") != "chat") {
 			const waitingGameView = new WaitingGameView({
 				model: currentUser().get("pendingGame"),

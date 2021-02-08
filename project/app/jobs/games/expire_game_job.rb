@@ -2,7 +2,7 @@ class ExpireGameJob < ApplicationJob
 	queue_as :default
 
 	def perform(game, room)
-	  return if game.started? || game.finished?
+	  return if game.started? || game.finished? || game.matched?
 	  if game.ladder?
 		@winner = game.initiator
 		@loser = game.opponent(@winner)
@@ -17,12 +17,12 @@ class ExpireGameJob < ApplicationJob
 			ActionCable.server.broadcast("room_#{room.id}", {"event" => "playchat"});
 		end
 	  else
-		game.broadcast("game_#{game.id}", {"action" => "expired"});
+		ActionCable.server.broadcast("game_#{game.id}", {"event" => "expired"});
 		if room
 			ActionCable.server.broadcast("room_#{room.id}", {"event" => "playchat"});
 		end
 		game.destroy
-	  end
+	  end 
 	end
 
 end

@@ -48,6 +48,7 @@ export interface IProfile {
   guild?: Guild;
   pendingGame?: Game;
   pendingGameToAccept?: Game;
+  matchedGame?: number;
   inGame?: boolean;
   ladder_rank?: number;
   notifications?: Notifications;

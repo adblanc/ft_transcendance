@@ -210,6 +210,12 @@ class User < ApplicationRecord
 		games.pending.where(id: game_request).first
 	end
 
+	def matchedGame
+		if games.matched.first
+			games.matched.first.id
+		end
+	end
+
 	def pendingGameToAccept
 		games.pending.where.not(id: game_request).first
 	end

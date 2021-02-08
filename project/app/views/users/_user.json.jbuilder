@@ -27,6 +27,12 @@ else
 	json.pending_guild nil
 end
 
+if user.matchedGame
+	json.matchedGame user.matchedGame
+else
+	json.matchedGame nil
+end
+
 if user.pendingGame
 	json.pendingGame do
 		json.id user.pendingGame.id
