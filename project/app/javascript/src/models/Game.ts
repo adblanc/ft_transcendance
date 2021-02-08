@@ -47,6 +47,7 @@ export interface GameData {
     | "expired"
     | "player_movement"
     | "player_score"
+    | "player_ready"
     | "game_over"
     | "game_paused"
     | "game_continue";
@@ -84,8 +85,8 @@ export default class Game extends BaseModel<IGame> {
         type: Backbone.One,
         key: "war_time",
         relatedModel: WarTime,
-	  },
-	  {
+      },
+      {
         type: Backbone.One,
         key: "tournament",
         relatedModel: Tournament,
@@ -179,12 +180,16 @@ export default class Game extends BaseModel<IGame> {
             case "game_continue":
               this.onGameContinue();
               break;
+            case "player_ready":
+              this.onPlayerReady(data);
+              break;
             case "player_movement":
               this.onPlayerMovement(data);
               break;
             case "player_score":
               this.onPlayerScore(data);
               break;
+
             case "game_over":
               this.onGameOver(data);
               break;
@@ -249,6 +254,15 @@ export default class Game extends BaseModel<IGame> {
   onGameContinue() {
     clearInterval(this._timerInterval);
     this.set({ status: "started" }, { silent: true });
+  }
+
+  onPlayerReady(data: GameData) {
+    console.log("player ready", data);
+    const player = this.get("players").find(
+      (p) => p.get("id") === data.playerId
+    );
+
+    player?.set({ status: "ready" });
   }
 
   onPlayerMovement(data: GameData) {

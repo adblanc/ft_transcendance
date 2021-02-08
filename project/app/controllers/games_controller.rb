@@ -62,6 +62,8 @@ class GamesController < ApplicationController
 
 		player.update(status: :ready);
 
+		@game.broadcast({"action" => "player_ready", "playerId": player.user_id})
+
 		if (@game.game_users.accepted.size == 0)
 			@game.update(status: :started)
 			@game.broadcast({"action" => "started"})
