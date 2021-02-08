@@ -26,11 +26,6 @@ class Game < ApplicationRecord
     validates :level,  presence: true
 	validates :goal, presence: true
 
-	def my_logger
-		@@my_logger ||= Logger.new("#{Rails.root}/log/my.log")
-	  end
-
-
 	def winner
 		if self.finished? || self.unanswered?
 			self.game_users.won.first.user
@@ -111,7 +106,6 @@ class Game < ApplicationRecord
 	end
 
 	def add_second_player(player)
-		my_logger.debug("==== add_second_player #{player.id} ====")
 		self.add_player_role(player)
 		self.users.push(player)
 		self.update(status: :matched)
@@ -140,13 +134,9 @@ class Game < ApplicationRecord
 		player = self.game_users.where(user_id: user.id).first
 
 		if (player.paused?)
-		my_logger.debug(" === player is paused ===")
 			player.update(status: :accepted);
 		end
-		my_logger.debug("=== check_user_paused game status ? #{self.status} ===")
-		my_logger.debug("=== check_user_paused paused players size #{self.game_users.paused.size}")
 		if (self.game_users.paused.size == 0 && self.paused?)
-			my_logger.debug("=== check_user_paused on repasse en started continue ===")
 			self.update(status: :started);
 			self.broadcast({"action" => "game_continue"});
 		end
