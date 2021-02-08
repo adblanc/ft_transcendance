@@ -272,10 +272,11 @@ export default class Pong extends BaseModel {
         this.difficulty.initialBallSpeedMin,
         this.difficulty.initialBallSpeedMax
       );
-      this.ball.vel.y = getRandomFloat(
-        this.difficulty.initialBallSpeedMin,
-        this.difficulty.initialBallSpeedMax
-      );
+      this.ball.vel.y =
+        getRandomFloat(
+          this.difficulty.initialBallSpeedMin,
+          this.difficulty.initialBallSpeedMax
+        ) * (getRandomFloat(0, 1) > 0.5 ? 1 : -1);
       this.ball.vel.len = 200;
     }
   }
