@@ -46,6 +46,7 @@ export default class GameView extends BaseView<Game> {
       "mousemove #pong": this.onMouseMove,
       "click #pong": this.onClick,
       "click #btn-ready": this.onReady,
+      "click #give-up": this.onGiveUp,
     };
   }
 
@@ -56,6 +57,10 @@ export default class GameView extends BaseView<Game> {
 
   onReady() {
     this.model.ready();
+  }
+
+  onGiveUp() {
+    this.model.giveUp();
   }
 
   moveOtherPlayer(data: MovementData) {

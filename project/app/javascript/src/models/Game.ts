@@ -376,4 +376,13 @@ export default class Game extends BaseModel<IGame> {
       }
     );
   }
+
+  giveUp() {
+    return this.asyncSave(
+      {},
+      {
+        url: `${this.urlRoot()}/give_up/${currentUser().get("id")}`,
+      }
+    );
+  }
 }

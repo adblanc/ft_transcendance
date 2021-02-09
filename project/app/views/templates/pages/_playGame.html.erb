@@ -54,7 +54,12 @@
 		{{/firstPlayer}}
 
 		{{^isFinished}}
-			<canvas class="pong-canvas my-8" id="pong" width="600" height="400"></canvas>
+			<div class="flex flex-col">
+				<canvas class="pong-canvas mt-8" id="pong" width="600" height="400"></canvas>
+				{{^isSpectator}}
+					<span id="give-up" class="text-base text-left hover:underline cursor-pointer mt-2">Give up</span>
+				{{/isSpectator}}
+			</div>
 			<div id="spectators"></div>
 		{{/isFinished}}
 

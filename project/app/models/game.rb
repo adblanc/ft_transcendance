@@ -217,6 +217,16 @@ class Game < ApplicationRecord
 		ActionCable.server.broadcast("game_#{self.id}", data);
 	end
 
+	def give_up(looser)
+		looser.update(status: :lose)
+		winner = self.game_users.where.not(id: looser.id).first
+		winner.update(status: :won)
+
+		self.update(status: :finished)
+
+		broadcast_end(winner, looser)
+	end
+
 	private
 
 	def data_over(winner, looser)

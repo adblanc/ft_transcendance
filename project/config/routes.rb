@@ -31,6 +31,7 @@ scope "/api" do
 	post "games/playChat", to: "games#playChat";
   post "games/ladderChallenge", to: "games#ladderChallenge";
   put  "games/ready/:user_id", to: "games#ready";
+  put  "games/give_up/:user_id", to: "games#giveUp";
 
   put "/block/:id", to: "blocks#block";
   put "/unblock/:id", to: "blocks#unblock";
