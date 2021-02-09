@@ -35,8 +35,6 @@ type BallMovementData = ReturnType<typeof Ball.prototype.toJSON>;
 
 export type Difficulty = "easy" | "normal" | "hard";
 
-export type Mode = "training" | "online";
-
 const DIFFICULTIES: Record<Difficulty, IDifficultyOptions> = {
   easy: {
     initialBallSpeedMin: 300,
@@ -297,7 +295,7 @@ export default class Pong extends BaseModel {
       const len = ball.vel.len;
       ball.vel.x = -ball.vel.x;
 
-      ball.vel.y += 100 * (Math.random() - 0.5);
+      ball.vel.y += 25 * (Math.random() - 0.5);
       ball.vel.len = len * this.difficulty.ballSpeedFactor;
     }
   }

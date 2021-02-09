@@ -52,7 +52,6 @@ export default class GameView extends BaseView<Game> {
   }
 
   onClose = () => {
-    console.log("on close");
     this.model.unsubscribeChannelConsumer();
   };
 
