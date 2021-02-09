@@ -156,7 +156,7 @@ class Game < ApplicationRecord
 
 	def game_user_opponent(user)
 		if self.game_users.count == 2
-			self.game_users.where.not(id: user.id).first
+			self.game_users.where.not(user_id: user.id).first
 		end
 	end
 
@@ -186,6 +186,7 @@ class Game < ApplicationRecord
 		duration = pause_duration_sec(player.pause_nbr)
 		pause_time = DateTime.now
 		player.update(status: :paused, pause_duration: duration, last_pause: pause_time);
+		logger.debug("last_pause: #{pause_time}")
 		self.update(status: :paused);
 		self.broadcast(self.data_paused(duration, pause_time));
 

@@ -132,7 +132,10 @@ export default class Game extends BaseModel<IGame> {
           const seconds = (endDate.getTime() - startDate.getTime()) / 1000;
 
           this.set({
-            pause_duration: this.get("pause_duration") - Math.ceil(seconds),
+            pause_duration: Math.max(
+              this.get("pause_duration") - Math.ceil(seconds),
+              0
+            ),
           });
 
           this.startPauseTimer();
