@@ -4,7 +4,10 @@ class GameSpectatorsChannel < ApplicationCable::Channel
 		@channel = "game_spectators_#{@id}";
 		@game = Game.find_by_id(@id)
 
-		reject unless @game
+
+		if !@game or @game.finished?
+			reject
+		end
 
 		if (current_user.is_spectating?(@game))
 			ActionCable.server.broadcast(@channel, data("spectator_joined"));
