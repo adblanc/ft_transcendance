@@ -57,10 +57,26 @@
 
 		{{^isFinished}}
 			<div class="flex flex-col">
-				<canvas class="pong-canvas mt-8" id="pong" width="600" height="400"></canvas>
+				<canvas class="pong-canvas mt-8 mb-4" id="pong" width="600" height="400"></canvas>
 				{{^isSpectator}}
 					{{^isTraining}}
-						<span id="give-up" class="text-base text-left hover:underline cursor-pointer mt-2">Give up</span>
+						<span id="give-up" class="text-base text-left hover:underline cursor-pointer">Give up</span>
+					{{/isTraining}}
+					{{#isTraining}}
+						<form class="flex flex-col text-base">
+							<label class="inline-flex items-center">
+								<input type="radio" class="form-radio" name="level" value="easy" checked>
+								<span class="ml-2">Easy</span>
+							</label>
+							<label class="inline-flex items-center">
+								<input type="radio" class="form-radio" name="level" value="normal">
+								<span class="ml-2">Normal</span>
+							</label>
+							<label class="inline-flex items-center">
+								<input type="radio" class="form-radio" name="level" value="hard">
+								<span class="ml-2">Hard</span>
+							</label>
+						</form>
 					{{/isTraining}}
 				{{/isSpectator}}
 			</div>

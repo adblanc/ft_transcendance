@@ -47,6 +47,7 @@ export default class GameView extends BaseView<Game> {
       "click #pong": this.onClick,
       "click #btn-ready": this.onReady,
       "click #give-up": this.onGiveUp,
+      "change input[name=level]": this.onDifficultyChange,
     };
   }
 
@@ -61,6 +62,12 @@ export default class GameView extends BaseView<Game> {
 
   onGiveUp() {
     this.model.giveUp();
+  }
+
+  onDifficultyChange(e: JQuery.ChangeEvent) {
+    if (this.model.get("isTraining")) {
+      this.model.set({ level: $(e.currentTarget).val() as string });
+    }
   }
 
   moveOtherPlayer(data: MovementData) {
