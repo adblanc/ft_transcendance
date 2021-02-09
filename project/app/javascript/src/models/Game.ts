@@ -346,6 +346,15 @@ export default class Game extends BaseModel<IGame> {
     );
   }
 
+  startTournamentGame() {
+    return this.asyncSave(
+      {},
+      {
+        url: `${this.baseGameRoot()}/startTournamentGame`,
+      }
+    );
+  }
+
   ready() {
     return this.asyncSave(
       {},

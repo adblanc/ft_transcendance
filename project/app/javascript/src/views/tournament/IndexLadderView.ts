@@ -29,7 +29,6 @@ export default class IndexLadderView extends BaseView {
 	const $element = this.$("#list");
 
 	this.players.slice(0, 5).forEach(function (item) {
-		console.log(item);
 		var itemView = new IndexLadderItemView({
 		  model: item,
 		});

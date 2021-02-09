@@ -210,6 +210,37 @@ class GamesController < ApplicationController
 		@game
 	end
 
+	def startTournamentGame
+		@game = Game.find_by_id(params[:id])
+		
+		/Tout ça ne vas pas marcher/
+		if current_user.inGame? || (current_user.pendingGame && current_user.pendingGame.id != @game.id) ||  (current_user.matchedGame && current_user.matchedGame.id != @game.id) 
+			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
+			return
+		end
+
+		@opponent = @game.opponent(current_user)
+		if @opponent.inGame? || (@opponent.pendingGame && @opponent.pendingGame.id != @game.id) ||  (@opponent.matchedGame && @opponent.matchedGame.id != @game.id) 
+			render json: {"Opponent" => ["already has a Game started or pending"]}, status: :unprocessable_entity
+			return
+		end
+		return head :unauthorized if not @game.pending?
+
+		player = @game.game_users.where(user_id: current_user.id).first
+		player.update(status: :ready)
+
+		if (@game.game_users.accepted.size == 0)
+			@game.add_player_role(@opponent)
+			@game.update(status: :started)
+			@game.broadcast({"action" => "started"})
+		else
+			@game.add_host(current_user)
+			@game.update(status: :matched)
+			@game.broadcast({"action" => "matched"})
+		end
+		@game
+	end
+
 	private
     def game_params
         params.permit(:level, :goal, :game_type)

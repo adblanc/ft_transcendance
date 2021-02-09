@@ -49,6 +49,7 @@ export interface IProfile {
   pendingGame?: Game;
   pendingGameToAccept?: Game;
   matchedGame?: number;
+  tournamentToPlay?: boolean;
   inGame?: boolean;
   ladder_rank?: number;
   notifications?: Notifications;

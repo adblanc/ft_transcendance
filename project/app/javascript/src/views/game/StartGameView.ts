@@ -69,7 +69,12 @@ export default class StartGameView extends BaseView {
 	{
 		this.$("#friendly-btn").addClass("btn-disabled");
 		this.$("#ladder-btn").addClass("btn-disabled");
-		this.$("#must-accept").show();
+		this.$("#ladder-must-play").show();
+	}
+	if (currentUser().get("tournamentToPlay")) {
+		this.$("#friendly-btn").addClass("btn-disabled");
+		this.$("#ladder-btn").addClass("btn-disabled");
+		this.$("#tour-must-play").show();
 	}
 	else if (this.disable == true) {
 		this.$("#friendly-btn").addClass("btn-disabled");

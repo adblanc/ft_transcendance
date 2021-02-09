@@ -32,8 +32,8 @@ export default class GameIndexView extends BaseView {
 	if (currentUser().get("matchedGame")) {
 		Backbone.history.navigate(`/game/${currentUser().get("matchedGame")}`, { trigger: true });
 	}
-	else if (currentUser().get("pendingGame") ) { 
-		if (currentUser().get("pendingGame").get("game_type") != "chat") {
+	else if (currentUser().get("pendingGame")) { 
+		if (currentUser().get("pendingGame").get("game_type") != "chat"){
 			const waitingGameView = new WaitingGameView({
 				model: currentUser().get("pendingGame"),
 			});
@@ -43,6 +43,10 @@ export default class GameIndexView extends BaseView {
 			const startGameView = new StartGameView({disable:true});
 			this.renderNested(startGameView, "#game-index-container");
 		}
+	}
+	else if (currentUser().get("tournamentToPlay")) {
+		const startGameView = new StartGameView({disable:true});
+		this.renderNested(startGameView, "#game-index-container");
 	}
 	else {
 		const startGameView = new StartGameView({disable:false});

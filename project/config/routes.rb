@@ -24,6 +24,7 @@ scope "/api" do
       put :acceptChallengeWT
       put :acceptPlayChat
       put :acceptLadderChallenge
+	  put :startTournamentGame
     end
   end
 	post "games/createFriendly", to: "games#createFriendly";

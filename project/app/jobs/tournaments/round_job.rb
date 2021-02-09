@@ -11,7 +11,7 @@ class RoundJob < ApplicationJob
 	  handle_games(tournament) 
 	  change_round(tournament)
 
-	  @round_length = 1
+	  @round_length = 3
 	  RoundJob.set(wait_until: DateTime.now + @round_length.minutes).perform_later(tournament)
 	end
 
@@ -24,7 +24,7 @@ class RoundJob < ApplicationJob
 			tournament.update(status: :final)
 		end
 		tournament.games.where(tournament_round: tournament.status).each do | game |
-			game.update(status: :matched)
+			game.update(status: :pending)
 		end
 		tournament.tournament_users.competing.each do | t_user |
 		  t_user.user.send_notification("#{tournament.name} : #{tournament.status} games are up!", "tournaments/#{tournament.id}", "tournaments")
@@ -36,11 +36,11 @@ class RoundJob < ApplicationJob
 			if game.finished?
 				push_next_round(tournament, game.winner)
 				set_tournament_user(tournament, nil, game.loser)
-			/elsif game.pending? && 1 guy is ready
+			/elsif game.matched? && 1 guy is ready
 				handle_forfeit(READYGUY, game, tournament, true)
 				push_next_round(tournament, READYGUY)
 			/
-			elsif game.pending?
+			elsif game.pending? || game.matched?
 				@random = game.users.sample
 				handle_forfeit(@random, game, tournament, false)
 			end
@@ -111,13 +111,13 @@ class RoundJob < ApplicationJob
 		if @game.finished?
 			set_tournament_user(tournament, @game.winner, @game.loser)
 			finish_notif(tournament, @game.winner)
-		/elsif @game.pending && 1 guy is ready
+		/elsif @game.matched && 1 guy is ready
 			finish_game(READY_GUY, @game)
 			set_tournament_user(tournament, @game.winner, @game.loser)
 			forfeit_notif(tournament, @game.winner, @game.loser, forfeit)
 			finish_notif(tournament, @game.winner)
 		/
-		else 
+		elsif game.pending? || game.matched?
 			@game.update(status: :abandon)
 			@game.users.each do | user |
 				user.game_users.where(game: @game).first.update(status: :lose)

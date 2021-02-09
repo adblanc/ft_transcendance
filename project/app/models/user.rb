@@ -217,7 +217,11 @@ class User < ApplicationRecord
 	end
 
 	def pendingGameToAccept
-		games.pending.where.not(id: game_request).first
+		games.pending.where.not(id: game_request).where.not(game_type: :tournament).first
+	end
+
+	def tournamentToPlay
+		return true if games.pending.where(game_type: :tournament)
 	end
 
 	def inGame?

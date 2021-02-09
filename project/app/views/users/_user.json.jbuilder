@@ -33,6 +33,13 @@ else
 	json.matchedGame nil
 end
 
+if user.tournamentToPlay
+	json.tournamentToPlay user.tournamentToPlay
+else
+	json.tournamentToPlay nil
+end
+
+
 if user.pendingGame
 	json.pendingGame do
 		json.id user.pendingGame.id
