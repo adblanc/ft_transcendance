@@ -25,9 +25,10 @@ class GamesController < ApplicationController
 
 		@games.to_ary.each do | game |
 			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type]
-				game.update(status: :matched)
 				@game = game
+				@game.update(status: :matched)
 				@game.add_second_player(current_user)
+				ExpireMatchedGameJob.set(wait: 5.minutes).perform_later(@game)
 				return @game
 			end
 		end

@@ -285,14 +285,14 @@ export default class Game extends BaseModel<IGame> {
 
   onGameOver(data: GameData) {
     const winner = this.get("players").find(
-      (p) => p.get("id") === data.payload.winner.id
+      (p) => p.get("id") === data.payload?.winner.id
     );
     const looser = this.get("players").find(
-      (p) => p.get("id") === data.payload.looser.id
+      (p) => p.get("id") === data.payload?.looser.id
     );
 
-    winner?.set(data.payload.winner);
-    looser?.set(data.payload.looser);
+    winner?.set(data.payload?.winner);
+    looser?.set(data.payload?.looser);
 
     clearInterval(this._timerInterval);
     this.set({ status: "finished" });

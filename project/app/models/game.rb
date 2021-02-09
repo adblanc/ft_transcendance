@@ -233,8 +233,8 @@ class Game < ApplicationRecord
 		res = {};
 		res["action"] = "game_over";
 		res["payload"] = {};
-		res["payload"]["winner"] = {"id": winner.user_id, "points": winner.points, "status": :won };
-		res["payload"]["looser"] = {"id": looser.user_id, "points": looser.points, "status": :lose };
+		res["payload"]["winner"] = {"id": winner&.user_id, "points": winner&.points, "status": :won };
+		res["payload"]["looser"] = {"id": looser&.user_id, "points": looser&.points, "status": :lose };
 
 		return res;
 	end
