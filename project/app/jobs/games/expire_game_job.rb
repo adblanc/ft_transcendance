@@ -17,7 +17,7 @@ class ExpireGameJob < ApplicationJob
 			ActionCable.server.broadcast("room_#{room.id}", {"event" => "playchat"});
 		end
 	  else
-		game.broadcast("game_#{game.id}", {"action" => "expired"});
+		game.broadcast({"action" => "expired"});
 		if room
 			ActionCable.server.broadcast("room_#{room.id}", {"event" => "playchat"});
 		end
