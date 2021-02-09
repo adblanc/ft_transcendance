@@ -90,9 +90,9 @@ export default class GameView extends BaseView<Game> {
     }
   }
 
-  onClick(e: JQuery.ClickEvent) {
-    if (this.pong && this.model.get("isHost")) {
-      this.pong.start();
+  onClick() {
+    if (this.model.get("isHost") || this.model.get("isTraining")) {
+      this.pong?.start();
     }
   }
 
@@ -119,8 +119,8 @@ export default class GameView extends BaseView<Game> {
     const html = Mustache.render(this.template(), {
       ...this.model?.toJSON(),
       isTraining: this.model.get("isTraining"),
-      firstPlayer: { ...firstPlayer?.toJSON(), isReady: firstPlayer.ready },
-      secondPlayer: { ...secondPlayer?.toJSON(), isReady: secondPlayer.ready },
+      firstPlayer: { ...firstPlayer?.toJSON(), isReady: firstPlayer?.ready },
+      secondPlayer: { ...secondPlayer?.toJSON(), isReady: secondPlayer?.ready },
       winner: this.model.winner?.toJSON(),
       looser: this.model.looser?.toJSON(),
       isFinished,

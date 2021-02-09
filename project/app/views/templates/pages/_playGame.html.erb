@@ -49,9 +49,11 @@
 
 	{{^isMatched}}
 
-		{{#firstPlayer}}
-			<h1>{{firstPlayer.name}} vs {{secondPlayer.name}}</h1>
-		{{/firstPlayer}}
+		{{^isTraining}}
+			{{#firstPlayer}}
+				<h1>{{firstPlayer.name}} vs {{secondPlayer.name}}</h1>
+			{{/firstPlayer}}
+		{{/isTraining}}
 
 		{{^isFinished}}
 			<div class="flex flex-col">

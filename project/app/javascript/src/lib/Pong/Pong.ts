@@ -6,6 +6,7 @@ import BaseModel from "../BaseModel";
 import Ball from "./classes/Ball";
 import Paddle from "./classes/Paddle";
 import Rect from "./classes/Rect";
+import Player from "./models/Player";
 
 const CHARS = [
   "111101101101111",
@@ -80,6 +81,11 @@ export default class Pong extends BaseModel {
     this.ball = new Ball();
 
     this.reset();
+
+    if (this.game.get("players").isEmpty) {
+      this.game.get("players").push(new Player());
+      this.game.get("players").push(new Player());
+    }
 
     this.game.get("players").at(0).posX = 40;
     this.game.get("players").at(1).posX = this.canvas.width - 40;
@@ -264,7 +270,7 @@ export default class Pong extends BaseModel {
   }
 
   start() {
-    if (!this.game.get("isHost")) {
+    if (!this.game.get("isHost") && !this.game.get("isTraining")) {
       return;
     }
     if (this.ball.vel.x === 0 && this.ball.vel.y === 0) {
