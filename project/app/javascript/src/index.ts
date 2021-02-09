@@ -23,13 +23,6 @@ export function start() {
       },
     },
   });
-  router.on("route", (page) => {
-    if (page === "game/:id") {
-      currentUser().appearanceChannel.perform("appear", {
-        appearing_on: "in game",
-      });
-    } // il faudrait reset le "en jeu" apres avoir fini la partie pas ici je pense
-  });
 
   $(document).ready(() => {
     Backbone.history.start({

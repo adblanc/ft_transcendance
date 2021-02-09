@@ -153,6 +153,11 @@ export default class Game extends BaseModel<IGame> {
     this.get("spectators").connectToSpectatorsChannel(this.get("id"));
   }
 
+  disconnectFromWS() {
+    this.unsubscribeChannelConsumer();
+    this.get("spectators").unsubscribeSpectatorsChannel();
+  }
+
   createChannelConsumer() {
     this.unsubscribeChannelConsumer();
     const gameId = this.get("id");
