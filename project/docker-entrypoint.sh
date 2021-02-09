@@ -1,3 +1,4 @@
+yarn install
 rm -f tmp/pids/server.pid
 rails db:drop db:create db:migrate db:seed
 rails runner 'Sidekiq.redis { |conn| conn.flushdb }'
