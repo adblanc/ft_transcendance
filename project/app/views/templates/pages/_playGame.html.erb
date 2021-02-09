@@ -5,20 +5,66 @@
 		<h1>Training</h1>
 	{{/isTraining}}
 
-	{{#firstPlayerName}}
-		<h1>{{firstPlayerName}} vs {{secondPlayerName}}</h1>
-	{{/firstPlayerName}}
+	{{#isMatched}}
+		{{^isSpectator}}
+		<div class="flex flex-row justify-between content-between w-4/6">
+			<div class="flex flex-col items-center">
+				<div class="flex flex-row items-center justify-center">
+					<img class="rounded-full h-16 w-16 mr-2" src="{{firstPlayer.avatar_url}}" />
+					<h3>{{firstPlayer.name}} </h3>
+				</div>
+				{{^firstPlayer.isReady}}
+					<button id="btn-ready" class="btn-primary text-lg" type="button">Ready</button>
+				{{/firstPlayer.isReady}}
 
-	{{^isFinished}}
-		<canvas class="pong-canvas my-8" id="pong" width="600" height="400"></canvas>
-		<div id="spectators"></div>
-	{{/isFinished}}
+				{{#firstPlayer.isReady}}
+					<svg class="w-16 h-16 text-green-600 stroke-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+				{{/firstPlayer.isReady}}
+			</div>
+			<span> VS </span>
 
-	{{#isFinished}}
-		<div class="underline">Game finished</div>
-		{{#winner}}
-			<div>{{name}} won {{points}} - {{#looser}} {{points}} {{/looser}} </div>
-		{{/winner}}
-	{{/isFinished}}
+			<div class="flex flex-col items-center">
+				<div class="flex flex-row items-center justify-center">
+					<img class="rounded-full h-16 w-16 mr-2" src="{{secondPlayer.avatar_url}}" />
+					<h3>{{secondPlayer.name}} </h3>
+				</div>
+
+				{{^secondPlayer.isReady}}
+					<span class="text-lg text-center"> Not ready yet.. </span>
+				{{/secondPlayer.isReady}}
+
+				{{#secondPlayer.isReady}}
+					<svg class="w-16 h-16 text-green-600 stroke-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+				{{/secondPlayer.isReady}}
+			</div>
+		</div>
+		{{/isSpectator}}
+
+		{{#isSpectator}}
+			<div>
+				Players are not ready yet
+			</div>
+		{{/isSpectator}}
+	{{/isMatched}}
+
+	{{^isMatched}}
+
+		{{#firstPlayer}}
+			<h1>{{firstPlayer.name}} vs {{secondPlayer.name}}</h1>
+		{{/firstPlayer}}
+
+		{{^isFinished}}
+			<canvas class="pong-canvas my-8" id="pong" width="600" height="400"></canvas>
+			<div id="spectators"></div>
+		{{/isFinished}}
+
+		{{#isFinished}}
+			<div class="underline">Game finished</div>
+			{{#winner}}
+				<div>{{name}} won {{points}} - {{#looser}} {{points}} {{/looser}} </div>
+			{{/winner}}
+		{{/isFinished}}
+
+	{{/isMatched}}
 	</div>
 </script>

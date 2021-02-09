@@ -1,7 +1,11 @@
 import Backbone from "backbone";
 import { currentUser } from "./models/Profile";
 import MainRouter from "./routers/MainRouter";
-import { addAuthHeaders, catchNavigation } from "./utils";
+import {
+  addAuthHeaders,
+  catchNavigation,
+  listenVisibilityChanges,
+} from "./utils";
 
 export function start() {
   const token = localStorage.getItem("tokenAuth") || "";
@@ -33,5 +37,6 @@ export function start() {
     });
 
     catchNavigation();
+    listenVisibilityChanges();
   });
 }

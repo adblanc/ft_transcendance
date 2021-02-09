@@ -1,11 +1,10 @@
 import Backbone from "backbone";
 import _ from "underscore";
 import { currentUser } from "src/models/Profile";
-import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import consumer from "channels/consumer";
-import { displaySuccess, displayError } from "src/utils/toast";
+import { displayError } from "src/utils/toast";
 import { eventBus } from "src/events/EventBus";
 import WarTime from "./WarTime";
 import Spectators from "src/collections/Spectators";
@@ -18,7 +17,15 @@ interface IGame {
   id: number;
   level?: string;
   goal?: number;
-  status?: "pending" | "started" | "finished" | "unanswered";
+  status?:
+    | "pending"
+    | "started"
+    | "finished"
+    | "unanswered"
+    | "paused"
+    | "matched";
+  last_pause?: number;
+  pause_duration?: number;
   game_type?: string;
   isSpectator?: boolean;
   isHost?: boolean;
@@ -32,11 +39,18 @@ interface IGame {
 }
 
 export interface GameData {
-  event: "started" | "expired";
-
   payload: any;
 
-  action: "player_movement" | "player_score" | "game_over";
+  action:
+    | "matched"
+    | "started"
+    | "expired"
+    | "player_movement"
+    | "player_score"
+    | "player_ready"
+    | "game_over"
+    | "game_paused"
+    | "game_continue";
   playerId: number;
 }
 
@@ -49,9 +63,9 @@ type CreatableGameArgs = Partial<Pick<IGame, "goal" | "level" | "game_type">>;
 type ConstructorArgs = Pick<IGame, "id" | "isTraining">;
 
 export default class Game extends BaseModel<IGame> {
-  first: Number;
   channel: ActionCable.Channel;
   spectatorsChannel?: ActionCable.Channel;
+  private _timerInterval: any;
 
   preinitialize() {
     this.relations = [
@@ -71,8 +85,8 @@ export default class Game extends BaseModel<IGame> {
         type: Backbone.One,
         key: "war_time",
         relatedModel: WarTime,
-	  },
-	  {
+      },
+      {
         type: Backbone.One,
         key: "tournament",
         relatedModel: Tournament,
@@ -103,8 +117,31 @@ export default class Game extends BaseModel<IGame> {
     return this.get("players").find((p) => p.get("status") === "lose");
   }
 
-  sync(method: string, model: Game, options: JQueryAjaxSettings): any {
-    return syncWithFormData(method, model, options);
+  get paused() {
+    return this.get("status") === "paused";
+  }
+
+  fetchAndConnect() {
+    return super.fetch({
+      success: () => {
+        this.connectToWS();
+        if (this.paused) {
+          const startDate = new Date(this.get("last_pause"));
+          const endDate = new Date();
+
+          const seconds = (endDate.getTime() - startDate.getTime()) / 1000;
+
+          this.set({
+            pause_duration: this.get("pause_duration") - Math.ceil(seconds),
+          });
+
+          this.startPauseTimer();
+        }
+      },
+      error: () => {
+        Backbone.history.navigate("/not-found", { trigger: true });
+      },
+    });
   }
 
   createFriendly(attrs: CreatableGameArgs) {
@@ -114,11 +151,6 @@ export default class Game extends BaseModel<IGame> {
   connectToWS() {
     this.createChannelConsumer();
     this.get("spectators").connectToSpectatorsChannel(this.get("id"));
-  }
-
-  unsubscribeChannelConsumer() {
-    this.channel?.unsubscribe();
-    this.channel = undefined;
   }
 
   createChannelConsumer() {
@@ -132,12 +164,36 @@ export default class Game extends BaseModel<IGame> {
           console.log("connected to the game", gameId);
         },
         received: (data: GameData) => {
-          //console.log("game received", data);
-          this.onScoreReceived(data);
-          this.onMovementReceived(data);
-          this.onGameStarted(data);
-          this.onGameExpired(data);
-          this.onGameOver(data);
+          switch (data.action) {
+            case "matched":
+              this.onGameMatched();
+              break;
+            case "started":
+              this.onGameStarted();
+              break;
+            case "expired":
+              this.onGameExpired();
+              break;
+            case "game_paused":
+              this.onGamePaused(data);
+              break;
+            case "game_continue":
+              this.onGameContinue();
+              break;
+            case "player_ready":
+              this.onPlayerReady(data);
+              break;
+            case "player_movement":
+              this.onPlayerMovement(data);
+              break;
+            case "player_score":
+              this.onPlayerScore(data);
+              break;
+
+            case "game_over":
+              this.onGameOver(data);
+              break;
+          }
         },
         disconnected: () => {
           console.log("disconnected from the game", gameId);
@@ -146,65 +202,100 @@ export default class Game extends BaseModel<IGame> {
     );
   }
 
-  onScoreReceived(data: GameData) {
-    if (data.action === "player_score") {
-      console.log("player scored", data);
-      eventBus.trigger("pong:player_scored", data);
-    }
+  unsubscribeChannelConsumer() {
+    this.channel?.unsubscribe();
+    this.channel = undefined;
   }
 
-  onMovementReceived(data: GameData) {
-    if (
-      data.action === "player_movement" &&
-      data.playerId !== currentUser().get("id")
-    ) {
-      eventBus.trigger("pong:player_movement", data);
-    }
-  }
-
-  onGameStarted(data: GameData) {
-    if (data.event === "started") {
-      console.log("we navigate");
-      this.navigateToGame();
-      return this.unsubscribeChannelConsumer();
-    }
-  }
-
-  onGameExpired(data: GameData) {
-    if (data.event == "expired") {
-		if (this.get("game_type") == "friendly") {
-			displayError(
-			"We were not able to find an opponent. Please try different game settings."
-			);
-			currentUser().fetch(); //car pas de notif envoyée ni d'event
-		}
-      return this.unsubscribeChannelConsumer();
-    }
-  }
-
-  onGameOver(data: GameData) {
-    if (data.action === "game_over") {
-      const winner = this.get("players").find(
-        (p) => p.get("id") === data.payload.winner.id
-      );
-      const looser = this.get("players").find(
-        (p) => p.get("id") === data.payload.looser.id
-      );
-
-      winner?.set(data.payload.winner);
-      looser?.set(data.payload.looser);
-
-      this.set({ status: "finished" });
-    }
+  onGameMatched() {
+    this.navigateToGame();
   }
 
   navigateToGame() {
+    this.unsubscribeChannelConsumer();
     Backbone.history.navigate(`/game/${this.get("id")}`, {
       trigger: true,
     });
   }
 
-  challengeWT(level: string, goal: number, game_type: string, warTimeId: string) {
+  onGameStarted() {
+    this.set({ status: "started" });
+    this.channel?.perform("game_started", {});
+  }
+
+  onGameExpired() {
+    if (this.get("game_type") == "friendly") {
+      displayError(
+        "We were not able to find an opponent. Please try different game settings."
+      );
+      currentUser().fetch(); //car pas de notif envoyée ni d'event
+    }
+    this.unsubscribeChannelConsumer();
+  }
+
+  onGamePaused(data: GameData) {
+    console.log("paused", data);
+    this.set({ status: "paused", ...data.payload }, { silent: true });
+    this.startPauseTimer();
+  }
+
+  startPauseTimer() {
+    this._timerInterval = setInterval(() => {
+      if (this.get("pause_duration") <= 0) {
+        return clearInterval(this._timerInterval);
+      }
+      this.set(
+        { pause_duration: this.get("pause_duration") - 1 },
+        { silent: true }
+      );
+    }, 1000);
+  }
+
+  onGameContinue() {
+    clearInterval(this._timerInterval);
+    this.set({ status: "started" }, { silent: true });
+  }
+
+  onPlayerReady(data: GameData) {
+    console.log("player ready", data);
+    const player = this.get("players").find(
+      (p) => p.get("id") === data.playerId
+    );
+
+    player?.set({ status: "ready" });
+  }
+
+  onPlayerMovement(data: GameData) {
+    if (data.playerId !== currentUser().get("id")) {
+      eventBus.trigger("pong:player_movement", data);
+    }
+  }
+
+  onPlayerScore(data: GameData) {
+    eventBus.trigger("pong:player_scored", data);
+  }
+
+  onGameOver(data: GameData) {
+    const winner = this.get("players").find(
+      (p) => p.get("id") === data.payload.winner.id
+    );
+    const looser = this.get("players").find(
+      (p) => p.get("id") === data.payload.looser.id
+    );
+
+    winner?.set(data.payload.winner);
+    looser?.set(data.payload.looser);
+
+    clearInterval(this._timerInterval);
+    this.set({ status: "finished" });
+  }
+
+  challengeWT(
+    level: string,
+    goal: number,
+    game_type: string,
+    warTimeId: string
+  ) {
     return this.asyncSave(
       {
         level: level,
@@ -262,10 +353,18 @@ export default class Game extends BaseModel<IGame> {
 
   acceptLadderChallenge() {
     return this.asyncSave(
-      {
-      },
+      {},
       {
         url: `${this.baseGameRoot()}/acceptLadderChallenge`,
+      }
+    );
+  }
+
+  ready() {
+    return this.asyncSave(
+      {},
+      {
+        url: `${this.urlRoot()}/ready/${currentUser().get("id")}`,
       }
     );
   }

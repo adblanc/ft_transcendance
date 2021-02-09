@@ -34,27 +34,23 @@ export default class GameView extends BaseView<Game> {
       spectators: this.model.get("spectators"),
     });
 
-    this.model.fetch({
-      error: this.onFetchError,
-      success: () => {
-        console.log("game model fetch success");
-        this.model.connectToWS();
-      },
-    });
+    this.model.fetchAndConnect();
 
     this.listenTo(eventBus, "pong:player_movement", this.moveOtherPlayer);
     this.listenTo(this.model, "change", this.render);
+    this.listenTo(this.model.get("players"), "change", this.render);
   }
 
   events() {
     return {
       "mousemove #pong": this.onMouseMove,
       "click #pong": this.onClick,
+      "click #btn-ready": this.onReady,
     };
   }
 
-  onFetchError() {
-    Backbone.history.navigate("/not-found", { trigger: true });
+  onReady() {
+    this.model.ready();
   }
 
   moveOtherPlayer(data: MovementData) {
@@ -70,7 +66,7 @@ export default class GameView extends BaseView<Game> {
   }
 
   onMouseMove(e: JQuery.MouseMoveEvent) {
-    if (this.pong && !this.model?.get("isSpectator")) {
+    if (this.pong && !this.model?.get("isSpectator") && !this.model?.paused) {
       const scale = e.offsetY / e.target.getBoundingClientRect().height;
 
       this.model.get("players").at(0).posY = this.pong.canvas.height * scale;
@@ -97,36 +93,54 @@ export default class GameView extends BaseView<Game> {
   }
 
   render() {
+    console.log("render gameview");
     if (!this.model.get("isTraining") && !this.model.get("status")) {
       return;
     }
 
-    const template = $("#playGameTemplate").html();
+    const isFinished =
+      this.model.get("status") === "finished" ||
+      this.model.get("status") === "unanswered";
+    const isMatched = this.model.get("status") === "matched";
 
-    const isFinished = this.model.get("status") === "finished";
+    const firstPlayer = this.model.get("players")?.first();
+    const secondPlayer = this.model.get("players")?.last();
 
-    const html = Mustache.render(template, {
+    const html = Mustache.render(this.template(), {
       ...this.model?.toJSON(),
       isTraining: this.model.get("isTraining"),
-      firstPlayerName: this.model.get("players")?.first()?.get("name"),
-      secondPlayerName: this.model.get("players")?.last()?.get("name"),
+      firstPlayer: { ...firstPlayer?.toJSON(), isReady: firstPlayer.ready },
+      secondPlayer: { ...secondPlayer?.toJSON(), isReady: secondPlayer.ready },
       winner: this.model.winner?.toJSON(),
       looser: this.model.looser?.toJSON(),
       isFinished,
+      isMatched,
+      isSpectator: this.model.get("isSpectator"),
     });
     this.$el.html(html);
 
-    if (isFinished) {
-      console.log("finished", this.model.toJSON());
+    if (isFinished || isMatched) {
       return this;
     }
 
     this.renderSpectators();
 
+    this.renderPong();
+
+    return this;
+  }
+
+  template() {
+    return $("#playGameTemplate").html();
+  }
+
+  renderPong() {
+    console.log("render pong");
+    if (this.pong) {
+      this.pong.close();
+    }
     const canvas = this.$("#pong")[0] as HTMLCanvasElement;
 
     this.pong = new Pong(canvas, this.model);
-
-    return this;
   }
 }

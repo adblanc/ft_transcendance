@@ -13,10 +13,9 @@ class GamesController < ApplicationController
 			return head :not_found
 		end
 
-		if (!current_user.is_playing_in?(@game) && !current_user.is_spectating?(@game))
-				current_user.add_role(:spectator, @game);
+		if (!@current_user.is_playing_in?(@game) && !@current_user.is_spectating?(@game))
+				@current_user.add_role(:spectator, @game);
 		end
-
         @game
     end
 
@@ -26,6 +25,7 @@ class GamesController < ApplicationController
 
 		@games.to_ary.each do | game |
 			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type]
+				game.update(status: :matched)
 				@game = game
 				@game.add_second_player(current_user)
 				return @game
@@ -41,6 +41,35 @@ class GamesController < ApplicationController
             render json: @game.errors, status: :unprocessable_entity
 		end
 
+	end
+
+	def ready
+		@game = Game.find_by_id(params[:id])
+
+		if (!@game)
+			return head :not_found
+		elsif (!@game.matched?)
+			return render json: {"game" => ["has expired"]}, status: :unprocessable_entity
+		end
+
+		player = @game.game_users.where(user_id: params[:user_id]).first
+
+		if (!player)
+			return render json: {"you" => ["are not a player in this game"]}, status: :unprocessable_entity
+		elsif (@current_user.id != player.user_id)
+			return render json: {"you" => ["can't start an other player game"]}, status: :unprocessable_entity
+		end
+
+		player.update(status: :ready);
+
+		@game.broadcast({"action" => "player_ready", "playerId": player.user_id})
+
+		if (@game.game_users.accepted.size == 0)
+			@game.update(status: :started)
+			@game.broadcast({"action" => "started"})
+		end
+
+		@game
 	end
 
 	def challengeWT
@@ -170,10 +199,9 @@ class GamesController < ApplicationController
 		end
 		@game = Game.find_by_id(params[:id])
 		return head :unauthorized if not @game.pending?
-		@game.update(status: :started)
+		@game.update(status: :matched)
 		@game.add_player_role(current_user)
-		current_user.game_users.where(game: @game).first.update(status: :accepted)
-		ActionCable.server.broadcast("game_#{@game.id}", {"event" => "started"});
+		@game.broadcast({"action" => "matched"})
 		@game
 	end
 

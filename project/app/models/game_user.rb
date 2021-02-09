@@ -6,7 +6,9 @@ class GameUser < ApplicationRecord
 		:pending,
 		:accepted,
 		:won,
-		:lose
+		:lose,
+		:paused,
+		:ready
 	]
 
 end

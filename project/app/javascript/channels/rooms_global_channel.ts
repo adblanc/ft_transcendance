@@ -12,9 +12,6 @@ export interface RoomsGlobalData {
 consumer.subscriptions.create(
   { channel: "RoomsGlobalChannel" },
   {
-    connected() {
-      console.log("connected to rooms global channel");
-    },
     received(data: RoomsGlobalData) {
       if (data.action === "channel_deleted") {
         eventBus.trigger("chat:rooms_global:deleted", data);
@@ -22,10 +19,7 @@ consumer.subscriptions.create(
         eventBus.trigger("chat:rooms_global:created");
       } else if (data.action === "admin_channel_created") {
         eventBus.trigger("chat:rooms_global:admin_created");
-	  }
-    },
-    disconnected() {
-      console.log("disconnected from rooms global channel");
+      }
     },
   }
 );
