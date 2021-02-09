@@ -33,7 +33,7 @@ class Tournament < ApplicationRecord
 			self.create!(
 				name: date.strftime("Week %W"),
 				registration_start: date,
-				registration_end: date + 1.days,
+				registration_end: date + 1.minutes,
 			)
 		rescue => e
 			puts "Failed to add new cron-tournament: #{e.inspect}"
