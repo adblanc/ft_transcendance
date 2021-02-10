@@ -20,7 +20,7 @@ scope "/api" do
   put "/profile/:id/remove_friend", to: "friendships#remove";
 
   post "games/create_friendly", to: "games#createFriendly";
-	put "games/cancel_friendly", to: "games#cancelFriendly";
+	delete "games/:id/cancel_friendly", to: "games#cancelFriendly";
 	post "games/challengeWT", to: "games#challengeWT";
 	post "games/playChat", to: "games#playChat";
   post "games/ladderChallenge", to: "games#ladderChallenge";

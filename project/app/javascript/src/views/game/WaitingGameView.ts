@@ -2,6 +2,7 @@ import Mustache from "mustache";
 import Backbone from "backbone";
 import BaseView from "src/lib/BaseView";
 import Game from "src/models/Game";
+import { currentUser } from "src/models/Profile";
 
 export default class StartGameView extends BaseView<Game> {
   constructor(options?: Backbone.ViewOptions<Game>) {
@@ -14,8 +15,12 @@ export default class StartGameView extends BaseView<Game> {
     };
   }
 
-  onCancelFriendly() {
-    this.model.cancelFriendly();
+  async onCancelFriendly() {
+    const success = await this.model.cancelFriendly();
+
+    if (success) {
+      currentUser().set({ pendingGame: null });
+    }
   }
 
   render() {

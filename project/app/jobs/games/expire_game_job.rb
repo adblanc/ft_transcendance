@@ -1,8 +1,12 @@
 class ExpireGameJob < ApplicationJob
 	queue_as :default
 
+	discard_on ActiveJob::DeserializationError do |job, error|
+		Rails.logger.error("Skipping job because of ActiveJob::DeserializationError (#{error.message})")
+	end
+
 	def perform(game, room)
-	  return if !game || game.started? || game.finished?
+	  return if game.started? || game.finished?
 	  if game.ladder?
 		@winner = game.initiator
 		@loser = game.opponent(@winner)

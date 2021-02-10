@@ -49,7 +49,6 @@ class GamesController < ApplicationController
 		if (!@game || !@game.pending?)
 			return render json: {"you" => ["have no pending game"]}, status: :not_found
 		else
-			@game.broadcast({"action" => "expired"});
 			@game.destroy
 		end
 	end

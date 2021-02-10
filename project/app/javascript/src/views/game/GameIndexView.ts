@@ -3,7 +3,6 @@ import Backbone from "backbone";
 import BaseView from "src/lib/BaseView";
 import WaitingGameView from "./WaitingGameView";
 import StartGameView from "./StartGameView";
-import { displaySuccess } from "src/utils/toast";
 import { currentUser } from "src/models/Profile";
 import { eventBus } from "src/events/EventBus";
 
@@ -12,7 +11,6 @@ export default class GameIndexView extends BaseView {
     super(options);
 
     this.listenTo(currentUser(), "change", this.render);
-    this.listenTo(eventBus, "game:expire", this.relaunch);
     this.listenTo(eventBus, "playchat:change", this.relaunch);
   }
 

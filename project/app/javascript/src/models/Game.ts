@@ -232,7 +232,8 @@ export default class Game extends BaseModel<IGame> {
       displayError(
         "We were not able to find an opponent. Please try different game settings."
       );
-      currentUser().fetch(); //car pas de notif envoyée ni d'event
+
+      currentUser().set({ pendingGame: null });
     }
     this.disconnectFromWS();
   }
@@ -299,12 +300,9 @@ export default class Game extends BaseModel<IGame> {
   }
 
   cancelFriendly() {
-    return this.asyncSave(
-      {},
-      {
-        url: `${this.urlRoot()}/cancel_friendly`,
-      }
-    );
+    return this.asyncDestroy({
+      url: `${this.urlRoot()}/${this.get("id")}/cancel_friendly`,
+    });
   }
 
   challengeWT(
