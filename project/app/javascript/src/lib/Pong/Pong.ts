@@ -80,7 +80,7 @@ export default class Pong extends BaseModel {
 
     this.reset();
 
-    if (this.game.get("players").isEmpty) {
+    if (this.game.get("isTraining")) {
       this.game.get("players").push(new Player());
       this.game.get("players").push(new Player());
     }
