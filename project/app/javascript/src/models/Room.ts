@@ -136,6 +136,7 @@ export default class Room extends BaseRoom {
   async quit() {
     const success = await this.asyncDestroy({
       url: `${BASE_ROOT}/quit-room?id=${this.get("id")}`,
+      wait: true,
     });
 
     if (success) {
