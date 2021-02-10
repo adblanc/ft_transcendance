@@ -26,7 +26,7 @@ class Room < ApplicationRecord
 
 	def notify_destruction_to_users
 		self.users.each do |user|
-			user.send_notification("Room #{self.name} has been deleted", "", "room_deleted")
+			user.send_notification("#{self.is_dm ? " Your conversation with" : "Room"} #{self.correct_name(user)} has been deleted", "", "room_deleted")
 		end
 	end
 

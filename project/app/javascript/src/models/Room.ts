@@ -142,6 +142,7 @@ export default class Room extends BaseRoom {
     if (success) {
       this.channel.unsubscribe();
     }
+
     return success;
   }
 
