@@ -3,7 +3,7 @@ class ExpireWarTimeGameJob < ApplicationJob
 
 	def perform(game, guild, opponent, warTime, user)
 	  return if game.started? || game.finished? || game.matched?
-	  game.update(status: :unanswered)
+	  game.update(status: :forfeit)
 	  user.game_users.where(game: game).update(status: :won)
 	  game.handle_points_wt
 	  guild.members.each do |member|
@@ -18,10 +18,10 @@ class ExpireWarTimeGameJob < ApplicationJob
 	  if warTime.unanswered_calls == warTime.max_unanswered_calls
 		warTime.update(status: :inactive)
 		guild.members.each do |member|
-			member.send_notification("Too many unanswered match calls! War Time with #{opponent.name} just ended!", "/wars", "wars")
+			member.send_notification("Too many forfeit match calls! War Time with #{opponent.name} just ended!", "/wars", "wars")
 		end
 		opponent.members.each do |member|
-			member.send_notification("Too many unanswered match calls! War Time with #{guild.name} just ended!", "/wars", "wars")
+			member.send_notification("Too many forfeit match calls! War Time with #{guild.name} just ended!", "/wars", "wars")
 		end
 	  end
 	end

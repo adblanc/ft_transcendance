@@ -52,7 +52,7 @@ export default class MatchView extends BaseView {
   render() {
 	const game = {
 		...this.model.toJSON(),
-		finished: this.model.get("status") === "finished" || this.model.get("status") === "unanswered",
+		finished: this.model.get("status") === "finished" || this.model.get("status") === "forfeit",
 	};
 
     const template = $(`#matchTemplate`).html();

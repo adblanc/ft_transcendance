@@ -18,7 +18,7 @@ export default class HistoryItemView extends BaseView {
 
 	const model = {
 		...this.model.toJSON(),
-		unanswered: this.model.get("status") === "unanswered",
+		forfeit: this.model.get("status") === "forfeit",
 	}
 
     const template = $("#historyItem").html();

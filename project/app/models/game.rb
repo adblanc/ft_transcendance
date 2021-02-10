@@ -11,7 +11,7 @@ class Game < ApplicationRecord
 		:pending,
 		:started,
 		:finished,
-		:unanswered,
+		:forfeit,
 		:waiting_tournament,
 		:abandon,
 		:paused,
@@ -37,13 +37,13 @@ class Game < ApplicationRecord
 	validates :goal, presence: true
 
 	def winner
-		if self.finished? || self.unanswered?
+		if self.finished? || self.forfeit?
 			self.game_users.won.first.user
 		end
 	end
 
 	def loser
-		if self.finished? || self.unanswered?
+		if self.finished? || self.forfeit?
 			self.game_users.lose.first.user
 		end
 	end
@@ -222,7 +222,7 @@ class Game < ApplicationRecord
 		winner = self.game_users.where.not(id: looser.id).first
 		winner.update(status: :won)
 
-		self.update(status: :unanswered)
+		self.update(status: :forfeit)
 		if self.war_time?
 			self.handle_points_wt
 		else

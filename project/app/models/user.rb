@@ -308,7 +308,7 @@ class User < ApplicationRecord
 	def lucky_man?
 		i = 0
 		self.games.each do |game|
-			if game.finished? && game.unanswered? && game.winner == self
+			if game.finished? && game.forfeit? && game.winner == self
 				i+= 1
 			end
 		end
@@ -335,7 +335,7 @@ class User < ApplicationRecord
 	end
 
 	def winner(game)
-		if game.finished? || game.unanswered?
+		if game.finished? || game.forfeit?
 			game.winner == self
 		else
 			return nil

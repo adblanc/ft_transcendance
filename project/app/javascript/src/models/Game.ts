@@ -21,7 +21,7 @@ export interface IGame {
     | "pending"
     | "started"
     | "finished"
-    | "unanswered"
+    | "forfeit"
     | "paused"
     | "matched";
   last_pause?: number;
