@@ -28,8 +28,8 @@ export default class MatchView extends BaseView {
   }
 
   async onPlayClicked(e: Event) {
-	if ($(`#game-${this.nb}`).hasClass("play")) {
-		console.log("tst");
+	e.preventDefault();
+	if ($(`#round-${this.round}-game-${this.nb}`).hasClass("play")) {
 		const success = await this.model.startTournamentGame();
 		if (success) {
 			this.start();
@@ -38,10 +38,11 @@ export default class MatchView extends BaseView {
   }
 
   start() { 
-	if (this.model.get("status") === "started") {
+	if (this.model.get("status") === "matched") {
 		this.model.navigateToGame();
 	  } else {
 		this.model.createChannelConsumer();
+		this.model.navigateToGame();
 	}
   }
 
@@ -55,10 +56,8 @@ export default class MatchView extends BaseView {
     const html = Mustache.render(template, game);
 	this.$el.html(html);
 	
-	if (this.model.get("status") === "pending") {
+	if (this.model.get("status") === "pending" || this.model.get("status") === "matched") {
 		this.model.get("players").forEach(function(item) {
-			console.log(currentUser().get("id"));
-			console.log(item.get("id"));
 			if (currentUser().get("id") == item.get("id")) {
 				$(`#round-${this.round}-game-${this.nb}`).addClass("play");
 				$(`#game-to-play`).show();

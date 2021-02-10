@@ -36,6 +36,7 @@ class TournamentsController < ApplicationController
 		@tournament.games.quarter.each do | game |
 			if game.users.count < 2
 				game.users.push(current_user)
+				game.game_users.where(user: current_user).update(status: :pending)
 				return
 			end
 		end
@@ -67,6 +68,7 @@ class TournamentsController < ApplicationController
 		tournament.games.quarter.each do | game |
 			if game.users.count < 2
 				game.users.push(user)
+				game.game_users.where(user: user).update(status: :pending)
 				return
 			end
 		end

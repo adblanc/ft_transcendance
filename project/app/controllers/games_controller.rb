@@ -191,6 +191,7 @@ class GamesController < ApplicationController
 		@game = Game.create(level: :normal, goal: 9, game_type: :ladder, status: :pending)
 		@game.add_host(current_user)
 		@game.users.push(@opponent)
+		@opponent.game_users.where(game: @game).first.update(status: :pending)
 		@opponent.send_notification("#{current_user.name} has challenged you to a Ladder Game", "/tournaments/ladder", "game")
 		@expire = 1
 		ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, nil)
@@ -204,6 +205,7 @@ class GamesController < ApplicationController
 		end
 		@game = Game.find_by_id(params[:id])
 		return head :unauthorized if not @game.pending?
+		current_user.game_users.where(game: @game).first.update(status: :accepted)
 		@game.update(status: :matched)
 		@game.add_player_role(current_user)
 		@game.broadcast({"action" => "matched"})
@@ -212,30 +214,26 @@ class GamesController < ApplicationController
 
 	def startTournamentGame
 		@game = Game.find_by_id(params[:id])
+		@opponent = @game.opponent(current_user)
 		
-		if current_user.inGame? || (current_user.pendingGame && current_user.pendingGame.id != @game.id) || (current_user.matchedGame && current_user.matchedGame.id != @game.id) 
+		if current_user.inGame? || (current_user.pendingGame && current_user.pendingGame.id != @game.id) || (current_user.matchedGame && current_user.matchedGame != @game.id) 
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
 
-		@opponent = @game.opponent(current_user)
-		if @opponent.inGame? || (@opponent.pendingGame && @opponent.pendingGame.id != @game.id) || (@opponent.matchedGame && @opponent.matchedGame.id != @game.id) 
-			render json: {"Opponent" => ["already has a Game started or pending"]}, status: :unprocessable_entity
+		if not @game.pending? || @game.matched?
+			render json: {"Game" => ["is already over."]}, status: :unprocessable_entity
 			return
 		end
-		return head :unauthorized if not @game.pending?
-
 		player = @game.game_users.where(user_id: current_user.id).first
-		player.update(status: :ready)
+		player.update(status: :accepted)
 
-		if (@game.game_users.accepted.size == 0)
-			@game.add_player_role(@opponent)
-			@game.update(status: :started)
-			@game.broadcast({"action" => "started"})
-		else
-			@game.add_host(current_user)
+		if (@game.game_users.pending.size == 0)
+			@game.add_player_role(current_user)
 			@game.update(status: :matched)
 			@game.broadcast({"action" => "matched"})
+		else
+			@game.add_host(current_user)
 		end
 		@game
 	end

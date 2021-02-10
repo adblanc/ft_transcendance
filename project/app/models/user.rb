@@ -212,7 +212,9 @@ class User < ApplicationRecord
 
 	def matchedGame
 		if games.matched.first
-			games.matched.first.id
+			return games.matched.first.id
+		else
+			return nil
 		end
 	end
 
