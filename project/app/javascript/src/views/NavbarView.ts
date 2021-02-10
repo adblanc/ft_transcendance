@@ -66,7 +66,11 @@ export default class NavbarView extends BaseView {
   }
 
   renderMessageReceived() {
-    this.$("#message-pending").show();
+    const chatInvisible = $(".chat-container").parent().hasClass("invisible");
+
+    if (chatInvisible) {
+      this.$("#message-pending").show();
+    }
   }
 
   render() {
