@@ -18,6 +18,12 @@ export default class Player extends BaseModel<IPlayer> {
     this.listenTo(eventBus, "pong:player_scored", this.onPlayerScored);
   }
 
+  defaults() {
+    return {
+      points: 0,
+    };
+  }
+
   get paddle() {
     return this._paddle;
   }
@@ -53,9 +59,12 @@ export default class Player extends BaseModel<IPlayer> {
   }
 
   score() {
-    if (this.game.get("isHost")) {
+    if (this.game.get("isHost") || this.game.get("isTraining")) {
       this.set({ points: this.get("points") + 1 }, { silent: true });
-      this.channel?.perform("player_score", { playerId: this.get("id") });
+
+      if (this.game.get("isHost")) {
+        this.channel?.perform("player_score", { playerId: this.get("id") });
+      }
     }
   }
 

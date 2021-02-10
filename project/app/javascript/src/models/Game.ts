@@ -13,7 +13,7 @@ import Players from "src/lib/Pong/collections/Players";
 import Player from "src/lib/Pong/models/Player";
 import Tournament from "src/models/Tournament";
 
-interface IGame {
+export interface IGame {
   id: number;
   level?: string;
   goal?: number;
@@ -26,7 +26,7 @@ interface IGame {
     | "matched";
   last_pause?: number;
   pause_duration?: number;
-  game_type?: string;
+  game_type?: "ladder" | "war_time" | "chat" | "friendly";
   isSpectator?: boolean;
   isHost?: boolean;
   players?: Players;
@@ -132,7 +132,10 @@ export default class Game extends BaseModel<IGame> {
           const seconds = (endDate.getTime() - startDate.getTime()) / 1000;
 
           this.set({
-            pause_duration: this.get("pause_duration") - Math.ceil(seconds),
+            pause_duration: Math.max(
+              this.get("pause_duration") - Math.ceil(seconds),
+              0
+            ),
           });
 
           this.startPauseTimer();
@@ -144,13 +147,14 @@ export default class Game extends BaseModel<IGame> {
     });
   }
 
-  createFriendly(attrs: CreatableGameArgs) {
-    return this.asyncSave(attrs, { url: `${this.urlRoot()}/createFriendly` });
-  }
-
   connectToWS() {
     this.createChannelConsumer();
     this.get("spectators").connectToSpectatorsChannel(this.get("id"));
+  }
+
+  disconnectFromWS() {
+    this.unsubscribeChannelConsumer();
+    this.get("spectators").unsubscribeSpectatorsChannel();
   }
 
   createChannelConsumer() {
@@ -212,7 +216,7 @@ export default class Game extends BaseModel<IGame> {
   }
 
   navigateToGame() {
-    this.unsubscribeChannelConsumer();
+    this.disconnectFromWS();
     Backbone.history.navigate(`/game/${this.get("id")}`, {
       trigger: true,
     });
@@ -228,9 +232,10 @@ export default class Game extends BaseModel<IGame> {
       displayError(
         "We were not able to find an opponent. Please try different game settings."
       );
-      currentUser().fetch(); //car pas de notif envoyée ni d'event
+
+      currentUser().set({ pendingGame: null });
     }
-    this.unsubscribeChannelConsumer();
+    this.disconnectFromWS();
   }
 
   onGamePaused(data: GameData) {
@@ -277,17 +282,27 @@ export default class Game extends BaseModel<IGame> {
 
   onGameOver(data: GameData) {
     const winner = this.get("players").find(
-      (p) => p.get("id") === data.payload.winner.id
+      (p) => p.get("id") === data.payload?.winner.id
     );
     const looser = this.get("players").find(
-      (p) => p.get("id") === data.payload.looser.id
+      (p) => p.get("id") === data.payload?.looser.id
     );
 
-    winner?.set(data.payload.winner);
-    looser?.set(data.payload.looser);
+    winner?.set(data.payload?.winner);
+    looser?.set(data.payload?.looser);
 
     clearInterval(this._timerInterval);
     this.set({ status: "finished" });
+  }
+
+  createFriendly(attrs: CreatableGameArgs) {
+    return this.asyncSave(attrs, { url: `${this.urlRoot()}/create_friendly` });
+  }
+
+  cancelFriendly() {
+    return this.asyncDestroy({
+      url: `${this.urlRoot()}/${this.get("id")}/cancel_friendly`,
+    });
   }
 
   challengeWT(
@@ -365,6 +380,15 @@ export default class Game extends BaseModel<IGame> {
       {},
       {
         url: `${this.urlRoot()}/ready/${currentUser().get("id")}`,
+      }
+    );
+  }
+
+  giveUp() {
+    return this.asyncSave(
+      {},
+      {
+        url: `${this.urlRoot()}/give_up/${currentUser().get("id")}`,
       }
     );
   }

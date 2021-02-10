@@ -6,6 +6,7 @@ import BaseModel from "../BaseModel";
 import Ball from "./classes/Ball";
 import Paddle from "./classes/Paddle";
 import Rect from "./classes/Rect";
+import Player from "./models/Player";
 
 const CHARS = [
   "111101101101111",
@@ -33,8 +34,6 @@ interface IDifficultyOptions {
 type BallMovementData = ReturnType<typeof Ball.prototype.toJSON>;
 
 export type Difficulty = "easy" | "normal" | "hard";
-
-export type Mode = "training" | "online";
 
 const DIFFICULTIES: Record<Difficulty, IDifficultyOptions> = {
   easy: {
@@ -80,6 +79,11 @@ export default class Pong extends BaseModel {
     this.ball = new Ball();
 
     this.reset();
+
+    if (this.game.get("isTraining")) {
+      this.game.get("players").push(new Player());
+      this.game.get("players").push(new Player());
+    }
 
     this.game.get("players").at(0).posX = 40;
     this.game.get("players").at(1).posX = this.canvas.width - 40;
@@ -139,11 +143,11 @@ export default class Pong extends BaseModel {
 
   onVisibilityChange(hidden: boolean) {
     if (hidden) {
-      this.game.channel.perform("game_paused", {});
+      this.game.channel?.perform("game_paused", {});
     } else if (this.game.paused) {
       console.log("on trigger ca continue", this.game.paused);
       console.log(this.game.toJSON());
-      this.game.channel.perform("game_continue", {});
+      this.game.channel?.perform("game_continue", {});
     }
   }
 
@@ -264,7 +268,7 @@ export default class Pong extends BaseModel {
   }
 
   start() {
-    if (!this.game.get("isHost")) {
+    if (!this.game.get("isHost") && !this.game.get("isTraining")) {
       return;
     }
     if (this.ball.vel.x === 0 && this.ball.vel.y === 0) {
@@ -291,7 +295,7 @@ export default class Pong extends BaseModel {
       const len = ball.vel.len;
       ball.vel.x = -ball.vel.x;
 
-      ball.vel.y += 100 * (Math.random() - 0.5);
+      ball.vel.y += 25 * (Math.random() - 0.5);
       ball.vel.len = len * this.difficulty.ballSpeedFactor;
     }
   }

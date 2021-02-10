@@ -19,6 +19,14 @@ scope "/api" do
 	put "/profile/:id/refuse_friend", to: "friendships#refuse";
   put "/profile/:id/remove_friend", to: "friendships#remove";
 
+  post "games/create_friendly", to: "games#createFriendly";
+	delete "games/:id/cancel_friendly", to: "games#cancelFriendly";
+	post "games/challengeWT", to: "games#challengeWT";
+	post "games/playChat", to: "games#playChat";
+  post "games/ladderChallenge", to: "games#ladderChallenge";
+  put  "games/ready/:user_id", to: "games#ready";
+  put  "games/give_up/:user_id", to: "games#giveUp";
+
   resources :games do
     member do
       put :acceptChallengeWT
@@ -26,11 +34,6 @@ scope "/api" do
       put :acceptLadderChallenge
     end
   end
-	post "games/createFriendly", to: "games#createFriendly";
-	post "games/challengeWT", to: "games#challengeWT";
-	post "games/playChat", to: "games#playChat";
-  post "games/ladderChallenge", to: "games#ladderChallenge";
-  put  "games/ready/:user_id", to: "games#ready";
 
   put "/block/:id", to: "blocks#block";
   put "/unblock/:id", to: "blocks#unblock";

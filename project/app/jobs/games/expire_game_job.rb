@@ -1,6 +1,10 @@
 class ExpireGameJob < ApplicationJob
 	queue_as :default
 
+	discard_on ActiveJob::DeserializationError do |job, error|
+		Rails.logger.error("Skipping job because of ActiveJob::DeserializationError (#{error.message})")
+	end
+
 	def perform(game, room)
 	  return if game.started? || game.finished?
 	  if game.ladder?
@@ -12,14 +16,14 @@ class ExpireGameJob < ApplicationJob
 	  	game.handle_points
 		@winner.send_notification("Your Ladder challenge was not answered! You moved up the Ladder", "/tournaments/ladder", "game")
 		@loser.send_notification("You failed to answer a Ladder Challenge! You moved down the Ladder", "/tournaments/ladder", "game")
-		ActionCable.server.broadcast("game_#{game.id}", {"event" => "expired"});
+		game.broadcast({"action" => "expired"});
 		if room
-			ActionCable.server.broadcast("room_#{room.id}", {"event" => "playchat"});
+			ActionCable.server.broadcast("room_#{room.id}", {"action" => "playchat"});
 		end
 	  else
-		game.broadcast("game_#{game.id}", {"action" => "expired"});
+		game.broadcast({"action" => "expired"});
 		if room
-			ActionCable.server.broadcast("room_#{room.id}", {"event" => "playchat"});
+			ActionCable.server.broadcast("room_#{room.id}", {"action" => "playchat"});
 		end
 		game.destroy
 	  end

@@ -25,9 +25,10 @@ class GamesController < ApplicationController
 
 		@games.to_ary.each do | game |
 			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type]
-				game.update(status: :matched)
 				@game = game
+				@game.update(status: :matched)
 				@game.add_second_player(current_user)
+				ExpireMatchedGameJob.set(wait: 5.minutes).perform_later(@game)
 				return @game
 			end
 		end
@@ -40,14 +41,23 @@ class GamesController < ApplicationController
         else
             render json: @game.errors, status: :unprocessable_entity
 		end
+	end
 
+	def cancelFriendly
+		@game = Game.find_by_id(params[:id])
+
+		if (!@game || !@game.pending?)
+			return render json: {"you" => ["have no pending game"]}, status: :not_found
+		else
+			@game.destroy
+		end
 	end
 
 	def ready
 		@game = Game.find_by_id(params[:id])
 
 		if (!@game)
-			return head :not_found
+			return render json: {"game" => ["doesn't exist"]}, status: :not_found
 		elsif (!@game.matched?)
 			return render json: {"game" => ["has expired"]}, status: :unprocessable_entity
 		end
@@ -68,6 +78,30 @@ class GamesController < ApplicationController
 			@game.update(status: :started)
 			@game.broadcast({"action" => "started"})
 		end
+
+		@game
+	end
+
+	def giveUp
+		@game = Game.find_by_id(params[:id])
+
+		if (!@game)
+			return render json: {"game" => ["doesn't exist"]}, status: :not_found
+		elsif (@game.finished?)
+			return render json: {"game" => ["is already finished"]}, status: :unprocessable_entity
+		elsif (@game.pending? || @game.matched?)
+			return render json: {"game" => ["has not started yet"]}, status: :unprocessable_entity
+		end
+
+		player = @game.game_users.where(user_id: params[:user_id]).first
+
+		if (!player)
+			return render json: {"you" => ["are not a player in this game"]}, status: :unprocessable_entity
+		elsif (@current_user.id != player.user_id)
+			return render json: {"you" => ["can't give up an other player game"]}, status: :unprocessable_entity
+		end
+
+		@game.give_up(player)
 
 		@game
 	end
