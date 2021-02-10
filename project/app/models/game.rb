@@ -222,7 +222,12 @@ class Game < ApplicationRecord
 		winner = self.game_users.where.not(id: looser.id).first
 		winner.update(status: :won)
 
-		self.update(status: :finished)
+		self.update(status: :unanswered)
+		if self.war_time?
+			self.handle_points_wt
+		else
+			self.handle_points
+		end
 
 		broadcast_end(winner, looser)
 	end

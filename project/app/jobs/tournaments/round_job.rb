@@ -33,11 +33,11 @@ class RoundJob < ApplicationJob
 
 	def handle_games(tournament)
 		tournament.games.where(tournament_round: tournament.status).each do | game |
-			if game.finished?
+			if game.finished? || game.unanswered?
 				push_next_round(tournament, game.winner)
 				set_tournament_user(tournament, nil, game.loser)
-			elsif game.matched? && game.game_users.where(status: :ready).first.present?
-				@winner = game.game_users.where(status: :ready).first
+			elsif (game.pending? || game.matched?) && game.game_users.where(status: :ready).first.present?
+				@winner = game.game_users.where(status: :ready).first.user
 				handle_forfeit(@winner, game, tournament, true)
 				push_next_round(tournament, @winner)
 			elsif game.pending? || game.matched?
@@ -74,7 +74,7 @@ class RoundJob < ApplicationJob
 		game.game_users.where(user_id: winner.id).first.update(status: :won)
 		game.game_users.where.not(user_id: winner.id).first.update(status: :lose)
 		game.update(status: :unanswered)
-		/game.broadcast_end(winner, game.game_users.where.not(id: winner.id).first)/
+		game.broadcast_end(winner, game.game_users.where.not(id: winner.id).first.user)
 	end
 
 	def set_tournament_user(tournament, winner, eliminated)
@@ -110,11 +110,11 @@ class RoundJob < ApplicationJob
 
 	def handle_final(tournament)
 		@game = tournament.games.final.first
-		if @game.finished?
+		if @game.finished? || game.unanswered?
 			set_tournament_user(tournament, @game.winner, @game.loser)
 			finish_notif(tournament, @game.winner)
-		elsif @game.matched? && @game.game_users.where(status: :ready).first.present?
-			@winner = @game.game_users.where(status: :ready).first
+		elsif (@game.pending? || @game.matched?) && @game.game_users.where(status: :ready).first.present?
+			@winner = @game.game_users.where(status: :ready).first.user
 			finish_game(@winner, @game)
 			set_tournament_user(tournament, @game.winner, @game.loser)
 			forfeit_notif(tournament, @game.winner, @game.loser, forfeit)

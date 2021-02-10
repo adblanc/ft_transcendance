@@ -268,7 +268,8 @@ class GamesController < ApplicationController
 			@game.update(status: :matched)
 			@game.broadcast({"action" => "matched"})
 		else
-			@game.add_host(current_user)
+			current_user.remove_role(:spectator, @game);
+			current_user.add_role(:host, @game);
 			@opponent.send_notification("#{current_user.name} wants to play your tournament game", "/tournaments/temporary", "tournament")
 		end
 		@game
