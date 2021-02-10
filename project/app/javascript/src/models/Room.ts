@@ -102,8 +102,9 @@ export default class Room extends BaseRoom {
               if (
                 !data.message.ancient &&
                 currentUser().get("id") != data.message.user_id
-              )
+              ) {
                 eventBus.trigger("message:received", this.get("id"));
+              }
             }
           }
           if (data.event === "playchat") {
