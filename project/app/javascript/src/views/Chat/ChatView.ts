@@ -55,11 +55,12 @@ export default class ChatView extends BaseView {
     this.listenTo(eventBus, "chat:go-to-dm", this.goToDm);
     this.listenTo(this.myRooms, "add", this.refreshHeaderInput);
     this.listenTo(this.myRooms, "remove", this.removeHeaderInput);
-    this.listenToOnce(currentUser(), "change", this.renderAdminRoomList);
+    this.listenTo(currentUser(), "change:admin", this.renderAdminRoomList);
   }
 
   onClose = () => {
     this.myRoomsView.close();
+    this.adminRoomsView.close();
     this.directMessagesView.close();
     this.createJoinChannelView.close();
     this.publicRoomsView.close();
@@ -152,6 +153,8 @@ export default class ChatView extends BaseView {
     this.appendNested(this.directMessagesView, "#left-container-chat");
     this.appendNested(this.myRoomsView, "#left-container-chat");
     this.appendNested(this.publicRoomsView, "#left-container-chat");
+
+    this.renderAdminRoomList();
 
     return this;
   }
