@@ -1,5 +1,3 @@
-import Backbone from "backbone";
-import { RoomsGlobalData } from "channels/rooms_global_channel";
 import { BASE_ROOT } from "src/constants";
 import { eventBus } from "src/events/EventBus";
 import PublicRoom from "src/models/PublicRoom";

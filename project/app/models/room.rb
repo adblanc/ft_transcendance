@@ -26,7 +26,7 @@ class Room < ApplicationRecord
 
 	def notify_destruction_to_users
 		self.users.each do |user|
-			user.send_notification("Room #{self.name} has been deleted", "", "room_deleted")
+			user.send_notification("#{self.is_dm ? " Your conversation with" : "Room"} #{self.correct_name(user)} has been deleted", "", "room_deleted")
 		end
 	end
 
@@ -92,12 +92,11 @@ class Room < ApplicationRecord
 	end
 
 	def send_room_notification(type, issuer, target, time)
-
 		room_content = room_notification_content(type,issuer, target,time);
 
 		if (room_content)
 			room_msg = RoomMessage.create(user: issuer, room: self, content: room_content, is_notification: true);
-			ActionCable.server.broadcast("room_#{self.id}", room_msg);
+			ActionCable.server.broadcast("room_#{self.id}", {"message" => room_msg});
 		end
 
 		target_content = target_notification_content(type, issuer, time);

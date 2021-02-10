@@ -4,7 +4,7 @@ import { IProfile } from "./Profile";
 import Room from "./Room";
 
 interface IRoomUser extends IProfile {
-  roomRole: "Owner" | "Administrator" | "Member";
+  roomRole: "Owner" | "Administrator" | "Member" | "Former member";
   isRoomAdministrator?: boolean;
   isBlocked?: boolean;
   isBan?: boolean;
@@ -13,7 +13,7 @@ interface IRoomUser extends IProfile {
 export type MuteBanTime = "10mn" | "30mn" | "1h" | "24h" | "indefinitely";
 
 export default class RoomUser extends BaseModel<IRoomUser> {
-  room = (this.collection as any).parents[0] as Room;
+  room = (this.collection as any)?.parents[0] as Room;
 
   updateRole(action: "promoted" | "demoted") {
     return this.asyncSave(
@@ -21,7 +21,7 @@ export default class RoomUser extends BaseModel<IRoomUser> {
         update_action: action,
       },
       {
-        url: `${BASE_ROOT}/${this.room.get("id")}/${this.get(
+        url: `${BASE_ROOT}/${this.room?.get("id")}/${this.get(
           "id"
         )}/update_role`,
       }

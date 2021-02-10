@@ -6,7 +6,7 @@ class RoomMessagesController < ApplicationController
 	def create
 		if (!@room)
 			render json: {"room" => ["not found"]}, status: :unprocessable_entity
-		elsif (!@current_user.rooms.exists?(@room.id) && !@current_user.admin?)
+		elsif (!@current_user.rooms.exists?(@room.id))
 			render json: {"you" => ["are not in this room"]}, status: :unprocessable_entity
 		elsif (@current_user.is_room_mute?(@room))
 			render json: {"you" => ["are mute in this room"]}, status: :unprocessable_entity
