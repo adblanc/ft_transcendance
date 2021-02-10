@@ -80,7 +80,11 @@ class User < ApplicationRecord
 	end
 
 	def room_role(room)
-		if self.is_room_owner?(room)
+		if self.admin? && self.has_role?(:owner, room)
+			return "Owner"
+		elsif self.admin?
+			return "Global Admin"
+		elsif self.is_room_owner?(room)
 			return "Owner"
 		elsif self.is_room_administrator?(room)
 			return "Administrator"
@@ -313,7 +317,7 @@ class User < ApplicationRecord
 	def won_tournaments
 		@arr = []
 		tournaments.finished.each do | tour |
-			@arr << tour if self.tournament_status(tour) == "winner" 
+			@arr << tour if self.tournament_status(tour) == "winner"
 		end
 		return @arr
 	end
