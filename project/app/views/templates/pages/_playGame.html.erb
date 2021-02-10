@@ -8,13 +8,18 @@
 	{{#isMatched}}
 		{{^isSpectator}}
 		<div class="flex flex-row justify-between content-between w-4/6">
-			<div class="flex flex-col">
+			<div class="flex flex-col items-center">
 				<div class="flex flex-row items-center justify-center">
 					<img class="rounded-full h-16 w-16 mr-2" src="{{firstPlayer.avatar_url}}" />
 					<h3>{{firstPlayer.name}} </h3>
 				</div>
+				{{^firstPlayer.isReady}}
+					<button id="btn-ready" class="btn-primary text-lg" type="button">Ready</button>
+				{{/firstPlayer.isReady}}
 
-				<button id="btn-ready" class="btn-primary text-lg" type="button">Ready</button>
+				{{#firstPlayer.isReady}}
+					<svg class="w-16 h-16 text-green-600 stroke-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+				{{/firstPlayer.isReady}}
 			</div>
 			<span> VS </span>
 
@@ -24,7 +29,13 @@
 					<h3>{{secondPlayer.name}} </h3>
 				</div>
 
-				<svg class="w-16 h-16 text-green-600 stroke-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+				{{^secondPlayer.isReady}}
+					<span class="text-lg text-center"> Not ready yet.. </span>
+				{{/secondPlayer.isReady}}
+
+				{{#secondPlayer.isReady}}
+					<svg class="w-16 h-16 text-green-600 stroke-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+				{{/secondPlayer.isReady}}
 			</div>
 		</div>
 		{{/isSpectator}}
@@ -37,12 +48,38 @@
 	{{/isMatched}}
 
 	{{^isMatched}}
-		{{#firstPlayer}}
-			<h1>{{firstPlayer.name}} vs {{secondPlayer.name}}</h1>
-		{{/firstPlayer}}
+
+		{{^isTraining}}
+			{{#firstPlayer}}
+				<h1>{{firstPlayer.name}} vs {{secondPlayer.name}}</h1>
+			{{/firstPlayer}}
+		{{/isTraining}}
 
 		{{^isFinished}}
-			<canvas class="pong-canvas my-8" id="pong" width="600" height="400"></canvas>
+			<div class="flex flex-col">
+				<canvas class="pong-canvas mt-8 mb-4" id="pong" width="600" height="400"></canvas>
+				{{^isSpectator}}
+					{{^isTraining}}
+						<span id="give-up" class="text-base text-left hover:underline cursor-pointer">Give up</span>
+					{{/isTraining}}
+					{{#isTraining}}
+						<form class="flex flex-col text-base">
+							<label class="inline-flex items-center">
+								<input type="radio" class="form-radio" name="level" value="easy" checked>
+								<span class="ml-2">Easy</span>
+							</label>
+							<label class="inline-flex items-center">
+								<input type="radio" class="form-radio" name="level" value="normal">
+								<span class="ml-2">Normal</span>
+							</label>
+							<label class="inline-flex items-center">
+								<input type="radio" class="form-radio" name="level" value="hard">
+								<span class="ml-2">Hard</span>
+							</label>
+						</form>
+					{{/isTraining}}
+				{{/isSpectator}}
+			</div>
 			<div id="spectators"></div>
 		{{/isFinished}}
 

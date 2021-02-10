@@ -38,6 +38,7 @@ export default class GameView extends BaseView<Game> {
 
     this.listenTo(eventBus, "pong:player_movement", this.moveOtherPlayer);
     this.listenTo(this.model, "change", this.render);
+    this.listenTo(this.model.get("players"), "change", this.render);
   }
 
   events() {
@@ -45,11 +46,27 @@ export default class GameView extends BaseView<Game> {
       "mousemove #pong": this.onMouseMove,
       "click #pong": this.onClick,
       "click #btn-ready": this.onReady,
+      "click #give-up": this.onGiveUp,
+      "change input[name=level]": this.onDifficultyChange,
     };
   }
 
+  onClose = () => {
+    this.model.unsubscribeChannelConsumer();
+  };
+
   onReady() {
     this.model.ready();
+  }
+
+  onGiveUp() {
+    this.model.giveUp();
+  }
+
+  onDifficultyChange(e: JQuery.ChangeEvent) {
+    if (this.model.get("isTraining")) {
+      this.model.set({ level: $(e.currentTarget).val() as string });
+    }
   }
 
   moveOtherPlayer(data: MovementData) {
@@ -79,9 +96,9 @@ export default class GameView extends BaseView<Game> {
     }
   }
 
-  onClick(e: JQuery.ClickEvent) {
-    if (this.pong && this.model.get("isHost")) {
-      this.pong.start();
+  onClick() {
+    if (this.model.get("isHost") || this.model.get("isTraining")) {
+      this.pong?.start();
     }
   }
 
@@ -92,6 +109,7 @@ export default class GameView extends BaseView<Game> {
   }
 
   render() {
+    console.log("render gameview");
     if (!this.model.get("isTraining") && !this.model.get("status")) {
       return;
     }
@@ -101,11 +119,14 @@ export default class GameView extends BaseView<Game> {
       this.model.get("status") === "unanswered";
     const isMatched = this.model.get("status") === "matched";
 
+    const firstPlayer = this.model.get("players")?.first();
+    const secondPlayer = this.model.get("players")?.last();
+
     const html = Mustache.render(this.template(), {
       ...this.model?.toJSON(),
       isTraining: this.model.get("isTraining"),
-      firstPlayer: this.model.get("players")?.first()?.toJSON(),
-      secondPlayer: this.model.get("players")?.last()?.toJSON(),
+      firstPlayer: { ...firstPlayer?.toJSON(), isReady: firstPlayer?.ready },
+      secondPlayer: { ...secondPlayer?.toJSON(), isReady: secondPlayer?.ready },
       winner: this.model.winner?.toJSON(),
       looser: this.model.looser?.toJSON(),
       isFinished,

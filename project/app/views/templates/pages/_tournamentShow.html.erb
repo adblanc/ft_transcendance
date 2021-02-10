@@ -12,7 +12,9 @@
 	<div>
 		<img style="margin-left: auto; margin-right: auto; margin-top:10px" width="100" height="100" class="flex flex-row rounded-full p-2" src="{{trophy_url}}" />
 	</div>
+	{{#owner}}
 	<h1 class="justify-center text-white flex flex-row" style="font-size:11px; text-align: center;">Organized by: &nbsp<a style=" text-decoration: underline;" href="/user/{{owner.id}}"> {{owner.name}}</a></h1>
+	{{/owner}}
 	<h1 class="justify-center text-white flex flex-row mt-2" style="font-size:13px; text-align: center;"> Registration start: {{registration_start}} </h1>
 	<h1 class="justify-center text-white flex flex-row" style="font-size:13px; text-align: center;"> Registration end: {{registration_end}} </h1>
 	<h1 class="justify-center text-white flex flex-row mt-2" style="font-size:13px; text-align: center;"> Phase: {{status}} </h1>

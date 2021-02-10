@@ -112,8 +112,8 @@ export default class Profile extends BaseModel<IProfile> {
         key: "friends",
         collectionType: Friends,
         relatedModel: User,
-	  },
-	  {
+      },
+      {
         type: Backbone.Many,
         key: "current_tournaments",
         collectionType: Tournaments,
@@ -137,8 +137,8 @@ export default class Profile extends BaseModel<IProfile> {
       two_fact_auth: false,
       number: 0,
       guild_role: "none",
-	  admin: false,
-	  current_tournaments: [],
+      admin: false,
+      current_tournaments: [],
     };
   }
 

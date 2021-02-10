@@ -7,7 +7,9 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data #makes posgres persistent: data volume to host directory
   redis:
-    image: redis:4.0-alpine
+    image: redis:alpine
+    volumes:
+      - redis_data:/data
   sidekiq:
     build: .
     command: bundle exec sidekiq
@@ -32,3 +34,4 @@ services:
 volumes:
   db_data:
   node_modules:
+  redis_data:

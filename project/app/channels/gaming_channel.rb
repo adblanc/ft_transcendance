@@ -4,7 +4,10 @@ class GamingChannel < ApplicationCable::Channel
       @id = params[:id]
       @game = Game.find_by_id(@id)
 
-      reject unless @game
+
+      if !@game or @game.finished?
+        reject
+      end
 
       stream_from "game_#{@id}"
 

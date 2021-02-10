@@ -7,7 +7,7 @@ interface IPlayer {
   id: number;
   name: string;
   points: number;
-  status?: "lose" | "won";
+  status?: "lose" | "won" | "ready" | "accepted";
 }
 
 export default class Player extends BaseModel<IPlayer> {
@@ -16,6 +16,12 @@ export default class Player extends BaseModel<IPlayer> {
   initialize() {
     this._paddle = new Paddle();
     this.listenTo(eventBus, "pong:player_scored", this.onPlayerScored);
+  }
+
+  defaults() {
+    return {
+      points: 0,
+    };
   }
 
   get paddle() {
@@ -38,6 +44,10 @@ export default class Player extends BaseModel<IPlayer> {
     this._paddle.pos.y = value;
   }
 
+  get ready() {
+    return this.get("status") === "ready";
+  }
+
   private get game(): Game {
     //@ts-ignore
     return this.collection.parents[0];
@@ -49,15 +59,18 @@ export default class Player extends BaseModel<IPlayer> {
   }
 
   score() {
-    if (this.game.get("isHost")) {
-      this.set({ points: this.get("points") + 1 });
-      this.channel?.perform("player_score", { playerId: this.get("id") });
+    if (this.game.get("isHost") || this.game.get("isTraining")) {
+      this.set({ points: this.get("points") + 1 }, { silent: true });
+
+      if (this.game.get("isHost")) {
+        this.channel?.perform("player_score", { playerId: this.get("id") });
+      }
     }
   }
 
   onPlayerScored(data: any) {
     if (!this.game.get("isHost") && data.playerId === this.get("id")) {
-      this.set({ points: this.get("points") + 1 });
+      this.set({ points: this.get("points") + 1 }, { silent: true });
     }
   }
 }

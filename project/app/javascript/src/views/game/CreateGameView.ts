@@ -2,15 +2,15 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
 import { displaySuccess } from "src/utils/toast";
-import Game from "src/models/Game";
+import Game, { IGame } from "src/models/Game";
 import { currentUser } from "src/models/Profile";
 
 type Options = Backbone.ViewOptions<Game> & {
-  type: string;
+  type: IGame["game_type"];
 };
 
 export default class CreateGameView extends ModalView<Game> {
-  type: string;
+  type: IGame["game_type"];
 
   constructor(options?: Options) {
     super(options);
@@ -42,7 +42,7 @@ export default class CreateGameView extends ModalView<Game> {
   gameSaved() {
     this.closeModal();
     displaySuccess("Matching you with another player...");
-    currentUser().fetch();
+    currentUser().set({ pendingGame: this.model });
     if (this.model.get("status") === "matched") {
       this.model.navigateToGame();
     } else {

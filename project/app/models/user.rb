@@ -258,6 +258,16 @@ class User < ApplicationRecord
 		return false
 	end
 
+	def war_won?
+		i = 0
+		self.guild.wars.each do |war|
+			if war.winner == self.guild
+				return true
+			end
+		end
+		return false
+	end
+
 	def number_victory
 		i = 0
 		self.games.each do |game|
@@ -295,6 +305,19 @@ class User < ApplicationRecord
 		ladder_rank == 1
 	end
 
+	def lucky_man?
+		i = 0
+		self.games.each do |game|
+			if game.finished? && game.unanswered? && game.winner == self
+				i+= 1
+			end
+		end
+		if i > 5
+			return true
+		end
+		return false
+	end
+
 	def current_tournaments
 		tournaments.where.not(status: :finished)
 	end
@@ -320,7 +343,7 @@ class User < ApplicationRecord
 	end
 
 	def achievement?
-		if (high_rank? || best_guild? || gold_medal? || silver_medal? || bronze_medal?)
+		if (high_rank? || best_guild? || gold_medal? || silver_medal? || bronze_medal? || lucky_man? || war_won?)
 			return true
 		end
 		return false

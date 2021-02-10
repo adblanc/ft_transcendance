@@ -1,6 +1,6 @@
 import Mustache from "mustache";
 import Backbone from "backbone";
-import Game from "src/models/Game";
+import Game, { IGame } from "src/models/Game";
 import BaseView from "src/lib/BaseView";
 import CreateGameView from "./CreateGameView";
 import CreateLadderGameView from "./CreateLadderGameView";
@@ -10,55 +10,53 @@ import { eventBus } from "src/events/EventBus";
 type Options = Backbone.ViewOptions & { disable: boolean };
 
 export default class StartGameView extends BaseView {
-	disable: boolean;
+  disable: boolean;
 
   constructor(options?: Options) {
-	super(options);
+    super(options);
 
-	this.disable = options.disable;
+    this.disable = options.disable;
 
-	this.listenTo(eventBus, "chatplay:change", this.relaunch);
-	this.listenTo(currentUser(), "change", this.render);
-	}
-
-	relaunch() {
-		currentUser().fetch({
-			success: () => {
-				if (currentUser().get("pendingGame") ) { 
-					if (currentUser().get("pendingGame").get("game_type") == "chat")
-						this.disable = true;
-					else 
-						this.disable = false;
-				}
-				else {
-					this.disable = false;
-				}
-				this.render();
-			}
-		});
-	}
-  
-  events() {
-	return {
-	  "click #friendly-btn": () => this.startGame("friendly"),
-	  "click #ladder-btn": () => this.startLadderGame(),
-	};
+    this.listenTo(eventBus, "chatplay:change", this.relaunch);
+    this.listenTo(currentUser(), "change", this.render);
   }
 
-   startGame(type: string) {
-	   const game = new Game();
-	   const createGameView = new CreateGameView({
-			model: game,
-			type: type,
-	  });
-  
-	  createGameView.render();
-   }
+  relaunch() {
+    currentUser().fetch({
+      success: () => {
+        if (currentUser().get("pendingGame")) {
+          if (currentUser().get("pendingGame").get("game_type") == "chat")
+            this.disable = true;
+          else this.disable = false;
+        } else {
+          this.disable = false;
+        }
+        this.render();
+      },
+    });
+  }
 
-   startLadderGame() {
-	const createLadderGameView = new CreateLadderGameView();
-   		createLadderGameView.render();
-	}
+  events() {
+    return {
+      "click #friendly-btn": () => this.startGame("friendly"),
+      "click #ladder-btn": () => this.startLadderGame(),
+    };
+  }
+
+  startGame(type: IGame["game_type"]) {
+    const game = new Game();
+    const createGameView = new CreateGameView({
+      model: game,
+      type: type,
+    });
+
+    createGameView.render();
+  }
+
+  startLadderGame() {
+    const createLadderGameView = new CreateLadderGameView();
+    createLadderGameView.render();
+  }
 
   render() {
     const template = $("#gameStartTemplate").html();
@@ -83,5 +81,4 @@ export default class StartGameView extends BaseView {
 	}
     return this;
   }
-
 }

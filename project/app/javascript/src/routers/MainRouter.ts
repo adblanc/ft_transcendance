@@ -39,37 +39,37 @@ export default class MainRouter extends Backbone.Router {
         "me/notifications": "notifShow",
         "user/:id": "userShow",
         "tfa/:user/:tfa": "twoFactAuth",
-		wars: "warsIndex",
-		tournaments: "tournamentIndex",
-		"tournaments/ladder": "ladder",
-		"tournaments/temporary": "tempTournament",
-		"tournaments/:id": "tournamentShow",
+        wars: "warsIndex",
+        tournaments: "tournamentIndex",
+        "tournaments/ladder": "ladder",
+        "tournaments/temporary": "tempTournament",
+        "tournaments/:id": "tournamentShow",
         "*path": "notFound",
       },
     });
   }
 
   async authCallBack(code: string) {
-	  try {
-		const { data: rsp } = await axios.get(
-		  	  `${BASE_ROOT}/auth/42?code=${code}`
-		  	  );
-		if (!rsp.token) {
-		    this.navigate(`/tfa/${rsp.user}/${rsp.tfa}`, { trigger: true });
-		    return;
-		}
-		addAuthHeaders(rsp.token);
-		this.navigate("/", { trigger: true });
-	  } catch (ex) {
-	  	const resp = ex.response.data;
+    try {
+      const { data: rsp } = await axios.get(
+        `${BASE_ROOT}/auth/42?code=${code}`
+      );
+      if (!rsp.token) {
+        this.navigate(`/tfa/${rsp.user}/${rsp.tfa}`, { trigger: true });
+        return;
+      }
+      addAuthHeaders(rsp.token);
+      this.navigate("/", { trigger: true });
+    } catch (ex) {
+      const resp = ex.response.data;
 
-		if (resp.msg == "banned_user") {
-			displayError(`${resp.user} is banned for the moment`);
-		} else {
-			displayError(`Logging as ${resp.user} has failed`);
-		}
-	  	this.navigate("/auth", { trigger: true });
-	  }
+      if (resp.msg == "banned_user") {
+        displayError(`${resp.user} is banned for the moment`);
+      } else {
+        displayError(`Logging as ${resp.user} has failed`);
+      }
+      this.navigate("/auth", { trigger: true });
+    }
   }
 
   twoFactAuth(user: string, tfa: string) {
@@ -161,7 +161,9 @@ export default class MainRouter extends Backbone.Router {
   }
 
   tournamentShow(id: number) {
-	const tournamentView = new TournamentView({ tournament: new Tournament({ id }) });
+    const tournamentView = new TournamentView({
+      tournament: new Tournament({ id }),
+    });
     pagesHandler.showPage(tournamentView);
   }
 }
