@@ -6,7 +6,7 @@
 	/>
 
 	<div class="presence-bg bg-teal-500">
-		<div class="presence--{{#is_present}}online{{/is_present}}{{^is_present}}offline{{/is_present}}"> </div>
+		<div class="presence--{{inGame}}inGame{{/inGame}}{{^inGame}}{{#is_present}}online{{/is_present}}{{^is_present}}offline{{/is_present}}{{/inGame}}"> </div>
 	</div>
 
   </div>

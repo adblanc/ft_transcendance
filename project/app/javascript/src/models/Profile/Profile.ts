@@ -186,6 +186,7 @@ export default class Profile extends BaseModel<IProfile> {
     if (user_id === this.get("id")) {
       this.set({
         is_present: event === "appear" ? true : false,
+		//inGame: this.get("inGame") ? this.get("inGame") : false,
         appearing_on,
       });
     }

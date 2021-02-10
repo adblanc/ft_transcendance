@@ -143,6 +143,11 @@ $chatInputHeight: 4rem;
     @extend .presence;
     @apply bg-red-600;
   }
+
+  &--inGame {
+    @extend .presence;
+    @apply bg-blue-600;
+  }
 }
 
 .tooltip .tooltip-text {
