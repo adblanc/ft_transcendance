@@ -16,6 +16,7 @@ class ExpireMatchedGameJob < ApplicationJob
 		else
 			game.update(status: :unanswered)
 			game.broadcast_end(nil, nil)
+			game.destroy
 		end
 	end
 
