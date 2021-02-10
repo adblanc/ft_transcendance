@@ -1,7 +1,6 @@
-import Backbone from "backbone";
-import { RoomsGlobalData } from "channels/rooms_global_channel";
 import { BASE_ROOT } from "src/constants";
 import { eventBus } from "src/events/EventBus";
+import { currentUser } from "src/models/Profile";
 import PublicRoom from "src/models/PublicRoom";
 import Room from "../models/Room";
 import BaseRooms from "./BaseRooms";
@@ -23,8 +22,19 @@ export default class MyRooms extends BaseRooms<Room> {
   }
 
   addPublicRoom(publicRoom: PublicRoom) {
-    const room = new Room(publicRoom.toJSON());
+    const roomInAdminList = this.find(
+      (r) => r.get("isInAdminList") && r.get("id") === publicRoom.get("id")
+    );
+
+    if (roomInAdminList) {
+      roomInAdminList.unsubscribe();
+      const a = this.remove(roomInAdminList);
+    }
+
+    const room = new Room({ ...publicRoom.toJSON(), isInAdminList: false });
+
     this.selectedRoom?.toggle();
+
     this.selectedRoom = undefined;
     this.add(room);
   }
@@ -36,6 +46,7 @@ export default class MyRooms extends BaseRooms<Room> {
   }
 
   onRemove(room: Room) {
+    room.unsubscribe();
     this.checkSelectedRemove(room);
   }
 
@@ -59,8 +70,8 @@ export default class MyRooms extends BaseRooms<Room> {
     }
     this.selectedRoom = room;
     this.selectedRoom.toggle();
-	console.log("set and toggle selectedRoom", room);
-	eventBus.trigger("chatplay:toggle");
+    console.log("set and toggle selectedRoom", room);
+    eventBus.trigger("chatplay:toggle");
   }
 
   url = () => `${BASE_ROOT}/my-rooms`;

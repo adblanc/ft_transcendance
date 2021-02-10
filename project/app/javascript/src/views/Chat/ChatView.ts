@@ -9,11 +9,14 @@ import PublicRoomsView from "./PublicRoomsView";
 import MyRoomsView from "./MyRoomsView";
 import DirectMessagesView from "./DirectMessagesView";
 import Room from "src/models/Room";
+import AdminRoomsView from "./AdminRoomsView";
+import { currentUser } from "src/models/Profile";
 
 export default class ChatView extends BaseView {
   myRooms: MyRooms;
   publicRoomsView: PublicRoomsView;
   myRoomsView: MyRoomsView;
+  adminRoomsView: AdminRoomsView;
   directMessagesView: DirectMessagesView;
   createJoinChannelView: CreateJoinChannelView;
   chatHeaderView?: ChatHeaderView;
@@ -33,6 +36,10 @@ export default class ChatView extends BaseView {
       myRooms: this.myRooms,
     });
 
+    this.adminRoomsView = new AdminRoomsView({
+      myRooms: this.myRooms,
+    });
+
     this.createJoinChannelView = new CreateJoinChannelView({
       rooms: this.myRooms,
     });
@@ -48,6 +55,7 @@ export default class ChatView extends BaseView {
     this.listenTo(eventBus, "chat:go-to-dm", this.goToDm);
     this.listenTo(this.myRooms, "add", this.refreshHeaderInput);
     this.listenTo(this.myRooms, "remove", this.removeHeaderInput);
+    this.listenToOnce(currentUser(), "change", this.renderAdminRoomList);
   }
 
   onClose = () => {
@@ -145,6 +153,12 @@ export default class ChatView extends BaseView {
     this.appendNested(this.publicRoomsView, "#left-container-chat");
 
     return this;
+  }
+
+  renderAdminRoomList() {
+    if (currentUser().get("admin")) {
+      this.appendNested(this.adminRoomsView, "#left-container-chat");
+    }
   }
 
   renderChatHeader() {

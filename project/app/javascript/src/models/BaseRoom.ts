@@ -7,6 +7,7 @@ export interface IRoom {
   name: string;
   password?: string;
   isOwner?: boolean;
+  isInAdminList?: boolean;
   is_private?: boolean;
   is_dm?: boolean;
   id?: number;
@@ -19,10 +20,11 @@ export default class BaseRoom extends BaseModel<IRoom> {
   join() {
     return this.asyncFetch({
       url: `${BASE_ROOT}/join-room`,
-      data: { name: this.get("name"),
-	    password: this.get("password"),
-	    is_private: this.get("is_private"),
-		},
+      data: {
+        name: this.get("name"),
+        password: this.get("password"),
+        is_private: this.get("is_private"),
+      },
     });
   }
 }
