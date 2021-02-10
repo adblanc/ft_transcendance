@@ -60,6 +60,7 @@ export default class ChatView extends BaseView {
 
   onClose = () => {
     this.myRoomsView.close();
+    this.directMessagesView.close();
     this.createJoinChannelView.close();
     this.publicRoomsView.close();
     this.chatHeaderView?.close();
