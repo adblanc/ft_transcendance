@@ -15,14 +15,15 @@ export default class MyRoomView extends BaseView<Room> {
       throw Error("Please provide a Room model.");
     }
 
-	this.listenTo(this.model, "change", this.render);
-	this.listenTo(eventBus, "message:received", this.renderMessageReceived);
+    this.listenTo(this.model, "change", this.render);
+    this.listenTo(eventBus, "message:received", this.renderMessageReceived);
 
     this.roomMessagesView = undefined;
   }
 
   onClose = () => {
     this.roomMessagesView?.close();
+    this.model.unsubscribe();
   };
 
   events() {
@@ -33,9 +34,9 @@ export default class MyRoomView extends BaseView<Room> {
 
   onClick() {
     if (!this.model.get("selected")) {
-	  this.model.select();
-	}
-	this.$("#message-pending").hide();
+      this.model.select();
+    }
+    this.$("#message-pending").hide();
   }
 
   renderMessages() {
@@ -48,8 +49,9 @@ export default class MyRoomView extends BaseView<Room> {
   }
 
   renderMessageReceived(id) {
-	if (id == this.model.get("id"))
-		this.$("#message-pending").show();
+    if (id == this.model.get("id")) {
+      this.$("#message-pending").show();
+    }
   }
 
   render() {

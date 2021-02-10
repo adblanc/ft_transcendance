@@ -22,22 +22,37 @@ export default class MatchView extends BaseView {
 	this.nb = options.nb;
 
 	const button = document.querySelector(`#round-${this.round}-game-${this.nb}`);
-
 	button.addEventListener('click', event => {
 		this.onPlayClicked(event);
 	});
   }
 
   async onPlayClicked(e: Event) {
-	if ($(`#game-${this.nb}`).hasClass("play")) {
-		console.log("test");
+	e.preventDefault();
+	if ($(`#round-${this.round}-game-${this.nb}`).hasClass("play")) {
+		const success = await this.model.startTournamentGame();
+		if (success) {
+			this.start();
+		}
+	}
+  }
+
+  start() { 
+	currentUser().fetch();
+	if (this.model.get("status") === "matched") {
+		this.model.navigateToGame();
+		displaySuccess("Redirecting you to the game...");
+	  } else {
+		this.model.createChannelConsumer();
+		displaySuccess("Waiting for opponent to start the game...");
+		Backbone.history.navigate("/play", { trigger: true });
 	}
   }
 
   render() {
 	const game = {
 		...this.model.toJSON(),
-		finished: this.model.get("status") === "finished" || this.model.get("status") === "unanswered",
+		finished: this.model.get("status") === "finished" || this.model.get("status") === "forfeit",
 	};
 
     const template = $(`#matchTemplate`).html();
@@ -46,8 +61,6 @@ export default class MatchView extends BaseView {
 	
 	if (this.model.get("status") === "pending") {
 		this.model.get("players").forEach(function(item) {
-			console.log(currentUser().get("id"));
-			console.log(item.get("id"));
 			if (currentUser().get("id") == item.get("id")) {
 				$(`#round-${this.round}-game-${this.nb}`).addClass("play");
 				$(`#game-to-play`).show();

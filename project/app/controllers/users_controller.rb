@@ -56,6 +56,8 @@ class UsersController < ApplicationController
 
 		if !@room
 			render json: {"room" => ["not found"]}, status: :not_found and return;
+		elsif @room.is_dm
+			render json: {"you" => ["can't update role in dm"]}, status: :unprocessable_entity
 		elsif !@current_user.is_room_owner?(@room)
 			render json: {"you" => ["must be owner of this room"]}, status: :unauthorized and return;
 		end

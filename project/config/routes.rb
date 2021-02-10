@@ -32,6 +32,7 @@ scope "/api" do
       put :acceptChallengeWT
       put :acceptPlayChat
       put :acceptLadderChallenge
+	  put :startTournamentGame
     end
   end
 

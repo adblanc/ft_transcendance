@@ -11,7 +11,7 @@ class RoundJob < ApplicationJob
 	  handle_games(tournament) 
 	  change_round(tournament)
 
-	  @round_length = 1
+	  @round_length = 5
 	  RoundJob.set(wait_until: DateTime.now + @round_length.minutes).perform_later(tournament)
 	end
 
@@ -33,14 +33,14 @@ class RoundJob < ApplicationJob
 
 	def handle_games(tournament)
 		tournament.games.where(tournament_round: tournament.status).each do | game |
-			if game.finished?
+			if game.finished? || game.forfeit?
 				push_next_round(tournament, game.winner)
 				set_tournament_user(tournament, nil, game.loser)
-			/elsif game.pending? && 1 guy is ready
-				handle_forfeit(READYGUY, game, tournament, true)
-				push_next_round(tournament, READYGUY)
-			/
-			elsif game.pending?
+			elsif (game.pending? || game.matched?) && game.game_users.where(status: :ready).first.present?
+				@winner = game.game_users.where(status: :ready).first.user
+				handle_forfeit(@winner, game, tournament, true)
+				push_next_round(tournament, @winner)
+			elsif game.pending? || game.matched?
 				@random = game.users.sample
 				handle_forfeit(@random, game, tournament, false)
 			end
@@ -56,6 +56,7 @@ class RoundJob < ApplicationJob
 		tournament.games.where(tournament_round: @status).each do | game |
 			if game.users.count < 2
 				game.users.push(winner)
+				game.game_users.where(user: winner).update(status: :pending)
 				return
 			end
 		end
@@ -63,8 +64,8 @@ class RoundJob < ApplicationJob
 
 	def handle_forfeit(winner, game, tournament, forfeit)
 		finish_game(winner, game)
-		push_next_round(tournament, game.winner)
 		game.handle_points
+		push_next_round(tournament, game.winner)
 		set_tournament_user(tournament, nil, game.loser)
 		forfeit_notif(tournament, game.winner, game.loser, forfeit)
 	end
@@ -72,7 +73,8 @@ class RoundJob < ApplicationJob
 	def finish_game(winner, game)
 		game.game_users.where(user_id: winner.id).first.update(status: :won)
 		game.game_users.where.not(user_id: winner.id).first.update(status: :lose)
-		game.update(status: :unanswered)
+		game.update(status: :forfeit)
+		game.broadcast_end(winner, game.game_users.where.not(id: winner.id).first.user)
 	end
 
 	def set_tournament_user(tournament, winner, eliminated)
@@ -108,16 +110,16 @@ class RoundJob < ApplicationJob
 
 	def handle_final(tournament)
 		@game = tournament.games.final.first
-		if @game.finished?
+		if @game.finished? || game.forfeit?
 			set_tournament_user(tournament, @game.winner, @game.loser)
 			finish_notif(tournament, @game.winner)
-		/elsif @game.pending && 1 guy is ready
-			finish_game(READY_GUY, @game)
+		elsif (@game.pending? || @game.matched?) && @game.game_users.where(status: :ready).first.present?
+			@winner = @game.game_users.where(status: :ready).first.user
+			finish_game(@winner, @game)
 			set_tournament_user(tournament, @game.winner, @game.loser)
 			forfeit_notif(tournament, @game.winner, @game.loser, forfeit)
 			finish_notif(tournament, @game.winner)
-		/
-		else 
+		elsif @game.pending? || @game.matched?
 			@game.update(status: :abandon)
 			@game.users.each do | user |
 				user.game_users.where(game: @game).first.update(status: :lose)

@@ -44,6 +44,9 @@ class MutesController < ApplicationController
 		elsif (!@room)
 			render json: {"room" => ["does not exist"]}, status: :unprocessable_entity
 			return false
+		elsif @room.is_dm
+			render json: {"you" => ["can't mute in dm"]}, status: :unprocessable_entity
+			return false
 		elsif (!@room.users.exists?(params[:id]))
 			render json: {"user" => ["is not in this room"]}, status: :unprocessable_entity
 			return false

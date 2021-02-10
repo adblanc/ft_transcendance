@@ -80,7 +80,11 @@ class User < ApplicationRecord
 	end
 
 	def room_role(room)
-		if self.is_room_owner?(room)
+		if self.admin? && self.has_role?(:owner, room)
+			return "Owner"
+		elsif self.admin?
+			return "Global Admin"
+		elsif self.is_room_owner?(room)
 			return "Owner"
 		elsif self.is_room_administrator?(room)
 			return "Administrator"
@@ -201,7 +205,7 @@ class User < ApplicationRecord
 
 	def game_request
 		games.pending.each do |game|
-			return game if game.initiator.id == self.id
+			return game if game.initiator && game.initiator.id == self.id
 		end
 		return nil
 	end
@@ -210,8 +214,24 @@ class User < ApplicationRecord
 		games.pending.where(id: game_request).first
 	end
 
+	def matchedGame
+		if games.matched.first
+			return games.matched.first.id
+		else
+			return nil
+		end
+	end
+
 	def pendingGameToAccept
-		games.pending.where.not(id: game_request).first
+		games.pending.where.not(id: game_request).where.not(game_type: :tournament).first
+	end
+
+	def tournamentToPlay
+		if self.games.pending.where(game_type: :tournament).present? || self.games.matched.where(game_type: :tournament).present?
+			return true
+		else
+			return false
+		end
 	end
 
 	def inGame?
@@ -292,7 +312,7 @@ class User < ApplicationRecord
 	def lucky_man?
 		i = 0
 		self.games.each do |game|
-			if game.finished? && game.unanswered? && game.winner == self
+			if game.finished? && game.forfeit? && game.winner == self
 				i+= 1
 			end
 		end
@@ -313,13 +333,13 @@ class User < ApplicationRecord
 	def won_tournaments
 		@arr = []
 		tournaments.finished.each do | tour |
-			@arr << tour if self.tournament_status(tour) == "winner" 
+			@arr << tour if self.tournament_status(tour) == "winner"
 		end
 		return @arr
 	end
 
 	def winner(game)
-		if game.finished? || game.unanswered?
+		if game.finished? || game.forfeit?
 			game.winner == self
 		else
 			return nil

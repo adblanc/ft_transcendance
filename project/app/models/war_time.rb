@@ -22,7 +22,11 @@ class WarTime < ApplicationRecord
 	end
 
 	def activeGame
-		games.where(status: [:started]).first
+		if games.where(status: [:started]).first
+			games.where(status: [:started]).first
+		elsif games.where(status: [:matched]).first
+			games.where(status: [:matched]).first
+		end
 	end
 
 	def pendingGame

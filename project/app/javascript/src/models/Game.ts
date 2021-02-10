@@ -21,12 +21,12 @@ export interface IGame {
     | "pending"
     | "started"
     | "finished"
-    | "unanswered"
+    | "forfeit"
     | "paused"
     | "matched";
   last_pause?: number;
   pause_duration?: number;
-  game_type?: "ladder" | "war_time" | "chat" | "friendly";
+  game_type?: "ladder" | "war_time" | "chat" | "friendly" | "tournament";
   isSpectator?: boolean;
   isHost?: boolean;
   players?: Players;
@@ -371,6 +371,15 @@ export default class Game extends BaseModel<IGame> {
       {},
       {
         url: `${this.baseGameRoot()}/acceptLadderChallenge`,
+      }
+    );
+  }
+
+  startTournamentGame() {
+    return this.asyncSave(
+      {},
+      {
+        url: `${this.baseGameRoot()}/startTournamentGame`,
       }
     );
   }

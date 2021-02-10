@@ -61,17 +61,24 @@ export default class StartGameView extends BaseView {
   render() {
     const template = $("#gameStartTemplate").html();
     const html = Mustache.render(template, {});
-    this.$el.html(html);
-
-    if (currentUser().get("pendingGameToAccept")) {
-      this.$("#friendly-btn").addClass("btn-disabled");
-      this.$("#ladder-btn").addClass("btn-disabled");
-      this.$("#must-accept").show();
-    } else if (this.disable == true) {
-      this.$("#friendly-btn").addClass("btn-disabled");
-      this.$("#ladder-btn").addClass("btn-disabled");
-      this.$("#chat-game").show();
-    }
+	this.$el.html(html);
+	
+	if (currentUser().get("pendingGameToAccept"))
+	{
+		this.$("#friendly-btn").addClass("btn-disabled");
+		this.$("#ladder-btn").addClass("btn-disabled");
+		this.$("#ladder-must-play").show();
+	}
+	if (currentUser().get("tournamentToPlay")) {
+		this.$("#friendly-btn").addClass("btn-disabled");
+		this.$("#ladder-btn").addClass("btn-disabled");
+		this.$("#tour-must-play").show();
+	}
+	else if (this.disable == true) {
+		this.$("#friendly-btn").addClass("btn-disabled");
+		this.$("#ladder-btn").addClass("btn-disabled");
+		this.$("#chat-game").show();
+	}
     return this;
   }
 }

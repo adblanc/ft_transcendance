@@ -11,10 +11,11 @@ class ExpireMatchedGameJob < ApplicationJob
 			if (looser)
 				looser.update(status: :lose)
 			end
-			game.update(status: :finished)
+			game.update(status: :forfeit)
+			game.handle_points
 			game.broadcast_end(winner, looser)
 		else
-			game.update(status: :unanswered)
+			game.update(status: :forfeit)
 			game.broadcast_end(nil, nil)
 			game.destroy
 		end

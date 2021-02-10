@@ -20,7 +20,7 @@ class GamesController < ApplicationController
     end
 
 	def createFriendly
-		return head :unauthorized if current_user.inGame? || current_user.pendingGame
+		return head :unauthorized if current_user.inGame? || current_user.pendingGame 
 		@games = Game.where(status: :pending)
 
 		@games.to_ary.each do | game |
@@ -114,7 +114,10 @@ class GamesController < ApplicationController
 
 		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
 		return head :unauthorized if @warTime.activeGame || @warTime.pendingGame
-		return head :unauthorized if current_user.inGame? || current_user.pendingGame
+		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
+			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
+			return
+		end
 
 		@game = Game.create(game_params)
 
@@ -145,11 +148,14 @@ class GamesController < ApplicationController
 
 		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
 		return head :unauthorized if @warTime.activeGame
-		return head :unauthorized if current_user.inGame? || current_user.pendingGame
+		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
+			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
+			return
+		end
 
+		@game.update(status: :matched)
 		@game.add_second_player(current_user)
 
-		/faire link vers match/
 		@guild.members.each do |member|
 			if not member == current_user
 				member.send_notification("#{current_user.name} from your Guild has accepted a War Time challenge against #{@opponent.name}. Click to watch the game!", "/game/#{@game.id}", "war")
@@ -162,7 +168,7 @@ class GamesController < ApplicationController
 	end
 
 	def playChat
-		if current_user.inGame? || current_user.pendingGame
+		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
@@ -181,7 +187,7 @@ class GamesController < ApplicationController
 		if @game.save
 			@game.update(game_type: :chat)
 			@game.add_host(current_user)
-			@expire = 5
+			@expire = 1
 			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, @room)
 			ActionCable.server.broadcast("room_#{@room.id}", {"event" => "playchat"});
 			@game
@@ -191,7 +197,7 @@ class GamesController < ApplicationController
 	end
 
 	def acceptPlayChat
-		if current_user.inGame? || current_user.pendingGame
+		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
@@ -199,13 +205,14 @@ class GamesController < ApplicationController
 		@game = Game.find_by_id(params[:id])
 		return head :unauthorized if not @game.pending?
 
+		@game.update(status: :matched)
 		@game.add_second_player(current_user)
 		ActionCable.server.broadcast("room_#{@game.room_message.room.id}", {"event" => "playchat"});
 		@game
 	end
 
 	def ladderChallenge
-		if current_user.inGame? || current_user.pendingGame
+		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
@@ -227,15 +234,44 @@ class GamesController < ApplicationController
 	end
 
 	def acceptLadderChallenge
-		if current_user.inGame? || current_user.pendingGame
+		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
 		@game = Game.find_by_id(params[:id])
 		return head :unauthorized if not @game.pending?
+		current_user.game_users.where(game: @game).first.update(status: :accepted)
 		@game.update(status: :matched)
 		@game.add_player_role(current_user)
 		@game.broadcast({"action" => "matched"})
+		@game
+	end
+
+	def startTournamentGame
+		@game = Game.find_by_id(params[:id])
+		@opponent = @game.opponent(current_user)
+		
+		if current_user.inGame? || (current_user.pendingGame && current_user.pendingGame.id != @game.id) || (current_user.matchedGame && current_user.matchedGame != @game.id) 
+			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
+			return
+		end
+
+		if not @game.pending? || @game.matched?
+			render json: {"Game" => ["is already over."]}, status: :unprocessable_entity
+			return
+		end
+		player = @game.game_users.where(user_id: current_user.id).first
+		player.update(status: :accepted)
+
+		if (@game.game_users.pending.size == 0)
+			@game.add_player_role(current_user)
+			@game.update(status: :matched)
+			@game.broadcast({"action" => "matched"})
+		else
+			current_user.remove_role(:spectator, @game);
+			current_user.add_role(:host, @game);
+			@opponent.send_notification("#{current_user.name} wants to play your tournament game", "/tournaments/temporary", "tournament")
+		end
 		@game
 	end
 

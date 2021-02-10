@@ -116,6 +116,7 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
     const html = Mustache.render(template, {
       ...this.model?.toJSON(),
       isCurrentUser: this.model.get("id") === currentUser().get("id"),
+      isInRoom: this.model.get("roomRole") !== "Former member",
       isAdmin: this.currentRoomUser.get("isRoomAdministrator"),
       isOwner: this.currentRoomUser.room.get("isOwner"),
       canPromote: this.model.canBePromote(),

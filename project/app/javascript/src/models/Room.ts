@@ -57,11 +57,16 @@ export default class Room extends BaseRoom {
       return undefined;
     }
 
+    this.unsubscribe();
+
     return consumer.subscriptions.create(
       { channel: "RoomChannel", room_id },
       {
         connected: () => {
-          console.log("connected to", room_id);
+          console.log("connected to room", room_id);
+        },
+        disconnected: () => {
+          console.log("disconnected from room", room_id);
         },
         received: (data: RoomData) => {
           if (data.message) {
@@ -93,9 +98,13 @@ export default class Room extends BaseRoom {
                   ...data.message,
                   sent: currentUser().get("id") === data.message.user_id,
                 })
-			  );
-			  if (!data.message.ancient && currentUser().get("id") != data.message.user_id)
-			  	eventBus.trigger("message:received", this.get("id"));
+              );
+              if (
+                !data.message.ancient &&
+                currentUser().get("id") != data.message.user_id
+              ) {
+                eventBus.trigger("message:received", this.get("id"));
+              }
             }
           }
           if (data.event === "playchat") {
@@ -107,11 +116,12 @@ export default class Room extends BaseRoom {
   }
 
   updateChannel() {
-    if (this.channel) {
-      this.channel.unsubscribe();
-    }
-
+    this.unsubscribe();
     this.channel = this.createConsumer();
+  }
+
+  unsubscribe() {
+    this.channel?.unsubscribe();
   }
 
   select() {
@@ -126,11 +136,13 @@ export default class Room extends BaseRoom {
   async quit() {
     const success = await this.asyncDestroy({
       url: `${BASE_ROOT}/quit-room?id=${this.get("id")}`,
+      wait: true,
     });
 
     if (success) {
       this.channel.unsubscribe();
     }
+
     return success;
   }
 
@@ -138,7 +150,7 @@ export default class Room extends BaseRoom {
     const success = await this.asyncDestroy();
 
     if (success) {
-      this.channel.unsubscribe();
+      this.unsubscribe();
     }
     return success;
   }

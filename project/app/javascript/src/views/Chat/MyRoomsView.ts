@@ -33,7 +33,7 @@ export default class MyRoomsView extends BaseView {
   };
 
   renderMyRoom(room: Room) {
-    if (!room.get("is_dm")) {
+    if (!room.get("is_dm") && !room.get("isInAdminList")) {
       const myRoomView = new MyRoomView({ model: room });
       this.myRoomViews.push(myRoomView);
       this.$("#my-rooms-list").append(myRoomView.render().el);
@@ -41,7 +41,7 @@ export default class MyRoomsView extends BaseView {
   }
 
   removeMyRoom(room: Room) {
-    if (!room.get("is_dm")) {
+    if (!room.get("is_dm") && !room.get("isInAdminList")) {
       this.myRoomViews.forEach((r) => {
         if (r.model.get("id") === room.get("id")) {
           r.close();

@@ -28,13 +28,15 @@ export default class StartGameView extends BaseView<Game> {
 
     const isWar = this.model.get("game_type") === "war_time";
     const isLadder = this.model.get("game_type") === "ladder";
-    const isClassic = !isWar && !isLadder;
+	const isTour = this.model.get("game_type") === "tournament";
+    const isClassic = !isWar && !isLadder && !isTour;
 
     const html = Mustache.render(template, {
       time: this.model.get("war_time")?.get("time_to_answer"),
       isWar,
       isLadder,
       isClassic,
+	  isTour,
     });
     this.$el.html(html);
 
