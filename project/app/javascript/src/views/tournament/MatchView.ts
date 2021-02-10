@@ -38,11 +38,15 @@ export default class MatchView extends BaseView {
   }
 
   start() { 
+	this.model.fetch();
+	currentUser().fetch();
 	if (this.model.get("status") === "matched") {
 		this.model.navigateToGame();
+		displaySuccess("Redirecting you to the game...");
 	  } else {
 		this.model.createChannelConsumer();
-		this.model.navigateToGame();
+		displaySuccess("Waiting for opponent to start the game...");
+		Backbone.history.navigate("/play", { trigger: true });
 	}
   }
 
@@ -56,7 +60,7 @@ export default class MatchView extends BaseView {
     const html = Mustache.render(template, game);
 	this.$el.html(html);
 	
-	if (this.model.get("status") === "pending" || this.model.get("status") === "matched") {
+	if (this.model.get("status") === "pending") {
 		this.model.get("players").forEach(function(item) {
 			if (currentUser().get("id") == item.get("id")) {
 				$(`#round-${this.round}-game-${this.nb}`).addClass("play");

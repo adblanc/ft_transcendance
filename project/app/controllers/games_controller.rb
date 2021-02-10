@@ -234,6 +234,7 @@ class GamesController < ApplicationController
 			@game.broadcast({"action" => "matched"})
 		else
 			@game.add_host(current_user)
+			@opponent.send_notification("#{current_user.name} wants to play your tournament game", "/tournaments/temporary", "tournament")
 		end
 		@game
 	end

@@ -201,7 +201,7 @@ class User < ApplicationRecord
 
 	def game_request
 		games.pending.each do |game|
-			return game if game.initiator.id == self.id
+			return game if game.initiator && game.initiator.id == self.id
 		end
 		return nil
 	end
@@ -223,7 +223,7 @@ class User < ApplicationRecord
 	end
 
 	def tournamentToPlay
-		if self.games.pending.where(game_type: :tournament).present?
+		if self.games.pending.where(game_type: :tournament).present? || self.games.matched.where(game_type: :tournament).present?
 			return true
 		else
 			return false

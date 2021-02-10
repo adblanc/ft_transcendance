@@ -143,7 +143,7 @@ class Game < ApplicationRecord
 	end
 
 	def initiator
-		if self.pending?
+		if self.pending? && self.game_users.accepted.first.present?
 			self.game_users.accepted.first.user
 		end
 	end
