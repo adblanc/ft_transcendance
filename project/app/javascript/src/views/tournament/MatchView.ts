@@ -38,7 +38,6 @@ export default class MatchView extends BaseView {
   }
 
   start() { 
-	this.model.fetch();
 	currentUser().fetch();
 	if (this.model.get("status") === "matched") {
 		this.model.navigateToGame();
