@@ -221,7 +221,11 @@ class User < ApplicationRecord
 	end
 
 	def tournamentToPlay
-		return true if games.pending.where(game_type: :tournament)
+		if self.games.pending.where(game_type: :tournament).present?
+			return true
+		else
+			return false
+		end
 	end
 
 	def inGame?

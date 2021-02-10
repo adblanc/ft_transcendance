@@ -7,8 +7,10 @@ if user.games
 			json.game_type game.game_type
 			json.game_level game.level
 			json.won user.game_won?(game)
-			json.opponentname game.opponent(user).login
-			json.opponentid game.opponent(user).id
+			if game.opponent(user)
+				json.opponentname game.opponent(user).login
+				json.opponentid game.opponent(user).id
+			end
 			json.goal game.goal
 			json.winner game.winner
 			json.created_at game.created_at

@@ -213,14 +213,13 @@ class GamesController < ApplicationController
 	def startTournamentGame
 		@game = Game.find_by_id(params[:id])
 		
-		/Tout ça ne vas pas marcher/
-		if current_user.inGame? || (current_user.pendingGame && current_user.pendingGame.id != @game.id) ||  (current_user.matchedGame && current_user.matchedGame.id != @game.id) 
+		if current_user.inGame? || (current_user.pendingGame && current_user.pendingGame.id != @game.id) || (current_user.matchedGame && current_user.matchedGame.id != @game.id) 
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
 
 		@opponent = @game.opponent(current_user)
-		if @opponent.inGame? || (@opponent.pendingGame && @opponent.pendingGame.id != @game.id) ||  (@opponent.matchedGame && @opponent.matchedGame.id != @game.id) 
+		if @opponent.inGame? || (@opponent.pendingGame && @opponent.pendingGame.id != @game.id) || (@opponent.matchedGame && @opponent.matchedGame.id != @game.id) 
 			render json: {"Opponent" => ["already has a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
