@@ -41,7 +41,17 @@ class GamesController < ApplicationController
         else
             render json: @game.errors, status: :unprocessable_entity
 		end
+	end
 
+	def cancelFriendly
+		@game = Game.find_by_id(params[:id])
+
+		if (!@game || !@game.pending?)
+			return render json: {"you" => ["have no pending game"]}, status: :not_found
+		else
+			@game.broadcast({"action" => "expired"});
+			@game.destroy
+		end
 	end
 
 	def ready

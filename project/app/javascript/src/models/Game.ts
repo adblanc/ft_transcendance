@@ -13,7 +13,7 @@ import Players from "src/lib/Pong/collections/Players";
 import Player from "src/lib/Pong/models/Player";
 import Tournament from "src/models/Tournament";
 
-interface IGame {
+export interface IGame {
   id: number;
   level?: string;
   goal?: number;
@@ -26,7 +26,7 @@ interface IGame {
     | "matched";
   last_pause?: number;
   pause_duration?: number;
-  game_type?: string;
+  game_type?: "ladder" | "war_time" | "chat" | "friendly";
   isSpectator?: boolean;
   isHost?: boolean;
   players?: Players;
@@ -147,10 +147,6 @@ export default class Game extends BaseModel<IGame> {
     });
   }
 
-  createFriendly(attrs: CreatableGameArgs) {
-    return this.asyncSave(attrs, { url: `${this.urlRoot()}/createFriendly` });
-  }
-
   connectToWS() {
     this.createChannelConsumer();
     this.get("spectators").connectToSpectatorsChannel(this.get("id"));
@@ -220,7 +216,7 @@ export default class Game extends BaseModel<IGame> {
   }
 
   navigateToGame() {
-    this.unsubscribeChannelConsumer();
+    this.disconnectFromWS();
     Backbone.history.navigate(`/game/${this.get("id")}`, {
       trigger: true,
     });
@@ -238,7 +234,7 @@ export default class Game extends BaseModel<IGame> {
       );
       currentUser().fetch(); //car pas de notif envoyée ni d'event
     }
-    this.unsubscribeChannelConsumer();
+    this.disconnectFromWS();
   }
 
   onGamePaused(data: GameData) {
@@ -296,6 +292,19 @@ export default class Game extends BaseModel<IGame> {
 
     clearInterval(this._timerInterval);
     this.set({ status: "finished" });
+  }
+
+  createFriendly(attrs: CreatableGameArgs) {
+    return this.asyncSave(attrs, { url: `${this.urlRoot()}/create_friendly` });
+  }
+
+  cancelFriendly() {
+    return this.asyncSave(
+      {},
+      {
+        url: `${this.urlRoot()}/cancel_friendly`,
+      }
+    );
   }
 
   challengeWT(

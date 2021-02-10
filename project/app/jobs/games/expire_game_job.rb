@@ -2,7 +2,7 @@ class ExpireGameJob < ApplicationJob
 	queue_as :default
 
 	def perform(game, room)
-	  return if game.started? || game.finished?
+	  return if !game || game.started? || game.finished?
 	  if game.ladder?
 		@winner = game.initiator
 		@loser = game.opponent(@winner)
@@ -12,7 +12,7 @@ class ExpireGameJob < ApplicationJob
 	  	game.handle_points
 		@winner.send_notification("Your Ladder challenge was not answered! You moved up the Ladder", "/tournaments/ladder", "game")
 		@loser.send_notification("You failed to answer a Ladder Challenge! You moved down the Ladder", "/tournaments/ladder", "game")
-		gamebroadcast({"action" => "expired"});
+		game.broadcast({"action" => "expired"});
 		if room
 			ActionCable.server.broadcast("room_#{room.id}", {"action" => "playchat"});
 		end
