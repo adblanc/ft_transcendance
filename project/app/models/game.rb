@@ -249,8 +249,12 @@ class Game < ApplicationRecord
 			"status": :lose
 		};
 
-		User.where({ id: winner.user_id }).first.appear("online")
-		User.where({ id: looser.user_id }).first.appear("online")
+		if (winner)
+			User.where({ id: winner.user_id }).first.appear("online")
+		end
+		if (looser)
+			User.where({ id: looser.user_id }).first.appear("online")
+		end
 		return res;
 	end
 

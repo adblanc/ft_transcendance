@@ -33,6 +33,10 @@ class RoomsController < ApplicationController
 			render json: {"password" => ["can't be blank"]},
 				status: :unprocessable_entity
 			return
+		elsif !room_params[:is_private] and !room_params[:password].blank?
+			render json: {"password" => ["should be blank when creating public channel"]},
+				status: :unprocessable_entity
+			return
 		end
 
 		@room = Room.create(room_params)
@@ -49,18 +53,18 @@ class RoomsController < ApplicationController
 	end
 
 	  def update
-		if params[:password].empty?
-			render json: {"password" => ["can't be blank"]}, status: :not_found
-			return
+		if params[:password].nil? || params[:password].empty?
+			return render json: {"password" => ["can't be blank"]}, status: :unprocessable_entity
 		end
 		@room = Room.find_by_id(params[:id])
-		unless @room
-			render json: {"room" => ["not found."]}, status: :not_found
-			return
+		if !@room
+			return render json: {"room" => ["not found."]}, status: :not_found
 		end
 
 		if !@current_user.is_room_owner?(@room)
-			render json: {"you" => ["must be owner of this room."]}, status: :unprocessable_entity
+			render json: {"you" => ["must be owner of this room"]}, status: :unprocessable_entity
+		elsif !@room.is_private
+			render json: {"room" => ["need to be private to have a password"]}, status: :unprocessable_entity
 		else
 			@room.password = BCrypt::Password.create(params[:password])
 			if (@room.save)
