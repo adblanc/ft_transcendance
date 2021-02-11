@@ -196,7 +196,6 @@ export default class Game extends BaseModel<IGame> {
             case "player_score":
               this.onPlayerScore(data);
               break;
-
             case "game_over":
               this.onGameOver(data);
               break;

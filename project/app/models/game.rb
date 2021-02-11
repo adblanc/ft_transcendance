@@ -238,9 +238,19 @@ class Game < ApplicationRecord
 		res = {};
 		res["action"] = "game_over";
 		res["payload"] = {};
-		res["payload"]["winner"] = {"id": winner&.user_id, "points": winner&.points, "status": :won };
-		res["payload"]["looser"] = {"id": looser&.user_id, "points": looser&.points, "status": :lose };
+		res["payload"]["winner"] = {
+			"id": winner&.user_id,
+			"points": winner&.points,
+			"status": :won
+		};
+		res["payload"]["looser"] = {
+			"id": looser&.user_id,
+			"points": looser&.points,
+			"status": :lose
+		};
 
+		User.where({ id: winner.user_id }).first.appear("online")
+		User.where({ id: looser.user_id }).first.appear("online")
 		return res;
 	end
 
