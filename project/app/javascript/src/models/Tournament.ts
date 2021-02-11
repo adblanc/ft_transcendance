@@ -7,6 +7,8 @@ import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import Games from "src/collections/Games";
 import Game from "src/models/Game";
+import consumer from "channels/consumer";
+import { eventBus } from "src/events/EventBus";
 
 interface ITournament {
   id: string;
@@ -56,6 +58,13 @@ export default class Tournament extends BaseModel<ITournament> {
 
   constructor(options?: any) {
     super(options);
+	if (options) {
+		consumer.subscriptions.create({ channel: "TournamentsChannel", id: options.id }, {
+			received(data) {
+				eventBus.trigger("tournament:change", options.id);
+			}
+		});
+	}
   }
 
   defaults() {

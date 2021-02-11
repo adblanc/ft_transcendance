@@ -6,6 +6,7 @@ import CreateTournamentView from "./CreateTournamentView"
 import TourListView from "./TourListView"
 import Tournaments from "src/collections/Tournaments";
 import { currentUser } from "src/models/Profile";
+import { eventBus } from "src/events/EventBus";
 
 export default class TempTournamentView extends BaseView {
 	collection: Tournaments;
@@ -24,7 +25,11 @@ export default class TempTournamentView extends BaseView {
 
 	this.current = currentUser().get("current_tournaments");
 	this.listenTo(currentUser(), "change", this.render);
+	this.listenTo(eventBus, "tournament:change", this.updateTournament);
+  }
 
+  updateTournament(id: string) {
+  	this.collection.get(id).fetch();
   }
 
   events() {

@@ -4,6 +4,7 @@ class RoundJob < ApplicationJob
 	def perform(tournament)
 	  if tournament.final?
 		tournament.update(status: :finished)
+		ActionCable.server.broadcast("tournament_#{tournament.id}", {})
 		handle_final(tournament)
 		return
 	  end
@@ -20,8 +21,10 @@ class RoundJob < ApplicationJob
 	def change_round(tournament)
 		if tournament.quarter?
 			tournament.update(status: :semi)
+			ActionCable.server.broadcast("tournament_#{tournament.id}", {})
 		else
 			tournament.update(status: :final)
+			ActionCable.server.broadcast("tournament_#{tournament.id}", {})
 		end
 		tournament.games.where(tournament_round: tournament.status).each do | game |
 			game.update(status: :pending)

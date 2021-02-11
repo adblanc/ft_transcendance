@@ -9,9 +9,11 @@ class EndRegistrationJob < ApplicationJob
 		User.all.each do |user|
 			user.send_notification("Registration period extension for #{tournament.name}!", "tournaments/#{tournament.id}", "tournaments")
 		end
+		ActionCable.server.broadcast("tournament_#{tournament.id}", {})
 		return
 	  end
 	  tournament.update(status: :quarter)
+      ActionCable.server.broadcast("tournament_#{tournament.id}", {})
 	  tournament.games.quarter.each do | game |
 		game.update(status: :pending)
 	  end

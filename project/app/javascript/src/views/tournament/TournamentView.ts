@@ -6,6 +6,7 @@ import moment from "moment";
 import { displaySuccess } from "src/utils";
 import { currentUser } from "src/models/Profile";
 import RoundView from "./RoundView";
+import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions & { tournament: Tournament };
 
@@ -25,6 +26,7 @@ export default class TournamentView extends BaseView {
 	
 	this.listenTo(this.tournament, "change", this.render);
 	this.listenTo(currentUser(), "change", this.render);
+	this.listenTo(eventBus, "tournament:change", this.render);
   }
 
   events() {
