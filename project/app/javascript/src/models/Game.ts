@@ -131,12 +131,15 @@ export default class Game extends BaseModel<IGame> {
 
           const seconds = (endDate.getTime() - startDate.getTime()) / 1000;
 
-          this.set({
-            pause_duration: Math.max(
-              this.get("pause_duration") - Math.ceil(seconds),
-              0
-            ),
-          });
+          this.set(
+            {
+              pause_duration: Math.max(
+                this.get("pause_duration") - Math.ceil(seconds),
+                0
+              ),
+            },
+            { silent: true }
+          );
 
           this.startPauseTimer();
         }
@@ -239,7 +242,6 @@ export default class Game extends BaseModel<IGame> {
   }
 
   onGamePaused(data: GameData) {
-    console.log("paused", data);
     this.set({ status: "paused", ...data.payload }, { silent: true });
     this.startPauseTimer();
   }
@@ -262,7 +264,6 @@ export default class Game extends BaseModel<IGame> {
   }
 
   onPlayerReady(data: GameData) {
-    console.log("player ready", data);
     const player = this.get("players").find(
       (p) => p.get("id") === data.playerId
     );

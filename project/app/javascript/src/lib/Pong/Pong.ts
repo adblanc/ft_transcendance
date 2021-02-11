@@ -163,8 +163,6 @@ export default class Pong extends BaseModel {
     console.log("create pong ball movement");
     const id = this.game.get("id");
 
-    this.unsubscribeBallMovement();
-
     this.ballMovementChannel = consumer.subscriptions.create(
       { channel: "PongBallChannel", id },
       {
@@ -188,7 +186,6 @@ export default class Pong extends BaseModel {
 
   unsubscribeBallMovement() {
     this.ballMovementChannel?.unsubscribe();
-    this.ballMovementChannel = undefined;
   }
 
   drawPause() {
@@ -213,8 +210,10 @@ export default class Pong extends BaseModel {
   }
 
   update(dt: number) {
-    this.ball.pos.x += this.ball.vel.x * dt;
-    this.ball.pos.y += this.ball.vel.y * dt;
+    if (this.game.get("isHost") || this.game.get("isTraining")) {
+      this.ball.pos.x += this.ball.vel.x * dt;
+      this.ball.pos.y += this.ball.vel.y * dt;
+    }
 
     if (this.ball.left < 0 || this.ball.right > this.canvas.width) {
       const playerIndex = this.ball.vel.x < 0 ? 1 : 0;
@@ -234,10 +233,10 @@ export default class Pong extends BaseModel {
     this.game
       .get("players")
       .forEach((player) => this.collide(player.paddle, this.ball));
+
     if (
       this.game.get("isHost") &&
-      this.ball.vel.x != 0 &&
-      this.ball.vel.y != 0
+      (this.ball.vel.x != 0 || this.ball.vel.y != 0)
     ) {
       this.ballMovementChannel.perform("movement", this.ball.toJSON());
     }
@@ -276,6 +275,7 @@ export default class Pong extends BaseModel {
         this.difficulty.initialBallSpeedMin,
         this.difficulty.initialBallSpeedMax
       );
+      this.ball.vel.y = 0;
       this.ball.vel.y =
         getRandomFloat(
           this.difficulty.initialBallSpeedMin,
@@ -292,6 +292,12 @@ export default class Pong extends BaseModel {
       paddle.top < ball.bottom &&
       paddle.bottom > ball.top
     ) {
+      // console.log("paddle left", paddle.left);
+      // console.log("ball right", ball.right);
+      // console.log("paddle top", paddle.top);
+      // console.log("ball bottom", ball.bottom);
+      // console.log("paddle bottom", paddle.bottom);
+      // console.log("ball top", ball.top);
       const len = ball.vel.len;
       ball.vel.x = -ball.vel.x;
 

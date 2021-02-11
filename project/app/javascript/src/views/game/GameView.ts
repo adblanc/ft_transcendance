@@ -52,7 +52,8 @@ export default class GameView extends BaseView<Game> {
   }
 
   onClose = () => {
-    this.model.unsubscribeChannelConsumer();
+    this.model.disconnectFromWS();
+    this.pong?.unsubscribeBallMovement();
   };
 
   onReady() {
@@ -109,10 +110,11 @@ export default class GameView extends BaseView<Game> {
   }
 
   render() {
-    console.log("render gameview");
     if (!this.model.get("isTraining") && !this.model.get("status")) {
       return;
     }
+
+    console.log("render gameview", this.model.toJSON());
 
     const isFinished =
       this.model.get("status") === "finished" ||
