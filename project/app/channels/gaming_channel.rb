@@ -41,7 +41,9 @@ class GamingChannel < ApplicationCable::Channel
   end
 
   def game_started
-  	current_user.appear("in_game")
+	GameUser.where({ game_id: @id }).each do |u|
+		User.where({ id: u.user_id }).first.appear("in_game")
+	end
     @game.reload
   end
 

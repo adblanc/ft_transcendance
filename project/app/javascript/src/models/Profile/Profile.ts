@@ -177,9 +177,7 @@ export default class Profile extends BaseModel<IProfile> {
   createAppereanceConsumer() {
     return consumer.subscriptions.create("AppearanceChannel", {
       received: (data: AppearanceData) => {
-        if (this.get("friends").find((u) => u.get("id") === data.user_id)) {
           eventBus.trigger("appeareance", data);
-        }
       },
     });
   }
