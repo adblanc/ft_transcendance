@@ -266,7 +266,7 @@ class User < ApplicationRecord
 		if self.guild
 			i = 0
 			self.guild.wars.each do |war|
-				if war.winner == self.guild
+				if war.winner == self.guild.ang
 					return true
 				end
 			end
@@ -314,11 +314,11 @@ class User < ApplicationRecord
 	def lucky_man?
 		i = 0
 		self.games.each do |game|
-			if game.finished? && game.forfeit? && game.winner == self
+			if game.forfeit? && game.winner == self
 				i+= 1
 			end
 		end
-		if i > 5
+		if i >= 5
 			return true
 		end
 		return false
