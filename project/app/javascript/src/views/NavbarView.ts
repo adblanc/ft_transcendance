@@ -29,6 +29,7 @@ export default class NavbarView extends BaseView {
       this.renderNotificationNumber
     );
     this.listenTo(this.profile, "change:id", this.render);
+	this.listenTo(this.profile, "change:inGame", this.render);
     this.listenTo(eventBus, "message:received", this.renderMessageReceived);
   }
 

@@ -187,8 +187,8 @@ export default class Profile extends BaseModel<IProfile> {
   reactToAppearance({ event, user_id, appearing_on }: AppearanceData) {
     if (user_id === this.get("id")) {
       this.set({
-        is_present: event === "appear" ? true : false,
-		//inGame: this.get("inGame") ? this.get("inGame") : false,
+        is_present: (event === "appear"),
+		inGame: appearing_on === "in_game" ? true : this.get("inGame"),
         appearing_on,
       });
     }

@@ -144,7 +144,7 @@ $chatInputHeight: 4rem;
     @apply bg-red-600;
   }
 
-  &--inGame {
+  &--in_game {
     @extend .presence;
     @apply bg-blue-600;
   }

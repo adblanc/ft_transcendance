@@ -41,6 +41,7 @@ class GamingChannel < ApplicationCable::Channel
   end
 
   def game_started
+  	current_user.appear("in_game")
     @game.reload
   end
 
