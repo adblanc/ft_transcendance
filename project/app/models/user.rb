@@ -192,13 +192,13 @@ class User < ApplicationRecord
 	end
 
 	def appear(appearing_on)
-		self.update_attributes(is_present: true, appearing_on: appearing_on);
+		self.update(is_present: true, appearing_on: appearing_on);
 
 		ActionCable.server.broadcast("appearance_channel", event: "appear", user_id: self.id, appearing_on: appearing_on);
 	end
 
 	def disappear
-		self.update_attributes(is_present: false, appearing_on: "offline");
+		self.update(is_present: false, appearing_on: "offline");
 
 		ActionCable.server.broadcast("appearance_channel", event: "disappear", user_id: self.id);
 	end
@@ -248,11 +248,11 @@ class User < ApplicationRecord
 	end
 
 	def game_points(game)
-		self.game_users.where(game_id: game.id).first.points
+		self.game_users.where(game_id: game.id).first&.points
 	end
 
 	def game_status(game)
-		self.game_users.where(game_id: game.id).first.status
+		self.game_users.where(game_id: game.id).first&.status
 	end
 
 	def game_won?(game)

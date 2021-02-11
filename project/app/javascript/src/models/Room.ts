@@ -10,7 +10,8 @@ import { currentUser } from "./Profile";
 import RoomUser from "./RoomUser";
 
 export interface RoomData {
-  event: "playchat";
+  event: "playchat:expired";
+  game_id?: number;
 
   message: IMessage;
 }
@@ -69,6 +70,7 @@ export default class Room extends BaseRoom {
           console.log("disconnected from room", room_id);
         },
         received: (data: RoomData) => {
+          console.log("data room received", data);
           if (data.message) {
             const blocked = currentUser()
               .get("blocked_users")
@@ -107,8 +109,8 @@ export default class Room extends BaseRoom {
               }
             }
           }
-          if (data.event === "playchat") {
-            eventBus.trigger("chatplay:change");
+          if (data.event === "playchat:expired") {
+            eventBus.trigger(data.event, data.game_id);
           }
         },
       }
