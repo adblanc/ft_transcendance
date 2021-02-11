@@ -14,5 +14,9 @@ class ActiveSupport::TestCase
     logger.debug(msg)
   end
 
+  def valid_auth_header
+    return {"Authorization": "Bearer #{TokiToki.encode(users(:one).login)}"}
+  end
+
   # Add more helper methods to be used by all tests here...
 end
