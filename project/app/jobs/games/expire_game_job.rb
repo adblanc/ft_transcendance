@@ -1,10 +1,6 @@
 class ExpireGameJob < ApplicationJob
 	queue_as :default
 
-	def my_logger
-		@@my_logger ||= Logger.new("#{Rails.root}/log/my.log)")
-	end
-
 	discard_on ActiveJob::DeserializationError do |job, error|
 		Rails.logger.error("Skipping job because of ActiveJob::DeserializationError (#{error.message})")
 	end
@@ -25,7 +21,6 @@ class ExpireGameJob < ApplicationJob
 		game.broadcast({"action" => "expired"});
 		if room
 			game.update(status: :forfeit)
-			my_logger.info("On envoie l'event playchat a #{room.id}")
 			ActionCable.server.broadcast("room_#{room.id}", {"event" => "playchat:expired", "game_id": game.id});
 		end
 		game.destroy

@@ -26,9 +26,7 @@ class GamesController < ApplicationController
 		@games.to_ary.each do | game |
 			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type]
 				@game = game
-				@game.update(status: :matched)
-				@game.add_second_player(current_user)
-				ExpireMatchedGameJob.set(wait: 20.seconds).perform_later(@game)
+				@game.launch_friendly(@current_user)
 				return @game
 			end
 		end
@@ -204,8 +202,7 @@ class GamesController < ApplicationController
 		@game = Game.find_by_id(params[:id])
 		return head :unauthorized if not @game.pending?
 
-		@game.update(status: :matched)
-		@game.add_second_player(current_user)
+		@game.launch_friendly(@current_user)
 		@game
 	end
 

@@ -232,6 +232,12 @@ class Game < ApplicationRecord
 		broadcast_end(winner, looser)
 	end
 
+	def launch_friendly(second_user)
+		self.update(status: :matched)
+		self.add_second_player(second_user)
+		ExpireMatchedGameJob.set(wait: 20.seconds).perform_later(self)
+	end
+
 	private
 
 	def data_over(winner, looser)
