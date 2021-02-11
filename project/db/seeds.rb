@@ -7,13 +7,6 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 bob = User.create(name: "bob", login: "bob");
-
-bob.avatar.attach(
-	io: URI.open("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1pEVYSLDyjch3zZYccCMgguA2zDSLyVP8EPrOb_2DSPNuV60si_Qju-Ll9fnDvfzEXcDEGDTD&usqp=CAc"),
-	filename: "bob.png",
-	"content_type": "image/png",
-)
-
 bill = User.create(name: "bill", login: "bill", contribution: 10);
 ben = User.create(name: "ben", login: "ben", contribution: 20);
 boule = User.create(name: "boule", login: "boule", contribution: 0);
@@ -26,6 +19,12 @@ jack = User.create(name: "jack", login: "jack", contribution: 10);
 User.all.each do |user|
 	user.update_attributes(:otp_secret_key => ROTP::Base32.random)
 end
+
+bob.avatar.attach(
+	io: URI.open("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1pEVYSLDyjch3zZYccCMgguA2zDSLyVP8EPrOb_2DSPNuV60si_Qju-Ll9fnDvfzEXcDEGDTD&usqp=CAc"),
+	filename: "bob.png",
+	"content_type": "image/png",
+)
 
 bill.avatar.attach(
 	io: URI.open("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Hotdog_-_Evan_Swigart.jpg/1024px-Hotdog_-_Evan_Swigart.jpg"),

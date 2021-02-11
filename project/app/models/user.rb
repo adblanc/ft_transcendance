@@ -263,10 +263,12 @@ class User < ApplicationRecord
 	end
 
 	def war_won?
-		i = 0
-		self.guild.wars.each do |war|
-			if war.winner == self.guild
-				return true
+		if self.guild
+			i = 0
+			self.guild.wars.each do |war|
+				if war.winner == self.guild
+					return true
+				end
 			end
 		end
 		return false
