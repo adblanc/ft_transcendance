@@ -66,6 +66,8 @@ export default class Pong extends BaseModel {
   private chars: HTMLCanvasElement[];
   private game: Game;
   private ballMovementChannel: ActionCable.Channel;
+  private _nbrSeparations = 20;
+  private _nbrSeparationsWithHoles = this._nbrSeparations * 2;
 
   constructor(canvas: HTMLCanvasElement, game: Game) {
     super();
@@ -314,6 +316,7 @@ export default class Pong extends BaseModel {
     this.game.get("players").forEach((player) => this.drawRect(player.paddle));
 
     this.drawScore();
+    this.drawSeparation();
   }
 
   drawRect(rect: Rect) {
@@ -337,5 +340,24 @@ export default class Pong extends BaseModel {
         );
       });
     });
+  }
+
+  drawSeparation() {
+    const height = this.canvas.height / this._nbrSeparations;
+
+    this.ctx.strokeStyle = "white";
+
+    for (let i = 0; i < this._nbrSeparationsWithHoles; i++) {
+      if (i % 2) {
+        continue;
+      }
+      this.ctx.beginPath();
+
+      const beginY = i * height + height / 2;
+
+      this.ctx.moveTo(this.canvas.width / 2, beginY);
+      this.ctx.lineTo(this.canvas.width / 2, beginY + height);
+      this.ctx.stroke();
+    }
   }
 }
