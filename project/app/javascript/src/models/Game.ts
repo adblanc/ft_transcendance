@@ -294,6 +294,8 @@ export default class Game extends BaseModel<IGame> {
 
     clearInterval(this._timerInterval);
     this.set({ status: "finished" });
+    this.disconnectFromWS();
+    currentUser().set({ pendingGame: null });
   }
 
   createFriendly(attrs: CreatableGameArgs) {

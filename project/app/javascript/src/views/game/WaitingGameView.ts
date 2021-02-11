@@ -16,11 +16,9 @@ export default class StartGameView extends BaseView<Game> {
   }
 
   async onCancelFriendly() {
-    const success = await this.model.cancelFriendly();
+    await this.model.cancelFriendly();
 
-    if (success) {
-      currentUser().set({ pendingGame: null });
-    }
+    currentUser().set({ pendingGame: null });
   }
 
   render() {
@@ -28,7 +26,7 @@ export default class StartGameView extends BaseView<Game> {
 
     const isWar = this.model.get("game_type") === "war_time";
     const isLadder = this.model.get("game_type") === "ladder";
-	const isTour = this.model.get("game_type") === "tournament";
+    const isTour = this.model.get("game_type") === "tournament";
     const isClassic = !isWar && !isLadder && !isTour;
 
     const html = Mustache.render(template, {
@@ -36,7 +34,7 @@ export default class StartGameView extends BaseView<Game> {
       isWar,
       isLadder,
       isClassic,
-	  isTour,
+      isTour,
     });
     this.$el.html(html);
 
