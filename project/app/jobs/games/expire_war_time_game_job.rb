@@ -5,6 +5,7 @@ class ExpireWarTimeGameJob < ApplicationJob
 	  return if game.started? || game.finished? || game.matched? || game.forfeit?
 	  game.update(status: :forfeit)
 	  user.game_users.where(game: game).update(status: :won)
+	  game.game_users.where.not(user: user).update(status: :lost)
 	  game.handle_points_wt
 	  guild.members.each do |member|
 		member.send_notification("#{opponent.name} has not answered #{user.name}'s' War Time challenge!", "/wars", "wars")
