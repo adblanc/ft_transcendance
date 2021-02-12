@@ -55,16 +55,21 @@ export default class NegotiateView extends ModalView<War> {
     };
   }
 
-  onChange(e: JQuery.Event) {
-	e.preventDefault();
+  changeButtons() {
+	this.$("#accept").removeClass("btn-nego");
 	this.$("#accept").addClass("btn-nego-disabled");
 	this.$("#negotiate").removeClass("btn-nego-disabled");
+	this.$("#negotiate").addClass("btn-nego");
+  }
+
+  onChange(e: JQuery.Event) {
+	e.preventDefault();
+	this.changeButtons();
   }
 
   onChangeFriendly(e: JQuery.Event) {
 	e.preventDefault();
-	this.$("#accept").addClass("btn-nego-disabled");
-	this.$("#negotiate").removeClass("btn-nego-disabled");
+	this.changeButtons();
 	if( this.$("#custom").is(":visible")) 
 		 this.$("#custom").hide();
 	else
@@ -73,9 +78,7 @@ export default class NegotiateView extends ModalView<War> {
 
   onDateChange(e: Event) {
 	e.preventDefault();
-	this.$("#accept").addClass("btn-nego-disabled");
-	this.$("#negotiate").removeClass("btn-nego-disabled");
-
+	this.changeButtons();
 	if ($(e.target).is("#input-start-date"))
 		this.dateTimeStart = this.fp_start.selectedDates[0];
 	if ($(e.target).is("#input-end-date"))
@@ -97,6 +100,7 @@ export default class NegotiateView extends ModalView<War> {
 		`You have successfully ${action}ed the proposition of war.`
 	);
 	this.guild.fetch();
+	currentUser().fetch();
     this.closeModal();
   }
 
@@ -144,6 +148,7 @@ export default class NegotiateView extends ModalView<War> {
       this.closeModal();
 	  this.model.fetch();
 	  this.guild.fetch();
+	  currentUser().fetch();
     }
   }
 
