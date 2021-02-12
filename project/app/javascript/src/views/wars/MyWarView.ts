@@ -26,9 +26,11 @@ export default class MyWarView extends BaseView {
     this.warConfirmedView = undefined;
     this.warWaitingView = undefined;
     this.noWarView = undefined;
+	this.guild?.fetch();
 
     this.listenTo(eventBus, "wars:update", this.onUpdate);
     this.listenTo(currentUser(), "change", this.onUpdate);
+	this.listenTo(this.guild, "change", this.render);
   }
 
   onUpdate() {
