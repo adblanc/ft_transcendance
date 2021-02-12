@@ -247,7 +247,7 @@ class GamesController < ApplicationController
 	end
 
 	def acceptLadderChallenge
-		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
+		if current_user.inGame? || current_user.pendingGame || || current_user.pendingGameToAccept || current_user.matchedGame
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
