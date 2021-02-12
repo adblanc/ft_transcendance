@@ -117,8 +117,11 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
       ...this.model?.toJSON(),
       isCurrentUser: this.model.get("id") === currentUser().get("id"),
       isInRoom: this.model.get("roomRole") !== "Former member",
-      isAdmin: this.currentRoomUser.get("isRoomAdministrator"),
-      isOwner: this.currentRoomUser.room.get("isOwner"),
+      isAdmin:
+        this.currentRoomUser?.get("isRoomAdministrator") ||
+        currentUser().get("admin"),
+      isOwner:
+        this.currentRoomUser?.room.get("isOwner") || currentUser().get("admin"),
       canPromote: this.model.canBePromote(),
       canDemote: this.model.canBeDemote(),
     });

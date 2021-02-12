@@ -4,7 +4,7 @@ import BaseView from "../../lib/BaseView";
 import ActivateView from "./ActivateView";
 import ActiveWarTimeView from "./ActiveWarTimeView";
 import War from "src/models/War";
-import { displaySuccess, displayError } from "src/utils";
+import { currentUser } from "src/models/Profile";
 
 type Options = Backbone.ViewOptions & { war: War};
 
@@ -36,7 +36,7 @@ export default class WarTimeView extends BaseView {
 
   render() {
     const template = $("#warTimeTemplate").html();
-    const html = Mustache.render(template, {});
+    const html = Mustache.render(template, {member: currentUser().get("guild_role") == "Member"});
 	this.$el.html(html);
 
 	if (this.war.get("atWarTime")) {

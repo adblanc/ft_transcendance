@@ -36,6 +36,7 @@ class Game < ApplicationRecord
     validates :level,  presence: true
 	validates :goal, presence: true
 
+	### data
 	def winner
 		if self.finished? || self.forfeit?
 			self.game_users.won.first&.user
@@ -48,6 +49,145 @@ class Game < ApplicationRecord
 		end
 	end
 
+	def	spectators
+		User.with_role(:spectator, self);
+	end
+
+	def initiator
+		if self.pending? && self.game_users.accepted.first.present?
+			self.game_users.accepted.first.user
+		end
+	end
+
+	def opponent(user)
+		if self.users.count == 2
+			self.users.where.not(id: user.id).first
+		end
+	end
+
+	def game_user_opponent(user)
+		if self.game_users.count == 2
+			self.game_users.where.not(user_id: user.id).first
+		end
+	end
+
+	### launch
+	def add_host(player)
+		self.users.push(player)
+		player.remove_role(:spectator, self);
+		player.add_role(:host, self);
+	end
+
+	def add_second_player(player)
+		self.add_player_role(player)
+		self.users.push(player)
+		self.update(status: :matched)
+		self.broadcast({"action" => "matched"});
+	end
+
+	def add_player_role(player)
+		player.remove_role(:spectator, self);
+		player.add_role(:player, self);
+	end
+
+	def launch_friendly(second_user)
+		self.update(status: :matched)
+		self.add_second_player(second_user)
+		ExpireMatchedGameJob.set(wait: 20.seconds).perform_later(self)
+	end
+
+	### run
+	def player_score(data)
+		game_user = self.game_users.where(user_id: data["playerId"], game_id: self.id).first
+		game_user.increment!(:points)
+
+		self.broadcast(data);
+
+		if (game_user.points >= self.goal)
+			game_user.update(status: :won)
+			looser = self.game_users.where.not(user_id: data["playerId"]).first
+			looser.update(status: :lose)
+			self.update(status: :finished)
+			if self.war_time?
+				self.handle_war_time_end
+			else
+				self.handle_points
+			end
+			self.broadcast(self.data_over(game_user, looser))
+		end
+	end
+
+	def user_paused(user)
+		player = self.game_users.where(user_id: user.id).first
+
+		player.increment!(:pause_nbr, 1)
+
+		duration = pause_duration_sec(player.pause_nbr)
+		pause_time = DateTime.now
+		player.update(status: :paused, pause_duration: duration, last_pause: pause_time);
+		logger.debug("last_pause: #{pause_time}")
+		self.update(status: :paused);
+		self.broadcast(self.data_paused(duration, pause_time));
+
+		if (duration == 0)
+			PauseGameJob.perform_now(self, player)
+		else
+			PauseGameJob.set(wait: duration.seconds).perform_later(self, player)
+		end
+	end
+
+	def check_user_paused(user)
+		player = self.game_users.where(user_id: user.id).first
+
+		if (player.paused?)
+			player.update(status: :accepted);
+		end
+		if (self.game_users.paused.size == 0 && self.paused?)
+			self.update(status: :started);
+			self.broadcast({"action" => "game_continue"});
+		end
+	end
+
+	### end
+	def ladder_swap
+		rank = self.winner.ladder_rank
+		self.winner.update(ladder_rank: self.loser.ladder_rank)
+		self.loser.update(ladder_rank: rank)
+	end
+
+	def broadcast_end(winner, looser)
+		self.broadcast(self.data_over(winner, looser))
+	end
+
+	def broadcast(data)
+		ActionCable.server.broadcast("game_#{self.id}", data);
+	end
+
+	def give_up(looser)
+		looser.update(status: :lose)
+		winner = self.game_users.where.not(id: looser.id).first
+		winner.update(status: :won)
+
+		self.update(status: :forfeit)
+		if self.war_time?
+			self.handle_war_time_end
+		else
+			self.handle_points
+		end
+
+		broadcast_end(winner, looser)
+	end
+
+	def handle_war_time_end
+		self.handle_points_wt
+		self.users.each do |user|
+			user.guild.members.each do |member|
+				member.send_notification("War time challenge: #{self.winner.login} won against #{self.loser.login}", "/wars", "wars")
+			end
+		end
+	end
+
+	### points
 	def handle_friendly_game
 		@war = self.winner.guild.startedWar
 		@level = []
@@ -110,126 +250,6 @@ class Game < ApplicationRecord
 		self.winner.guild.war_score(10)
 		self.winner.guild.increment!(:points, 10)
 		self.winner.increment!(:contribution, 10)
-	end
-
-	def ladder_swap
-		rank = self.winner.ladder_rank
-		self.winner.update(ladder_rank: self.loser.ladder_rank)
-		self.loser.update(ladder_rank: rank)
-	end
-
-	def	spectators
-		User.with_role(:spectator, self);
-	end
-
-	def player_score(data)
-		game_user = self.game_users.where(user_id: data["playerId"], game_id: self.id).first
-		game_user.increment!(:points)
-
-		self.broadcast(data);
-
-		if (game_user.points >= self.goal)
-			game_user.update(status: :won)
-			looser = self.game_users.where.not(user_id: data["playerId"]).first
-			looser.update(status: :lose)
-			self.update(status: :finished)
-			if self.war_time?
-				self.handle_points_wt
-			else
-				self.handle_points
-			end
-			self.broadcast(self.data_over(game_user, looser))
-		end
-	end
-
-	def initiator
-		if self.pending? && self.game_users.accepted.first.present?
-			self.game_users.accepted.first.user
-		end
-	end
-
-	def opponent(user)
-		if self.users.count == 2
-			self.users.where.not(id: user.id).first
-		end
-	end
-
-	def game_user_opponent(user)
-		if self.game_users.count == 2
-			self.game_users.where.not(user_id: user.id).first
-		end
-	end
-
-	def add_host(player)
-		self.users.push(player)
-		player.remove_role(:spectator, self);
-		player.add_role(:host, self);
-	end
-
-	def add_second_player(player)
-		self.add_player_role(player)
-		self.users.push(player)
-		self.update(status: :matched)
-		self.broadcast({"action" => "matched"});
-	end
-
-	def add_player_role(player)
-		player.remove_role(:spectator, self);
-		player.add_role(:player, self);
-	end
-
-	def user_paused(user)
-		player = self.game_users.where(user_id: user.id).first
-
-		player.increment!(:pause_nbr, 1)
-
-		duration = pause_duration_sec(player.pause_nbr)
-		pause_time = DateTime.now
-		player.update(status: :paused, pause_duration: duration, last_pause: pause_time);
-		logger.debug("last_pause: #{pause_time}")
-		self.update(status: :paused);
-		self.broadcast(self.data_paused(duration, pause_time));
-
-		if (duration == 0)
-			PauseGameJob.perform_now(self, player)
-		else
-			PauseGameJob.set(wait: duration.seconds).perform_later(self, player)
-		end
-	end
-
-	def check_user_paused(user)
-		player = self.game_users.where(user_id: user.id).first
-
-		if (player.paused?)
-			player.update(status: :accepted);
-		end
-		if (self.game_users.paused.size == 0 && self.paused?)
-			self.update(status: :started);
-			self.broadcast({"action" => "game_continue"});
-		end
-	end
-
-	def broadcast_end(winner, looser)
-		self.broadcast(self.data_over(winner, looser))
-	end
-
-	def broadcast(data)
-		ActionCable.server.broadcast("game_#{self.id}", data);
-	end
-
-	def give_up(looser)
-		looser.update(status: :lose)
-		winner = self.game_users.where.not(id: looser.id).first
-		winner.update(status: :won)
-
-		self.update(status: :forfeit)
-		if self.war_time?
-			self.handle_points_wt
-		else
-			self.handle_points
-		end
-
-		broadcast_end(winner, looser)
 	end
 
 	private

@@ -6,7 +6,7 @@ class ExpireGameJob < ApplicationJob
 	end
 
 	def perform(game, room)
-	  return if game.started? || game.finished? || game.matched?
+	  return if game.started? || game.finished? || game.matched? || game.forfeit?
 	  if game.ladder?
 		@winner = game.initiator
 		@loser = game.opponent(@winner)
@@ -21,10 +21,10 @@ class ExpireGameJob < ApplicationJob
 		game.broadcast({"action" => "expired"});
 		if room
 			game.update(status: :forfeit)
-			ActionCable.server.broadcast("room_#{room.id}", {"action" => "playchat"});
+			ActionCable.server.broadcast("room_#{room.id}", {"event" => "playchat:expired", "game_id": game.id});
 		end
 		game.destroy
-	  end 
+	  end
 	end
 
 end

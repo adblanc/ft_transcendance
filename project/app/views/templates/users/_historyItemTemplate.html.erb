@@ -2,7 +2,17 @@
 <div class="row">
   <div class="column">
 	<div style="padding:10px">
-		<h1 style="float:left;" class="counter text-white">{{game_type}} game against <a class="underline" href="user/{{opponentid}}"> {{opponentname}}</a> - </h1>
+		{{#chat}}
+		<h1 style="float:left;" class="counter text-white">friendly game against <a class="underline" href="user/{{opponentid}}"> {{opponentname}}</a> - </h1>
+		{{/chat}}
+		{{^chat}}
+			{{^opponentid}}
+			<h1 style="float:left;" class="counter text-white">{{game_type}} game unanswered </h1>
+			{{/opponentid}}
+			{{#opponentid}}
+			<h1 style="float:left;" class="counter text-white">{{game_type}} game against <a class="underline" href="user/{{opponentid}}"> {{opponentname}}</a> - </h1>
+			{{/opponentid}}
+		{{/chat}}
 		<h1 style="float:left;" class="text-white">
 		{{#won}} <p>&nbsp Won </p>{{/won}}
 		{{^won}} <p>&nbsp Lost </p>{{/won}}

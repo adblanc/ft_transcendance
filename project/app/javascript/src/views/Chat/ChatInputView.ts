@@ -19,26 +19,26 @@ export default class ChatInputView extends BaseView {
   constructor(options?: Options) {
     super(options);
 
-	this.rooms = options.rooms;
-	this.listenTo(eventBus, "chatplay:toggle", this.render);
+    this.rooms = options.rooms;
+    this.listenTo(eventBus, "chatplay:toggle", this.render);
   }
 
   events() {
     return {
       "keypress #send-message-input": this.onKeyPress,
-	  "click #send-message-btn": this.sendMessage,
-	  "click #chat-play-btn": this.onPlay,
+      "click #send-message-btn": this.sendMessage,
+      "click #chat-play-btn": this.onPlay,
     };
   }
 
   onPlay() {
-	const game = new Game();
-	const chatPlayView = new ChatPlayView({
-		model: game,
-		room_id: this.rooms.selectedRoom.get("id"),
-	});
-	
-	chatPlayView.render();
+    const game = new Game();
+    const chatPlayView = new ChatPlayView({
+      model: game,
+      room_id: this.rooms.selectedRoom.get("id"),
+    });
+
+    chatPlayView.render();
   }
 
   async onKeyPress(e: JQuery.Event) {
@@ -73,8 +73,10 @@ export default class ChatInputView extends BaseView {
 
   render() {
     const template = $("#chat-input-template").html();
-    const html = Mustache.render(template, {dm: this.rooms.selectedRoom.get("is_dm")});
-	this.$el.html(html);
+    const html = Mustache.render(template, {
+      dm: this.rooms.selectedRoom.get("is_dm"),
+    });
+    this.$el.html(html);
 
     return this;
   }

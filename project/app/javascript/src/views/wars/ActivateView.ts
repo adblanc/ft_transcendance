@@ -48,7 +48,7 @@ export default class ActivateView extends ModalView<War> {
     const template = $("#warTimeFormTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
 	this.$content.html(html);
-	
+
 	this.fp_end = flatpickr(this.$("#input-end-date"), {
 		enableTime: true,
 		dateFormat: "Y-m-d H:i",

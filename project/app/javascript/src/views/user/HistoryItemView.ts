@@ -12,6 +12,7 @@ export default class HistoryItemView extends BaseView {
   constructor(options?: Options) {
     super(options);
 	this.model = options.model;
+
   }
 
   render() {
@@ -19,6 +20,7 @@ export default class HistoryItemView extends BaseView {
 	const model = {
 		...this.model.toJSON(),
 		forfeit: this.model.get("status") === "forfeit",
+		chat: this.model.get("game_type") === "chat",
 	}
 
     const template = $("#historyItem").html();

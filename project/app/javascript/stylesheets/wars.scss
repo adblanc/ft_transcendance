@@ -17,6 +17,11 @@
 	background-color: #ef6666;
 }
 
+.btn-nego{
+	@apply bg-teal-500;
+	@apply text-white;
+}
+
 .btn-nego-disabled{
     cursor: not-allowed;
 	pointer-events: none;

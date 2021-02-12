@@ -15,7 +15,11 @@ class WarsController < ApplicationController
 		@recipient = Guild.find(params[:recipient_id])
 
 		return head :unauthorized unless current_user.guild_owner?(@initiator)
-		return head :unauthorized if @initiator.atWar? || @initiator.warInitiator? || @recipient.atWar?
+
+		if @initiator.atWar? || @initiator.warInitiator? || @recipient.atWar?
+			render json: {"Your" => ["guild or opponent guild is already at war"]}, status: :unprocessable_entity
+			return
+		end
 		@war = War.create(war_params)
 
 		if @war.save
@@ -24,16 +28,16 @@ class WarsController < ApplicationController
 			@initiator.wars.where(status: :pending).each do |war|
 				if war != @war
 					war.opponent(@initiator).members.each do |member|
-						member.send_notification("#{@initiator.name} rejected your guild's war declaration", "/wars", "war")
+						member.send_notification("#{@initiator.name} rejected your guild's war declaration", "/wars", "wars")
 					end
 					war.destroy
 				end
 			end
 			@recipient.members.each do |member|
-				member.send_notification("#{@initiator.name} has declared war to your Guild", "/wars", "war")
+				member.send_notification("#{@initiator.name} has declared war to your Guild", "/wars", "wars")
 			end
 			@initiator.members.each do |member|
-				member.send_notification("Your guild has declared war to #{@recipient.name}", "/wars", "war")
+				member.send_notification("Your guild has declared war to #{@recipient.name}", "/wars", "wars")
 			end
 			ExpireWarJob.set(wait_until: @war.end).perform_later(@war)
 			@war
@@ -48,8 +52,15 @@ class WarsController < ApplicationController
 		@opponent = @war.opponent(@guild)
 		@guild_war = GuildWar.where(war: @war, guild: @guild).first
 
-		return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
-		return head :unauthorized if @guild.atWar? || @guild.warInitiator? || @opponent.atWar?
+		if not current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
+			render json: {"You" => ["must be a guild owner or officer to do this"]}, status: :unprocessable_entity
+			return
+		end
+
+		if @guild.atWar? || @guild.warInitiator? || @opponent.atWar?
+			render json: {"Your" => ["guild or opponent guild is already at war"]}, status: :unprocessable_entity
+			return
+		end
 
 		@guild_war.update(status: :accepted)
 		@war.update(status: :confirmed)
@@ -66,7 +77,7 @@ class WarsController < ApplicationController
 		end
 
 		@opponent.members.each do |member|
-			member.send_notification("#{@guild.name} has accepted your guild's war declaration", "/wars", "war")
+			member.send_notification("#{@guild.name} has accepted your guild's war declaration", "/wars", "wars")
 		end
 
 		StartWarJob.set(wait_until: @war.start).perform_later(@war)
@@ -77,11 +88,14 @@ class WarsController < ApplicationController
 		@war = War.find_by_id(params[:id])
 		@guild = Guild.find_by_id(current_user.guild.id)
 
-		return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
+		if not current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
+			render json: {"You" => ["must be a guild owner or officer to do this"]}, status: :unprocessable_entity
+			return
+		end
 		return head :unauthorized if @guild.atWar? || @guild.warInitiator?
 
 		@war.opponent(@guild).members.each do |member|
-			member.send_notification("#{@guild.name} rejected your guild's war declaration", "/wars", "war")
+			member.send_notification("#{@guild.name} rejected your guild's war declaration", "/wars", "wars")
 		end
 		@war.destroy
 	end
@@ -93,8 +107,14 @@ class WarsController < ApplicationController
 		@gw_initiator = GuildWar.where(war: @war, guild: @guild).first
 		@gw_recipient = GuildWar.where(war: @war).where.not(guild: @guild).first
 
-		return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
-		return head :unauthorized if @guild.atWar? || @guild.warInitiator? || @opponent.atWar?
+		if not current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
+			render json: {"You" => ["must be a guild owner or officer to do this"]}, status: :unprocessable_entity
+			return
+		end
+		if @guild.atWar? || @guild.warInitiator? || @opponent.atWar?
+			render json: {"Your" => ["guild or opponent guild is already at war"]}, status: :unprocessable_entity
+			return
+		end
 
 		@war.update(war_params)
 		if @war.save
@@ -103,13 +123,13 @@ class WarsController < ApplicationController
 			@guild.wars.where(status: :pending).each do |war|
 				if war != @war
 					war.opponent(@guild).members.each do |member|
-						member.send_notification("#{@guild.name} rejected your guild's war declaration", "/wars", "war")
+						member.send_notification("#{@guild.name} rejected your guild's war declaration", "/wars", "wars")
 					end
 					war.destroy
 				end
 			end
 			@opponent.members.each do |member|
-				member.send_notification("#{@guild.name} has negotiated the terms of your guild's war declaration", "/wars", "war")
+				member.send_notification("#{@guild.name} has negotiated the terms of your guild's war declaration", "/wars", "wars")
 			end
 			@war
 		else
@@ -122,17 +142,29 @@ class WarsController < ApplicationController
 		@guild = Guild.find_by_id(current_user.guild.id)
 		@opponent = @war.opponent(@guild)
 
-		return head :unauthorized if not @guild.atWar? || @opponent.atWar?
-		return head :unauthorized if @war.atWarTime?
+		if not current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
+			render json: {"You" => ["must be a guild owner or officer to do this"]}, status: :unprocessable_entity
+			return
+		end
+
+		if not @guild.atWar? || @opponent.atWar?
+			render json: {"Your" => ["guild or opponent guild is not at war"]}, status: :unprocessable_entity
+			return
+		end
+
+		if @war.atWarTime?
+			render json: {"This" => ["war already is already in war time."]}, status: :unprocessable_entity
+			return
+		end
 
 		@war_time = WarTime.create(war: @war, start: DateTime.now, end: params[:end], time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
 
 		if @war_time.save
 			@guild.members.each do |member|
-				member.send_notification("War time has just started with #{@opponent.name}! Take your slots!", "/wars", "war")
+				member.send_notification("War time has just started with #{@opponent.name}! Take your slots!", "/wars", "wars")
 			end
 			@opponent.members.each do |member|
-				member.send_notification("War time has just started with #{@guild.name}! Take your slots!", "/wars", "war")
+				member.send_notification("War time has just started with #{@guild.name}! Take your slots!", "/wars", "wars")
 			end
 			EndWarTimeJob.set(wait_until: @war_time.end).perform_later(@war_time, @war)
 			@war.increment!(:nb_wartimes, 1)

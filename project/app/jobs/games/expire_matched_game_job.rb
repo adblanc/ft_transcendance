@@ -12,7 +12,11 @@ class ExpireMatchedGameJob < ApplicationJob
 				looser.update(status: :lose)
 			end
 			game.update(status: :forfeit)
-			game.handle_points
+			if game.war_time?
+				game.handle_war_time_end
+			else
+				game.handle_points
+			end
 			game.broadcast_end(winner, looser)
 		else
 			game.update(status: :forfeit)
@@ -20,5 +24,4 @@ class ExpireMatchedGameJob < ApplicationJob
 			game.destroy
 		end
 	end
-
 end

@@ -1,4 +1,4 @@
-json.extract! game, :id, :level, :goal, :status, :game_type, :tournament_round
+json.extract! game, :id, :level, :goal, :status, :game_type, :tournament_round, :created_at
 json.players do
 	json.array! game.users do | user |
 	   json.extract! user, :id, :name
