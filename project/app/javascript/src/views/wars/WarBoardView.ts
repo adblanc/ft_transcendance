@@ -14,63 +14,63 @@ export default class WarBoardView extends BaseView {
   count: number;
 
   constructor(options?: Options) {
-	super(options);
-	
-	this.max = 5;
+    super(options);
 
-	this.collection = options.collection;
+    this.max = 5;
+
+    this.collection = new Wars();
+    this.collection.fetch();
 
     this.listenTo(this.collection, "reset", this.render);
-	this.listenTo(this.collection, "change", this.render);
-	this.listenTo(this.collection, "add", this.render);
-	this.listenTo(eventBus, "wars:update", this.onUpdate);
+    this.listenTo(this.collection, "change", this.render);
+    this.listenTo(this.collection, "add", this.render);
+    this.listenTo(this.collection, "update", this.render);
+    this.listenTo(eventBus, "wars:update", this.onUpdate);
   }
 
   onUpdate() {
-	  this.collection.fetch();
-	  this.render();
+    this.collection.fetch();
+    this.render();
   }
 
   renderWar(war: War) {
-	var itemWarView = new BoardItemView({
-		model: war,
-	  });
-	  this.$("#listing").append(itemWarView.render().el);
+    var itemWarView = new BoardItemView({
+      model: war,
+    });
+    this.$("#listing").append(itemWarView.render().el);
   }
 
   onLoadMore() {
-	  var wars = this.collection.models.slice(this.count, this.count + this.max);
-	  if(wars.length) {
-			wars.forEach(function (item) {
-				this.renderWar(item);
-			}, this);
-		  	this.count += wars.length;
-	  } 
-	  if (this.count == this.collection.length) {
-		  this.$("#load-more").hide();
-	  }
+    var wars = this.collection.models.slice(this.count, this.count + this.max);
+    if (wars.length) {
+      wars.forEach(function (item) {
+        this.renderWar(item);
+      }, this);
+      this.count += wars.length;
+    }
+    if (this.count == this.collection.length) {
+      this.$("#load-more").hide();
+    }
   }
 
   render() {
-
     const template = $("#warBoardTemplate").html();
     const html = Mustache.render(template, {});
     this.$el.html(html);
 
-	var wars = this.collection.first(this.max);
+    var wars = this.collection.first(this.max);
 
-	if (wars.length == 0) {
-		this.$("#none").show();
-	}
+    if (wars.length == 0) {
+      this.$("#none").show();
+    }
 
-	wars.forEach(function (item) {
-		this.renderWar(item);
-	}, this);
-	this.count = wars.length;
-	if (this.count == this.collection.length) {
-		this.$("#load-more").hide();
-	}
-
+    wars.forEach(function (item) {
+      this.renderWar(item);
+    }, this);
+    this.count = wars.length;
+    if (this.count == this.collection.length) {
+      this.$("#load-more").hide();
+    }
 
     return this;
   }

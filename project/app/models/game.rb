@@ -134,6 +134,11 @@ class Game < ApplicationRecord
 			looser.update(status: :lose)
 			self.update(status: :finished)
 			if self.war_time?
+				self.users.each do |user|
+					user.guild.members.each do |member|
+						member.send_notification("War time challenge: #{self.winner.login} won against #{self.loser.login}", "/wars", "war")
+					end
+				end
 				self.handle_points_wt
 			else
 				self.handle_points
