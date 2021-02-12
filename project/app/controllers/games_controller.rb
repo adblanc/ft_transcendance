@@ -32,7 +32,6 @@ class GamesController < ApplicationController
 		end
 		@game = Game.create(game_params)
         if @game.save
-			@expire = 1
 			ExpireGameJob.set(wait_until: DateTime.now + 40.seconds).perform_later(@game, nil)
 			@game.add_host(current_user)
 			@game
@@ -200,7 +199,6 @@ class GamesController < ApplicationController
 		if @game.save
 			@game.update(game_type: :chat)
 			@game.add_host(current_user)
-			@expire = 1
 			ExpireGameJob.set(wait_until: DateTime.now + 40.seconds).perform_later(@game, @room)
 			@game
 		else

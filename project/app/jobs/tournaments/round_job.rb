@@ -36,13 +36,9 @@ class RoundJob < ApplicationJob
 
 	def handle_games(tournament)
 		tournament.games.where(tournament_round: tournament.status).each do | game |
-			if game.finished? || game.forfeit?
-				push_next_round(tournament, game.winner)
-				set_tournament_user(tournament, nil, game.loser)
-			elsif (game.pending? || game.matched?) && game.game_users.where(status: :ready).first.present?
+			if (game.pending? || game.matched?) && game.game_users.where(status: :ready).first.present?
 				@winner = game.game_users.where(status: :ready).first.user
 				handle_forfeit(@winner, game, tournament, true)
-				push_next_round(tournament, @winner)
 			elsif game.pending? || game.matched?
 				@random = game.users.sample
 				handle_forfeit(@random, game, tournament, false)
@@ -50,26 +46,10 @@ class RoundJob < ApplicationJob
 		end
 	end
 
-	def push_next_round(tournament, winner)
-		if tournament.quarter?
-			@status = "semi"
-		else
-			@status = "final"
-		end
-		tournament.games.where(tournament_round: @status).each do | game |
-			if game.users.count < 2
-				game.users.push(winner)
-				game.game_users.where(user: winner).update(status: :pending)
-				return
-			end
-		end
-	end
-
 	def handle_forfeit(winner, game, tournament, forfeit)
 		finish_game(winner, game)
-		game.handle_points
-		push_next_round(tournament, game.winner)
-		set_tournament_user(tournament, nil, game.loser)
+		tournament.push_next_round(game.winner)
+		tournament.set_tournament_user(nil, game.loser)
 		forfeit_notif(tournament, game.winner, game.loser, forfeit)
 	end
 
@@ -77,28 +57,7 @@ class RoundJob < ApplicationJob
 		game.game_users.where(user_id: winner.id).first.update(status: :won)
 		game.game_users.where.not(user_id: winner.id).first.update(status: :lose)
 		game.update(status: :forfeit)
-		game.broadcast_end(winner, game.game_users.where.not(id: winner.id).first.user)
-	end
-
-	def set_tournament_user(tournament, winner, eliminated)
-		if winner
-			TournamentUser.where(tournament: tournament, user: winner).first.update(status: :winner)
-			TournamentUser.where(tournament: tournament, user: eliminated).first.update(status: :eliminated)
-		else
-			TournamentUser.where(tournament: tournament, user: eliminated).first.update(status: :eliminated)
-		end
-	end 
-
-	def finish_notif(tournament, winner)
-		if winner
-			User.all.each do |user|
-				user.send_notification("#{tournament.name} tournament is over. Winner is : #{winner.name}", "tournaments/#{tournament.id}", "tournaments")
-			end
-		else
-			User.all.each do |user|
-				user.send_notification("#{tournament.name} tournament final was not played! Tournament is over and has no winner!", "tournaments/#{tournament.id}", "tournaments")
-			end
-		end
+		game.handle_points
 	end
 
 	def forfeit_notif(tournament, winner, loser, forfeit)
@@ -114,12 +73,11 @@ class RoundJob < ApplicationJob
 	def handle_final(tournament)
 		@game = tournament.games.final.first
 		if @game.finished? || game.forfeit?
-			set_tournament_user(tournament, @game.winner, @game.loser)
 			finish_notif(tournament, @game.winner)
 		elsif (@game.pending? || @game.matched?) && @game.game_users.where(status: :ready).first.present?
 			@winner = @game.game_users.where(status: :ready).first.user
 			finish_game(@winner, @game)
-			set_tournament_user(tournament, @game.winner, @game.loser)
+			tournament.set_tournament_user(@game.winner, @game.loser)
 			forfeit_notif(tournament, @game.winner, @game.loser, forfeit)
 			finish_notif(tournament, @game.winner)
 		elsif @game.pending? || @game.matched?
@@ -130,6 +88,18 @@ class RoundJob < ApplicationJob
 				user.send_notification("You haven't played your tournament final. You have lost the tournament!", "tournaments/#{tournament.id}", "tournaments")
 			end
 			finish_notif(tournament, nil)
+		end
+	end
+
+	def finish_notif(tournament, winner)
+		if winner
+			User.all.each do |user|
+				user.send_notification("#{tournament.name} tournament is over. Winner is : #{winner.name}", "tournaments/#{tournament.id}", "tournaments")
+			end
+		else
+			User.all.each do |user|
+				user.send_notification("#{tournament.name} tournament final was not played! Tournament is over and has no winner!", "tournaments/#{tournament.id}", "tournaments")
+			end
 		end
 	end
 

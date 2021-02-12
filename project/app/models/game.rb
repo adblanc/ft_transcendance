@@ -108,11 +108,7 @@ class Game < ApplicationRecord
 			looser = self.game_users.where.not(user_id: data["playerId"]).first
 			looser.update(status: :lose)
 			self.update(status: :finished)
-			if self.war_time?
-				self.handle_war_time_end
-			else
-				self.handle_points
-			end
+			self.handle_end_cases
 			self.broadcast(self.data_over(game_user, looser))
 		end
 	end
@@ -149,6 +145,44 @@ class Game < ApplicationRecord
 	end
 
 	### end
+
+	def give_up(looser)
+		looser.update(status: :lose)
+		winner = self.game_users.where.not(id: looser.id).first
+		winner.update(status: :won)
+
+		self.update(status: :forfeit)
+		self.handle_end_cases
+
+		broadcast_end(winner, looser)
+	end
+
+	def handle_end_cases
+		if self.war_time?
+			self.handle_war_time_end
+		elsif self.tournament?
+			self.handle_tournament_end
+			self.handle_points
+		else
+			self.handle_points
+		end
+	end
+
+	def handle_war_time_end
+		self.handle_points_wt
+		self.users.each do |user|
+			user.guild.members.each do |member|
+				member.send_notification("War time challenge: #{self.winner.login} won against #{self.loser.login}", "/wars", "wars")
+			end
+		end
+	end
+
+	def handle_tournament_end
+		@tournament = Tournament.find_by_id(self.tournament_id)
+		@tournament.push_next_round(self.winner)
+		@tournament.set_tournament_user(nil, self.loser)
+	end
+
 	def ladder_swap
 		rank = self.winner.ladder_rank
 		self.winner.update(ladder_rank: self.loser.ladder_rank)
@@ -161,30 +195,6 @@ class Game < ApplicationRecord
 
 	def broadcast(data)
 		ActionCable.server.broadcast("game_#{self.id}", data);
-	end
-
-	def give_up(looser)
-		looser.update(status: :lose)
-		winner = self.game_users.where.not(id: looser.id).first
-		winner.update(status: :won)
-
-		self.update(status: :forfeit)
-		if self.war_time?
-			self.handle_war_time_end
-		else
-			self.handle_points
-		end
-
-		broadcast_end(winner, looser)
-	end
-
-	def handle_war_time_end
-		self.handle_points_wt
-		self.users.each do |user|
-			user.guild.members.each do |member|
-				member.send_notification("War time challenge: #{self.winner.login} won against #{self.loser.login}", "/wars", "wars")
-			end
-		end
 	end
 
 	### points

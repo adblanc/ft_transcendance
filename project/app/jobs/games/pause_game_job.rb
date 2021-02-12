@@ -11,11 +11,7 @@ class PauseGameJob < ApplicationJob
 		@winner.update(status: :won)
 		@loser.update(status: :lose)
 	  	game.update(status: :forfeit)
-		if game.war_time?
-			game.handle_war_time_end
-		else
-			game.handle_points
-		end
+		game.handle_end_cases
 		game.broadcast_end(@winner, @loser);
 	end
 end

@@ -20,7 +20,6 @@ class EndRegistrationJob < ApplicationJob
 	  User.all.each do |user|
 		user.send_notification("Registrations are closed for #{tournament.name} tournament ! Play your opening matches!", "tournaments/#{tournament.id}", "tournaments")
 	  end
-	  @round_length = 3
-	  RoundJob.set(wait_until: DateTime.now + @round_length.minutes).perform_later(tournament)
+	  RoundJob.set(wait_until: DateTime.now + 1.minutes).perform_later(tournament)
 	end
 end

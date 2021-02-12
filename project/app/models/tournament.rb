@@ -113,4 +113,30 @@ class Tournament < ApplicationRecord
 			end
 		end
 	end
+
+	def push_next_round(winner)
+		if self.quarter?
+			@status = "semi"
+		else
+			@status = "final"
+		end
+		self.games.where(tournament_round: @status).each do | game |
+			if game.users.count < 2
+				game.users.push(winner)
+				game.game_users.where(user: winner).update(status: :pending)
+				return
+			end
+		end
+	end
+
+	def set_tournament_user(winner, eliminated)
+		if winner
+			TournamentUser.where(tournament: self, user: winner).first.update(status: :winner)
+			TournamentUser.where(tournament: self, user: eliminated).first.update(status: :eliminated)
+		else
+			TournamentUser.where(tournament: self, user: eliminated).first.update(status: :eliminated)
+		end
+	end 
+
+
 end
