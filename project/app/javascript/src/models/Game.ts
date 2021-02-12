@@ -302,8 +302,8 @@ export default class Game extends BaseModel<IGame> {
       (p) => p.get("id") === data.payload?.looser.id
     );
 
-    winner?.set(data.payload?.winner);
-    looser?.set(data.payload?.looser);
+    winner?.set(data.payload?.winner as object, { silent: true });
+    looser?.set(data.payload?.looser as object, { silent: true });
 
     clearInterval(this._timerInterval);
     this.set({ status: "finished" });
