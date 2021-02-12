@@ -38,13 +38,13 @@ class Game < ApplicationRecord
 
 	def winner
 		if self.finished? || self.forfeit?
-			self.game_users.won.first.user
+			self.game_users.won.first&.user
 		end
 	end
 
 	def loser
 		if self.finished? || self.forfeit?
-			self.game_users.lose.first.user
+			self.game_users.lose.first&.user
 		end
 	end
 

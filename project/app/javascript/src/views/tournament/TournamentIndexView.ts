@@ -5,17 +5,16 @@ import { eventBus } from "src/events/EventBus";
 
 export default class TournamentIndexView extends BaseView {
   constructor(options?: Backbone.ViewOptions) {
-	super(options);
+    super(options);
 
-	this.listenTo(eventBus, "tournament:change", this.render);
+    this.listenTo(eventBus, "tournament:change", this.render);
   }
 
   render() {
     const template = $("#tournamentTemplate").html();
     const html = Mustache.render(template, {});
-	this.$el.html(html);
+    this.$el.html(html);
 
     return this;
   }
-
 }

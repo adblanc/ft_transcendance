@@ -153,11 +153,21 @@ export default class Game extends BaseModel<IGame> {
   connectToWS() {
     this.createChannelConsumer();
     this.get("spectators").connectToSpectatorsChannel(this.get("id"));
+    this.playersListenToScore();
+  }
+
+  playersListenToScore() {
+    this.get("players").forEach((p) => p.listenToPlayerScored());
+  }
+
+  playersStopListenToScore() {
+    this.get("players").forEach((p) => p.stopListeningPlayerScored());
   }
 
   disconnectFromWS() {
     this.unsubscribeChannelConsumer();
     this.get("spectators").unsubscribeSpectatorsChannel();
+    this.playersStopListenToScore();
   }
 
   createChannelConsumer() {
@@ -277,7 +287,8 @@ export default class Game extends BaseModel<IGame> {
   }
 
   onPlayerScore(data: GameData) {
-    eventBus.trigger("pong:player_scored", data);
+    eventBus.trigger(`pong:player_scored:${data.playerId}`);
+    eventBus.trigger("pong:player_scored");
   }
 
   onGameOver(data: GameData) {

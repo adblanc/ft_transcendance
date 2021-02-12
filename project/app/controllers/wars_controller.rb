@@ -1,4 +1,5 @@
 class WarsController < ApplicationController
+	before_action :authenticate_user!
 
 	def index
 		@wars = War.where(status: :started)

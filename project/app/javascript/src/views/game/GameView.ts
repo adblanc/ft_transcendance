@@ -114,8 +114,6 @@ export default class GameView extends BaseView<Game> {
       return;
     }
 
-    console.log("render gameview", this.model.toJSON());
-
     const isFinished =
       this.model.get("status") === "finished" ||
       this.model.get("status") === "forfeit";
@@ -153,7 +151,6 @@ export default class GameView extends BaseView<Game> {
   }
 
   renderPong() {
-    console.log("render pong");
     if (this.pong) {
       this.pong.close();
     }
