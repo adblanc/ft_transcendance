@@ -162,6 +162,7 @@ class GamesController < ApplicationController
 		@opponent.members.each do |member|
 			member.send_notification("#{current_user.name} has accepted your Guild's War Time challenge. Click to watch the game!", "/game/#{@game.id}", "war")
 		end
+		ExpireMatchedGameJob.set(wait: 20.seconds).perform_later(@game)
 		@game
 	end
 
