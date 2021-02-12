@@ -16,6 +16,7 @@ class TournamentsController < ApplicationController
 		@tournament = Tournament.new(tournament_params)
 		if @tournament.save
 			current_user.add_role :owner, @tournament
+			ActionCable.server.broadcast("tournaments_global", {})
 			@tournament
 		else
 			render json: @tournament.errors, status: :unprocessable_entity
