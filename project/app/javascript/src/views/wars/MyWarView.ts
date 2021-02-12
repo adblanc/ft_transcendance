@@ -91,8 +91,6 @@ export default class MyWarView extends BaseView {
       return this;
     }
 
-    console.log("render my war view");
-
     const template = $("#myWarTemplate").html();
     const html = Mustache.render(template, {});
     this.$el.html(html);
