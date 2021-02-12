@@ -28,12 +28,11 @@ export default class MyWarView extends BaseView {
     this.noWarView = undefined;
 
     this.listenTo(eventBus, "wars:update", this.onUpdate);
-    this.listenTo(currentUser(), "change", this.render);
+    this.listenTo(currentUser(), "change", this.onUpdate);
   }
 
   onUpdate() {
-    this.guild?.fetch();
-    this.render();
+    this.guild?.fetch({ success: () => this.render() });
   }
 
   setundefined(view: string) {
@@ -91,6 +90,8 @@ export default class MyWarView extends BaseView {
     if (!currentUser().get("guild")) {
       return this;
     }
+
+    console.log("render my war view");
 
     const template = $("#myWarTemplate").html();
     const html = Mustache.render(template, {});

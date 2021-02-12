@@ -249,7 +249,7 @@ export default class Game extends BaseModel<IGame> {
       );
     }
 
-    currentUser().set({ pendingGame: null });
+    currentUser().fetch();
     this.disconnectFromWS();
   }
 
@@ -308,7 +308,7 @@ export default class Game extends BaseModel<IGame> {
     clearInterval(this._timerInterval);
     this.set({ status: "finished" });
     this.disconnectFromWS();
-    currentUser().set({ pendingGame: null, matchedGame: null });
+    currentUser().fetch();
   }
 
   createFriendly(attrs: CreatableGameArgs) {

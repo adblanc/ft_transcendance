@@ -177,7 +177,7 @@ export default class Profile extends BaseModel<IProfile> {
   createAppereanceConsumer() {
     return consumer.subscriptions.create("AppearanceChannel", {
       received: (data: AppearanceData) => {
-          eventBus.trigger("appeareance", data);
+        eventBus.trigger("appeareance", data);
       },
     });
   }
@@ -185,8 +185,8 @@ export default class Profile extends BaseModel<IProfile> {
   reactToAppearance({ event, user_id, appearing_on }: AppearanceData) {
     if (user_id === this.get("id")) {
       this.set({
-        is_present: (event === "appear"),
-		inGame: (appearing_on === "in_game"),
+        is_present: event === "appear",
+        inGame: appearing_on === "in_game",
         appearing_on,
       });
     }

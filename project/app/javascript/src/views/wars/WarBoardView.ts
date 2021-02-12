@@ -21,8 +21,6 @@ export default class WarBoardView extends BaseView {
     this.collection = new Wars();
     this.collection.fetch();
 
-    this.listenTo(this.collection, "reset", this.render);
-    this.listenTo(this.collection, "change", this.render);
     this.listenTo(this.collection, "add", this.render);
     this.listenTo(this.collection, "update", this.render);
     this.listenTo(eventBus, "wars:update", this.onUpdate);
@@ -30,7 +28,6 @@ export default class WarBoardView extends BaseView {
 
   onUpdate() {
     this.collection.fetch();
-    this.render();
   }
 
   renderWar(war: War) {
@@ -54,6 +51,7 @@ export default class WarBoardView extends BaseView {
   }
 
   render() {
+    console.log("render war board");
     const template = $("#warBoardTemplate").html();
     const html = Mustache.render(template, {});
     this.$el.html(html);
