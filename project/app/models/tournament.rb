@@ -35,6 +35,7 @@ class Tournament < ApplicationRecord
 				registration_start: date,
 				registration_end: date + 1.days,
 			)
+			ActionCable.server.broadcast("tournaments_global", {})
 		rescue => e
 			puts "Failed to add new cron-tournament: #{e.inspect}"
 		end

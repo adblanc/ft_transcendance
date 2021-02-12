@@ -26,10 +26,15 @@ export default class TempTournamentView extends BaseView {
 	this.current = currentUser().get("current_tournaments");
 	this.listenTo(currentUser(), "change", this.render);
 	this.listenTo(eventBus, "tournament:change", this.updateTournament);
+	this.listenTo(eventBus, "tournament:new", this.updateTournaments);
   }
 
   updateTournament(id: string) {
   	this.collection.get(id).fetch();
+  }
+
+  updateTournaments() {
+  	this.collection.fetch();
   }
 
   events() {
