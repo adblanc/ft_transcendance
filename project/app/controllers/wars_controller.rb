@@ -24,16 +24,16 @@ class WarsController < ApplicationController
 			@initiator.wars.where(status: :pending).each do |war|
 				if war != @war
 					war.opponent(@initiator).members.each do |member|
-						member.send_notification("#{@initiator.name} rejected your guild's war declaration", "/wars", "war")
+						member.send_notification("#{@initiator.name} rejected your guild's war declaration", "/wars", "wars")
 					end
 					war.destroy
 				end
 			end
 			@recipient.members.each do |member|
-				member.send_notification("#{@initiator.name} has declared war to your Guild", "/wars", "war")
+				member.send_notification("#{@initiator.name} has declared war to your Guild", "/wars", "wars")
 			end
 			@initiator.members.each do |member|
-				member.send_notification("Your guild has declared war to #{@recipient.name}", "/wars", "war")
+				member.send_notification("Your guild has declared war to #{@recipient.name}", "/wars", "wars")
 			end
 			ExpireWarJob.set(wait_until: @war.end).perform_later(@war)
 			@war
@@ -66,7 +66,7 @@ class WarsController < ApplicationController
 		end
 
 		@opponent.members.each do |member|
-			member.send_notification("#{@guild.name} has accepted your guild's war declaration", "/wars", "war")
+			member.send_notification("#{@guild.name} has accepted your guild's war declaration", "/wars", "wars")
 		end
 
 		StartWarJob.set(wait_until: @war.start).perform_later(@war)
@@ -81,7 +81,7 @@ class WarsController < ApplicationController
 		return head :unauthorized if @guild.atWar? || @guild.warInitiator?
 
 		@war.opponent(@guild).members.each do |member|
-			member.send_notification("#{@guild.name} rejected your guild's war declaration", "/wars", "war")
+			member.send_notification("#{@guild.name} rejected your guild's war declaration", "/wars", "wars")
 		end
 		@war.destroy
 	end
@@ -103,13 +103,13 @@ class WarsController < ApplicationController
 			@guild.wars.where(status: :pending).each do |war|
 				if war != @war
 					war.opponent(@guild).members.each do |member|
-						member.send_notification("#{@guild.name} rejected your guild's war declaration", "/wars", "war")
+						member.send_notification("#{@guild.name} rejected your guild's war declaration", "/wars", "wars")
 					end
 					war.destroy
 				end
 			end
 			@opponent.members.each do |member|
-				member.send_notification("#{@guild.name} has negotiated the terms of your guild's war declaration", "/wars", "war")
+				member.send_notification("#{@guild.name} has negotiated the terms of your guild's war declaration", "/wars", "wars")
 			end
 			@war
 		else
@@ -129,10 +129,10 @@ class WarsController < ApplicationController
 
 		if @war_time.save
 			@guild.members.each do |member|
-				member.send_notification("War time has just started with #{@opponent.name}! Take your slots!", "/wars", "war")
+				member.send_notification("War time has just started with #{@opponent.name}! Take your slots!", "/wars", "wars")
 			end
 			@opponent.members.each do |member|
-				member.send_notification("War time has just started with #{@guild.name}! Take your slots!", "/wars", "war")
+				member.send_notification("War time has just started with #{@guild.name}! Take your slots!", "/wars", "wars")
 			end
 			EndWarTimeJob.set(wait_until: @war_time.end).perform_later(@war_time, @war)
 			@war.increment!(:nb_wartimes, 1)
