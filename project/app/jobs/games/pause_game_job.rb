@@ -10,8 +10,12 @@ class PauseGameJob < ApplicationJob
 		@loser = player
 		@winner.update(status: :won)
 		@loser.update(status: :lose)
-	  	game.update(status: :finished)
-		game.handle_points
+	  	game.update(status: :forfeit)
+		if game.war_time?
+			game.handle_war_time_end
+		else
+			game.handle_points
+		end
 		game.broadcast_end(@winner, @loser);
 	end
 end
