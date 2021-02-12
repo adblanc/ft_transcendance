@@ -13,7 +13,6 @@ if user.games
 				json.opponentid game.opponent(user).id
 			end
 			json.goal game.goal
-			json.winner game.winner
 			json.created_at game.created_at
 		end
 	end
