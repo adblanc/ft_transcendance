@@ -224,6 +224,9 @@ export default class Game extends BaseModel<IGame> {
   }
 
   onGameMatched() {
+    if (this.get("game_type") === "chat") {
+      eventBus.trigger("playchat:expired", this.get("id"));
+    }
     this.navigateToGame();
   }
 
@@ -244,9 +247,9 @@ export default class Game extends BaseModel<IGame> {
       displayError(
         "We were not able to find an opponent. Please try different game settings."
       );
-
-      currentUser().set({ pendingGame: null });
     }
+
+    currentUser().set({ pendingGame: null });
     this.disconnectFromWS();
   }
 
@@ -305,7 +308,7 @@ export default class Game extends BaseModel<IGame> {
     clearInterval(this._timerInterval);
     this.set({ status: "finished" });
     this.disconnectFromWS();
-    currentUser().set({ pendingGame: null });
+    currentUser().set({ pendingGame: null, matchedGame: null });
   }
 
   createFriendly(attrs: CreatableGameArgs) {

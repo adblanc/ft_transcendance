@@ -20,22 +20,20 @@ class GamesController < ApplicationController
     end
 
 	def createFriendly
-		return head :unauthorized if current_user.inGame? || current_user.pendingGame 
+		return head :unauthorized if current_user.inGame? || current_user.pendingGame
 		@games = Game.where(status: :pending)
 
 		@games.to_ary.each do | game |
 			if game.goal == params[:goal].to_i && game.level == params[:level] && game.game_type == params[:game_type]
 				@game = game
-				@game.update(status: :matched)
-				@game.add_second_player(current_user)
-				ExpireMatchedGameJob.set(wait: 5.minutes).perform_later(@game)
+				@game.launch_friendly(@current_user)
 				return @game
 			end
 		end
 		@game = Game.create(game_params)
         if @game.save
 			@expire = 1
-			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, nil)
+			ExpireGameJob.set(wait_until: DateTime.now + 40.seconds).perform_later(@game, nil)
 			@game.add_host(current_user)
 			@game
         else
@@ -188,8 +186,7 @@ class GamesController < ApplicationController
 			@game.update(game_type: :chat)
 			@game.add_host(current_user)
 			@expire = 1
-			ExpireGameJob.set(wait_until: DateTime.now + @expire.minutes).perform_later(@game, @room)
-			ActionCable.server.broadcast("room_#{@room.id}", {"event" => "playchat"});
+			ExpireGameJob.set(wait_until: DateTime.now + 40.seconds).perform_later(@game, @room)
 			@game
 		else
 			render json: @game.errors, status: :unprocessable_entity
@@ -205,9 +202,7 @@ class GamesController < ApplicationController
 		@game = Game.find_by_id(params[:id])
 		return head :unauthorized if not @game.pending?
 
-		@game.update(status: :matched)
-		@game.add_second_player(current_user)
-		ActionCable.server.broadcast("room_#{@game.room_message.room.id}", {"event" => "playchat"});
+		@game.launch_friendly(@current_user)
 		@game
 	end
 
@@ -250,8 +245,8 @@ class GamesController < ApplicationController
 	def startTournamentGame
 		@game = Game.find_by_id(params[:id])
 		@opponent = @game.opponent(current_user)
-		
-		if current_user.inGame? || (current_user.pendingGame && current_user.pendingGame.id != @game.id) || (current_user.matchedGame && current_user.matchedGame != @game.id) 
+
+		if current_user.inGame? || (current_user.pendingGame && current_user.pendingGame.id != @game.id) || (current_user.matchedGame && current_user.matchedGame != @game.id)
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
