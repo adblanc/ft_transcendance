@@ -253,6 +253,7 @@ class GamesController < ApplicationController
 		@game.update(status: :matched)
 		@game.add_player_role(current_user)
 		@game.broadcast({"action" => "matched"})
+		ExpireMatchedGameJob.set(wait: 20.seconds).perform_later(@game)
 		@game
 	end
 
