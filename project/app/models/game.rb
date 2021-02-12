@@ -208,6 +208,7 @@ class Game < ApplicationRecord
 		@goal.each do | goal |
 			if goal == self.goal && @score
 				self.winner.guild.war_score(10)
+				@war.update_guilds
 			end
 		end
 	end
@@ -216,8 +217,10 @@ class Game < ApplicationRecord
 		@war = self.winner.guild.startedWar
 		if self.ladder? && @war.inc_ladder
 			self.winner.guild.war_score(10)
+			@war.update_guilds
 		elsif self.tournament? && @war.inc_tour
 			self.winner.guild.war_score(10)
+			@war.update_guilds
 		elsif (self.friendly? || self.chat?) && @war.inc_friendly
 			self.handle_friendly_game
 		end

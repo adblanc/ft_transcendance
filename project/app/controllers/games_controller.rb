@@ -222,11 +222,15 @@ class GamesController < ApplicationController
 	end
 
 	def ladderChallenge
-		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
+		if current_user.inGame? || current_user.pendingGame || current_user.pendingGameToAccept || current_user.matchedGame
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
 		@opponent = User.find_by_id(params[:opponent_id])
+		if @opponent.inGame? || @opponent.pendingGame || @opponent.pendingGameToAccept || @opponent.matchedGame
+			render json: {"Opponent" => ["already has a Game started or pending"]}, status: :unprocessable_entity
+			return
+		end
 
 		if current_user.ladder_rank < @opponent.ladder_rank
 			render json: {"This" => [" user must have moved down the ladder while you were choosing. Please refresh to choose an opponent that is ranked higher than you. "]}, status: :unprocessable_entity
