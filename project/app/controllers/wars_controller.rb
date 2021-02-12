@@ -15,7 +15,11 @@ class WarsController < ApplicationController
 		@recipient = Guild.find(params[:recipient_id])
 
 		return head :unauthorized unless current_user.guild_owner?(@initiator)
-		return head :unauthorized if @initiator.atWar? || @initiator.warInitiator? || @recipient.atWar?
+
+		if @initiator.atWar? || @initiator.warInitiator? || @recipient.atWar?
+			render json: {"Your" => ["guild or opponent guild is already at war"]}, status: :unprocessable_entity
+			return
+		end
 		@war = War.create(war_params)
 
 		if @war.save
@@ -48,8 +52,15 @@ class WarsController < ApplicationController
 		@opponent = @war.opponent(@guild)
 		@guild_war = GuildWar.where(war: @war, guild: @guild).first
 
-		return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
-		return head :unauthorized if @guild.atWar? || @guild.warInitiator? || @opponent.atWar?
+		if not current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
+			render json: {"You" => ["must be a guild owner or officer to do this"]}, status: :unprocessable_entity
+			return
+		end
+
+		if @guild.atWar? || @guild.warInitiator? || @opponent.atWar?
+			render json: {"Your" => ["guild or opponent guild is already at war"]}, status: :unprocessable_entity
+			return
+		end
 
 		@guild_war.update(status: :accepted)
 		@war.update(status: :confirmed)
@@ -77,7 +88,10 @@ class WarsController < ApplicationController
 		@war = War.find_by_id(params[:id])
 		@guild = Guild.find_by_id(current_user.guild.id)
 
-		return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
+		if not current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
+			render json: {"You" => ["must be a guild owner or officer to do this"]}, status: :unprocessable_entity
+			return
+		end
 		return head :unauthorized if @guild.atWar? || @guild.warInitiator?
 
 		@war.opponent(@guild).members.each do |member|
@@ -93,8 +107,14 @@ class WarsController < ApplicationController
 		@gw_initiator = GuildWar.where(war: @war, guild: @guild).first
 		@gw_recipient = GuildWar.where(war: @war).where.not(guild: @guild).first
 
-		return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
-		return head :unauthorized if @guild.atWar? || @guild.warInitiator? || @opponent.atWar?
+		if not current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
+			render json: {"You" => ["must be a guild owner or officer to do this"]}, status: :unprocessable_entity
+			return
+		end
+		if @guild.atWar? || @guild.warInitiator? || @opponent.atWar?
+			render json: {"Your" => ["guild or opponent guild is already at war"]}, status: :unprocessable_entity
+			return
+		end
 
 		@war.update(war_params)
 		if @war.save
@@ -122,8 +142,15 @@ class WarsController < ApplicationController
 		@guild = Guild.find_by_id(current_user.guild.id)
 		@opponent = @war.opponent(@guild)
 
-		return head :unauthorized if not @guild.atWar? || @opponent.atWar?
-		return head :unauthorized if @war.atWarTime?
+		if not @guild.atWar? || @opponent.atWar?
+			render json: {"Your" => ["guild or opponent guild is not at war"]}, status: :unprocessable_entity
+			return
+		end
+
+		if @war.atWarTime?
+			render json: {"This" => ["war already is already in war time."]}, status: :unprocessable_entity
+			return
+		end
 
 		@war_time = WarTime.create(war: @war, start: DateTime.now, end: params[:end], time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
 

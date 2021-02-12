@@ -110,8 +110,15 @@ class GamesController < ApplicationController
 		@guild = Guild.find_by_id(current_user.guild.id)
 		@opponent = @war.opponent(@guild)
 
-		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
-		return head :unauthorized if @warTime.activeGame || @warTime.pendingGame
+		if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
+			render json: {"War" => ["inexistent or war time is inactive"]}, status: :unprocessable_entity
+			return
+		end
+		if @warTime.activeGame || @warTime.pendingGame
+			render json: {"There" => ["is already a pending or started game in this war time"]}, status: :unprocessable_entity
+			return
+		end
+
 		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
@@ -144,8 +151,15 @@ class GamesController < ApplicationController
 		@guild = Guild.find_by_id(current_user.guild.id)
 		@opponent = @war.opponent(@guild)
 
-		return head :unauthorized if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
-		return head :unauthorized if @warTime.activeGame
+		if not @guild.atWar? || @opponent.atWar? || @war.atWarTime?
+			render json: {"War" => ["inexistent or war time is inactive"]}, status: :unprocessable_entity
+			return
+		end
+		if @warTime.activeGame
+			render json: {"There" => ["is already a started game in this war time"]}, status: :unprocessable_entity
+			return
+		end
+
 		if current_user.inGame? || current_user.pendingGame || current_user.matchedGame
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
