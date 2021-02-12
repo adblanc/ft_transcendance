@@ -6,7 +6,12 @@
 		- Registration ends : {{tour.registration_end}}
 		{{/open}}
 		{{^open}}
-		- Registration starts : {{tour.registration_start}}
+			{{#raging}}
+				- Round : {{status}}
+			{{/raging}}
+			{{^raging}}
+				- Registration starts : {{tour.registration_start}}
+			{{/raging}}
 		{{/open}}
 	{{/mine}}
 	{{#mine}}
