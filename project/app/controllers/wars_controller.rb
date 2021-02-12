@@ -142,6 +142,11 @@ class WarsController < ApplicationController
 		@guild = Guild.find_by_id(current_user.guild.id)
 		@opponent = @war.opponent(@guild)
 
+		if not current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
+			render json: {"You" => ["must be a guild owner or officer to do this"]}, status: :unprocessable_entity
+			return
+		end
+
 		if not @guild.atWar? || @opponent.atWar?
 			render json: {"Your" => ["guild or opponent guild is not at war"]}, status: :unprocessable_entity
 			return
