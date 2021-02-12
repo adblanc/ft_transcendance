@@ -2,7 +2,7 @@ class PauseGameJob < ApplicationJob
 	queue_as :default
 
 	def perform(game, player)
-		if game.started? || game.finished?
+		if game.started? || game.finished? || game.forfeit?
 			return
 	  	end
 
