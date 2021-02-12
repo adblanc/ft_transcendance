@@ -225,14 +225,19 @@ class Game < ApplicationRecord
 
 	def handle_points
 		if self.winner.guild?
-			self.winner.guild.increment!(:points, 10)
-			self.winner.increment!(:contribution, 10)
 			if self.loser.guild?
-				if (self.winner.guild != self.loser.guild) && self.winner.guild.startedWar && self.loser.guild.startedWar
-					if self.winner.guild.startedWar == self.loser.guild.startedWar
-						self.handle_war_points
+				if (self.winner.guild != self.loser.guild)
+					self.winner.guild.increment!(:points, 10)
+					self.winner.increment!(:contribution, 10)
+					if self.winner.guild.startedWar && self.loser.guild.startedWar
+						if self.winner.guild.startedWar == self.loser.guild.startedWar
+							self.handle_war_points
+						end
 					end
 				end
+			else
+				self.winner.guild.increment!(:points, 10)
+				self.winner.increment!(:contribution, 10)
 			end
 		end
 		if self.ladder?
