@@ -1,4 +1,4 @@
-json.extract! game, :id, :level, :goal, :status, :game_type, :war_time
+json.extract! game, :id, :level, :goal, :status, :game_type, :war_time, :created_at
 json.isSpectator @current_user.is_spectating?(game)
 json.isHost @current_user.is_host?(game)
 

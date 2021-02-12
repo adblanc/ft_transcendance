@@ -27,6 +27,11 @@ export default class GameHistoryView extends BaseView {
 
 	this.user = options.user;
 	this.games = this.user.get("games");
+
+	if (this.games != undefined)
+		this.games.sort();
+
+	this.listenTo(this.games, "sort", this.render);
   
   }
 
@@ -46,7 +51,7 @@ export default class GameHistoryView extends BaseView {
       });
       const $element = this.$("#listing_game");
       $element.append(historyItemView.render().el);
-      this.count += 1; // UNdefined ???
+      this.count += 1;
 			}, this);
 	  } 
 	  if (this.count == this.games.length) {
