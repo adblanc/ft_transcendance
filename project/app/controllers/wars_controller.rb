@@ -10,17 +10,22 @@ class WarsController < ApplicationController
 		return head :not_found unless @war
 	end
 
+	def my_logger
+		@@my_logger ||= Logger.new("#{Rails.root}/log/my.log")
+	end	   
+
 	def create
 		@initiator = Guild.find(params[:initiator_id])
 		@recipient = Guild.find(params[:recipient_id])
-		@warTimes = params[:wt_dates]
+		@warTimes = JSON.parse(params[:wt_dates])
+		my_logger.info("wartimes : #{@warTimes}")
 
 		return head :unauthorized unless current_user.guild_owner?(@initiator)
 
-		if @warTimes.size == 0
+		/if @warTimes.size == 0
 			render json: {"There" => ["must be at least one War Time scheduled"]}, status: :unprocessable_entity
 			return
-		end
+		end/
 
 		if @initiator.atWar? || @initiator.warInitiator? || @recipient.atWar?
 			render json: {"Your" => ["guild or opponent guild is already at war"]}, status: :unprocessable_entity
@@ -140,10 +145,6 @@ class WarsController < ApplicationController
 	def war_params
 		params.permit( :start, :end, :prize, :time_to_answer, :max_unanswered_calls, :inc_ladder, :inc_tour, :inc_friendly,
 		:inc_easy, :inc_normal, :inc_hard, :inc_three, :inc_six, :inc_nine)
-	end
-
-	def wt_params
-		params.permit(wt_dates: [:id, :start, :end])
 	end
 
 	def after_creation(war, initiator, recipient)

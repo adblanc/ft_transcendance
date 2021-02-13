@@ -72,7 +72,7 @@ export default class War extends BaseModel<IWar> {
   urlRoot = () => `${BASE_ROOT}/wars`;
   baseWarRoot = () => `${this.urlRoot()}/${this.get("id")}`;
 
-  sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
+  sync(method: string, model: War, options: JQueryAjaxSettings): any {
     return syncWithFormData(method, model, options);
   }
 
@@ -113,7 +113,7 @@ export default class War extends BaseModel<IWar> {
 		inc_nine: inc_nine,
         initiator_id: initiator_id,
         recipient_id: recipient_id,
-		wt_dates: wt_dates,
+		wt_dates: JSON.stringify(wt_dates)
       },
       {
         url: this.urlRoot(),
