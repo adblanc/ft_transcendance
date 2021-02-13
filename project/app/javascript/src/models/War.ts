@@ -170,7 +170,7 @@ export default class War extends BaseModel<IWar> {
   }
 
   
-
+//TO REMOVE
   activateWarTime(end: Date) {
     return this.asyncSave(
       {
