@@ -72,6 +72,7 @@ export default class GamesToSpectateView extends BaseView {
 
     const html = Mustache.render(template, {
       games,
+      isGamesEmpty: games.length === 0,
     });
 
     this.$el.html(html);

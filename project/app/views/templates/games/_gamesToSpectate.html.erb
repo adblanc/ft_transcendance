@@ -1,5 +1,13 @@
 <script type="text/html" id="games-to-spectate-template">
-	<h2 class="text-2xl font-semibold underline mb-4">Games currently being played :</h2>
+	{{#isGamesEmpty}}
+		<h2 class="text-2xl font-semibold underline mb-4">No games are currently being played</h2>
+	{{/isGamesEmpty}}
+
+
+	{{^isGamesEmpty}}
+		<h2 class="text-2xl font-semibold underline mb-4">Games currently being played :</h2>
+	{{/isGamesEmpty}}
+
 	<ul class="space-y-4">
 		{{#games}}
 			<li>

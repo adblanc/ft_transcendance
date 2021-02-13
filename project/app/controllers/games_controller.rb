@@ -7,7 +7,7 @@ class GamesController < ApplicationController
 	end
 
 	def to_spectate
-		@games = Game.all
+		@games = Game.where(status: :started).or(Game.where(status: :paused))
 	end
 
 	def show
