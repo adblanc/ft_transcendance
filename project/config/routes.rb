@@ -84,7 +84,6 @@ scope "/api" do
     member do
       put :accept
       put :reject
-	    put :activateWarTime
     end
   end
 end

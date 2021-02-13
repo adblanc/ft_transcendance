@@ -11,6 +11,11 @@ class WarsController < ApplicationController
 	end
 
 	def create
+		/create WTS && return if issue/
+		/@war_time = WarTime.create(war: @war, start: DateTime.now, end: params[:end], time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)/
+		/start job/
+		/EndWarTimeJob.set(wait_until: @war_time.end).perform_later(@war_time, @war)/
+
 		@initiator = Guild.find(params[:initiator_id])
 		@recipient = Guild.find(params[:recipient_id])
 
@@ -134,42 +139,6 @@ class WarsController < ApplicationController
 			@war
 		else
 			render json: @war.errors, status: :unprocessable_entity
-		end
-	end
-
-	def activateWarTime
-		@war = War.find_by_id(params[:id])
-		@guild = Guild.find_by_id(current_user.guild.id)
-		@opponent = @war.opponent(@guild)
-
-		if not current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
-			render json: {"You" => ["must be a guild owner or officer to do this"]}, status: :unprocessable_entity
-			return
-		end
-
-		if not @guild.atWar? || @opponent.atWar?
-			render json: {"Your" => ["guild or opponent guild is not at war"]}, status: :unprocessable_entity
-			return
-		end
-
-		if @war.atWarTime?
-			render json: {"This" => ["war already is already in war time."]}, status: :unprocessable_entity
-			return
-		end
-
-		@war_time = WarTime.create(war: @war, start: DateTime.now, end: params[:end], time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
-
-		if @war_time.save
-			@guild.members.each do |member|
-				member.send_notification("War time has just started with #{@opponent.name}! Take your slots!", "/wars", "wars")
-			end
-			@opponent.members.each do |member|
-				member.send_notification("War time has just started with #{@guild.name}! Take your slots!", "/wars", "wars")
-			end
-			EndWarTimeJob.set(wait_until: @war_time.end).perform_later(@war_time, @war)
-			@war.increment!(:nb_wartimes, 1)
-		else
-			render json: @war_time.errors, status: :unprocessable_entity
 		end
 	end
 

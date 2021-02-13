@@ -7,6 +7,11 @@ import BaseModel from "src/lib/BaseModel";
 import Guilds from "src/collections/Guilds";
 import { BASE_ROOT } from "src/constants";
 
+export interface WarTimeDates {
+	start: Date;
+	end: Date;
+  }
+
 interface IWar {
   id: string;
   start: Date;
@@ -86,7 +91,8 @@ export default class War extends BaseModel<IWar> {
 	inc_six: boolean,
 	inc_nine: boolean,
     initiator_id: string,
-	recipient_id: string
+	recipient_id: string,
+	wt_dates: WarTimeDates[],
   ) {
     return this.asyncSave(
       {
@@ -106,6 +112,7 @@ export default class War extends BaseModel<IWar> {
 		inc_nine: inc_nine,
         initiator_id: initiator_id,
         recipient_id: recipient_id,
+		wt_dates: wt_dates,
       },
       {
         url: this.urlRoot(),
