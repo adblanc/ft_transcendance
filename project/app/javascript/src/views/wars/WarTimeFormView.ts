@@ -5,6 +5,7 @@ import BaseView from "../../lib/BaseView";
 import War, { WarTimeDates } from "src/models/War";
 const flatpickr = require("flatpickr");
 import { eventBus } from "src/events/EventBus";
+import { displayError, displaySuccess } from "src/utils/toast";
 require("flatpickr/dist/flatpickr.css");
 
 /*type Options = Backbone.ViewOptions & {
@@ -21,21 +22,28 @@ export default class WarTimeFormView extends BaseView{
 
   events() {
 	return {
-		"click #add-war-time": "onAddWT"}; //CANNOT DO THIS IF NOT FILLED
-	}
+		"click #add-war-time": "onAddWT"
+	};
+  }
 	  
 	onAddWT(e: JQuery.Event) {
 		e.preventDefault();
 		const dateTimeStart = this.fp_start.selectedDates[0];
 		const dateTimeEnd = this.fp_end.selectedDates[0];
+
+		if (!dateTimeStart || !dateTimeEnd) {
+			displayError(`Fill in the dates to add war time`);
+			return;
+		}
+
 		const start = dateTimeStart;
 		const end = dateTimeEnd;
 		let dates: WarTimeDates = {
 			start, end
 		};
 		eventBus.trigger("wartime:add", dates);
-		this.$('add-war-time').hide();
-		this.$('remove-war-time').show();
+		this.$('#add-war-time').hide();
+		this.$('#remove-war-time').show();
 	}
 
 
