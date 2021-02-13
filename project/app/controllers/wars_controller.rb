@@ -32,10 +32,11 @@ class WarsController < ApplicationController
 			return
 		end
 		@war = War.create(war_params)
-
 		if @war.save
-			@wartimes.each do | wartime |
-				@wartime = WarTime.create(war: @war, start: wartime.start, end: wartime.end, time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
+			@warTimes.each do | wartime |
+				my_logger.info("wartime : #{wartime}")
+				my_logger.info("wartime_start : #{wartime[:start]}")
+				@wartime = WarTime.create(war: @war, start: wartime[:start], end: wartime[:end], time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
 				if not @wartime.save
 					@war.destroy
 					render json: @war.errors, status: :unprocessable_entity
