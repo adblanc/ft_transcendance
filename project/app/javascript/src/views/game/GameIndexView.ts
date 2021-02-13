@@ -45,25 +45,19 @@ export default class GameIndexView extends BaseView {
       });
     } else if (currentUser().get("pendingGame")) {
       if (currentUser().get("pendingGame").get("game_type") != "chat") {
-        if (this.waitingGameView) {
-          this.waitingGameView.close();
-        }
+        this.closeWaitingStartViews();
         this.waitingGameView = new WaitingGameView({
           model: currentUser().get("pendingGame"),
           className: "text-center text-white p-5 space-y-5 text-sm",
         });
         this.appendNested(this.waitingGameView, "#game-index-container");
       } else {
-        if (this.startGameView) {
-          this.startGameView.close();
-        }
+        this.closeWaitingStartViews();
         this.startGameView = new StartGameView({ disable: true });
         this.appendNested(this.startGameView, "#game-index-container");
       }
     } else {
-      if (this.startGameView) {
-        this.startGameView.close();
-      }
+      this.closeWaitingStartViews();
       this.startGameView = new StartGameView({
         disable: !!currentUser().get("tournamentToPlay"),
       });
@@ -73,5 +67,14 @@ export default class GameIndexView extends BaseView {
 
   renderGamesToSpectate() {
     this.renderNested(this.gamesToSpectateView, "#game-to-spectate");
+  }
+
+  closeWaitingStartViews() {
+    if (this.waitingGameView) {
+      this.waitingGameView.close();
+    }
+    if (this.startGameView) {
+      this.startGameView.close();
+    }
   }
 }
