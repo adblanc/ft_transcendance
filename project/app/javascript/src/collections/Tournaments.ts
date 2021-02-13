@@ -5,6 +5,8 @@ import consumer from "channels/consumer";
 import { eventBus } from "src/events/EventBus";
 
 export default class Tournaments extends Backbone.Collection<Tournament> {
+	static GLOBAL_CHANNEL: ActionCable.Channel = undefined;
+
 	constructor() {
 		super();
 		this.model = Tournament;
@@ -14,9 +16,11 @@ export default class Tournaments extends Backbone.Collection<Tournament> {
 			return model.get('registration_start');
 		}
 
-		consumer.subscriptions.create({ channel: "TournamentsGlobalChannel" }, {
-			received(data) {
-				eventBus.trigger("tournament:new");
+		Tournaments.GLOBAL_CHANNEL ||= consumer.subscriptions.create({
+				channel: "TournamentsGlobalChannel"
+			}, {
+				received(data) {
+					eventBus.trigger("tournament:new");
 			}
 		});
 	}

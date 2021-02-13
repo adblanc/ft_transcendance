@@ -26,7 +26,7 @@ export default class TournamentView extends BaseView {
 	
 	this.listenTo(this.tournament, "change", this.render);
 	this.listenTo(currentUser(), "change", this.render);
-	this.listenTo(eventBus, "tournament:change", this.updateTournament);
+	this.listenTo(eventBus, `tournament-${this.tournament.get("id")}:change`, this.updateTournament);
 	}
 
 	updateTournament(id: string) {

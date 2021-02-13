@@ -4,6 +4,7 @@ import Game from "src/models/Game";
 import BaseView from "src/lib/BaseView";
 import { displaySuccess } from "src/utils";
 import { currentUser } from "src/models/Profile";
+import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions & {
   model: Game;
@@ -23,12 +24,17 @@ export default class MatchView extends BaseView {
     this.round = options.round;
     this.nb = options.nb;
 
+	this.listenTo(eventBus, `game-${this.model.id}:player-register`, this.update_game);
     const button = document.querySelector(
       `#round-${this.round}-game-${this.nb}`
     );
     button.addEventListener("click", (event) => {
       this.onPlayClicked(event);
     });
+  }
+
+  update_game() {
+  	this.model.fetch();
   }
 
   async onPlayClicked(e: Event) {

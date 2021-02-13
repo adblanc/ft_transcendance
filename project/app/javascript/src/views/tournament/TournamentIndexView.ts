@@ -6,8 +6,6 @@ import { eventBus } from "src/events/EventBus";
 export default class TournamentIndexView extends BaseView {
   constructor(options?: Backbone.ViewOptions) {
     super(options);
-
-    this.listenTo(eventBus, "tournament:change", this.render);
   }
 
   render() {

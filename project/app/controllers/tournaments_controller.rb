@@ -40,6 +40,8 @@ class TournamentsController < ApplicationController
 			if game.users.count < 2
 				game.users.push(current_user)
 				game.game_users.where(user: current_user).update(status: :pending)
+				ActionCable.server.broadcast("tournament_#{@tournament.id}",
+					{ game_id: game.id })
 				return
 			end
 		end

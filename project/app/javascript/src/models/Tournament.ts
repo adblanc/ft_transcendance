@@ -27,7 +27,7 @@ type CreatableTournamentArgs = Partial<Pick<ITournament, "name" | "registration_
 
 
 export default class Tournament extends BaseModel<ITournament> {
-  global_channel: ActionCable.Channel = undefined;
+  tournament_channel: ActionCable.Channel = undefined;
 
   preinitialize() {
     this.relations = [
@@ -61,11 +61,19 @@ export default class Tournament extends BaseModel<ITournament> {
   constructor(options?: any) {
     super(options);
 	if (options) {
-		this.global_channel ||= consumer.subscriptions.create({
+		this.tournament_channel = consumer.subscriptions.create({
 			channel: "TournamentsChannel", id: options.id
 		}, {
 			received(data) {
-				eventBus.trigger("tournament:change", options.id);
+				if (data["game_id"]) {
+					eventBus.trigger(`game-${data["game_id"]}:player-register`);
+				} else {
+					eventBus.trigger(`tournament-${options.id}:change`, options.id);
+					eventBus.trigger(`tournament:change`, options.id);
+				}
+				if (data["eot"]) {
+					this.tournament_channel.unsubscribe();		
+				}
 			}
 		});
 	}

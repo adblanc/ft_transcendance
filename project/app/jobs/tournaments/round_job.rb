@@ -4,7 +4,7 @@ class RoundJob < ApplicationJob
 	def perform(tournament)
 	  if tournament.final?
 		tournament.update(status: :finished)
-		ActionCable.server.broadcast("tournament_#{tournament.id}", {})
+		ActionCable.server.broadcast("tournament_#{tournament.id}", { eot: true })
 		handle_final(tournament)
 		return
 	  end
