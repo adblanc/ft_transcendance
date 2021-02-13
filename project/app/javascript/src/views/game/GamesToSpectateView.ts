@@ -3,6 +3,7 @@ import Mustache from "mustache";
 import Games from "src/collections/Games";
 import BaseView from "src/lib/BaseView";
 import Game, { IGame } from "src/models/Game";
+import GameToSpectateView from "./GameToSpectateView";
 
 interface NewGameData {
   event: "new_game";
@@ -28,7 +29,8 @@ export default class GamesToSpectateView extends BaseView {
     this.games = new Games();
     this.games.fetchSpectateGames();
 
-    this.listenTo(this.games, "update", this.render);
+    this.listenTo(this.games, "add", this.renderGameToSpectateView);
+    this.listenTo(this.games, "remove", this.removeGameToSpectateView);
     this.channel = this.createGamesToSpectateChannel();
   }
 
@@ -45,9 +47,9 @@ export default class GamesToSpectateView extends BaseView {
         },
         received: (data: GameToSpectateData) => {
           if (data.event === "new_game") {
-            this.games.push(new Game(data.game));
+            this.games.addSpectateGame(data.game);
           } else if (data.event === "finished_game") {
-            this.games.remove(data.gameId.toString());
+            this.games.removeSpectateGame(data.gameId);
           }
         },
         disconnected: () => {
@@ -57,26 +59,37 @@ export default class GamesToSpectateView extends BaseView {
     );
   }
 
+  renderGameToSpectateView(game: Game) {
+    this.appendNested(
+      new GameToSpectateView({
+        model: game,
+        id: `game-to-spectate-${game.get("id")}`,
+      }),
+      "#games-to-spectate-list"
+    );
+    this.renderRightTitle();
+  }
+
+  removeGameToSpectateView(game: Game) {
+    this.$(`#game-to-spectate-${game.get("id")}`).remove();
+    this.renderRightTitle();
+  }
+
+  renderRightTitle() {
+    if (this.games.isEmpty()) {
+      this.$("#games-title").hide();
+    } else {
+      this.$("#games-title").show();
+    }
+  }
+
   render() {
     const template = $("#games-to-spectate-template").html();
 
-    const games = this.games.map((g) => ({
-      ...g.toJSON(),
-      spectatorsNbr: g.spectatorsNbr,
-      firstPlayer: g.get("players").at(0)?.toJSON(),
-      secondPlayer: g.get("players").at(1)?.toJSON(),
-      link: `/game/${g.get("id")}`,
-    }));
-
-    console.log(games);
-
-    const html = Mustache.render(template, {
-      games,
-      isGamesEmpty: games.length === 0,
-    });
+    const html = Mustache.render(template, {});
 
     this.$el.html(html);
-
+    this.renderRightTitle();
     return this;
   }
 }
