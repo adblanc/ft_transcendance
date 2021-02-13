@@ -7,6 +7,8 @@ class Game < ApplicationRecord
 	has_one :room_message
 	has_one :tournament
 
+	after_update :broadcast_finished_to_games_spectate_channel if :saved_change_to_status
+
 	enum status: [
 		:pending,
 		:started,
@@ -35,6 +37,16 @@ class Game < ApplicationRecord
 
     validates :level,  presence: true
 	validates :goal, presence: true
+
+	def broadcast_finished_to_games_spectate_channel
+		if 	self.game_ended?
+			ActionCable.server.broadcast("games_to_spectate", {"event" => "finished_game", "gameId" => self.id })
+		end
+	end
+
+	def game_ended?
+		return self.finished? || self.forfeit? || self.abandon?
+	end
 
 	def to_spectate_json
 		json = {:id => id}

@@ -7,15 +7,13 @@ import Game, { IGame } from "src/models/Game";
 interface NewGameData {
   event: "new_game";
 
-  payload: IGame;
+  game: IGame;
 }
 
 interface GameFinishedData {
   event: "finished_game";
 
-  payload: {
-    gameId: number;
-  };
+  gameId: number;
 }
 
 type GameToSpectateData = NewGameData | GameFinishedData;
@@ -47,8 +45,9 @@ export default class GamesToSpectateView extends BaseView {
         },
         received: (data: GameToSpectateData) => {
           if (data.event === "new_game") {
-            console.log("we push new game", data);
-            this.games.push(new Game(data.payload));
+            this.games.push(new Game(data.game));
+          } else if (data.event === "finished_game") {
+            this.games.remove(data.gameId.toString());
           }
         },
         disconnected: () => {
@@ -68,6 +67,8 @@ export default class GamesToSpectateView extends BaseView {
       secondPlayer: g.get("players").at(1)?.toJSON(),
       link: `/game/${g.get("id")}`,
     }));
+
+    console.log(games);
 
     const html = Mustache.render(template, {
       games,
