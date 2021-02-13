@@ -109,6 +109,10 @@ export default class Game extends BaseModel<IGame> {
   urlRoot = () => `${BASE_ROOT}/games`;
   baseGameRoot = () => `${this.urlRoot()}/${this.get("id")}`;
 
+  get spectatorsNbr() {
+    return this.get("spectators").size();
+  }
+
   get winner() {
     return this.get("players").find((p) => p.get("status") === "won");
   }
