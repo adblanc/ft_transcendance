@@ -4,12 +4,17 @@ import BaseView from "src/lib/BaseView";
 import WaitingGameView from "./WaitingGameView";
 import StartGameView from "./StartGameView";
 import { currentUser } from "src/models/Profile";
+import GamesToSpectateView from "./GamesToSpectateView";
 
 export default class GameIndexView extends BaseView {
+  gamesToSpectateView: GamesToSpectateView;
+
   constructor(options?: Backbone.ViewOptions) {
     super(options);
 
     this.listenTo(currentUser(), "change", this.render);
+
+    this.gamesToSpectateView = new GamesToSpectateView();
   }
 
   render() {
@@ -17,6 +22,14 @@ export default class GameIndexView extends BaseView {
     const html = Mustache.render(template, {});
     this.$el.html(html);
 
+    this.renderWaitingGameView();
+
+    this.renderGamesToSpectate();
+
+    return this;
+  }
+
+  renderWaitingGameView() {
     if (currentUser().get("matchedGame")) {
       Backbone.history.navigate(`/game/${currentUser().get("matchedGame")}`, {
         trigger: true,
@@ -39,7 +52,9 @@ export default class GameIndexView extends BaseView {
       const startGameView = new StartGameView({ disable: false });
       this.renderNested(startGameView, "#game-index-container");
     }
+  }
 
-    return this;
+  renderGamesToSpectate() {
+    this.renderNested(this.gamesToSpectateView, "#game-to-spectate");
   }
 }

@@ -70,7 +70,6 @@ export default class Room extends BaseRoom {
           console.log("disconnected from room", room_id);
         },
         received: (data: RoomData) => {
-          console.log("data room received", data);
           if (data.message) {
             const blocked = currentUser()
               .get("blocked_users")

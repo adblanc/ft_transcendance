@@ -6,6 +6,10 @@ class GamesController < ApplicationController
 		@games = Game.all
 	end
 
+	def to_spectate
+		@games = Game.all
+	end
+
 	def show
 		@game = Game.find_by_id(params[:id])
 
