@@ -24,6 +24,7 @@ export default class DeclareWarView extends ModalView<War> {
     super(options);
 
     this.guild = options.guild;
+	this.wt_dates = [];
 	this.listenTo(eventBus, "wartime:add", this.onAddWarTime);
   }
 
@@ -41,8 +42,10 @@ export default class DeclareWarView extends ModalView<War> {
 	 	this.$("#custom").show();
 	}
 
-	onAddWarTime(dates: WarTimeDates) { //call by child view
+	onAddWarTime(dates: WarTimeDates) { 
+		console.log(dates);
 		this.wt_dates.push(dates);
+		console.log(this.wt_dates);
 		var warTimeFormView = new WarTimeFormView();
 		this.appendNested(warTimeFormView, "#wt-schedule");
 	}
