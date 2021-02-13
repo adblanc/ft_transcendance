@@ -19,7 +19,7 @@ class RoomsController < ApplicationController
 
 	def my_rooms
 		if (@current_user.admin?)
-			@rooms = Room.where(is_dm: false)
+			@rooms = Room.where('id IN (?) OR is_dm = false', @current_user.rooms.ids)
 		else
 			@rooms = @current_user.rooms.select { |room| !@current_user.is_room_ban?(room) }
 		end
