@@ -17,6 +17,10 @@ export default class GameIndexView extends BaseView {
     this.gamesToSpectateView = new GamesToSpectateView();
   }
 
+  onClose = () => {
+    this.gamesToSpectateView.close();
+  };
+
   render() {
     const template = $("#gameIndexTemplate").html();
     const html = Mustache.render(template, {});

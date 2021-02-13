@@ -36,6 +36,15 @@ class Game < ApplicationRecord
     validates :level,  presence: true
 	validates :goal, presence: true
 
+	def to_spectate_json
+		json = {:id => id}
+		json[:players] = users.map do |u|
+			u.to_spectate_json
+		end
+		json[:spectators] = spectators.as_json(only: [:id, :name])
+		json
+	end
+
 	### data
 	def winner
 		if self.finished? || self.forfeit?

@@ -78,6 +78,7 @@ class GamesController < ApplicationController
 		if (@game.game_users.accepted.size == 0)
 			@game.update(status: :started)
 			@game.broadcast({"action" => "started"})
+			ActionCable.server.broadcast("games_to_spectate", {"event" => "new_game", "payload" => @game.to_spectate_json});
 		end
 
 		@game
