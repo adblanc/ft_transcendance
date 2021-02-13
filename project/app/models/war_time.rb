@@ -12,7 +12,7 @@ class WarTime < ApplicationRecord
 	validate :date_check
 
 	def date_check
-		if self.start.present && self.end.present?
+		if self.start.present? && self.end.present?
 			if self.end < self.start
 				errors.add :dates, ": war times end date cannot be before start date"
 			end
