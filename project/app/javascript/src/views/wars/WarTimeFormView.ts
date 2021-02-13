@@ -8,21 +8,25 @@ import { eventBus } from "src/events/EventBus";
 import { displayError, displaySuccess } from "src/utils/toast";
 require("flatpickr/dist/flatpickr.css");
 
-/*type Options = Backbone.ViewOptions & {
-	wt_id: number;
-  };*/
+type Options = Backbone.ViewOptions & {
+	viewId: number;
+  };
 
 export default class WarTimeFormView extends BaseView{
   fp_start: typeof flatpickr;
   fp_end: typeof flatpickr;
+  viewId: number;
 
-  constructor(options?: Backbone.ViewOptions) {
+  constructor(options?: Options) {
     super(options);
+
+	this.viewId = options.viewId;
   }
 
   events() {
 	return {
-		"click #add-war-time": "onAddWT"
+		"click #add-war-time": "onAddWT",
+		"click #remove-war-time": "onRemoveWT"
 	};
   }
 	  
@@ -38,12 +42,19 @@ export default class WarTimeFormView extends BaseView{
 
 		const start = dateTimeStart;
 		const end = dateTimeEnd;
+		const id = this.viewId;
 		let dates: WarTimeDates = {
-			start, end
+			id, start, end
 		};
 		eventBus.trigger("wartime:add", dates);
 		this.$('#add-war-time').hide();
 		this.$('#remove-war-time').show();
+	}
+
+	onRemoveWT(e: JQuery.Event) {
+		e.preventDefault();
+		eventBus.trigger("wartime:remove", this.viewId);
+		this.close();
 	}
 
 

@@ -19,13 +19,16 @@ export default class DeclareWarView extends ModalView<War> {
   fp_start: typeof flatpickr;
   fp_end: typeof flatpickr;
   wt_dates: WarTimeDates[];
+  viewId: number;
 
   constructor(options?: Options) {
     super(options);
 
     this.guild = options.guild;
 	this.wt_dates = [];
+	this.viewId = 0;
 	this.listenTo(eventBus, "wartime:add", this.onAddWarTime);
+	this.listenTo(eventBus, "wartime:remove", this.onRemoveWarTime);
   }
 
   events() {
@@ -46,8 +49,18 @@ export default class DeclareWarView extends ModalView<War> {
 		console.log(dates);
 		this.wt_dates.push(dates);
 		console.log(this.wt_dates);
-		var warTimeFormView = new WarTimeFormView();
+		this.viewId++;
+		var warTimeFormView = new WarTimeFormView({
+			viewId: this.viewId,
+		});
 		this.appendNested(warTimeFormView, "#wt-schedule");
+	}
+
+	onRemoveWarTime(id: number) { 
+		this.wt_dates.forEach( (item, index) => {
+			if(item.id === id) this.wt_dates.splice(index,1);
+		});
+		console.log(this.wt_dates);
 	}
 
   async onSubmit(e: JQuery.Event) {
@@ -145,7 +158,9 @@ export default class DeclareWarView extends ModalView<War> {
       minDate: new Date(),
 	});
 
-	var warTimeFormView = new WarTimeFormView();
+	var warTimeFormView = new WarTimeFormView({
+		viewId: this.viewId,
+	});
 	this.appendNested(warTimeFormView, "#wt-schedule");
 
 	this.$content.on("click", this.dismiss);

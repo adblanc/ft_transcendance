@@ -8,6 +8,7 @@ import Guilds from "src/collections/Guilds";
 import { BASE_ROOT } from "src/constants";
 
 export interface WarTimeDates {
+	id: number;
 	start: Date;
 	end: Date;
   }
