@@ -8,13 +8,18 @@ import GamesToSpectateView from "./GamesToSpectateView";
 
 export default class GameIndexView extends BaseView {
   gamesToSpectateView: GamesToSpectateView;
+  waitingGameView: WaitingGameView;
+  startGameView: StartGameView;
 
   constructor(options?: Backbone.ViewOptions) {
     super(options);
 
-    this.listenTo(currentUser(), "change", this.render);
+    this.listenTo(currentUser(), "change", this.renderWaitingGameView);
 
     this.gamesToSpectateView = new GamesToSpectateView();
+
+    this.waitingGameView = undefined;
+    this.startGameView = undefined;
   }
 
   onClose = () => {
@@ -40,21 +45,29 @@ export default class GameIndexView extends BaseView {
       });
     } else if (currentUser().get("pendingGame")) {
       if (currentUser().get("pendingGame").get("game_type") != "chat") {
-        const waitingGameView = new WaitingGameView({
+        if (this.waitingGameView) {
+          this.waitingGameView.close();
+        }
+        this.waitingGameView = new WaitingGameView({
           model: currentUser().get("pendingGame"),
           className: "text-center text-white p-5 space-y-5 text-sm",
         });
-        this.renderNested(waitingGameView, "#game-index-container");
+        this.appendNested(this.waitingGameView, "#game-index-container");
       } else {
-        const startGameView = new StartGameView({ disable: true });
-        this.renderNested(startGameView, "#game-index-container");
+        if (this.startGameView) {
+          this.startGameView.close();
+        }
+        this.startGameView = new StartGameView({ disable: true });
+        this.appendNested(this.startGameView, "#game-index-container");
       }
-    } else if (currentUser().get("tournamentToPlay")) {
-      const startGameView = new StartGameView({ disable: true });
-      this.renderNested(startGameView, "#game-index-container");
     } else {
-      const startGameView = new StartGameView({ disable: false });
-      this.renderNested(startGameView, "#game-index-container");
+      if (this.startGameView) {
+        this.startGameView.close();
+      }
+      this.startGameView = new StartGameView({
+        disable: !!currentUser().get("tournamentToPlay"),
+      });
+      this.appendNested(this.startGameView, "#game-index-container");
     }
   }
 
