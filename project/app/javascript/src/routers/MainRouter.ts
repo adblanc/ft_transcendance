@@ -127,7 +127,7 @@ export default class MainRouter extends Backbone.Router {
     pagesHandler.showPage(gameView);
   }
 
-  help(){
+  help() {
     const helpView = new HelpView({});
     pagesHandler.showPage(helpView);
   }

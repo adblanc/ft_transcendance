@@ -294,3 +294,8 @@ $chatInputHeight: 4rem;
 .load-more {
   @apply flex items-center justify-center mb-2;
 }
+
+.loader {
+  @apply animate-spin ease-linear rounded-full border-gray-400 h-12 w-12 border-4 border-t-4;
+  border-top-color: #38b2ac;
+}
