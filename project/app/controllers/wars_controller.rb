@@ -21,10 +21,10 @@ class WarsController < ApplicationController
 
 		return head :unauthorized unless current_user.guild_owner?(@initiator)
 
-		/if @warTimes.size == 0
+		if @warTimes.size == 0
 			render json: {"There" => ["must be at least one War Time scheduled"]}, status: :unprocessable_entity
 			return
-		end/
+		end
 
 		if @initiator.atWar? || @initiator.warInitiator? || @recipient.atWar?
 			render json: {"Your" => ["guild or opponent guild is already at war"]}, status: :unprocessable_entity

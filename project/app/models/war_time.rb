@@ -31,9 +31,10 @@ class WarTime < ApplicationRecord
 	end
 
 	def check_overlap
-		my_logger.info("wartimes : #{war.war_times.count}")
-		war.war_times.each do |wartime|
-			my_logger.info("prev_wartime : #{@wartime}")
+		my_logger.info("wartime count : #{war.war_times.count}")
+		war.war_times.each do | wartime |
+			my_logger.info("enter")
+			my_logger.info("prev_wartime : #{wartime}")
 			my_logger.info("new_wartime : #{self}")
 			if not self.start < wartime.start && self.end < wartime.start
 				my_logger.info("condition 1")
