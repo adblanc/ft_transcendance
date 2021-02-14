@@ -16,14 +16,14 @@ export default class GuildIndexView extends BaseView {
   constructor(options?: Backbone.ViewOptions) {
     super(options);
 
-	this.max = 5;
+    this.max = 5;
     this.collection = new Guilds();
-	
+
     this.myGuildView = new MyGuildView({
       collection: this.collection,
-	});
+    });
 
-	this.listenTo(currentUser(), "change", this.render);
+    this.listenTo(currentUser(), "change", this.render);
 
     this.listenTo(this.collection, "reset", this.render);
     this.listenTo(this.collection, "change", this.render);
@@ -35,28 +35,32 @@ export default class GuildIndexView extends BaseView {
 
   events() {
     return {
-	  'click #load-more': 'onLoadMore'
+      "click #load-more": this.onLoadMore,
     };
   }
 
   renderGuild(guild: Guild) {
-	var itemView = new ItemView({
-		model: guild,
-	  });
-	  this.$("#listing").append(itemView.render().el);
+    var itemView = new ItemView({
+      model: guild,
+      maximumPoints: this.collection.maximumPoints,
+    });
+    this.$("#listing").append(itemView.render().el);
   }
 
   onLoadMore() {
-	  var guilds = this.collection.models.slice(this.count, this.count + this.max);
-	  if(guilds.length) {
-			guilds.forEach(function (item) {
-				this.renderGuild(item);
-			}, this);
-		  	this.count += guilds.length;
-	  } 
-	  if (this.count == this.collection.length) {
-		  this.$("#load-more").hide();
-	  }
+    var guilds = this.collection.models.slice(
+      this.count,
+      this.count + this.max
+    );
+    if (guilds.length) {
+      guilds.forEach(function (item) {
+        this.renderGuild(item);
+      }, this);
+      this.count += guilds.length;
+    }
+    if (this.count == this.collection.length) {
+      this.$("#load-more").hide();
+    }
   }
 
   render() {
@@ -64,14 +68,14 @@ export default class GuildIndexView extends BaseView {
     const html = Mustache.render(template, {});
     this.$el.html(html);
 
-	var guilds = this.collection.first(this.max);
-	guilds.forEach(function (item) {
-		this.renderGuild(item);
-	}, this);
-	this.count = guilds.length;
-	if (this.count == this.collection.length) {
-		this.$("#load-more").hide();
-	}
+    var guilds = this.collection.first(this.max);
+    guilds.forEach(function (item) {
+      this.renderGuild(item);
+    }, this);
+    this.count = guilds.length;
+    if (this.count == this.collection.length) {
+      this.$("#load-more").hide();
+    }
 
     if (this.myGuildView) {
       this.renderNested(this.myGuildView, "#myguild");

@@ -47,34 +47,34 @@ export default class Guild extends BaseModel<IGuild> {
         key: "pending_members",
         collectionType: Profiles,
         relatedModel: Profile,
-	  },
-	  {
+      },
+      {
         type: Backbone.Many,
         key: "wars",
         collectionType: Wars,
         relatedModel: War,
-	  },
-	  {
+      },
+      {
         type: Backbone.Many,
         key: "pendingWars",
         collectionType: Wars,
         relatedModel: War,
-	  },
-	  {
+      },
+      {
         type: Backbone.One,
         key: "activeWar",
         relatedModel: War,
-	  },
-	  {
+      },
+      {
         type: Backbone.One,
         key: "waitingWar",
         relatedModel: War,
-	  },
-	  {
+      },
+      {
         type: Backbone.One,
         key: "warOpponent",
         relatedModel: Guild,
-	  },
+      },
     ];
   }
 
@@ -87,20 +87,24 @@ export default class Guild extends BaseModel<IGuild> {
       name: "",
       ang: "",
       points: 0,
-	  atWar: false,
-	  warInitiator: false,
-	  warPending: false,
-	  members: [],
-	  wars: [],
-	  pendingWars: [],
-	  activeWar: null,
-	  waitingWar: null,
-	  warOpponent: null,
+      atWar: false,
+      warInitiator: false,
+      warPending: false,
+      members: [],
+      wars: [],
+      pendingWars: [],
+      activeWar: null,
+      waitingWar: null,
+      warOpponent: null,
     };
   }
 
   urlRoot = () => `${BASE_ROOT}/guilds`;
   baseGuildRoot = () => `${this.urlRoot()}/${this.get("id")}`;
+
+  pointsPercentage = (maxPoints: number) => {
+    return (this.get("points") / maxPoints) * 100;
+  };
 
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
     return syncWithFormData(method, model, options);

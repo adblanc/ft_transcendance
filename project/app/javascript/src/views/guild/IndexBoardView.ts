@@ -1,7 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
-import Guild from "src/models/Guild";
 import Guilds from "src/collections/Guilds";
 import ItemView from "./ItemView";
 
@@ -17,7 +16,7 @@ export default class IndexBoardView extends BaseView {
     this.listenTo(this.collection, "change", this.render);
     this.listenTo(this.collection, "sort", this.render);
     this.collection.fetch();
-	this.collection.sort();
+    this.collection.sort();
   }
 
   render() {
@@ -27,9 +26,10 @@ export default class IndexBoardView extends BaseView {
 
     const $element = this.$("#list");
 
-    this.collection.slice(0, 5).forEach(function (item) {
+    this.collection.slice(0, 5).forEach((item) => {
       var itemView = new ItemView({
         model: item,
+        maximumPoints: this.collection.maximumPoints,
       });
       $element.append(itemView.render().el);
     });
