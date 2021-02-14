@@ -1,14 +1,15 @@
 <script type="text/html" id="indexLadderItemTemplate">
-<div class="row">
-  <div class="column" style="padding: 10px; height:90px">
-  <img style="float:left" width="80" height="80" class="rounded-full p-2" src="{{avatar_url}}" />
-	<div style="padding:30px">
-		<h1 style="float:left;" class="text-black">
-		<a style=" text-decoration: underline;" class="text-black ml-4" href="/user/{{id}}"><b>{{login}}</b></a>
-		<h1 style="float:right" class="text-black"><b> Rank : {{ladder_rank}}</b></h1>
+ <a href="/user/{{id}}" class="h-20 p-2 flex flex-row w-full items-center justify-center border-teal-900 border-b">
+	<img src="{{avatar_url}}" class="h-16 w-16 rounded-full">
+	<div class="p-2 flex flex-col flex-1">
+		<div class="mb-2">
+			<h3 class="text-white font-medium inline">{{rank}}.</h3>
+			<h2 class="text-white underline mb-2 font-medium inline" >{{login}}</h2>
+		</div>
 	</div>
-	<div class="line flex" style="border: 1px solid; color: #14B8A6; margin:auto;"></div>
-  </div>
-</div>
+  </a>
 </script>
+
+
+
 
