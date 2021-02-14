@@ -290,3 +290,7 @@ $chatInputHeight: 4rem;
 .board-title {
   @apply text-white px-2 py-5 underline text-xl font-semibold bg-teal-900 text-center h-16;
 }
+
+.load-more {
+  @apply flex items-center justify-center mb-2;
+}
