@@ -84,7 +84,9 @@ class WarsController < ApplicationController
 
 		StartWarJob.set(wait_until: @war.start).perform_later(@war)
 		EndWarJob.set(wait_until: @war.end).perform_later(@war)
-		/WARTIMEJOBS/
+		@war.war_times.each do | wt |
+			StartWarTimeJob.set(wait_until: wt.start).perform_later(wt, @war)
+		end
 	end
 
 	def reject
@@ -119,16 +121,13 @@ class WarsController < ApplicationController
 			return
 		end
 		@wt_change = params[:wt_change]
-		my_logger.info("before condition: #{@wt_change}")
 		if @wt_change
-			my_logger.info("enter condition")
 			@warTimes = JSON.parse(params[:wt_dates])
 			if @warTimes.size == 0
 				render json: {"There" => ["must be at least one War Time scheduled"]}, status: :unprocessable_entity
 				return
 			end
 			@war.war_times.each do | wt |
-				my_logger.info("test")
 				wt.delete
 			end
 			@warTimes.each do | wartime |
