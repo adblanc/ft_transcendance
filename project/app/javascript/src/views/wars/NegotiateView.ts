@@ -72,9 +72,7 @@ export default class NegotiateView extends ModalView<War> {
   }
 
   onAddWarTime(dates: WarTimeDates) { 
-	console.log(dates);
 	this.wt_dates.push(dates);
-	console.log(this.wt_dates);
 	this.viewId++;
 	var warTimeFormView = new WarTimeFormView({
 		viewId: this.viewId,
@@ -88,7 +86,6 @@ export default class NegotiateView extends ModalView<War> {
 	this.wt_dates.forEach( (item, index) => {
 		if(item.id === id) this.wt_dates.splice(index,1);
 	});
-	console.log(this.wt_dates);
 	this.wt_change = true;
 	this.changeButtons();
   }

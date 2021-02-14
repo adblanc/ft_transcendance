@@ -10,10 +10,6 @@ class WarsController < ApplicationController
 		return head :not_found unless @war
 	end
 
-	def my_logger
-		@@my_logger ||= Logger.new("#{Rails.root}/log/my.log")
-	end	   
-
 	def create
 		@initiator = Guild.find(params[:initiator_id])
 		@recipient = Guild.find(params[:recipient_id])

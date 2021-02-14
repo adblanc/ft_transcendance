@@ -16,7 +16,6 @@ export default class ItemRequestView extends BaseView {
 
 	this.model = options.model;
 	this.user = options.user;
-	console.log(this.model);
   }
 
   events() {

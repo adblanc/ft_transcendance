@@ -12,7 +12,6 @@ export default class ScheduleView extends ModalView<War> {
   constructor(options?: Backbone.ViewOptions<War>) {
 	super(options);
 	
-	console.log(this.model);
 	this.wartimes = this.model.get("warTimes");
   }
 

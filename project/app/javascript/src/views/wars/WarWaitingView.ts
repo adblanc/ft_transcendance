@@ -19,8 +19,6 @@ export default class WarWaitingView extends BaseView {
 	this.war = options.war;
 	this.guild = options.guild;
 
-	console.log(this.war);
-
 	this.listenTo(this.war, "change", this.render);
   }
 

@@ -31,14 +31,13 @@ class WarTime < ApplicationRecord
 	end
 
 	def check_overlap
-		my_logger.info("call check overlap")
 		@wartimes = WarTime.where(war: war)
 		for wt in @wartimes
 			if wt.id != self.id
 				if not self.start < wt.start && self.end < wt.start
-					my_logger.info("condition 1")
+					/my_logger.info("condition 1")/
 					if self.start <= wt.end
-						my_logger.info("condition 2")
+						/my_logger.info("condition 2")/
 						errors.add :wartimes, 'cannot overlap'
 					end
 				end

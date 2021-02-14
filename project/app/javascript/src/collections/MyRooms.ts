@@ -65,12 +65,10 @@ export default class MyRooms extends BaseRooms<Room> {
       this.selectedRoom &&
       this.find((r) => r.get("id") === this.selectedRoom.get("id"))
     ) {
-      console.log("toggle previosu selectedRoom");
       this.selectedRoom.toggle();
     }
     this.selectedRoom = room;
     this.selectedRoom.toggle();
-    console.log("set and toggle selectedRoom", room);
     eventBus.trigger("chatplay:toggle");
   }
 
