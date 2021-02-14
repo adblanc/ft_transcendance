@@ -1,5 +1,6 @@
 json.extract! guild, :id, :name, :ang, :points, :created_at, :updated_at
 json.img_url url_for(guild.img) if guild.img.attached?
+json.isOwner @current_user.guild_owner?(guild)
 json.atWar guild.atWar?
 json.pendingWar guild.pendingWar?
 json.warInitiator guild.warInitiator?
@@ -49,16 +50,16 @@ else
 	json.activeWar nil
 end
 if guild.activeWar
-	json.warOpponent do 
+	json.warOpponent do
 		json.id  guild.warOpponent(guild.activeWar).id
 		json.name  guild.warOpponent(guild.activeWar).name
 		json.img_url url_for(guild.warOpponent(guild.activeWar).img) if guild.warOpponent(guild.activeWar).img.attached?
 		json.warPoints guild.activeWar.war_points(guild.warOpponent(guild.activeWar))
 	end
-end 
+end
 if guild.waitingWar
 	json.waitingWar guild.waitingWar
-	json.warOpponent do 
+	json.warOpponent do
 		json.id  guild.warOpponent(guild.waitingWar).id
 		json.name  guild.warOpponent(guild.waitingWar).name
 		json.img_url url_for(guild.warOpponent(guild.waitingWar).img) if guild.warOpponent(guild.waitingWar).img.attached?
@@ -84,7 +85,7 @@ json.wars do
 		json.nb_games war.nb_games
 		json.nb_wartimes war.nb_wartimes
 		json.war_points war.war_points(guild)
-		json.winner war.winner 
+		json.winner war.winner
 		json.warOpponent do
 			json.id  guild.warOpponent(war).id
 			json.ang  guild.warOpponent(war).ang

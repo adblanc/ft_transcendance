@@ -27,6 +27,7 @@ interface IGuild {
   warPoints: string;
   created_at: string;
   updated_at: string;
+  isOwner?: boolean;
 }
 
 type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img_url">>;
