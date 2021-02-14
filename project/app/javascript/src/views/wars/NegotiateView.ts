@@ -93,7 +93,6 @@ export default class NegotiateView extends ModalView<War> {
 	this.changeButtons();
   }
 
-
   changeButtons() {
 	this.$("#accept").removeClass("btn-nego");
 	this.$("#accept").addClass("btn-nego-disabled");

@@ -1,6 +1,5 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import DeclareWarView from "./DeclareWarView";
 import BaseView from "../../lib/BaseView";
 import War, { WarTimeDates } from "src/models/War";
 const flatpickr = require("flatpickr");

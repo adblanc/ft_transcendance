@@ -144,7 +144,7 @@ export default class War extends BaseModel<IWar> {
 	inc_three: boolean,
 	inc_six: boolean,
 	inc_nine: boolean,
-	wt_dates: WarTimeDates,
+	wt_dates: WarTimeDates[],
 	wt_change: boolean,
   ) {
     return this.asyncSave(

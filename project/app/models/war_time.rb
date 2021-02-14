@@ -26,7 +26,7 @@ class WarTime < ApplicationRecord
 			if self.start < war.start || self.start > war.end || self.end < war.start || self.end > war.end
 				errors.add :wartime, 'must be set within the time frame of the war'
 			end
-			self.check_overlap
+			/self.check_overlap/
 		end
 	end
 

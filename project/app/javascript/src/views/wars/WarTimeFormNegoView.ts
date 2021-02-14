@@ -1,14 +1,11 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
-import DeclareWarView from "./DeclareWarView";
 import BaseView from "../../lib/BaseView";
-import War, { WarTimeDates } from "src/models/War";
 const flatpickr = require("flatpickr");
 import { eventBus } from "src/events/EventBus";
-import { displayError, displaySuccess } from "src/utils/toast";
 import WarTime from "src/models/WarTime";
-import { eventBus } from "src/events/EventBus";
 require("flatpickr/dist/flatpickr.css");
+import moment from "moment";
 
 type Options = Backbone.ViewOptions & {
 	viewId: number;
@@ -40,8 +37,18 @@ export default class WarTimeFormNegoView extends BaseView{
 
 
   render() {
+	const wartime = {
+		...this.wartime.toJSON(),
+		start: moment(this.wartime.get("start")).format(
+			"MMM Do, h:mm a"
+		),
+		end: moment(this.wartime.get("end")).format(
+		  "MMM Do, h:mm a"
+		)
+	};
+
     const template = $("#warTimesNegoFormTemplate").html();
-    const html = Mustache.render(template, this.wartime.toJSON());
+    const html = Mustache.render(template, wartime);
     this.$el.html(html);
 
     return this;
