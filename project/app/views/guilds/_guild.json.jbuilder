@@ -71,8 +71,6 @@ if guild.waitingWar
 		json.status guild.waitingWar.status
 		json.time_to_answer guild.waitingWar.time_to_answer
 		json.max_unanswered_calls guild.waitingWar.max_unanswered_calls
-		json.warPoints guild.waitingWar.war_points(guild)
-		json.atWarTime guild.waitingWar.atWarTime?
 		json.partial! "wars/warinclude", war: guild.waitingWar
 		json.warTimes do
 			json.array! guild.waitingWar.war_times do |war_time|

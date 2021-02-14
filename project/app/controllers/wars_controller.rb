@@ -154,6 +154,14 @@ class WarsController < ApplicationController
 			@opponent.members.each do |member|
 				member.send_notification("#{@guild.name} has negotiated the terms of your guild's war declaration", "/wars", "wars")
 			end
+
+			queue = Sidekiq::Queue.new
+			queue.each do |job|
+				if job.args == @war
+					job.delete
+				end
+			end
+			ExpireWarJob.set(wait_until: @war.end).perform_later(@war)
 			@war
 		else
 			render json: @war.errors, status: :unprocessable_entity
