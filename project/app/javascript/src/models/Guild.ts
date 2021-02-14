@@ -108,6 +108,12 @@ export default class Guild extends BaseModel<IGuild> {
     return (this.get("points") / maxPoints) * 100;
   };
 
+  get maxMemberPoints() {
+    return this.get("members")
+      .max((m) => m.get("contribution"))
+      .get("contribution");
+  }
+
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
     return syncWithFormData(method, model, options);
   }

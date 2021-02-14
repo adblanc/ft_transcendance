@@ -60,6 +60,7 @@ export interface IProfile {
   won_tournaments?: Tournaments; //only fetched for user page
   current_tournaments?: Tournaments; //only for profile
   games?: Games;
+  contribution?: number; // only for guild members
 }
 
 type ModifiableProfileArgs = {
