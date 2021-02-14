@@ -8,6 +8,7 @@ import ModifyGuildView from "./ModifyGuildView";
 import DeclareWarView from "../wars/DeclareWarView";
 import { displaySuccess } from "src/utils";
 import War from "src/models/War";
+import ConfirmationModalView from "../ConfirmationModalView";
 
 type Options = Backbone.ViewOptions & { guild: Guild };
 
@@ -31,11 +32,11 @@ export default class InfoView extends BaseView {
 
   events() {
     return {
-      "click #edit-btn": "onEditClicked",
-      "click #quit-btn": "onQuitClicked",
-      "click #join-btn": "onJoinClicked",
-      "click #withdraw-btn": "onWithdrawClicked",
-      "click #war-btn": "onWarClicked",
+      "click #edit-btn": this.onEditClicked,
+      "click #quit-btn": this.askConfirmationQuitGuild,
+      "click #join-btn": this.onJoinClicked,
+      "click #withdraw-btn": this.onWithdrawClicked,
+      "click #war-btn": this.onWarClicked,
     };
   }
 
@@ -47,12 +48,23 @@ export default class InfoView extends BaseView {
     modifyGuildView.render();
   }
 
-  async onQuitClicked() {
+  askConfirmationQuitGuild() {
+    const confirmationView = new ConfirmationModalView({
+      question: `Are you sure you want to ${
+        this.guild.get("members").size() === 1 ? "destroy" : "quit"
+      } ${this.guild.get("name")} `,
+      onYes: this.onQuitClicked,
+    });
+
+    confirmationView.render();
+  }
+
+  onQuitClicked = async () => {
     const success = await this.guild.quit();
     if (success) {
       this.guildQuit();
     }
-  }
+  };
 
   guildQuit() {
     displaySuccess(`You successfully left ${this.guild.get("name")}.`);
