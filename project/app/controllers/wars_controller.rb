@@ -35,8 +35,9 @@ class WarsController < ApplicationController
 		if @war.save
 			@warTimes.each do | wartime |
 				my_logger.info("wartime : #{wartime}")
-				my_logger.info("wartime_start : #{wartime[start]}")
-				@wartime = WarTime.create(war: @war, start: wartime[:start], end: wartime[:end], time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
+				my_logger.info("wartime_start : #{wartime["start"]}")
+				my_logger.info("wartime_start : #{wartime["start"].to_datetime}")
+				@wartime = WarTime.create(war: @war, start: wartime["start"].to_datetime, end: wartime["end"].to_datetime, time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
 				if not @wartime.save
 					@war.destroy
 					render json: @war.errors, status: :unprocessable_entity
