@@ -15,6 +15,11 @@ if guild.activeWar
 		json.warPoints guild.activeWar.war_points(guild)
 		json.atWarTime guild.activeWar.atWarTime?
 		json.partial! "wars/warinclude", war: guild.activeWar
+		json.warTimes do
+			json.array! guild.activeWar.war_times do |war_time|
+				json.partial! "wars/war_time", war_time: war_time
+			end
+		end
 		if guild.activeWar.activeWarTime
 			json.activeWarTime do
 				json.id guild.activeWar.activeWarTime.id
@@ -56,9 +61,27 @@ if guild.activeWar
 		json.img_url url_for(guild.warOpponent(guild.activeWar).img) if guild.warOpponent(guild.activeWar).img.attached?
 		json.warPoints guild.activeWar.war_points(guild.warOpponent(guild.activeWar))
 	end
-end 
+end
 if guild.waitingWar
-	json.waitingWar guild.waitingWar
+	json.waitingWar do
+		json.id guild.waitingWar.id
+		json.prize guild.waitingWar.prize
+		json.start guild.waitingWar.start
+		json.end guild.waitingWar.end
+		json.status guild.waitingWar.status
+		json.time_to_answer guild.waitingWar.time_to_answer
+		json.max_unanswered_calls guild.waitingWar.max_unanswered_calls
+		json.warPoints guild.waitingWar.war_points(guild)
+		json.atWarTime guild.waitingWar.atWarTime?
+		json.partial! "wars/warinclude", war: guild.waitingWar
+		json.warTimes do
+			json.array! guild.waitingWar.war_times do |war_time|
+				json.partial! "wars/war_time", war_time: war_time
+			end
+		end
+	end
+end
+if guild.waitingWar
 	json.warOpponent do 
 		json.id  guild.warOpponent(guild.waitingWar).id
 		json.name  guild.warOpponent(guild.waitingWar).name

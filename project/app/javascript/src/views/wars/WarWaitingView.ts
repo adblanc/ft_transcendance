@@ -3,8 +3,8 @@ import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import War from "src/models/War";
 import Guild from "src/models/Guild";
-import { displaySuccess } from "src/utils";
 import moment from "moment";
+import ScheduleView from "./ScheduleView";
 
 type Options = Backbone.ViewOptions & { war: War, guild: Guild};
 
@@ -19,7 +19,22 @@ export default class WarWaitingView extends BaseView {
 	this.war = options.war;
 	this.guild = options.guild;
 
+	console.log(this.war);
+
 	this.listenTo(this.war, "change", this.render);
+  }
+
+  events() {
+    return {
+	  "click #wt-schedule": "onScheduleClicked",
+    };
+  }
+
+  onScheduleClicked() {
+	const scheduleView = new ScheduleView({
+		model: this.war,
+	});
+	scheduleView.render();
   }
 
   render() {

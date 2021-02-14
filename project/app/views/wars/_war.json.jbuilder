@@ -13,3 +13,8 @@ else
 	json.activeWarTime nil
 end
 json.partial! "wars/warinclude", war: war
+json.warTimes do
+	json.array! war.war_times do |war_time|
+		json.partial! "wars/war_time", war_time: war_time
+	end
+end
