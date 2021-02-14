@@ -157,7 +157,9 @@ class WarsController < ApplicationController
 
 			queue = Sidekiq::Queue.new
 			queue.each do |job|
-				if job.args == @war
+				my_logger.info("job args : #{job.args}")
+				if job.args[0] == @war
+					my_logger.info("enter")
 					job.delete
 				end
 			end

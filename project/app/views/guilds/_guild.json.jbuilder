@@ -78,6 +78,8 @@ if guild.waitingWar
 			end
 		end
 	end
+else
+	json.waitingWar nil
 end
 if guild.waitingWar
 	json.warOpponent do 
