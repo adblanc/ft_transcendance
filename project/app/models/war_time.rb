@@ -16,7 +16,6 @@ class WarTime < ApplicationRecord
 	end	
 
 	def date_check
-		my_logger.info("call date check")
 		if self.start.present? && self.end.present?
 			if self.end < self.start
 				errors.add :dates, ": war times end date cannot be before start date"
@@ -32,15 +31,16 @@ class WarTime < ApplicationRecord
 	end
 
 	def check_overlap
+		my_logger.info("call check overlap")
 		@wartimes = WarTime.where(war: war)
-		/@wartimes.each do | wt |/
 		for wt in @wartimes
-			my_logger.info("enter")
-			if not self.start < wt.start && self.end < wt.start
-				my_logger.info("condition 1")
-				if self.start <= wt.end
-					my_logger.info("condition 2")
-					errors.add :wartimes, 'cannot overlap'
+			if wt.id != self.id
+				if not self.start < wt.start && self.end < wt.start
+					my_logger.info("condition 1")
+					if self.start <= wt.end
+						my_logger.info("condition 2")
+						errors.add :wartimes, 'cannot overlap'
+					end
 				end
 			end
 		end
