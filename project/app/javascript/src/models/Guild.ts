@@ -28,6 +28,7 @@ interface IGuild {
   created_at: string;
   updated_at: string;
   isOwner?: boolean;
+  isInGuild?: boolean;
 }
 
 type CreatableGuildArgs = Partial<Pick<IGuild, "name" | "ang" | "img_url">>;

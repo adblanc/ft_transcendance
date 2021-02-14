@@ -1,6 +1,7 @@
 json.extract! guild, :id, :name, :ang, :points, :created_at, :updated_at
 json.img_url url_for(guild.img) if guild.img.attached?
 json.isOwner @current_user.guild_owner?(guild)
+json.isInGuild guild.is_member?(@current_user)
 json.atWar guild.atWar?
 json.pendingWar guild.pendingWar?
 json.warInitiator guild.warInitiator?

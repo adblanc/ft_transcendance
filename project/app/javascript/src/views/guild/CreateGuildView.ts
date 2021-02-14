@@ -5,6 +5,7 @@ import Guild from "src/models/Guild";
 import { displaySuccess } from "src/utils/toast";
 import { generateAcn } from "src/utils/acronym";
 import { displayError } from "src/utils";
+import { currentUser } from "src/models/Profile";
 
 export default class CreateGuildView extends ModalView<Guild> {
   list: string[];
@@ -60,7 +61,8 @@ export default class CreateGuildView extends ModalView<Guild> {
   guildSaved() {
     displaySuccess("Guild successfully created.");
     this.closeModal();
-    this.model.fetch();
+
+    currentUser().set({ guild: this.model });
     Backbone.history.navigate(`guild/${this.model.get("id")}`, {
       trigger: true,
     });

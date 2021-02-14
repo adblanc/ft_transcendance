@@ -129,22 +129,12 @@ export default class InfoView extends BaseView {
 
   render() {
     const template = $("#infoTemplate").html();
-    const html = Mustache.render(template, this.guild.toJSON());
+    const html = Mustache.render(template, {
+      ...this.guild.toJSON(),
+      isAGuildOwner: currentUser().get("guild")?.get("isOwner"),
+      hasAGuild: !!currentUser().get("guild"),
+    });
     this.$el.html(html);
-
-    const $elementquit = this.$("#quit-btn");
-    const $elementwar = this.$("#war");
-    const $elementjoin = this.$("#join");
-
-    if (currentUser().get("guild")) {
-      if (currentUser().get("guild").get("id") === this.guild.get("id")) {
-        $elementquit.show();
-      } else if (currentUser().get("guild_role") === "Owner") {
-        $elementwar.show();
-      }
-    } else {
-      $elementjoin.show();
-    }
 
     if (this.guild.get("atWar")) {
       this.$("#war-btn").addClass("btn-war-disabled");
