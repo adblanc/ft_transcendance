@@ -1,5 +1,5 @@
 class WarTime < ApplicationRecord
-	belongs_to :war
+	belongs_to :war, :validate => false
 	has_many :games
 
 	enum status: [
@@ -16,6 +16,7 @@ class WarTime < ApplicationRecord
 	end	
 
 	def date_check
+		my_logger.info("call date check")
 		if self.start.present? && self.end.present?
 			if self.end < self.start
 				errors.add :dates, ": war times end date cannot be before start date"
@@ -26,20 +27,18 @@ class WarTime < ApplicationRecord
 			if self.start < war.start || self.start > war.end || self.end < war.start || self.end > war.end
 				errors.add :wartime, 'must be set within the time frame of the war'
 			end
-			/self.check_overlap/
+			self.check_overlap
 		end
 	end
 
 	def check_overlap
-		my_logger.info("wartime count : #{war.war_times.count}")
-		my_logger.info("wartimes : #{war.war_times}")
-		war.war_times.each do | wartime |
+		@wartimes = WarTime.where(war: war)
+		/@wartimes.each do | wt |/
+		for wt in @wartimes
 			my_logger.info("enter")
-			my_logger.info("prev_wartime : #{wartime}")
-			my_logger.info("new_wartime : #{self}")
-			if not self.start < wartime.start && self.end < wartime.start
+			if not self.start < wt.start && self.end < wt.start
 				my_logger.info("condition 1")
-				if self.start <= wartime.end
+				if self.start <= wt.end
 					my_logger.info("condition 2")
 					errors.add :wartimes, 'cannot overlap'
 				end

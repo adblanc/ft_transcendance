@@ -21,6 +21,7 @@ class WarsController < ApplicationController
 
 		return head :unauthorized unless current_user.guild_owner?(@initiator)
 
+		my_logger.info("wartime : #{@warTimes.size}")
 		if @warTimes.size == 0
 			render json: {"There" => ["must be at least one War Time scheduled"]}, status: :unprocessable_entity
 			return
@@ -33,7 +34,7 @@ class WarsController < ApplicationController
 		@war = War.create(war_params)
 		if @war.save
 			@warTimes.each do | wartime |
-				/my_logger.info("wartime : #{wartime}")/
+				my_logger.info("start creation")
 				@wartime = WarTime.create(war: @war, start: wartime["start"].to_datetime, end: wartime["end"].to_datetime, time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
 				if not @wartime.save
 					render json: @wartime.errors, status: :unprocessable_entity

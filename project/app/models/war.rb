@@ -3,7 +3,7 @@ class War < ApplicationRecord
 	has_many :guilds, through: :guild_wars, source: :guild, foreign_key: :guild_id
 	accepts_nested_attributes_for :guilds
 
-	has_many :war_times, dependent: :destroy
+	has_many :war_times, dependent: :destroy, :validate => false
 
 	enum status: [
 		:pending,
