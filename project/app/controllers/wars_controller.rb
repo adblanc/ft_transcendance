@@ -18,7 +18,6 @@ class WarsController < ApplicationController
 		@initiator = Guild.find(params[:initiator_id])
 		@recipient = Guild.find(params[:recipient_id])
 		@warTimes = JSON.parse(params[:wt_dates])
-		my_logger.info("wartimes : #{@warTimes}")
 
 		return head :unauthorized unless current_user.guild_owner?(@initiator)
 

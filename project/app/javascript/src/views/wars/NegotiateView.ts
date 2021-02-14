@@ -27,6 +27,8 @@ export default class NegotiateView extends ModalView<War> {
 	this.dateTimeStart = this.model.get("start");
 	this.dateTimeEnd = this.model.get("end");
 
+	//put all existing in wt_dates, avec id
+
 	this.listenTo(this.guild, "change", this.render);
     this.listenTo(this.model, "change", this.render);
     this.listenTo(this.model, "add", this.render);
@@ -229,6 +231,8 @@ export default class NegotiateView extends ModalView<War> {
 		this.$("#nine-points").attr( 'checked', 'checked' );
 
 	this.$content.on("click", this.dismiss);
+
+	//display warTimesNeno templates + one WarTimeForm classic.
 
     return this;
   }

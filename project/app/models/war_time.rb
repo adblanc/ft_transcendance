@@ -1,5 +1,5 @@
 class WarTime < ApplicationRecord
-	belongs_to :war, dependent: :destroy
+	belongs_to :war
 	has_many :games
 
 	enum status: [
@@ -10,6 +10,10 @@ class WarTime < ApplicationRecord
 	validates :start, presence: true
 	validates :end, presence: true
 	validate :date_check
+
+	def my_logger
+		@@my_logger ||= Logger.new("#{Rails.root}/log/my.log")
+	end	
 
 	def date_check
 		if self.start.present? && self.end.present?
@@ -22,14 +26,19 @@ class WarTime < ApplicationRecord
 			if self.start < war.start || self.start > war.end || self.end < war.start || self.end > war.end
 				errors.add :wartime, 'must be set within the time frame of the war'
 			end
-			check_overlap
+			self.check_overlap
 		end
 	end
 
 	def check_overlap
+		my_logger.info("wartimes : #{war.war_times.count}")
 		war.war_times.each do |wartime|
+			my_logger.info("prev_wartime : #{@wartime}")
+			my_logger.info("new_wartime : #{self}")
 			if not self.start < wartime.start && self.end < wartime.start
+				my_logger.info("condition 1")
 				if self.start <= wartime.end
+					my_logger.info("condition 2")
 					errors.add :wartimes, 'cannot overlap'
 				end
 			end
