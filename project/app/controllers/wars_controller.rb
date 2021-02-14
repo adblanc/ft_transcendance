@@ -155,11 +155,9 @@ class WarsController < ApplicationController
 				member.send_notification("#{@guild.name} has negotiated the terms of your guild's war declaration", "/wars", "wars")
 			end
 
-			queue = Sidekiq::Queue.new
+			queue = Sidekiq::ScheduledSet.new
 			queue.each do |job|
-				my_logger.info("job args : #{job.args}")
-				if job.args[0] == @war
-					my_logger.info("enter")
+				if job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/War/#{@war.id}"
 					job.delete
 				end
 			end
