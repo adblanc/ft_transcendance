@@ -26,12 +26,13 @@ class WarTime < ApplicationRecord
 			if self.start < war.start || self.start > war.end || self.end < war.start || self.end > war.end
 				errors.add :wartime, 'must be set within the time frame of the war'
 			end
-			/self.check_overlap/
+			self.check_overlap
 		end
 	end
 
 	def check_overlap
 		my_logger.info("wartime count : #{war.war_times.count}")
+		my_logger.info("wartimes : #{war.war_times}")
 		war.war_times.each do | wartime |
 			my_logger.info("enter")
 			my_logger.info("prev_wartime : #{wartime}")

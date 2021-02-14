@@ -9,6 +9,7 @@ import Game from "./Game";
 
 interface IWarTime {
   id: string;
+  start: Date;
   end: Date;
   time_to_answer: string;
   max_unanswered_calls: string;

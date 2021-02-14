@@ -1,13 +1,18 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
+import WarTimeFormView from "./WarTimeFormView";
+import WarTimeFormNegoView from "./WarTimeFormNegoView";
 import War, { WAR_ACTION } from "src/models/War";
+import { WarTimeDates } from "src/models/War";
+import WarTimes from "src/collections/WarTimes";
 import { displaySuccess, displayError } from "src/utils";
 import Guild from "src/models/Guild";
 const flatpickr = require("flatpickr");
 require("flatpickr/dist/flatpickr.css");
 import moment from "moment";
 import { currentUser } from "src/models/Profile";
+import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions<War> & {
 	guild: Guild, 
@@ -19,6 +24,10 @@ export default class NegotiateView extends ModalView<War> {
 	fp_end: typeof flatpickr;
 	dateTimeStart: Date;
 	dateTimeEnd: Date;
+	wt_dates: WarTimeDates[];
+	viewId: number;
+	wt_change: boolean;
+	warTimes: WarTimes;
 
   constructor(options?: Options) {
     super(options);
@@ -26,12 +35,17 @@ export default class NegotiateView extends ModalView<War> {
 	this.guild = options.guild;
 	this.dateTimeStart = this.model.get("start");
 	this.dateTimeEnd = this.model.get("end");
+	this.warTimes = this.model.get("warTimes");
 
-	//put all existing in wt_dates, avec id
+	this.wt_dates = [];
+	this.wt_change = false;
+	this.viewId = 0;
 
 	this.listenTo(this.guild, "change", this.render);
     this.listenTo(this.model, "change", this.render);
     this.listenTo(this.model, "add", this.render);
+	this.listenTo(eventBus, "wartime:add", this.onAddWarTime);
+	this.listenTo(eventBus, "wartime:remove", this.onRemoveWarTime);
   }
 
   events() {
@@ -56,6 +70,29 @@ export default class NegotiateView extends ModalView<War> {
 	  "change #nine-points": "onChange",
     };
   }
+
+  onAddWarTime(dates: WarTimeDates) { 
+	console.log(dates);
+	this.wt_dates.push(dates);
+	console.log(this.wt_dates);
+	this.viewId++;
+	var warTimeFormView = new WarTimeFormView({
+		viewId: this.viewId,
+	});
+	this.appendNested(warTimeFormView, "#wt-schedule");
+	this.wt_change = true;
+	this.changeButtons();
+}
+
+  onRemoveWarTime(id: number) { 
+	this.wt_dates.forEach( (item, index) => {
+		if(item.id === id) this.wt_dates.splice(index,1);
+	});
+	console.log(this.wt_dates);
+	this.wt_change = true;
+	this.changeButtons();
+  }
+
 
   changeButtons() {
 	this.$("#accept").removeClass("btn-nego");
@@ -123,6 +160,9 @@ export default class NegotiateView extends ModalView<War> {
 	const inc_six = this.$("#six-points").is(":checked");
 	const inc_nine = this.$("#nine-points").is(":checked");
 
+	const wt_dates = this.wt_dates;
+	const wt_change = this.wt_change;
+
 	if (parseInt(prize) > this.model.get("warOpponent").get("points") || parseInt(prize) > this.guild.get("points")) {
 		displayError("One or both guilds cannot wager that many points");
 		return;
@@ -143,6 +183,8 @@ export default class NegotiateView extends ModalView<War> {
 		inc_three,
 		inc_six,
 		inc_nine,
+		wt_dates,
+		wt_change,
 	  );
 
     if (success) {
@@ -232,7 +274,26 @@ export default class NegotiateView extends ModalView<War> {
 
 	this.$content.on("click", this.dismiss);
 
-	//display warTimesNeno templates + one WarTimeForm classic.
+	this.warTimes.forEach(function (item) {
+		let id = this.viewId;
+		let start = item.get("start");
+		let end = item.get("end");
+		let dates: WarTimeDates = {
+			id, start, end,
+		};
+		this.wt_dates.push(dates);
+		var warTimeFormNegoView = new WarTimeFormNegoView({
+			viewId: this.viewId,
+			wartime: item,
+		});
+		this.appendNested(warTimeFormNegoView, "#wt-schedule");
+		this.viewId++;
+	}, this);
+
+	var warTimeFormView = new WarTimeFormView({
+		viewId: this.viewId,
+	});
+	this.appendNested(warTimeFormView, "#wt-schedule");
 
     return this;
   }

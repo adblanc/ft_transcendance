@@ -18,6 +18,7 @@ if guild.activeWar
 		if guild.activeWar.activeWarTime
 			json.activeWarTime do
 				json.id guild.activeWar.activeWarTime.id
+				json.start guild.activeWar.activeWarTime.start
 				json.end guild.activeWar.activeWarTime.end
 				json.time_to_answer guild.activeWar.activeWarTime.time_to_answer
 				json.max_unanswered_calls guild.activeWar.activeWarTime.max_unanswered_calls
@@ -108,6 +109,11 @@ json.pendingWars do
 			json.name  guild.warOpponent(pendingWar).name
 			json.img_url url_for(guild.warOpponent(pendingWar).img) if guild.warOpponent(pendingWar).img.attached?
 			json.points  guild.warOpponent(pendingWar).points
+		end
+		json.warTimes do
+			json.array! pendingWar.war_times do |war_time|
+				json.partial! "wars/war_time", war_time: war_time
+			end
 		end
 	end
 end

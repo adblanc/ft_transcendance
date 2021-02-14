@@ -119,6 +119,24 @@ class WarsController < ApplicationController
 			return
 		end
 
+		if params[:wt_change] == true
+			@warTimes = JSON.parse(params[:wt_dates])
+			if @warTimes.size == 0
+				render json: {"There" => ["must be at least one War Time scheduled"]}, status: :unprocessable_entity
+				return
+			end
+			@war.war_times.each do | wt |
+				wt.destroy
+			end
+			@warTimes.each do | wartime |
+				@wartime = WarTime.create(war: @war, start: wartime["start"].to_datetime, end: wartime["end"].to_datetime, time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
+				if not @wartime.save
+					render json: @wartime.errors, status: :unprocessable_entity
+					return
+				end
+			end
+		end
+
 		@war.update(war_params)
 		if @war.save
 			@gw_initiator.update(status: :accepted)

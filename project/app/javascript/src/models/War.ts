@@ -5,6 +5,7 @@ import WarTime from "src/models/WarTime";
 import { syncWithFormData } from "src/utils";
 import BaseModel from "src/lib/BaseModel";
 import Guilds from "src/collections/Guilds";
+import WarTimes from "src/collections/WarTimes";
 import { BASE_ROOT } from "src/constants";
 
 export interface WarTimeDates {
@@ -24,6 +25,7 @@ interface IWar {
   atWarTime: boolean;
   guilds: Guilds;
   warOpponent: Guild;
+  warTimes: WarTimes;
   activeWarTime: WarTime;
   nb_games: number;
   nb_wartimes: number;
@@ -62,6 +64,12 @@ export default class War extends BaseModel<IWar> {
         key: "activeWarTime",
         relatedModel: WarTime,
 	  },
+	  {
+        type: Backbone.Many,
+        key: "warTimes",
+        collectionType: WarTimes,
+        relatedModel: WarTime,
+      },
     ];
   }
 
@@ -136,6 +144,8 @@ export default class War extends BaseModel<IWar> {
 	inc_three: boolean,
 	inc_six: boolean,
 	inc_nine: boolean,
+	wt_dates: WarTimeDates,
+	wt_change: boolean,
   ) {
     return this.asyncSave(
       {
@@ -153,6 +163,8 @@ export default class War extends BaseModel<IWar> {
 		inc_three: inc_three,
 		inc_six: inc_six,
 		inc_nine: inc_nine,
+		wt_dates: JSON.stringify(wt_dates),
+		wt_change: wt_change,
       },
       {
         url: this.baseWarRoot(),

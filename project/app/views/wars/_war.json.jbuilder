@@ -3,6 +3,7 @@ json.atWarTime war.atWarTime?
 if war.activeWarTime
 	json.activeWarTime do
 		json.id war.activeWarTime.id
+		json.start war.activeWarTime.start
 		json.end war.activeWarTime.end
 		json.time_to_answer war.activeWarTime.time_to_answer
 		json.max_unanswered_calls war.activeWarTime.max_unanswered_calls
