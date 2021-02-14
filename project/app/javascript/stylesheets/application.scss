@@ -286,3 +286,8 @@ $chatInputHeight: 4rem;
   width: 10px;
   margin-right: 5px;
 }
+
+.timepickr-disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
