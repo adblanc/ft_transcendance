@@ -34,13 +34,11 @@ class WarsController < ApplicationController
 		@war = War.create(war_params)
 		if @war.save
 			@warTimes.each do | wartime |
-				my_logger.info("wartime : #{wartime}")
-				my_logger.info("wartime_start : #{wartime["start"]}")
-				my_logger.info("wartime_start : #{wartime["start"].to_datetime}")
+				/my_logger.info("wartime : #{wartime}")/
 				@wartime = WarTime.create(war: @war, start: wartime["start"].to_datetime, end: wartime["end"].to_datetime, time_to_answer: @war.time_to_answer, max_unanswered_calls: @war.max_unanswered_calls)
 				if not @wartime.save
+					render json: @wartime.errors, status: :unprocessable_entity
 					@war.destroy
-					render json: @war.errors, status: :unprocessable_entity
 					return
 				end
 			end
@@ -87,6 +85,7 @@ class WarsController < ApplicationController
 
 		StartWarJob.set(wait_until: @war.start).perform_later(@war)
 		EndWarJob.set(wait_until: @war.end).perform_later(@war)
+		/WARTIMEJOBS/
 	end
 
 	def reject
@@ -167,7 +166,6 @@ class WarsController < ApplicationController
 			member.send_notification("Your guild has declared war to #{recipient.name}", "/wars", "wars")
 		end
 		ExpireWarJob.set(wait_until: @war.end).perform_later(war)
-		/War Time Jobs/
 	end
 
 end

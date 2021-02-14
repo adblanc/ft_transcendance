@@ -1,5 +1,5 @@
 class WarTime < ApplicationRecord
-	belongs_to :war
+	belongs_to :war, dependent: :destroy
 	has_many :games
 
 	enum status: [
