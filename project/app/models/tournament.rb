@@ -14,7 +14,7 @@ class Tournament < ApplicationRecord
 		:finished
 	]
 
-	validates :name, presence: true
+	validates :name, presence: true, uniqueness: true
 	validates :registration_start, presence: true
 	validates :registration_end, presence: true
 	validates_with RegistrationDateValidator
