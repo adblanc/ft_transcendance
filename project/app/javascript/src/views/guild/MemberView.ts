@@ -18,9 +18,9 @@ export default class MemberView extends BaseView {
     this.guild = options.guild;
 
     this.listenTo(this.model, "change", this.render);
-    this.listenTo(this.model, "add", this.render);
     this.listenTo(this.guild, "change", this.render);
     this.listenTo(this.guild.get("members"), "update", this.render);
+    this.listenTo(currentUser(), "change", this.render);
   }
 
   events() {
@@ -40,19 +40,21 @@ export default class MemberView extends BaseView {
 
   render() {
     const template = $("#memberTemplate").html();
-    const html = Mustache.render(template, this.model.toJSON());
-    this.$el.html(html);
 
-    const $element = this.$("#manage-btn");
-    if (
+    const canBeManaged =
       (currentUser().get("guild") &&
         currentUser().get("guild").get("id") === this.guild.get("id") &&
         currentUser().get("guild_role") === "Owner" &&
         currentUser().get("id") != this.model.get("id")) ||
-      (currentUser().get("admin") && this.model.get("guild_role") != "Owner")
-    ) {
-      $element.show();
-    }
+      (currentUser().get("admin") && this.model.get("guild_role") != "Owner");
+
+    const html = Mustache.render(template, {
+      ...this.model.toJSON(),
+      pointsPercentage:
+        (this.model.get("contribution") / this.guild.maxMemberPoints) * 100,
+      canBeManaged,
+    });
+    this.$el.html(html);
 
     return this;
   }

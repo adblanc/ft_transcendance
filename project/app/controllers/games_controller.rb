@@ -6,6 +6,10 @@ class GamesController < ApplicationController
 		@games = Game.all
 	end
 
+	def to_spectate
+		@games = Game.where(status: :started).or(Game.where(status: :paused))
+	end
+
 	def show
 		@game = Game.find_by_id(params[:id])
 
@@ -74,6 +78,7 @@ class GamesController < ApplicationController
 		if (@game.game_users.accepted.size == 0)
 			@game.update(status: :started)
 			@game.broadcast({"action" => "started"})
+			ActionCable.server.broadcast("games_to_spectate", {"event" => "new_game", "game" => @game.to_spectate_json});
 		end
 
 		@game

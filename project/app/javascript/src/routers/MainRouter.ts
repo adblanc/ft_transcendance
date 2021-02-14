@@ -22,6 +22,7 @@ import { BASE_ROOT } from "src/constants";
 import { displayError } from "../utils/toast";
 import Tournament from "src/models/Tournament";
 import TournamentView from "../views/tournament/TournamentView";
+import HelpView from "../views/HelpView";
 
 export default class MainRouter extends Backbone.Router {
   constructor() {
@@ -44,6 +45,7 @@ export default class MainRouter extends Backbone.Router {
         "tournaments/ladder": "ladder",
         "tournaments/temporary": "tempTournament",
         "tournaments/:id": "tournamentShow",
+        help: "help",
         "*path": "notFound",
       },
     });
@@ -123,6 +125,11 @@ export default class MainRouter extends Backbone.Router {
   game(id: string) {
     const gameView = new GameView({ gameId: id });
     pagesHandler.showPage(gameView);
+  }
+
+  help() {
+    const helpView = new HelpView({});
+    pagesHandler.showPage(helpView);
   }
 
   training() {

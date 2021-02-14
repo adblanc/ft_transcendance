@@ -19,6 +19,7 @@ scope "/api" do
 	put "/profile/:id/refuse_friend", to: "friendships#refuse";
   put "/profile/:id/remove_friend", to: "friendships#remove";
 
+  get "games/to_spectate", to: "games#to_spectate";
   post "games/create_friendly", to: "games#createFriendly";
 	delete "games/:id/cancel_friendly", to: "games#cancelFriendly";
 	post "games/challengeWT", to: "games#challengeWT";

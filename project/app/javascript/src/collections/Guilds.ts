@@ -12,4 +12,8 @@ export default class Guilds extends Backbone.Collection<Guild> {
       return -model.get("points");
     };
   }
+
+  get maximumPoints() {
+    return this.max((g) => g.get("points")).get("points");
+  }
 }

@@ -1,15 +1,17 @@
 <script type="text/html" id="itemTemplate">
-<div class="row">
-  <div class="column" style="padding: 10px; height:90px">
-	<div id="itemImg"></div>
-	<div style="padding:30px">
-		<h1 style="float:left;" class="counter text-white">
-		<a style=" text-decoration: underline;" class="text-white" href="/guild/{{id}}">{{name}}</a>
-		<h1 style="float:right" class="text-white"> {{points}} points</h1>
+  <a href="/guild/{{id}}" class="h-20 p-2 flex flex-row w-full items-center justify-center border-teal-900 border-b">
+	<img src="{{img_url}}" class="h-16 w-16 rounded-full">
+	<div class="p-2 flex flex-col flex-1">
+		<div class="mb-2">
+			<h3 class="counter text-white font-medium inline">
+			<h2 class="text-white underline mb-2 font-medium inline" >{{name}}</h2>
+		</div>
+	<div class="from-teal-600 to-teal-400 bg-gradient-to-r" style=" height: 2px; width:{{pointsPercentage}}%"></div>
 	</div>
-	<div class="line flex" style="border: 1px solid; color: #14B8A6; margin:auto;"></div>
-  </div>
-</div>
+	<div>
+		<h3 class="text-white font-medium text-sm"> {{points}} points</h3>
+	</div>
+  </a>
 </script>
 
 

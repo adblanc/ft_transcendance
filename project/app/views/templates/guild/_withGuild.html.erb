@@ -1,10 +1,12 @@
 <script type="text/html" id="withGuildTemplate">
-	<h1 style="margin-top:10px;" class="justify-center flex flex-row  text-white"> You belong to: </h1>
-	<div>
-		<img style="margin-left: auto; margin-right: auto; margin-top:10px" width="150" height="150" class="flex flex-row rounded-full p-2" src="{{guild.img_url}}" />
+	<div class="p-4 text-white">
+		<div class="flex items-center justify-center">
+			<img class="flex flex-row rounded-full p-2 h-32 w-32" src="{{guild.img_url}}" />
+		</div>
+		<div class="flex flex-col space-y-2 items-center justify-center">
+			<a class="text-3xl underline " href="/guild/{{guild.id}}">{{guild.name}}</a>
+			<h4> {{guild.points}} points </h4>
+			<h4>{{guild_role}}</h4>
+		</div>
 	</div>
-	<a style=" text-decoration: underline;" class="justify-center flex flex-row text-3xl text-white" href="/guild/{{guild.id}}"> {{guild.name}} </a>
-	<h1 style="margin-top:10px" class="justify-center flex flex-row text-white"> {{guild.points}} points </h1>
-	<h1 style="margin-top:10px; margin-down:10px" class="justify-center flex flex-row text-white"> Your status within this guild is {{guild_role}} </h1>
-	
 </script>

@@ -64,7 +64,6 @@ type ConstructorArgs = Pick<IGame, "id" | "isTraining">;
 
 export default class Game extends BaseModel<IGame> {
   channel: ActionCable.Channel;
-  spectatorsChannel?: ActionCable.Channel;
   private _timerInterval: any;
 
   preinitialize() {
@@ -109,6 +108,10 @@ export default class Game extends BaseModel<IGame> {
   urlRoot = () => `${BASE_ROOT}/games`;
   baseGameRoot = () => `${this.urlRoot()}/${this.get("id")}`;
 
+  get spectatorsNbr() {
+    return this.get("spectators").size();
+  }
+
   get winner() {
     return this.get("players").find((p) => p.get("status") === "won");
   }
@@ -152,22 +155,30 @@ export default class Game extends BaseModel<IGame> {
 
   connectToWS() {
     this.createChannelConsumer();
-    this.get("spectators").connectToSpectatorsChannel(this.get("id"));
+    this.connectToSpectatorsChannel();
     this.playersListenToScore();
+  }
+
+  connectToSpectatorsChannel() {
+    this.get("spectators").connectToSpectatorsChannel(this.get("id"));
   }
 
   playersListenToScore() {
     this.get("players").forEach((p) => p.listenToPlayerScored());
   }
 
-  playersStopListenToScore() {
-    this.get("players").forEach((p) => p.stopListeningPlayerScored());
-  }
-
   disconnectFromWS() {
     this.unsubscribeChannelConsumer();
-    this.get("spectators").unsubscribeSpectatorsChannel();
+    this.unsubscribeSpectatorsChannel();
     this.playersStopListenToScore();
+  }
+
+  unsubscribeSpectatorsChannel() {
+    this.get("spectators").unsubscribeSpectatorsChannel();
+  }
+
+  playersStopListenToScore() {
+    this.get("players").forEach((p) => p.stopListeningPlayerScored());
   }
 
   createChannelConsumer() {

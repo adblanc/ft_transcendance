@@ -11,6 +11,7 @@ export default class GuildView extends BaseView {
   infoView: Backbone.View;
   membersView: Backbone.View;
   guild: Guild;
+  ready: boolean;
 
   constructor(options?: Options) {
     super(options);
@@ -23,9 +24,15 @@ export default class GuildView extends BaseView {
     this.membersView = new MembersView({
       guild: this.guild,
     });
+
+    this.ready = false;
     this.guild.fetch({
       error: () => {
         Backbone.history.navigate("/not-found", { trigger: true });
+      },
+      success: () => {
+        this.ready = true;
+        this.render();
       },
     });
 
@@ -33,6 +40,10 @@ export default class GuildView extends BaseView {
   }
 
   render() {
+    if (!this.ready) {
+      return this.renderLoadingPage();
+    }
+
     const template = $("#guildPageTemplate").html();
     const html = Mustache.render(template, {});
     this.$el.html(html);

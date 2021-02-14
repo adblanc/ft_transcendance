@@ -47,6 +47,10 @@ class Guild < ApplicationRecord
 		end
 	end
 
+	def is_member?(user)
+		user.guild&.id == self.id
+	end
+
 	def owner
 		User.with_role(:owner, self).first
 	end

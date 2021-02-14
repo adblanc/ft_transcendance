@@ -6,7 +6,7 @@ class ExpireGameJob < ApplicationJob
 	end
 
 	def perform(game, room)
-	  return if game.started? || game.finished? || game.matched? || game.forfeit?
+	  return if game.started? || game.finished? || game.matched? || game.forfeit? || game.paused?
 	  if game.ladder?
 		@winner = game.initiator
 		@loser = game.opponent(@winner)

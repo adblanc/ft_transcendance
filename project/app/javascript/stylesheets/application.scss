@@ -291,3 +291,16 @@ $chatInputHeight: 4rem;
     cursor: not-allowed;
     pointer-events: none;
   }
+  
+.board-title {
+  @apply text-white px-2 py-5 underline text-xl font-semibold bg-teal-900 text-center h-16;
+}
+
+.load-more {
+  @apply flex items-center justify-center mb-2;
+}
+
+.loader {
+  @apply animate-spin ease-linear rounded-full border-gray-400 h-12 w-12 border-4 border-t-4;
+  border-top-color: #38b2ac;
+}
