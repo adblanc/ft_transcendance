@@ -43,10 +43,9 @@ export default class PendingMemberView extends BaseView {
 
   saved(method: "accepted" | "refused") {
     displaySuccess(`You ${method} ${this.model.get("name")} into your guild`);
-    if (this.guild.get("pending_members").size() === 1) {
+    if (this.guild.get("pending_members").isEmpty()) {
       closeAllModal();
     }
-    this.guild.fetch();
   }
 
   render() {
