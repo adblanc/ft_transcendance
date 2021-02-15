@@ -4,9 +4,11 @@ class RoundJob < ApplicationJob
 	def perform(tournament)
 	  handle_games(tournament) 
 
-	  if not tournament.final?
+	  my_logger.info("winner : #{tournament.status}")
+
+	  if tournament.quarter? || tournament.semi? 
 		change_round(tournament)
-	  	RoundJob.set(wait_until: DateTime.now + 3.minutes).perform_later(tournament)
+	  	RoundJob.set(wait_until: DateTime.now + 1.minutes).perform_later(tournament)
 	  end
 	end
 
@@ -48,6 +50,10 @@ class RoundJob < ApplicationJob
 				tournament.forfeit_notif(game.winner, game.loser, false)
 			end
 		end
+	end
+
+	def my_logger
+		@@my_logger ||= Logger.new("#{Rails.root}/log/my.log")
 	end
 
 end
