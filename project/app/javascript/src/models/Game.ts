@@ -23,7 +23,8 @@ export interface IGame {
     | "finished"
     | "forfeit"
     | "paused"
-    | "matched";
+    | "matched"
+	| "abandon";
   last_pause?: number;
   pause_duration?: number;
   game_type?: "ladder" | "war_time" | "chat" | "friendly" | "tournament";

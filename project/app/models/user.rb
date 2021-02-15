@@ -260,7 +260,16 @@ class User < ApplicationRecord
 		self.game_users.where(game_id: game.id).first&.status
 	end
 
+	def games_finished
+		self.games.select do |game|
+			game.game_ended?
+		end
+	end
+
 	def game_won?(game)
+		if game.abandon?
+			return false
+		end
 		if game.winner.id == self.id
 			return true
 		end

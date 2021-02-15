@@ -181,9 +181,10 @@ class Game < ApplicationRecord
 	def handle_end_cases
 		if self.war_time?
 			self.handle_war_time_end
+		elsif self.ladder?
+			self.handle_ladder_end
 		elsif self.tournament?
 			self.handle_tournament_end
-			self.handle_points
 		else
 			self.handle_points
 		end
@@ -198,10 +199,27 @@ class Game < ApplicationRecord
 		end
 	end
 
+	def handle_ladder_end
+		self.handle_points
+		self.winner.update(ladder_unchallengeable: 0)
+		self.loser.update(ladder_unchallengeable: 0)
+		if self.winner.ladder_rank > self.loser.ladder_rank
+			self.ladder_swap
+		else
+			self.loser.update(ladder_unchallengeable: self.winner.id)
+		end
+	end
+
 	def handle_tournament_end
+		self.handle_points
 		@tournament = Tournament.find_by_id(self.tournament_id)
-		@tournament.push_next_round(self.winner)
-		@tournament.set_tournament_user(nil, self.loser)
+		if self.final?
+			@tournament.set_tournament_user(self.winner, self.loser)
+			@tournament.finish_tournament(self.winner)
+		else
+			@tournament.push_next_round(self.winner)
+			@tournament.set_tournament_user(nil, self.loser)
+		end
 	end
 
 	def ladder_swap
@@ -239,7 +257,7 @@ class Game < ApplicationRecord
 		@goal.each do | goal |
 			if goal == self.goal && @score
 				self.winner.guild.war_score(10)
-				@war.update_guilds
+				@war.update_guild(self.winner.guild)
 			end
 		end
 	end
@@ -248,10 +266,10 @@ class Game < ApplicationRecord
 		@war = self.winner.guild.startedWar
 		if self.ladder? && @war.inc_ladder
 			self.winner.guild.war_score(10)
-			@war.update_guilds
+			@war.update_guild(self.winner.guild)
 		elsif self.tournament? && @war.inc_tour
 			self.winner.guild.war_score(10)
-			@war.update_guilds
+			@war.update_guild(self.winner.guild)
 		elsif (self.friendly? || self.chat?) && @war.inc_friendly
 			self.handle_friendly_game
 		end
@@ -259,10 +277,14 @@ class Game < ApplicationRecord
 
 	def handle_points
 		if self.winner.guild?
+			if self.final?
+				self.winner.guild.increment!(:points, 50)
+				self.winner.increment!(:contribution, 50)
+			end
 			if self.loser.guild?
 				if (self.winner.guild != self.loser.guild)
-					self.winner.guild.increment!(:points, 10)
-					self.winner.increment!(:contribution, 10)
+					self.winner.guild.increment!(:points, 10) unless self.final?
+					self.winner.increment!(:contribution, 10) unless self.final?
 					if self.winner.guild.startedWar && self.loser.guild.startedWar
 						if self.winner.guild.startedWar == self.loser.guild.startedWar
 							self.handle_war_points
@@ -270,17 +292,8 @@ class Game < ApplicationRecord
 					end
 				end
 			else
-				self.winner.guild.increment!(:points, 10)
-				self.winner.increment!(:contribution, 10)
-			end
-		end
-		if self.ladder?
-			self.winner.update(ladder_unchallengeable: 0)
-			self.loser.update(ladder_unchallengeable: 0)
-			if self.winner.ladder_rank > self.loser.ladder_rank
-				self.ladder_swap
-			else
-				self.loser.update(ladder_unchallengeable: self.winner.id)
+				self.winner.guild.increment!(:points, 10) unless self.final?
+				self.winner.increment!(:contribution, 10) unless self.final?
 			end
 		end
 	end
@@ -289,6 +302,8 @@ class Game < ApplicationRecord
 		self.winner.guild.war_score(10)
 		self.winner.guild.increment!(:points, 10)
 		self.winner.increment!(:contribution, 10)
+		@war = self.winner.guild.startedWar
+		@war.update_guild(self.winner.guild)
 	end
 
 	private
