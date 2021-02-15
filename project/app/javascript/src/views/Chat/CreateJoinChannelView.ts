@@ -4,6 +4,7 @@ import Rooms from "src/collections/MyRooms";
 import BaseView from "src/lib/BaseView";
 import Room from "src/models/Room";
 import { displaySuccess } from "src/utils";
+import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions & {
   rooms: Rooms;
@@ -52,11 +53,14 @@ export default class CreateJoinChannelView extends BaseView {
 
     if (success) {
       this.rooms.add(room);
-      room.select();
+      //room.select();
       this.clearInput();
       displaySuccess(
         `Room ${name} successfully ${this.isJoin ? "joined" : "created"}.`
       );
+	  if (this.isJoin) {
+	  	eventBus.trigger("chat:channel-joined");
+	  }
     }
   }
 
