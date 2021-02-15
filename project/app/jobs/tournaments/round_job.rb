@@ -3,9 +3,9 @@ class RoundJob < ApplicationJob
 
 	def perform(tournament)
 	  handle_games(tournament) 
-	  change_round(tournament)
 
 	  if not tournament.final?
+		change_round(tournament)
 	  	RoundJob.set(wait_until: DateTime.now + 3.minutes).perform_later(tournament)
 	  end
 	end
