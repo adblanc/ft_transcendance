@@ -3,7 +3,7 @@ import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import Profile from "src/models/Profile";
 import Guild from "src/models/Guild";
-import { displaySuccess } from "src/utils";
+import { closeAllModal, displaySuccess } from "src/utils";
 
 type Options = Backbone.ViewOptions & { model: Profile; guild: Guild };
 
@@ -42,17 +42,9 @@ export default class PendingMemberView extends BaseView {
   }
 
   saved(method: "accepted" | "refused") {
-    switch (method) {
-      case "accepted":
-        displaySuccess(
-          `You accepted ${this.model.get("name")} into your guild`
-        );
-        break;
-      case "refused":
-        displaySuccess(
-          `You refused ${this.model.get("name")}'s request to join your guild`
-        );
-        break;
+    displaySuccess(`You ${method} ${this.model.get("name")} into your guild`);
+    if (this.guild.get("pending_members").size() === 1) {
+      closeAllModal();
     }
     this.guild.fetch();
   }
