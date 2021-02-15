@@ -138,5 +138,35 @@ class Tournament < ApplicationRecord
 		end
 	end 
 
+	def finish_game(winner, game)
+		game.game_users.where(user_id: winner.id).first.update(status: :won)
+		game.game_users.where.not(user_id: winner.id).first.update(status: :lose)
+		game.update(status: :forfeit)
+		game.handle_tournament_end
+	end
+
+	def forfeit_notif(winner, loser, forfeit)
+		if forfeit == true
+			winner.send_notification("You won your game by forfeit for #{self.name} tournament", "tournaments/#{self.id}", "tournaments")
+			loser.send_notification("You lost your game by forfeit for #{self.name} tournament", "tournaments/#{self.id}", "tournaments")
+		else
+			winner.send_notification("You randomly won your game for #{self.name} tournament", "tournaments/#{self.id}", "tournaments")
+			loser.send_notification("You randomly lost your game for #{self.name} tournament", "tournaments/#{self.id}", "tournaments")
+		end
+	end
+
+	def finish_tournament(winner)
+		self.update(status: :finished)
+		ActionCable.server.broadcast("tournament_#{self.id}", { eot: true })
+		if winner
+			User.all.each do |user|
+				user.send_notification("#{self.name} tournament is over. Winner is : #{winner.name}", "tournaments/#{self.id}", "tournaments")
+			end
+		else
+			User.all.each do |user|
+				user.send_notification("#{self.name} tournament final was not played! Tournament is over and has no winner!", "tournaments/#{self.id}", "tournaments")
+			end
+		end
+	end
 
 end
