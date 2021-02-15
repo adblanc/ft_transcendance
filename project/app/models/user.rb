@@ -260,14 +260,13 @@ class User < ApplicationRecord
 		self.game_users.where(game_id: game.id).first&.status
 	end
 
-
-	def my_logger
-		@@my_logger ||= Logger.new("#{Rails.root}/log/my.log")
-	end	
+	def games_finished
+		self.games.select do |game|
+			game.game_ended?
+		end
+	end
 
 	def game_won?(game)
-		my_logger.info("winner : #{game.winner}")
-		my_logger.info("loser: #{game.loser}")
 		if game.winner.id == self.id
 			return true
 		end

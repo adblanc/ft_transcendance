@@ -62,7 +62,7 @@ export default class GameHistoryView extends BaseView {
       games.forEach(function (item) {
         if (
           item.get("status") == "finished" ||
-          item.get("status") == "forfeit" ||
+          item.get("status") == "forfeit"
         ) {
           var historyItemView = new HistoryItemView({
             model: item,
