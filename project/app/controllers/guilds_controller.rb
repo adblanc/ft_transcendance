@@ -132,6 +132,8 @@ class GuildsController < ApplicationController
     @guild.pending_members.delete(pending_member)
 	@guild.members.push(pending_member)
 	pending_member.send_notification("#{current_user.name} accepted your request to join #{@guild.name}", "/guild/#{@guild.id}", "guild")
+
+	@guild
   end
 
   def reject
@@ -142,6 +144,8 @@ class GuildsController < ApplicationController
 
     @guild.pending_members.delete(pending_member)
 	pending_member.send_notification("#{current_user.name} rejected your request to join #{@guild.name}", "/guild/#{@guild.id}", "guild")
+
+	@guild
   end
 
   def withdraw
