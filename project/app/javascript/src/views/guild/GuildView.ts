@@ -8,8 +8,8 @@ import BaseView from "src/lib/BaseView";
 type Options = Backbone.ViewOptions & { guild: Guild };
 
 export default class GuildView extends BaseView {
-  infoView: Backbone.View;
-  membersView: Backbone.View;
+  infoView: InfoView;
+  membersView: MembersView;
   guild: Guild;
   ready: boolean;
 
