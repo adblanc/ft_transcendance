@@ -70,9 +70,9 @@ export default class Tournament extends BaseModel<ITournament> {
 				} else {
 					eventBus.trigger(`tournament-${options.id}:change`);
 					eventBus.trigger(`tournament:change`, options.id);
-					if (data["eot"]) {
+					/*if (data["eot"]) {
 						this.tournament_channel.unsubscribe();		
-					}
+					}*/
 				}
 			}
 		});

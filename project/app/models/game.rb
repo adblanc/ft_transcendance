@@ -278,8 +278,8 @@ class Game < ApplicationRecord
 	def handle_points
 		if self.winner.guild?
 			if self.final?
-				self.winner.guild.increment!(:points, 40)
-				self.winner.increment!(:contribution, 40)
+				self.winner.guild.increment!(:points, 50)
+				self.winner.increment!(:contribution, 50)
 			end
 			if self.loser.guild?
 				if (self.winner.guild != self.loser.guild)
@@ -291,7 +291,7 @@ class Game < ApplicationRecord
 						end
 					end
 				end
-			else
+			elsif not self.final?
 				self.winner.guild.increment!(:points, 10)
 				self.winner.increment!(:contribution, 10)
 			end
