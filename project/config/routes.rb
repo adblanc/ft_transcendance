@@ -14,6 +14,8 @@ scope "/api" do
 	get '/profile/:id', to: 'users#show_other_user'
 	put '/profile/:id/ban', to: 'users#ban_other_user'
 	put '/profile/:id/unban', to: 'users#unban_other_user'
+	put '/profile/:id/admin', to: 'users#admin_other_user'
+	put '/profile/:id/unadmin', to: 'users#un_admin_other_user'
 	put "/profile/:id/add_friend", to: "friendships#add";
 	put "/profile/:id/accept_friend", to: "friendships#accept";
 	put "/profile/:id/refuse_friend", to: "friendships#refuse";

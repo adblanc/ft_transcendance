@@ -46,11 +46,17 @@
 		{{#is_admin}}
 			<div class="flex justify-center items-center">
 				{{#ban}}
-					<button class="btn-primary mt-8" id="unban-user" type="button">Unban user</button>
+					<button class="btn-primary mt-8 mx-2" id="unban-user" type="button">Unban user</button>
 				{{/ban}}
 				{{^ban}}
-					<button class="btn-primary mt-8" id="ban-user" type="button">Ban user</button>
+					<button class="btn-primary mt-8 mx-2" id="ban-user" type="button">Ban user</button>
 				{{/ban}}
+				{{#admin}}
+					<button class="btn-primary mt-8 mx-2" id="unadmin-user" type="button">Unmake admin</button>
+				{{/admin}}
+				{{^admin}}
+					<button class="btn-primary mt-8 mx-2" id="admin-user" type="button">Make admin</button>
+				{{/admin}}
 			</div>
 
 		{{/is_admin}}

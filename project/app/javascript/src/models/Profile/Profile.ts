@@ -253,6 +253,24 @@ export default class Profile extends BaseModel<IProfile> {
       }
     );
   }
+
+  adminUser(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/profile/${id}/admin`,
+      }
+    );
+  }
+
+  unAdminUser(id: number) {
+    return this.asyncSave(
+      {},
+      {
+        url: `${BASE_ROOT}/profile/${id}/unadmin`,
+      }
+    );
+  }
 }
 
 let memorizedUser: Profile = undefined;

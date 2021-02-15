@@ -38,7 +38,25 @@ export default class UserView extends BaseView {
       "click #friends-btn": "onFriendsClicked",
       "click #ban-user": this.onUserBan,
       "click #unban-user": this.onUserUnban,
+      "click #admin-user": this.onUserAdmin,
+      "click #unadmin-user": this.onUserUnAdmin,
     };
+  }
+
+  async onUserAdmin() {
+    const success = await currentUser().adminUser(this.user.get("id"));
+    if (success) {
+      displaySuccess(`${this.user.get("login")} is no more an administrator`);
+    }
+    this.actualize();
+  }
+
+  async onUserUnAdmin() {
+    const success = await currentUser().unAdminUser(this.user.get("id"));
+    if (success) {
+      displaySuccess(`${this.user.get("login")} is an administrator now`);
+    }
+    this.actualize();
   }
 
   async onUserBan() {

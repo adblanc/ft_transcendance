@@ -51,6 +51,32 @@ class UsersController < ApplicationController
 	end
   end
 
+  def admin_other_user
+  	if @current_user.admin?
+		if (@other_user = User.find_by_id(params[:id]))
+			@other_user.add_role :admin
+			render json: {}, status: :ok
+		else
+			render json: { "User": ["not found"] }, status: :not_found
+		end
+	else
+		render json: { "User": ["not allowed to do that"] }, status: :unauthorized
+	end
+  end
+
+  def un_admin_other_user
+  	if @current_user.admin?
+		if (@other_user = User.find_by_id(params[:id]))
+			@other_user.remove_role :admin
+			render json: {}, status: :ok
+		else
+			render json: { "User": ["not found"] }, status: :not_found
+		end
+	else
+		render json: { "User": ["not allowed to do that"] }, status: :unauthorized
+	end
+  end
+
   def update_room_role
 		@room = Room.find_by_id(params[:room_id])
 
