@@ -1,16 +1,7 @@
 <script type="text/html" id="friendItemTemplate">
-<div id="friend-{{id}}" class="row" >
-	<div >
-		<table>
-		<tr>
-			<td> <img style="float:left" width="80" height="80" class="rounded-full p-2 ml-2" src="{{avatar_url}}" /></td>
-			<td style="padding:0 20px; text-decoration:underline"><b class="m-auto "><a href='/user/{{id}}'>{{login}}</a></b></td>
-			<td>
-				<button id="remove-btn" style="margin-left:40px;" id="remove-btn" class="btn-primary" type="button">Remove</button>
-			</td>
-		</tr>
-		</table>
-		<div class="line flex flex-row" style="border: 1px solid; color: #14B8A6; margin-left:15px; margin-top: 5px; width:270px"></div>
+	<div id="friend-{{id}}" class="flex flex-row items-center justify-around p-2 border-b border-teal-500 space-x-4">
+		<img class="rounded-full h-12 w-12" src="{{avatar_url}}"/>
+		<a class="underline text-lg font-semibold" href="/user/{{id}}">{{login}}</a>
+		<button id="remove-btn" class="btn-primary" type="button">Remove</button>
 	</div>
-</div>
 </script>

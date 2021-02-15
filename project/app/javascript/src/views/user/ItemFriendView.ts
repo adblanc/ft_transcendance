@@ -4,7 +4,7 @@ import BaseView from "../../lib/BaseView";
 import User from "src/models/User";
 import { displaySuccess } from "src/utils";
 
-type Options = Backbone.ViewOptions & { model: User, user: User};
+type Options = Backbone.ViewOptions & { model: User; user: User };
 
 export default class ItemFriendView extends BaseView {
   model: User;
@@ -13,13 +13,13 @@ export default class ItemFriendView extends BaseView {
   constructor(options?: Options) {
     super(options);
 
-	this.model = options.model;
-	this.user = options.user;
+    this.model = options.model;
+    this.user = options.user;
   }
 
   events() {
     return {
-	  "click #remove-btn": this.onRemoveFriend,
+      "click #remove-btn": this.onRemoveFriend,
     };
   }
 
@@ -29,15 +29,15 @@ export default class ItemFriendView extends BaseView {
     if (success) {
       displaySuccess(
         `Your are no longer friend with ${this.model.get("login")}`
-	  );
-	}
-	this.user.fetch();
+      );
+    }
+    this.user.fetch();
   }
 
   render() {
     const template = $("#friendItemTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
-	this.$el.html(html);
+    this.$el.html(html);
 
     return this;
   }
