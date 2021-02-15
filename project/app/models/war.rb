@@ -59,9 +59,11 @@ class War < ApplicationRecord
 		end
 	end
 
-	def update_guild(winner)
-		winner.members.each do |member|
-			member.send_notification("Your guild earned war points!", "/wars", "wars")
+	def update_guilds(winner)
+		self.guilds.each do |guild|
+			guild.members.each do |member|
+				member.send_notification("#{winner.name} earned war points!", "/wars", "wars")
+			end
 		end
 	end
 end
