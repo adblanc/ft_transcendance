@@ -6,7 +6,7 @@ if user.games
 			json.status game.status
 			json.created_at game.created_at
 			json.game_type game.game_type
-			json.game_level game.level
+			json.level game.level
 			json.won user.game_won?(game)
 			if game.opponent(user)
 				json.opponentname game.opponent(user).login

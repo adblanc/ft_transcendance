@@ -269,13 +269,13 @@ class GamesController < ApplicationController
 		@opponent = @game.opponent(current_user)
 		@tournament = Tournament.find_by_id(@game.tournament_id)
 
-		if current_user.inGame? || (current_user.pendingGame && current_user.pendingGame.id != @game.id) || (current_user.matchedGame && current_user.matchedGame != @game.id)
+		if current_user.inGame? || (current_user.pendingGame && current_user.pendingGame.id != @game.id) || current_user.pendingGameToAccept
 			render json: {"You" => ["already have a Game started or pending"]}, status: :unprocessable_entity
 			return
 		end
 
-		if not @game.pending? || @game.matched?
-			render json: {"Game" => ["is already over."]}, status: :unprocessable_entity
+		if not @game.pending?
+			render json: {"Game" => ["is already started or over."]}, status: :unprocessable_entity
 			return
 		end
 		player = @game.game_users.where(user_id: current_user.id).first
