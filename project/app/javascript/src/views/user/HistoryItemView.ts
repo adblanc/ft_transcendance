@@ -13,7 +13,6 @@ export default class HistoryItemView extends BaseView {
     super(options);
 	this.model = options.model;
 
-	console.log(this.model);
   }
 
   render() {

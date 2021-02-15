@@ -37,6 +37,11 @@ class User < ApplicationRecord
 
 	after_create :attach_avatar
 
+	def to_spectate_json
+		json = {:id => id, :name => name, :avatar_url => Rails.application.routes.url_helpers.rails_blob_path(avatar, only_path: true)}
+		json
+	end
+
 	def attach_avatar
 		self.avatar.attach(
 			io: File.open("default/user.jpg", "r"),

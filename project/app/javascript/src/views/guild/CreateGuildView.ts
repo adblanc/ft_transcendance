@@ -5,6 +5,7 @@ import Guild from "src/models/Guild";
 import { displaySuccess } from "src/utils/toast";
 import { generateAcn } from "src/utils/acronym";
 import { displayError } from "src/utils";
+import { currentUser } from "src/models/Profile";
 
 export default class CreateGuildView extends ModalView<Guild> {
   list: string[];
@@ -28,10 +29,14 @@ export default class CreateGuildView extends ModalView<Guild> {
 
   async onSubmit(e: JQuery.Event) {
     e.preventDefault();
-    var acn = generateAcn(
-      this.$("#input-guild-name").val() as string,
-      this.list
-    ) as string;
+
+    const name = this.$("#input-guild-name").val() as string;
+
+    if (!name) {
+      return displayError("Guild name can't be blank.");
+    }
+
+    var acn = generateAcn(name, this.list) as string;
     if (acn == "error") {
       displayError(
         "Acronym generation error : your chosen guild name is too similar to existing guild. Please choose another name."
@@ -39,7 +44,7 @@ export default class CreateGuildView extends ModalView<Guild> {
       acn = "";
     } else {
       const attrs = {
-        name: this.$("#input-guild-name").val() as string,
+        name,
         ang: acn,
         img: (this.$("#input-guild-img")[0] as HTMLInputElement).files?.item(0),
       };
@@ -56,7 +61,8 @@ export default class CreateGuildView extends ModalView<Guild> {
   guildSaved() {
     displaySuccess("Guild successfully created.");
     this.closeModal();
-    this.model.fetch();
+
+    currentUser().set({ guild: this.model });
     Backbone.history.navigate(`guild/${this.model.get("id")}`, {
       trigger: true,
     });

@@ -29,8 +29,8 @@ export default class MembersView extends Backbone.View {
 
   events() {
     return {
-      "click #pending-btn": "onPendingClicked",
-      "click #load-more": "onLoadMore",
+      "click #pending-btn": this.onPendingClicked,
+      "click #load-more": this.onLoadMore,
     };
   }
 
@@ -40,14 +40,6 @@ export default class MembersView extends Backbone.View {
     });
 
     pendingView.render();
-  }
-
-  renderMember(member: Profile) {
-    var memberView = new MemberView({
-      model: member,
-      guild: this.guild,
-    });
-    this.$("#listing").append(memberView.render().el);
   }
 
   onLoadMore() {
@@ -85,14 +77,22 @@ export default class MembersView extends Backbone.View {
     }
 
     var members = this.profiles.first(this.max);
-    members.forEach(function (item) {
+    members.forEach((item) => {
       this.renderMember(item);
-    }, this);
+    });
     this.count = members.length;
     if (this.count == this.profiles.length) {
       this.$("#load-more").hide();
     }
 
     return this;
+  }
+
+  renderMember(member: Profile) {
+    var memberView = new MemberView({
+      model: member,
+      guild: this.guild,
+    });
+    this.$("#listing").append(memberView.render().el);
   }
 }

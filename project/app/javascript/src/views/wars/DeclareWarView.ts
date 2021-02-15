@@ -1,10 +1,12 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import ModalView from "../ModalView";
+import WarTimeFormView from "./WarTimeFormView";
 import Guild from "src/models/Guild";
 import { currentUser } from "src/models/Profile";
-import War from "src/models/War";
+import War, { WarTimeDates } from "src/models/War";
 import { displayError, displaySuccess } from "src/utils/toast";
+import { eventBus } from "src/events/EventBus";
 const flatpickr = require("flatpickr");
 require("flatpickr/dist/flatpickr.css");
 
@@ -16,12 +18,17 @@ export default class DeclareWarView extends ModalView<War> {
   guild: Guild;
   fp_start: typeof flatpickr;
   fp_end: typeof flatpickr;
-
+  wt_dates: WarTimeDates[];
+  viewId: number;
 
   constructor(options?: Options) {
     super(options);
 
     this.guild = options.guild;
+	this.wt_dates = [];
+	this.viewId = 0;
+	this.listenTo(eventBus, "wartime:add", this.onAddWarTime);
+	this.listenTo(eventBus, "wartime:remove", this.onRemoveWarTime);
   }
 
   events() {
@@ -36,6 +43,21 @@ export default class DeclareWarView extends ModalView<War> {
 		 this.$("#custom").hide();
 	 else
 	 	this.$("#custom").show();
+	}
+
+	onAddWarTime(dates: WarTimeDates) { 
+		this.wt_dates.push(dates);
+		this.viewId++;
+		var warTimeFormView = new WarTimeFormView({
+			viewId: this.viewId,
+		});
+		this.appendNested(warTimeFormView, "#wt-schedule");
+	}
+
+	onRemoveWarTime(id: number) { 
+		this.wt_dates.forEach( (item, index) => {
+			if(item.id === id) this.wt_dates.splice(index,1);
+		});
 	}
 
   async onSubmit(e: JQuery.Event) {
@@ -60,6 +82,7 @@ export default class DeclareWarView extends ModalView<War> {
 
     const initiator_id = currentUser().get("guild").get("id");
     const recipient_id = this.guild.get("id");
+	const wt_dates = this.wt_dates;
 
     if (
       parseInt(prize) > currentUser().get("guild").get("points") ||
@@ -85,7 +108,8 @@ export default class DeclareWarView extends ModalView<War> {
 	  inc_six,
 	  inc_nine,
       initiator_id,
-      recipient_id
+      recipient_id,
+	  wt_dates,
     );
     if (success) {
       this.warSaved();
@@ -130,6 +154,11 @@ export default class DeclareWarView extends ModalView<War> {
       static: true,
       minDate: new Date(),
 	});
+
+	var warTimeFormView = new WarTimeFormView({
+		viewId: this.viewId,
+	});
+	this.appendNested(warTimeFormView, "#wt-schedule");
 
 	this.$content.on("click", this.dismiss);
     return this;

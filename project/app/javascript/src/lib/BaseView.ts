@@ -1,4 +1,5 @@
 import Backbone from "backbone";
+import LoadingPageView from "src/views/LoadingPageView";
 
 export type View<T> = Omit<Backbone.View, "events"> & {
   events: () => Record<string, keyof View<T>>;
@@ -30,7 +31,7 @@ export default class BaseView<
   }
 
   renderNested(view: Backbone.View, selector: string) {
-	const $element = this.$(selector);
+    const $element = this.$(selector);
 
     view.setElement($element).render();
   }
@@ -53,5 +54,13 @@ export default class BaseView<
     }
     this.remove();
     this.unbind();
+  }
+
+  renderLoadingPage() {
+    const loadingView = new LoadingPageView();
+
+    this.$el.html(loadingView.render().$el.html());
+
+    return this;
   }
 }

@@ -6,7 +6,7 @@
     >
 		<div style="background-color:#134E4A; height:50px; text-align: center;" class=" text-white px-100 py-5">Ladder Board</div>
 		<div class="py-5" id="list" style="justify-content: center;"></div>
-		<button id="load-more" class="flex items-center justify-center">
+		<button id="load-more" class="load-more">
 		<svg class="w-6 text-black text-center fill-current" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m256 512c-141.164062 0-256-114.835938-256-256s114.835938-256 256-256 256 114.835938 256 256-114.835938 256-256 256zm0-480c-123.519531 0-224 100.480469-224 224s100.480469 224 224 224 224-100.480469 224-224-100.480469-224-224-224zm0 0"/><path d="m368 272h-224c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h224c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/><path d="m256 384c-8.832031 0-16-7.167969-16-16v-224c0-8.832031 7.167969-16 16-16s16 7.167969 16 16v224c0 8.832031-7.167969 16-16 16zm0 0"/></svg>
   		</button>
 	</div>
@@ -18,9 +18,9 @@
 			<h1 class="justify-center text-white flex flex-row"> If you win, you will take the rank of your opponent. </h1>
 			<h1 class="justify-center text-white flex flex-row"> If you fail to accept a ladder challenge within 2 days, you will automatically lose. </h1>
 			<h1 class="justify-center text-white flex flex-row"> You cannot start or accept any other type of match if you have a pending ladder challenge. </h1>
-			
+
 			<h1 style="margin-top:10px; font-size:11px" class="text-white justify-center flex flex-row"> Ladder games are of normal difficulty and are played in 9 points. </h1>
-			
+
 			<h1 id="default" style="margin-top:15px; font-size:15px; display:none" class="justify-center text-white flex flex-row"><b> You have no pending ladder challenge </b></h1>
 			<div id="accept" style="text-align: center; margin-top:15px; font-size:15px; display:none">
 				<h1 style="margin-top:10px" class="justify-center text-white flex flex-row"> {{pendingGameToAccept.opponent.login}}, rank {{pendingGameToAccept.opponent.ladder_rank}} has challenged you. </h1>

@@ -17,7 +17,7 @@ export default class BoardView extends BaseView {
     this.listenTo(this.collection, "change", this.render);
     this.listenTo(this.collection, "sort", this.render);
     this.collection.fetch();
-	this.collection.sort();
+    this.collection.sort();
   }
 
   render() {
@@ -27,9 +27,10 @@ export default class BoardView extends BaseView {
 
     const $element = this.$("#listing");
 
-    this.collection.slice(0, 5).forEach(function (item) {
+    this.collection.slice(0, 5).forEach((item) => {
       var itemView = new ItemView({
         model: item,
+        maximumPoints: this.collection.maximumPoints,
       });
       $element.append(itemView.render().el);
     });

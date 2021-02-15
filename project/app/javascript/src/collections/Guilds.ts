@@ -12,24 +12,8 @@ export default class Guilds extends Backbone.Collection<Guild> {
       return -model.get("points");
     };
   }
+
+  get maximumPoints() {
+    return this.max((g) => g.get("points")).get("points");
+  }
 }
-
-//version js dans BoardView avant
-/*var Collection = Backbone.Collection.extend({
-		url: "/guilds",
-
-		initialize: function(models, options) {
-			options = options || {};
-			models = new Guild();
-
-			this.fetch({
-				reset: true,
-				success: console.log('SUCCESS'),
-				error: console.log('ERROR'),
-			});
-
-			this.comparator = function(model) {
-				return -model.get('points');
-			}
-		},
-	});*/

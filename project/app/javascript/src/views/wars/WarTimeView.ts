@@ -1,7 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
-import ActivateView from "./ActivateView";
 import ActiveWarTimeView from "./ActiveWarTimeView";
 import War from "src/models/War";
 import { currentUser } from "src/models/Profile";
@@ -20,23 +19,9 @@ export default class WarTimeView extends BaseView {
 	
   }
 
-  events() {
-    return {
-	  "click #wartime-btn": "onActivateClicked",
-    };
-  }
-
-  onActivateClicked() {
-	const activateView = new ActivateView({
-		model: this.war,
-	  });
-  
-	  activateView.render();
-  }
-
   render() {
     const template = $("#warTimeTemplate").html();
-    const html = Mustache.render(template, {member: currentUser().get("guild_role") == "Member"});
+    const html = Mustache.render(template, {});
 	this.$el.html(html);
 
 	if (this.war.get("atWarTime")) {
