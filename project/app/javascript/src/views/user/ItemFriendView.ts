@@ -15,6 +15,8 @@ export default class ItemFriendView extends BaseView {
 
     this.model = options.model;
     this.user = options.user;
+
+    this.listenTo(this.model, "change", this.render);
   }
 
   events() {

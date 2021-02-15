@@ -8,12 +8,8 @@ import FriendsView from "./FriendsView";
 import { eventBus } from "src/events/EventBus";
 import { currentUser } from "src/models/Profile";
 import { displaySuccess } from "src/utils";
-import { BASE_ROOT } from "src/constants";
-import axios from "axios";
 import GameHistoryView from "./GameHistoryView";
 import TrophiesView from "./TrophiesView";
-import Game from "src/models/Game";
-import Games from "src/collections/Games";
 
 type Options = Backbone.ViewOptions & { userId: number };
 

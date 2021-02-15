@@ -264,7 +264,6 @@ const fetchCurrentUser = () => {
       memorizedUser.channel = memorizedUser.createNotificationsConsumer();
       memorizedUser.appearanceChannel?.unsubscribe();
       memorizedUser.appearanceChannel = memorizedUser.createAppereanceConsumer();
-      // memorizedUser.connectGlobalRoomsConsumer();
     },
     error: () => {
       logoutUser();
