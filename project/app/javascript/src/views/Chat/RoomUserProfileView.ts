@@ -2,9 +2,8 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import { eventBus } from "src/events/EventBus";
 import { currentUser } from "src/models/Profile";
-import Room from "src/models/Room";
 import RoomUser, { MuteBanTime } from "src/models/RoomUser";
-import { displaySuccess } from "src/utils";
+import { closeAllModal, displaySuccess } from "src/utils";
 import ModalView from "../ModalView";
 
 type Options = Backbone.ViewOptions<RoomUser> & {
@@ -106,7 +105,7 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
 
   async sendDm() {
     eventBus.trigger("chat:go-to-dm", this.model.get("id"));
-    this.closeAllModal();
+    closeAllModal();
   }
 
   render() {
