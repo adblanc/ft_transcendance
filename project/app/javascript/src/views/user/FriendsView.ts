@@ -3,7 +3,7 @@ import Mustache from "mustache";
 import ModalView from "../ModalView";
 import Friends from "src/collections/Friends";
 import User from "src/models/User";
-import ItemFriendView from "./ItemFriendView"
+import ItemFriendView from "./ItemFriendView";
 import { eventBus } from "src/events/EventBus";
 
 export default class FriendsView extends ModalView<User> {
@@ -12,9 +12,9 @@ export default class FriendsView extends ModalView<User> {
   constructor(options?: Backbone.ViewOptions<User>) {
     super(options);
 
-	this.friends = this.model.get("friends");
+    this.friends = this.model.get("friends");
 
-	this.listenTo(this.friends, "remove", this.onRemove);
+    this.listenTo(this.friends, "remove", this.onRemove);
   }
 
   onRemove(friend: User) {
@@ -24,8 +24,8 @@ export default class FriendsView extends ModalView<User> {
 
     if (this.friends.isEmpty()) {
       this.renderIsEmpty();
-	}
-	eventBus.trigger("user:change");
+    }
+    eventBus.trigger("user:change");
   }
 
   renderIsEmpty() {
@@ -48,8 +48,8 @@ export default class FriendsView extends ModalView<User> {
     this.friends.forEach((item) => {
       this.$("#listing").append(
         new ItemFriendView({
-		  model: item,
-		  user: this.model,
+          model: item,
+          user: this.model,
         }).render().el
       );
     }, this);

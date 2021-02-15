@@ -205,7 +205,7 @@ class User < ApplicationRecord
 	def disappear
 		self.update(is_present: false, appearing_on: "offline");
 
-		ActionCable.server.broadcast("appearance_channel", event: "disappear", user_id: self.id);
+		ActionCable.server.broadcast("appearance_channel", event: "disappear", user_id: self.id, appearing_on: "offline");
 	end
 
 	def game_request

@@ -8,6 +8,8 @@ import Game from "src/models/Game";
 import Games from "src/collections/Games";
 import Tournament from "./Tournament";
 import Tournaments from "src/collections/Tournaments";
+import { eventBus } from "src/events/EventBus";
+import { AppearanceData } from "./Profile/Profile";
 
 export default class User extends BaseModel<IProfile> {
   urlRoot = () => `${BASE_ROOT}/profile/`;
@@ -15,13 +17,13 @@ export default class User extends BaseModel<IProfile> {
 
   preinitialize() {
     this.relations = [
-	  {
+      {
         type: Backbone.Many,
         key: "friend_requests",
         collectionType: FriendRequests,
         relatedModel: User,
-	  },
-	  {
+      },
+      {
         type: Backbone.Many,
         key: "friends",
         collectionType: Friends,
@@ -32,8 +34,8 @@ export default class User extends BaseModel<IProfile> {
         key: "games",
         collectionType: Games,
         relatedModel: Game,
-	  },
-	  {
+      },
+      {
         type: Backbone.Many,
         key: "won_tournaments",
         collectionType: Tournaments,
@@ -42,11 +44,25 @@ export default class User extends BaseModel<IProfile> {
     ];
   }
 
+  initialize() {
+    this.listenTo(eventBus, "appeareance", this.reactToAppearance);
+  }
+
+  reactToAppearance({ event, user_id, appearing_on }: AppearanceData) {
+    if (user_id === this.get("id")) {
+      this.set({
+        is_present: event === "appear",
+        inGame: appearing_on === "in_game",
+        appearing_on,
+      });
+    }
+  }
+
   addFriend() {
     return this.asyncSave(
       {},
       {
-        url: `${this.baseUserRoot()}/add_friend`
+        url: `${this.baseUserRoot()}/add_friend`,
       }
     );
   }
@@ -55,7 +71,7 @@ export default class User extends BaseModel<IProfile> {
     return this.asyncSave(
       {},
       {
-        url: `${this.baseUserRoot()}/accept_friend`
+        url: `${this.baseUserRoot()}/accept_friend`,
       }
     );
   }
@@ -64,7 +80,7 @@ export default class User extends BaseModel<IProfile> {
     return this.asyncSave(
       {},
       {
-        url: `${this.baseUserRoot()}/refuse_friend`
+        url: `${this.baseUserRoot()}/refuse_friend`,
       }
     );
   }
@@ -73,7 +89,7 @@ export default class User extends BaseModel<IProfile> {
     return this.asyncSave(
       {},
       {
-        url: `${this.baseUserRoot()}/remove_friend`
+        url: `${this.baseUserRoot()}/remove_friend`,
       }
     );
   }

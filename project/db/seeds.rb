@@ -66,6 +66,8 @@ guild3.members << billy
 billy.add_role(:owner, guild3)
 guild4.members << jeff
 guild4.members << john
+john.add_role(:owner, guild4)
 guild5.members << jack
+jack.add_role(:owner, guild5)
 
 john.add_role :admin

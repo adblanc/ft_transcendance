@@ -2,10 +2,9 @@ import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
 import User from "src/models/User";
-import { displaySuccess } from "src/utils";
-import { currentUser } from "src/models/Profile";
+import { closeAllModal, displaySuccess } from "src/utils";
 
-type Options = Backbone.ViewOptions & { model: User, user: User };
+type Options = Backbone.ViewOptions & { model: User; user: User };
 
 export default class ItemRequestView extends BaseView {
   model: User;
@@ -14,14 +13,14 @@ export default class ItemRequestView extends BaseView {
   constructor(options?: Options) {
     super(options);
 
-	this.model = options.model;
-	this.user = options.user;
+    this.model = options.model;
+    this.user = options.user;
   }
 
   events() {
     return {
-      "click #accept-btn": "onAcceptClicked",
-      "click #refuse-btn": "onRefuseClicked",
+      "click #accept-btn": this.onAcceptClicked,
+      "click #refuse-btn": this.onRefuseClicked,
     };
   }
 
@@ -42,25 +41,17 @@ export default class ItemRequestView extends BaseView {
   }
 
   saved(method: "accepted" | "refused") {
-    switch (method) {
-      case "accepted":
-        displaySuccess(
-          `You accepted ${this.model.get("login")}'s friend request`
-        );
-        break;
-      case "refused":
-        displaySuccess(
-          `You refused ${this.model.get("login")}'s friend request`
-        );
-        break;
+    displaySuccess(`You ${method} ${this.model.get("login")}'s friend request`);
+    if (this.user.get("friend_requests").size() === 1) {
+      closeAllModal();
     }
-	this.user.fetch();
+    this.user.fetch();
   }
 
   render() {
     const template = $("#requestItemTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
-	this.$el.html(html);
+    this.$el.html(html);
 
     return this;
   }
