@@ -4,7 +4,7 @@ import { currentUser } from "src/models/Profile";
 import BaseModel from "src/lib/BaseModel";
 import { BASE_ROOT } from "src/constants";
 import consumer from "channels/consumer";
-import { displayError } from "src/utils/toast";
+import { displayError, displaySuccess } from "src/utils/toast";
 import { eventBus } from "src/events/EventBus";
 import WarTime from "./WarTime";
 import Spectators from "src/collections/Spectators";
@@ -51,7 +51,8 @@ export interface GameData {
     | "player_ready"
     | "game_over"
     | "game_paused"
-    | "game_continue";
+    | "game_continue"
+	| "round_stop";
   playerId: number;
 }
 
@@ -221,6 +222,10 @@ export default class Game extends BaseModel<IGame> {
             case "game_over":
               this.onGameOver(data);
               break;
+			case "round_stop":
+				console.log("test");
+				displayError("Tournament round has ended and your match was stopped.")
+			  break;
           }
         },
         disconnected: () => {

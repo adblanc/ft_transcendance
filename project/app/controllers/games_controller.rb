@@ -285,7 +285,7 @@ class GamesController < ApplicationController
 			@game.add_player_role(current_user)
 			@game.update(status: :matched)
 			@game.broadcast({"action" => "matched"})
-			ExpireTourMatchedGameJob.set(wait: 20.seconds).perform_later(@game, @tournament)
+			ExpireTourMatchedGameJob.set(wait: 20.minutes).perform_later(@game, @tournament)
 		else
 			current_user.remove_role(:spectator, @game);
 			current_user.add_role(:host, @game);
