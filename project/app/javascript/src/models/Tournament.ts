@@ -64,7 +64,7 @@ export default class Tournament extends BaseModel<ITournament> {
 		this.tournament_channel = consumer.subscriptions.create({
 			channel: "TournamentsChannel", id: options.id
 		}, {
-			received(data) {
+			received: (data) => {
 				if (data["game_id"]) {
 					eventBus.trigger(`game-${data["game_id"]}:player-register`);
 				} else {
