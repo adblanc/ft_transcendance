@@ -3,7 +3,6 @@ import Mustache from "mustache";
 import Games from "src/collections/Games";
 import BaseView from "src/lib/BaseView";
 import MatchView from "./MatchView";
-import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions & { collection: Games; round: string };
 

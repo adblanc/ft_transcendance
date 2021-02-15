@@ -68,11 +68,11 @@ export default class Tournament extends BaseModel<ITournament> {
 				if (data["game_id"]) {
 					eventBus.trigger(`game-${data["game_id"]}:player-register`);
 				} else {
-					eventBus.trigger(`tournament-${options.id}:change`, options.id);
+					eventBus.trigger(`tournament-${options.id}:change`);
 					eventBus.trigger(`tournament:change`, options.id);
-				}
-				if (data["eot"]) {
-					this.tournament_channel.unsubscribe();		
+					if (data["eot"]) {
+						this.tournament_channel.unsubscribe();		
+					}
 				}
 			}
 		});

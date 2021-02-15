@@ -50,11 +50,9 @@ export default class MatchView extends BaseView {
   start() {
     currentUser().fetch();
     if (this.model.get("status") === "matched") {
-      console.log("status matched on navigate to game");
       this.model.navigateToGame();
       displaySuccess("Redirecting you to the game...");
     } else {
-      console.log("on cree channel consumer on met pending game");
       displaySuccess("Waiting for opponent to start the game...");
       this.model.createChannelConsumer();
       Backbone.history.navigate("/play", {
