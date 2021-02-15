@@ -283,17 +283,17 @@ class Game < ApplicationRecord
 			end
 			if self.loser.guild?
 				if (self.winner.guild != self.loser.guild)
-					self.winner.guild.increment!(:points, 10)
-					self.winner.increment!(:contribution, 10)
+					self.winner.guild.increment!(:points, 10) unless self.final?
+					self.winner.increment!(:contribution, 10) unless self.final?
 					if self.winner.guild.startedWar && self.loser.guild.startedWar
 						if self.winner.guild.startedWar == self.loser.guild.startedWar
 							self.handle_war_points
 						end
 					end
 				end
-			elsif not self.final?
-				self.winner.guild.increment!(:points, 10)
-				self.winner.increment!(:contribution, 10)
+			else
+				self.winner.guild.increment!(:points, 10) unless self.final?
+				self.winner.increment!(:contribution, 10) unless self.final?
 			end
 		end
 	end

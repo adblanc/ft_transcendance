@@ -5,8 +5,6 @@ class RoundJob < ApplicationJob
 		return if tournament.finished?
 	  handle_games(tournament) 
 
-	  my_logger.info("winner : #{tournament.status}")
-
 	  if tournament.quarter? || tournament.semi? 
 		change_round(tournament)
 	  	RoundJob.set(wait_until: DateTime.now + 1.minutes).perform_later(tournament)
