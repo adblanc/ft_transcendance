@@ -302,6 +302,8 @@ class Game < ApplicationRecord
 		self.winner.guild.war_score(10)
 		self.winner.guild.increment!(:points, 10)
 		self.winner.increment!(:contribution, 10)
+		@war = self.winner.guild.startedWar
+		@war.update_guild(self.winner.guild)
 	end
 
 	private
