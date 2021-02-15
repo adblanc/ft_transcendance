@@ -2,6 +2,7 @@ class RoundJob < ApplicationJob
 	queue_as :default
 
 	def perform(tournament)
+		return if tournament.finished?
 	  handle_games(tournament) 
 
 	  my_logger.info("winner : #{tournament.status}")
