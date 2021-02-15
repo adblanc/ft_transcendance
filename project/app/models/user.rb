@@ -267,6 +267,9 @@ class User < ApplicationRecord
 	end
 
 	def game_won?(game)
+		if game.abandon?
+			return false
+		end
 		if game.winner.id == self.id
 			return true
 		end
