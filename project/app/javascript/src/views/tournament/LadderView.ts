@@ -67,9 +67,7 @@ export default class LadderView extends BaseView {
     var opponents = this.opponents.models.slice(this.count, this.count + this.max);
     if (opponents.length) {
 		opponents.forEach(function (item) {
-			if (item.get("id") != currentUser().get("id")) {
-				this.renderOpponent(item);
-			}
+			this.renderOpponent(item);
       }, this);
       this.count += opponents.length;
     }
@@ -85,9 +83,7 @@ export default class LadderView extends BaseView {
 
 	var opponents = this.opponents.first(this.max);
     opponents.forEach(function (item) {
-		if (item.get("id") != currentUser().get("id")) {
-			this.renderOpponent(item);
-		}
+		this.renderOpponent(item);
     }, this);
     this.count = opponents.length;
     if (this.count == this.opponents.length) {
