@@ -23,6 +23,12 @@ class ExpireGameJob < ApplicationJob
 			game.update(status: :forfeit)
 			ActionCable.server.broadcast("room_#{room.id}", {"event" => "playchat:expired", "game_id": game.id});
 		end
+		queue = Sidekiq::ScheduledSet.new
+		queue.each do |job|
+			if job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/Game/#{game.id}"
+				job.delete
+			end
+		end
 		game.destroy
 	  end
 	end
