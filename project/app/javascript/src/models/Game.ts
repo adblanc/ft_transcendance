@@ -249,6 +249,7 @@ export default class Game extends BaseModel<IGame> {
   }
 
   navigateToGame() {
+	currentUser().set({ pendingGame: null });
     currentUser().set({ matchedGame: this.get("id") });
     this.disconnectFromWS();
     Backbone.history.navigate(`/game/${this.get("id")}`, {

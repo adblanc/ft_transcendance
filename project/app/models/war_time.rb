@@ -50,6 +50,8 @@ class WarTime < ApplicationRecord
 			games.where(status: [:started]).first
 		elsif games.where(status: [:matched]).first
 			games.where(status: [:matched]).first
+		elsif games.where(status: [:paused]).first
+			games.where(status: [:paused]).first
 		end
 	end
 
