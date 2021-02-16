@@ -20,8 +20,9 @@ class ExpireGameJob < ApplicationJob
 	  else
 		game.broadcast({"action" => "expired"});
 		if room
-			game.update(status: :forfeit)
+			game.update(status: :chat_expired)
 			ActionCable.server.broadcast("room_#{room.id}", {"event" => "playchat:expired", "game_id": game.id});
+			return
 		end
 		queue = Sidekiq::ScheduledSet.new
 		queue.each do |job|

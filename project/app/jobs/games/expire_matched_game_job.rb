@@ -15,15 +15,21 @@ class ExpireMatchedGameJob < ApplicationJob
 			game.handle_end_cases
 			game.broadcast_end(winner, looser)
 		else
-			game.update(status: :forfeit)
-			game.broadcast_end(nil, nil)
-			queue = Sidekiq::ScheduledSet.new
-			queue.each do |job|
-				if job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/Game/#{game.id}"
-					job.delete
+			if game.room_message.present?
+				game.update(status: :chat_expired)
+				game.broadcast_end(nil, nil)
+				return
+			else
+				game.update(status: :forfeit)
+				game.broadcast_end(nil, nil)
+				queue = Sidekiq::ScheduledSet.new
+				queue.each do |job|
+					if job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/Game/#{game.id}"
+						job.delete
+					end
 				end
+				game.destroy
 			end
-			game.destroy
 		end
 	end
 end

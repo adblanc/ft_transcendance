@@ -17,7 +17,8 @@ class Game < ApplicationRecord
 		:waiting_tournament,
 		:abandon,
 		:paused,
-		:matched
+		:matched,
+		:chat_expired
 	]
 
 	enum game_type: [
