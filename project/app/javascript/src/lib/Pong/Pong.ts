@@ -147,8 +147,6 @@ export default class Pong extends BaseModel {
     if (hidden) {
       this.game.channel?.perform("game_paused", {});
     } else if (this.game.paused) {
-      console.log("on trigger ca continue", this.game.paused);
-      console.log(this.game.toJSON());
       this.game.channel?.perform("game_continue", {});
     }
   }
@@ -162,7 +160,6 @@ export default class Pong extends BaseModel {
   }
 
   createBallMovementChannel() {
-    console.log("create pong ball movement");
     const id = this.game.get("id");
 
     this.ballMovementChannel = consumer.subscriptions.create(
@@ -294,12 +291,6 @@ export default class Pong extends BaseModel {
       paddle.top < ball.bottom &&
       paddle.bottom > ball.top
     ) {
-      // console.log("paddle left", paddle.left);
-      // console.log("ball right", ball.right);
-      // console.log("paddle top", paddle.top);
-      // console.log("ball bottom", ball.bottom);
-      // console.log("paddle bottom", paddle.bottom);
-      // console.log("ball top", ball.top);
       const len = ball.vel.len;
       ball.vel.x = -ball.vel.x;
 

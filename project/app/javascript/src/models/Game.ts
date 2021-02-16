@@ -223,7 +223,6 @@ export default class Game extends BaseModel<IGame> {
               this.onGameOver(data);
               break;
 			case "round_stop":
-				console.log("test");
 				displayError("Tournament round has ended and your match was stopped.")
 			  break;
           }

@@ -106,8 +106,4 @@ class RoundJob < ApplicationJob
 		end
 	end
 
-	def my_logger
-		@@my_logger ||= Logger.new("#{Rails.root}/log/my.log")
-	end
-
 end

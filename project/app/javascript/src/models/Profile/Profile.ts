@@ -150,9 +150,7 @@ export default class Profile extends BaseModel<IProfile> {
     return consumer.subscriptions.create(
       { channel: "NotificationsChannel", user_id: user_id },
       {
-        connected: () => {
-          //console.log("connected to", user_id);
-        },
+        connected: () => {},
         received: (notification: INotification) => {
           this.checkDmCreationNotification(notification);
           this.checkWarEvent(notification);
