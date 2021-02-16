@@ -7,9 +7,10 @@ class AuthenticationController < ApplicationController
 	@@mailer_mdp = "crrlmswkphcturna"
 	@@send_opt = {	user_name: @@mailer_addr,
 					password: @@mailer_mdp,
+					domain: "gmail.com",
 					address: "smtp.gmail.com",
 					port: "587",
-					authentication: "plain",
+					authentication: "login",
 					enable_starttls_auto: true }
 
 	def loginGuest
@@ -102,16 +103,20 @@ class AuthenticationController < ApplicationController
 		Thread.new do
 			@@send_mut.synchronize do
 				begin
+					my_logger.info("start")
 					Mail.defaults do
 						delivery_method :smtp, @@send_opt
 					end
+					my_logger.info("deliver")
 					Mail.deliver do
 						from @@mailer_addr
 						to target
 						subject sub
 						body bod
 					end
+					my_logger.info("delivered")
 				rescue => error
+					my_logger.info(error.message)
 					File.open("mail.log", "w") do |file|
 						file.puts error.message
 					end
@@ -119,6 +124,10 @@ class AuthenticationController < ApplicationController
 			end
 		end
 	end
+
+	def my_logger
+		@@my_logger ||= Logger.new("#{Rails.root}/log/my.log")
+	end	   
 
 	def tfaTreatment(user)
 		if user.two_fact_auth

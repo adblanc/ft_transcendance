@@ -18,6 +18,8 @@ gem 'jbuilder', '~> 2.7'
 #rolify
 gem 'rolify'
 
+gem 'dotenv-rails'
+
 # jobs background: https://github.com/mperham/sidekiq
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
@@ -51,7 +53,6 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 
   # .env file
-  gem 'dotenv-rails'
 end
 
 group :development do

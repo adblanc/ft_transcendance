@@ -70,9 +70,7 @@ export default class LadderView extends BaseView {
     );
     if (opponents.length) {
       opponents.forEach(function (item) {
-        if (item.get("id") != currentUser().get("id")) {
           this.renderOpponent(item);
-        }
       }, this);
       this.count += opponents.length;
     }
