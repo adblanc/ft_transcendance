@@ -56,7 +56,6 @@ export default class MessageView extends Backbone.View<Message> {
   }
 
   gameSaved() {
-    console.log("navigate");
     this.game.navigateToGame();
   }
 

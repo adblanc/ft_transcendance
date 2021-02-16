@@ -7,6 +7,7 @@ json.ladder_unchallengeable user.ladder_unchallengeable
 json.inGame user.inGame?
 json.guild_role user.guild_role?
 json.admin user.admin?
+json.master user.master?
 json.ban user.is_banned?
 json.ban_time user.ban_time
 if user.guild_role?
@@ -93,9 +94,13 @@ json.blocked_users do
 	end
 end
 
-json.current_tournaments do
-	json.array! user.current_tournaments do |tour|
-		json.partial! "tournaments/tournament", tournament: tour
-		json.tournament_status user.tournament_status(tour)
+if user.current_tournaments
+	json.current_tournaments do
+		json.array! user.current_tournaments do |tour|
+			json.partial! "tournaments/tournament", tournament: tour
+			json.tournament_status user.tournament_status(tour)
+		end
 	end
+else
+	json.current_tournaments nil
 end

@@ -36,8 +36,7 @@ export default class TournamentView extends BaseView {
 
   events() {
     return {
-	  "click #register-btn": "onRegisterClicked",
-	  "click #seed-for-test": "onSeedClicked",
+	  "click #register-btn": "onRegisterClicked"
     };
   }
 
@@ -51,21 +50,6 @@ export default class TournamentView extends BaseView {
   registered() {
     displaySuccess(
       `You have registered to the ${this.tournament.get("name")} tournament. `
-    );
-    this.tournament.fetch();
-    currentUser().fetch();
-  }
-
-  async onSeedClicked() {
-    const success = await this.tournament.seed_for_test();
-    if (success) {
-      this.seeded();
-    }
-  }
-
-  seeded() {
-    displaySuccess(
-      `Users seeded for test `
     );
     this.tournament.fetch();
     currentUser().fetch();

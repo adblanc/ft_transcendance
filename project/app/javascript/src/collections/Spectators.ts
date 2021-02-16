@@ -20,7 +20,6 @@ export default class Spectators extends Backbone.Collection<Spectator> {
       { channel: "GameSpectatorsChannel", id: gameId },
       {
         connected: () => {
-          console.log("connected to spectators", gameId);
         },
         received: ({ action, payload }: SpectatorData) => {
           if (

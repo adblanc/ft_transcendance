@@ -145,6 +145,13 @@ class Tournament < ApplicationRecord
 		game.handle_tournament_end
 	end
 
+	def finish_game_without_forfeit(winner, game)
+		game.game_users.where(user_id: winner.id).first.update(status: :won)
+		game.game_users.where.not(user_id: winner.id).first.update(status: :lose)
+		game.update(status: :finished)
+		game.handle_tournament_end
+	end
+
 	def forfeit_notif(winner, loser, forfeit)
 		if forfeit == true
 			winner.send_notification("You won your game by forfeit for #{self.name} tournament", "tournaments/#{self.id}", "tournaments")
@@ -168,5 +175,4 @@ class Tournament < ApplicationRecord
 			end
 		end
 	end
-
 end

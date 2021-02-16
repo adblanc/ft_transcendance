@@ -257,7 +257,7 @@ class Game < ApplicationRecord
 		@goal.each do | goal |
 			if goal == self.goal && @score
 				self.winner.guild.war_score(10)
-				@war.update_guilds
+				@war.update_guilds(self.winner.guild)
 			end
 		end
 	end
@@ -266,10 +266,10 @@ class Game < ApplicationRecord
 		@war = self.winner.guild.startedWar
 		if self.ladder? && @war.inc_ladder
 			self.winner.guild.war_score(10)
-			@war.update_guilds
+			@war.update_guilds(self.winner.guild)
 		elsif self.tournament? && @war.inc_tour
 			self.winner.guild.war_score(10)
-			@war.update_guilds
+			@war.update_guilds(self.winner.guild)
 		elsif (self.friendly? || self.chat?) && @war.inc_friendly
 			self.handle_friendly_game
 		end
@@ -278,13 +278,13 @@ class Game < ApplicationRecord
 	def handle_points
 		if self.winner.guild?
 			if self.final?
-				self.winner.guild.increment!(:points, 40)
-				self.winner.increment!(:contribution, 40)
+				self.winner.guild.increment!(:points, 50)
+				self.winner.increment!(:contribution, 50)
 			end
 			if self.loser.guild?
 				if (self.winner.guild != self.loser.guild)
-					self.winner.guild.increment!(:points, 10)
-					self.winner.increment!(:contribution, 10)
+					self.winner.guild.increment!(:points, 10) unless self.final?
+					self.winner.increment!(:contribution, 10) unless self.final?
 					if self.winner.guild.startedWar && self.loser.guild.startedWar
 						if self.winner.guild.startedWar == self.loser.guild.startedWar
 							self.handle_war_points
@@ -292,8 +292,8 @@ class Game < ApplicationRecord
 					end
 				end
 			else
-				self.winner.guild.increment!(:points, 10)
-				self.winner.increment!(:contribution, 10)
+				self.winner.guild.increment!(:points, 10) unless self.final?
+				self.winner.increment!(:contribution, 10) unless self.final?
 			end
 		end
 	end
@@ -302,6 +302,8 @@ class Game < ApplicationRecord
 		self.winner.guild.war_score(10)
 		self.winner.guild.increment!(:points, 10)
 		self.winner.increment!(:contribution, 10)
+		@war = self.winner.guild.startedWar
+		@war.update_guilds(self.winner.guild)
 	end
 
 	private

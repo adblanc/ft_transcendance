@@ -81,7 +81,11 @@ class User < ApplicationRecord
 	end
 
 	def admin?
-		self.has_role?(:admin)
+		self.has_role?(:admin) || self.has_role?(:master)
+	end
+
+	def master?
+		self.has_role?(:master)
 	end
 
 	def room_role(room)
@@ -267,6 +271,9 @@ class User < ApplicationRecord
 	end
 
 	def game_won?(game)
+		if game.abandon?
+			return false
+		end
 		if game.winner.id == self.id
 			return true
 		end

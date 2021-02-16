@@ -55,7 +55,6 @@ function generate(name: string, rd: number) {
 
   //add second or third letter of second word, and then of third
   for (let i in spl) {
-    //console.log(acronym);
     acronym += spl[i][0].toUpperCase();
     if (it >= 2 && rd != 0) {
       n = spl[i].length - 1;
@@ -84,6 +83,5 @@ export function generateAcn(name: string, list: string[]) {
     if (i >= 10) return "error";
     i++;
   }
-  //console.log(acronym);
   return acronym;
 }

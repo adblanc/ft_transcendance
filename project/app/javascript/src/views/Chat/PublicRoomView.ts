@@ -22,7 +22,6 @@ export default class PublicRoomView extends BaseView<PublicRoom> {
   }
 
   onClick() {
-    console.log("public room clicked");
     const joinPublicChannelView = new JoinPublicChannelView({
       model: this.model,
     });
