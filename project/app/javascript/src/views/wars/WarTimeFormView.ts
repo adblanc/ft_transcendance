@@ -25,7 +25,7 @@ export default class WarTimeFormView extends BaseView{
   events() {
 	return {
 		"click #add-war-time": "onAddWT",
-		"click #remove-war-time": "onRemoveWT"
+		"click .remove-war-time": "onRemoveWT"
 	};
   }
 	  
@@ -47,7 +47,7 @@ export default class WarTimeFormView extends BaseView{
 		};
 		eventBus.trigger("wartime:add", dates);
 		this.$('#add-war-time').hide();
-		this.$('#remove-war-time').show();
+		this.$('.remove-war-time').show();
 		this.$("#wt-start-date").addClass("timepickr-disabled");
 		this.$("#wt-end-date").addClass("timepickr-disabled");
 

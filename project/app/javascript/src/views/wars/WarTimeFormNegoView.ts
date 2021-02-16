@@ -25,7 +25,7 @@ export default class WarTimeFormNegoView extends BaseView{
 
   events() {
 	return {
-		"click #remove-war-time": "onRemoveWT"
+		"click .remove-war-time": "onRemoveWT"
 	};
   }
 	  
