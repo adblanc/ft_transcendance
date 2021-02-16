@@ -1,5 +1,6 @@
 import { BASE_ROOT } from "src/constants";
 import { eventBus } from "src/events/EventBus";
+import PublicRoom from "src/models/PublicRoom";
 import Room from "../models/Room";
 import BaseRooms from "./BaseRooms";
 
@@ -15,13 +16,15 @@ export default class MyRooms extends BaseRooms<Room> {
     this.selectedRoom = undefined;
     this.listenTo(this, "add", this.checkSelectedAdd);
     this.listenTo(this, "remove", this.onRemove);
-    this.listenTo(eventBus, "chat:channel-joined", this.addRoom);
-    this.listenTo(eventBus, "chat:other-user-dm-creation", () => this.fetch());
+    this.listenTo(eventBus, "chat:public-channel-joined", this.addPublicRoom);
+    this.listenTo(eventBus, "chat:other-user-dm-creation", this.fetch);
+    this.listenTo(eventBus, "chat:rooms_global:created", this.fetch);
+    this.listenTo(eventBus, "chat:my-room-left", this.fetch);
   }
 
-  addRoom(room: Room) {
+  addPublicRoom(publicRoom: PublicRoom) {
     const roomInAdminList = this.find(
-      (r) => r.get("isInAdminList") && r.get("id") === room.get("id")
+      (r) => r.get("isInAdminList") && r.get("id") === publicRoom.get("id")
     );
 
     if (roomInAdminList) {
@@ -29,12 +32,12 @@ export default class MyRooms extends BaseRooms<Room> {
       this.remove(roomInAdminList);
     }
 
-    const myRoom = new Room({ ...room.toJSON(), isInAdminList: false });
+    const room = new Room({ ...publicRoom.toJSON(), isInAdminList: false });
 
     this.selectedRoom?.toggle();
 
     this.selectedRoom = undefined;
-    this.add(myRoom);
+    this.add(room);
   }
 
   checkSelectedAdd(room: Room) {

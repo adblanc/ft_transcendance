@@ -64,7 +64,7 @@ export default class ChatHeaderView extends BaseView {
         : "destroyed";
 
       if (action === "left") {
-        eventBus.trigger("chat:my-room-left", selectedRoom);
+        eventBus.trigger("chat:my-room-left");
       }
 
       const msg = selectedRoom.get("is_dm")

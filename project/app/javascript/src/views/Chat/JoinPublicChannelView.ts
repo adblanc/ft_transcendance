@@ -26,7 +26,7 @@ export default class JoinPublicChannelView extends ModalView<PublicRoom> {
 
     if (success) {
       displaySuccess(`Room ${this.model.get("name")} successfully joined`);
-      eventBus.trigger("chat:channel-joined", this.model);
+      eventBus.trigger("chat:public-channel-joined", this.model);
       this.model.collection.remove(this.model);
     }
     this.closeModal();
