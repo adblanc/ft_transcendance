@@ -1,5 +1,6 @@
 json.extract! user, :id, :login, :email, :two_fact_auth, :name, :contribution, :appearing_on, :created_at, :updated_at
 json.is_present user == @current_user ? true : user.is_present
+json.inGame user.appearing_on == "in game"
 json.is_friend @current_user.is_friend_of?(user);
 json.avatar_url url_for(user.avatar) if user.avatar.attached?
 json.ladder_rank user.ladder_rank

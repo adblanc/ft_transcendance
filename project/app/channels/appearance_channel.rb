@@ -1,7 +1,10 @@
 class AppearanceChannel < ApplicationCable::Channel
   def subscribed
     stream_from "appearance_channel"
-    current_user.appear("online")
+
+    if (current_user.appearing_on == "offline")
+      current_user.appear("online")
+    end
   end
 
   def unsubscribed
