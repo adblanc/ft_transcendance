@@ -4,7 +4,7 @@ require 'mail'
 class AuthenticationController < ApplicationController
 	@@send_mut = Mutex.new
 	@@mailer_addr = "ft.transcendance@gmail.com"
-	@@mailer_mdp = "lemotdepasse12345."
+	@@mailer_mdp = "crrlmswkphcturna"
 	@@send_opt = {	user_name: @@mailer_addr,
 					password: @@mailer_mdp,
 					address: "smtp.gmail.com",
