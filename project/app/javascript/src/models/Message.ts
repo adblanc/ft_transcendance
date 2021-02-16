@@ -12,7 +12,6 @@ export interface IMessage {
   id?: number;
   avatar_url?: string;
   user_id?: number;
-  user?: User;
   pseudo?: string;
   game_id?: number;
   game?: Game;
