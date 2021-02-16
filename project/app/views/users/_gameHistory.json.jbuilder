@@ -1,7 +1,7 @@
 json.partial! "users/user", user: user
-if user.games
+if user.games_finished
 	json.games do
-		json.array! user.games_finished do |game|
+		json.array! user.games_finished.sort_by{|g| g[:created_at]}.reverse! do |game|
 			json.id game.id
 			json.status game.status
 			json.created_at game.created_at

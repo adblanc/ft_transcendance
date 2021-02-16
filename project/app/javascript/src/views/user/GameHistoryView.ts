@@ -18,10 +18,6 @@ export default class GameHistoryView extends BaseView {
 
     this.user = options.user;
     this.games = this.user.get("games");
-
-    this.games?.sort();
-
-    this.listenTo(this.games, "sort", this.render);
   }
 
   events() {
