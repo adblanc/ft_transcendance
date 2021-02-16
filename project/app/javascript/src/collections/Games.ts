@@ -7,9 +7,6 @@ export default class Games extends Backbone.Collection<Game> {
     super();
     this.model = Game;
     this.url = `${BASE_ROOT}/games`;
-    this.comparator = function (model) {
-      return model.get("created_at");
-    };
   }
 
   fetchSpectateGames() {

@@ -1,7 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
-import Guild from "src/models/Guild";
 import Guilds from "src/collections/Guilds";
 import ItemView from "./ItemView";
 

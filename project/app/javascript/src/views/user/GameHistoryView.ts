@@ -3,7 +3,6 @@ import Mustache from "mustache";
 import User from "src/models/User";
 import BaseView from "src/lib/BaseView";
 import HistoryItemView from "./HistoryItemView";
-import Game from "src/models/Game";
 import Games from "src/collections/Games";
 
 type Options = Backbone.ViewOptions & { user: User };
@@ -19,29 +18,26 @@ export default class GameHistoryView extends BaseView {
 
     this.user = options.user;
     this.games = this.user.get("games");
-
-    if (this.games != undefined) this.games.sort();
-
-    this.listenTo(this.games, "sort", this.render);
   }
 
   events() {
     return {
-      "click #load-more-game": "LoadMoreGame",
+      "click #load-more-game": this.loadMoreGame,
     };
   }
 
-  LoadMoreGame() {
+  loadMoreGame() {
     var games = this.games.models.slice(this.count, this.count + this.max);
     if (games.length) {
-      games.forEach(function (item) {
+      games.forEach((item) => {
         var historyItemView = new HistoryItemView({
           model: item,
+          user: this.user,
         });
         const $element = this.$("#listing_game");
         $element.append(historyItemView.render().el);
         this.count += 1;
-      }, this);
+      });
     }
     if (this.count == this.games.length) {
       this.$("#load-more-game").hide();
@@ -59,11 +55,12 @@ export default class GameHistoryView extends BaseView {
       this.$("#load-more-game").hide();
     } else {
       var games = this.games.first(this.max);
-      games.forEach(function (item) {
-          var historyItemView = new HistoryItemView({
-            model: item,
-          });
-          $element.append(historyItemView.render().el);
+      games.forEach((item) => {
+        var historyItemView = new HistoryItemView({
+          model: item,
+          user: this.user,
+        });
+        $element.append(historyItemView.render().el);
       });
 
       this.count += games.length;
