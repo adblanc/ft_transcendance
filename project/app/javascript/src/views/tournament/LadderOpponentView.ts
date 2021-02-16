@@ -20,7 +20,7 @@ export default class LadderOpponentView extends BaseView {
 
     this.model = options.model;
     this.challengeable = options.challengeable;
-    if (currentUser().get("pendingGame")) this.challengeable = false;
+    if (currentUser().get("pendingGame") || currentUser().get("matchedGame")) this.challengeable = false;
     if (this.model.get("id") == currentUser().get("ladder_unchallengeable")) {
       this.challengeable = false;
       this.justLost = true;

@@ -244,7 +244,7 @@ class User < ApplicationRecord
 	end
 
 	def inGame?
-		self.games.started.present?
+		self.games.started.present? || self.games.paused.present?
 	end
 
 	def is_host?(game)
