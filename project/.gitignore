@@ -29,7 +29,8 @@
 .byebug_history
 
 # Ignore master key for decrypting credentials and more.
-/config/master.key
+# we need it to run in production even if not safe
+#/config/master.key
 
 /public/packs
 /public/packs-test
