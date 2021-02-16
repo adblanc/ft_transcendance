@@ -29,6 +29,7 @@ class GamingChannel < ApplicationCable::Channel
   def game_continue
     @game.reload
     if (current_user.is_playing_in?(@game) && @game.paused?)
+      current_user.appear("in game")
       @game.check_user_paused(current_user);
     end
   end
@@ -42,7 +43,7 @@ class GamingChannel < ApplicationCable::Channel
 
   def game_started
 	GameUser.where({ game_id: @id }).each do |u|
-		User.where({ id: u.user_id }).first.appear("in_game")
+		User.where({ id: u.user_id }).first.appear("in game")
 	end
     @game.reload
   end

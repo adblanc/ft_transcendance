@@ -29,4 +29,8 @@ export default class Games extends Backbone.Collection<Game> {
 
     removed?.unsubscribeSpectatorsChannel();
   }
+
+  unsubSpectateGames() {
+    this.forEach((g) => g.unsubscribeSpectatorsChannel());
+  }
 }

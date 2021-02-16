@@ -23,6 +23,7 @@ export default class LadderView extends BaseView {
     this.listenTo(this.opponents, "update", this.render);
     this.listenTo(this.opponents, "sort", this.render);
     this.listenTo(currentUser(), "change", this.update);
+
   }
 
   update() {
@@ -97,13 +98,15 @@ export default class LadderView extends BaseView {
     if (currentUser().get("pendingGame")) {
       if (currentUser().get("pendingGame").get("game_type") == "ladder")
         this.$("#waiting").show();
-      else this.$("#unavailable").show();
+      else this.$("#unavailable-pend").show();
     }
+	else if (currentUser().get("matchedGame"))
+		this.$("#unavailable-start").show();
     if (currentUser().get("pendingGameToAccept")) {
       this.$("#accept").show();
     }
-    if (
-      !currentUser().get("pendingGame") &&
+    else if (
+      !currentUser().get("pendingGame") && !currentUser().get("matchedGame") &&
       !currentUser().get("pendingGameToAccept")
     ) {
       this.$("#default").show();

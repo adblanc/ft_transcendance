@@ -15,6 +15,7 @@ export default class GameIndexView extends BaseView {
     super(options);
 
     this.listenTo(currentUser(), "change", this.renderWaitingGameView);
+    this.listenTo(currentUser(), "change:matchedGame", this.checkCurrentGame);
 
     this.gamesToSpectateView = new GamesToSpectateView();
 
@@ -38,12 +39,16 @@ export default class GameIndexView extends BaseView {
     return this;
   }
 
-  renderWaitingGameView() {
+  checkCurrentGame() {
     if (currentUser().get("matchedGame")) {
       Backbone.history.navigate(`/game/${currentUser().get("matchedGame")}`, {
         trigger: true,
       });
-    } else if (currentUser().get("pendingGame")) {
+    }
+  }
+
+  renderWaitingGameView() {
+    if (currentUser().get("pendingGame")) {
       if (currentUser().get("pendingGame").get("game_type") != "chat") {
         this.closeWaitingStartViews();
         this.waitingGameView = new WaitingGameView({

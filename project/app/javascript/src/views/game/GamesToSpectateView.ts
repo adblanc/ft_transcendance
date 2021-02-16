@@ -36,6 +36,7 @@ export default class GamesToSpectateView extends BaseView {
 
   onClose = () => {
     this.channel.unsubscribe();
+    this.games.unsubSpectateGames();
   };
 
   createGamesToSpectateChannel() {
