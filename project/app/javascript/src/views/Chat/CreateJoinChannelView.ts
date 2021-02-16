@@ -1,10 +1,10 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import Rooms from "src/collections/MyRooms";
+import { eventBus } from "src/events/EventBus";
 import BaseView from "src/lib/BaseView";
 import Room from "src/models/Room";
 import { displaySuccess } from "src/utils";
-import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions & {
   rooms: Rooms;
@@ -52,11 +52,11 @@ export default class CreateJoinChannelView extends BaseView {
       : await this.joinChannel(name, password);
 
     if (success) {
+      eventBus.trigger("chat:public-channel-joined", room);
       this.clearInput();
       displaySuccess(
         `Room ${name} successfully ${this.isJoin ? "joined" : "created"}.`
       );
-      eventBus.trigger("chat:channel-joined", room);
     }
   }
 

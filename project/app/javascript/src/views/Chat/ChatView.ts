@@ -106,7 +106,7 @@ export default class ChatView extends BaseView {
   }
 
   removeHeaderInput() {
-    if (!this.myRoomsLength()) {
+    if (!this.myRoomsLength() && !this.adminRoomsLength()) {
       if (this.chatHeaderView) {
         this.chatHeaderView.close();
         this.chatHeaderView = undefined;
@@ -121,6 +121,7 @@ export default class ChatView extends BaseView {
   }
 
   myRoomsLength = () => this.$("#my-rooms-list").children().length;
+  adminRoomsLength = () => this.$("#admin-rooms-list").children().length;
 
   async goToDm(userId: number) {
     const dmRoom = this.myRooms.find(
