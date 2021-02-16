@@ -98,6 +98,8 @@ export default class MainRouter extends Backbone.Router {
     const gameIndexView = new GameIndexView({});
 
     pagesHandler.showPage(gameIndexView);
+
+    gameIndexView.checkCurrentGame();
   }
 
   notFound() {

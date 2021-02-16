@@ -24,7 +24,7 @@ export interface IGame {
     | "forfeit"
     | "paused"
     | "matched"
-	| "abandon";
+    | "abandon";
   last_pause?: number;
   pause_duration?: number;
   game_type?: "ladder" | "war_time" | "chat" | "friendly" | "tournament";
@@ -52,7 +52,7 @@ export interface GameData {
     | "game_over"
     | "game_paused"
     | "game_continue"
-	| "round_stop";
+    | "round_stop";
   playerId: number;
 }
 
@@ -222,9 +222,11 @@ export default class Game extends BaseModel<IGame> {
             case "game_over":
               this.onGameOver(data);
               break;
-			case "round_stop":
-				displayError("Tournament round has ended and your match was stopped.")
-			  break;
+            case "round_stop":
+              displayError(
+                "Tournament round has ended and your match was stopped."
+              );
+              break;
           }
         },
         disconnected: () => {
@@ -247,6 +249,7 @@ export default class Game extends BaseModel<IGame> {
   }
 
   navigateToGame() {
+    currentUser().set({ matchedGame: this.get("id") });
     this.disconnectFromWS();
     Backbone.history.navigate(`/game/${this.get("id")}`, {
       trigger: true,
