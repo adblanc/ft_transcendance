@@ -11,7 +11,10 @@ class TournamentsController < ApplicationController
 	end
 
 	def create
-		return head :unauthorized if not current_user.admin?
+		if not current_user.admin?
+			render json: {"You" => ["are not authorized to do this"]}, status: :unprocessable_entity
+			return
+		end
 
 		@tournament = Tournament.new(tournament_params)
 		if @tournament.save
@@ -26,9 +29,10 @@ class TournamentsController < ApplicationController
 	def register
 		@tournament = Tournament.find(params[:id])
 
-		return head :unauthorized unless @tournament.open_registration?
-
-		if @tournament.users.count >= 8
+		if not @tournament.open_registration?
+			render json: {"Tournament" => ["is not open for registration"]}, status: :unprocessable_entity
+			return
+		elsif @tournament.users.count >= 8
 			render json: {"Tournament" => ["is full"]}, status: :unprocessable_entity
 			return
 		elsif @tournament.tournament_users.where(user_id: current_user.id).first

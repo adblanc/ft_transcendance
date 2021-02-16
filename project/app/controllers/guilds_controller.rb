@@ -15,8 +15,10 @@ class GuildsController < ApplicationController
   end
 
   def create
-	return head :unauthorized if current_user.guild.present? || current_user.pending_guild.present?
-
+	if current_user.guild.present? || current_user.pending_guild.present?
+		render json: {"You" => ["already have a guild or pending guild"]}, status: :unprocessable_entity
+		return
+    end
 	@guild = Guild.create(guild_params)
 	if @guild.save
 		@guild.members.push(current_user)
@@ -29,12 +31,18 @@ class GuildsController < ApplicationController
 
   def edit
 	@guild = Guild.find_by_id(params[:id])
-	return head :unauthorized unless current_user.guild_owner?(@guild)
+	if not current_user.guild_owner?(@guild)
+		render json: {"You" => ["must be the guild owner"]}, status: :unprocessable_entity
+		return
+	end
   end
 
   def update
 	@guild = Guild.find_by_id(params[:id])
-	return head :unauthorized unless current_user.guild_owner?(@guild)
+	if not current_user.guild_owner?(@guild)
+		render json: {"You" => ["must be the guild owner"]}, status: :unprocessable_entity
+		return
+	end
 
 	@guild.update(guild_params)
 	if @guild.save
@@ -46,7 +54,10 @@ class GuildsController < ApplicationController
 
   def destroy
 	@guild = Guild.find_by_id(params[:id])
-	return head :unauthorized unless current_user.guild_owner?(@guild)
+	if not current_user.guild_owner?(@guild)
+		render json: {"You" => ["must be the guild owner"]}, status: :unprocessable_entity
+		return
+	end
 
 	@guild.members.each do |member|
 		member.update(contribution: 0)
@@ -56,7 +67,10 @@ class GuildsController < ApplicationController
 
   def quit
 	@guild = Guild.find_by_id(params[:id])
-	return head :unauthorized unless current_user.guild == @guild
+	if not current_user.guild == @guild
+		render json: {"You" => ["don't belong to this guild"]}, status: :unprocessable_entity
+		return
+	end
 
 	if @guild.remove_user(current_user)
 		@guild
@@ -65,8 +79,10 @@ class GuildsController < ApplicationController
 
   def promote
 	@guild = Guild.find_by(id: params[:id])
-	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin?
-
+	if not current_user.guild_owner?(@guild) || current_user.admin?
+		render json: {"You" => ["must be the guild owner"]}, status: :unprocessable_entity
+		return
+	end
     user = User.find_by_id(params[:user_id])
 	if user.add_role(:officer, @guild)
 		@guild
@@ -76,7 +92,10 @@ class GuildsController < ApplicationController
 
   def demote
 	@guild = Guild.find_by_id(params[:id])
-	return head :unauthorized unless current_user.guild_owner?(@guild) || current_user.admin?
+	if not current_user.guild_owner?(@guild) || current_user.admin?
+		render json: {"You" => ["must be the guild owner"]}, status: :unprocessable_entity
+		return
+	end
 
     user = User.find(params[:user_id])
 	if user.remove_role(:officer, @guild)
@@ -87,7 +106,10 @@ class GuildsController < ApplicationController
 
   def fire
 	@guild = Guild.find_by_id(params[:id])
-	return head :unauthorized unless current_user.guild_owner?(@guild)
+	if not current_user.guild_owner?(@guild)
+		render json: {"You" => ["must be the guild owner"]}, status: :unprocessable_entity
+		return
+	end
 
     user = User.find(params[:user_id])
 	if @guild.remove_user(user)
@@ -100,8 +122,15 @@ class GuildsController < ApplicationController
   def transfer
 	@guild = Guild.find_by_id(params[:id])
 	user = User.find(params[:user_id])
-	return head :unauthorized unless current_user.guild_owner?(@guild) or
-		(current_user.admin? and not user.guild_owner?(@guild))
+	if not current_user.guild_owner?(@guild) || current_user.admin?
+		render json: {"You" => ["must be the guild owner"]}, status: :unprocessable_entity
+		return
+	end
+
+	if user.guild_owner?(@guild)
+		render json: {"This" => ["user is already guild owner"]}, status: :unprocessable_entity
+		return
+	end
 
 	owner = User.with_role(:owner, @guild).first
 	user.add_role(:owner, @guild)
@@ -114,7 +143,10 @@ class GuildsController < ApplicationController
 
   def join
 	@guild = Guild.find_by_id(params[:id])
-	return head :unauthorized if current_user.guild.present? || current_user.pending_guild.present?
+	if current_user.guild.present? || current_user.pending_guild.present?
+		render json: {"You" => ["already have a guild or pending guild"]}, status: :unprocessable_entity
+		return
+    end
 
 	@guild.pending_members.push(current_user)
 
@@ -125,7 +157,10 @@ class GuildsController < ApplicationController
 
   def accept
 	@guild = Guild.find_by_id(params[:id])
-	return head :unauthorized unless authorized_for_guild?(current_user, @guild)
+	if not authorized_for_guild?(current_user, @guild)
+		render json: {"You" => ["are not authorized to do this"]}, status: :unprocessable_entity
+		return
+	end
 
 	pending_member = User.find_by_id(params[:user_id])
 
@@ -138,7 +173,10 @@ class GuildsController < ApplicationController
 
   def reject
 	@guild = Guild.find_by_id(params[:id])
-	return head :unauthorized unless authorized_for_guild?(current_user, @guild)
+	if not authorized_for_guild?(current_user, @guild)
+		render json: {"You" => ["are not authorized to do this"]}, status: :unprocessable_entity
+		return
+	end
 
     pending_member = User.find_by_id(params[:user_id])
 
@@ -150,8 +188,10 @@ class GuildsController < ApplicationController
 
   def withdraw
 	@guild = Guild.find_by_id(params[:id])
-	return head :unauthorized unless current_user.pending_guild == @guild
-
+	if not current_user.pending_guild == @guild
+		render json: {"You" => ["have not requested to join this guild"]}, status: :unprocessable_entity
+		return
+	end
 	@guild.pending_members.delete(current_user)
   end
 

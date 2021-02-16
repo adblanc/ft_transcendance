@@ -24,7 +24,9 @@ class GamesController < ApplicationController
     end
 
 	def createFriendly
-		return head :unauthorized if current_user.inGame? || current_user.pendingGame
+		if current_user.inGame? || current_user.pendingGame
+			return render json: {"you" => ["already have a game started or pending"]}, status: :unprocessable_entity
+		end
 		@games = Game.where(status: :pending)
 
 		@games.to_ary.each do | game |
