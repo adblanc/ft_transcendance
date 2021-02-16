@@ -109,9 +109,11 @@ export default class Guild extends BaseModel<IGuild> {
   };
 
   get maxMemberPoints() {
-    return this.get("members")
-      .max((m) => m.get("contribution"))
-      .get("contribution");
+    return this.get("members").isEmpty()
+      ? 0
+      : this.get("members")
+          .max((m) => m.get("contribution"))
+          .get("contribution");
   }
 
   sync(method: string, model: Guild, options: JQueryAjaxSettings): any {
