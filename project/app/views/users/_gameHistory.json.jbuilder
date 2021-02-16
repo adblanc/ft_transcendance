@@ -8,10 +8,7 @@ if user.games
 			json.game_type game.game_type
 			json.level game.level
 			json.won user.game_won?(game)
-			if game.opponent(user)
-				json.opponentname game.opponent(user).login
-				json.opponentid game.opponent(user).id
-			end
+			json.partial! "games/gamePlayers", game: game
 			json.goal game.goal
 			json.created_at game.created_at
 		end

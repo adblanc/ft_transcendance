@@ -7,14 +7,7 @@ json.spectators do
 		json.partial! "games/spectator", spectator: spectator
 	end
 end
-json.players do
-	json.array! game.users.sort_by {|u| u.id === @current_user.id ? -1 : 1} do |user|
-	   json.extract! user, :id, :name
-	   json.avatar_url url_for(user.avatar) if user.avatar.attached?
-	   json.points user.game_points(game)
-	   json.status user.game_status(game)
-	end
-end
+json.partial! "games/gamePlayers", game: game
 
 opponent = game.game_user_opponent(@current_user)
 if (opponent)
