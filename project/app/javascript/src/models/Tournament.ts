@@ -107,13 +107,4 @@ export default class Tournament extends BaseModel<ITournament> {
       }
     );
   }
-
-  seed_for_test() {
-    return this.asyncSave(
-      {},
-      {
-        url: `${this.baseGuildRoot()}/seed_for_test`,
-      }
-    );
-  }
 }

@@ -175,5 +175,4 @@ class Tournament < ApplicationRecord
 			end
 		end
 	end
-
 end
