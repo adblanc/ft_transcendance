@@ -17,6 +17,12 @@ class ExpireMatchedGameJob < ApplicationJob
 		else
 			game.update(status: :forfeit)
 			game.broadcast_end(nil, nil)
+			queue = Sidekiq::ScheduledSet.new
+			queue.each do |job|
+				if job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/Game/#{game.id}"
+					job.delete
+				end
+			end
 			game.destroy
 		end
 	end
