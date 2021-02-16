@@ -19,10 +19,7 @@
     "toastify-js": "^1.9.3",
     "ts-loader": "^8.0.11",
     "typescript": "^4.0.5",
-    "underscore": "^1.11.0"
-  },
-  "version": "0.1.0",
-  "devDependencies": {
+    "underscore": "^1.11.0",
     "@types/actioncable": "^5.2.3",
     "@types/axios": "^0.14.0",
     "@types/backbone": "^1.4.5",
@@ -31,7 +28,10 @@
     "@types/mustache": "^4.0.1",
     "@types/toastify-js": "^1.9.1",
     "@types/underscore": "^1.10.24",
-    "@types/webpack-env": "^1.16.0",
+    "@types/webpack-env": "^1.16.0"
+  },
+  "version": "0.1.0",
+  "devDependencies": {
     "webpack-dev-server": "^3.11.0"
   }
 }
