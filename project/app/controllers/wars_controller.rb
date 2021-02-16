@@ -66,6 +66,12 @@ class WarsController < ApplicationController
 			war.opponent(@guild).members.each do |member|
 				member.send_notification("#{@guild.name} rejected your guild's war declaration", "/wars", "wars")
 			end
+			queue = Sidekiq::ScheduledSet.new
+			queue.each do |job|
+				if job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/War/#{war.id}"
+					job.delete
+				end
+			end
 			war.destroy
 		end
 
@@ -149,6 +155,12 @@ class WarsController < ApplicationController
 					war.opponent(@guild).members.each do |member|
 						member.send_notification("#{@guild.name} rejected your guild's war declaration", "/wars", "wars")
 					end
+					queue = Sidekiq::ScheduledSet.new
+					queue.each do |job|
+						if job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/War/#{war.id}"
+							job.delete
+						end
+					end
 					war.destroy
 				end
 			end
@@ -183,6 +195,12 @@ class WarsController < ApplicationController
 			if other_war != war
 				other_war.opponent(initiator).members.each do |member|
 					member.send_notification("#{initiator.name} rejected your guild's war declaration", "/wars", "wars")
+				end
+				queue = Sidekiq::ScheduledSet.new
+				queue.each do |job|
+					if job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/War/#{other_war.id}"
+						job.delete
+					end
 				end
 				other_war.destroy
 			end
