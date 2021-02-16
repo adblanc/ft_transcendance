@@ -81,7 +81,11 @@ class User < ApplicationRecord
 	end
 
 	def admin?
-		self.has_role?(:admin)
+		self.has_role?(:admin) || self.has_role?(:master)
+	end
+
+	def master?
+		self.has_role?(:master)
 	end
 
 	def room_role(room)

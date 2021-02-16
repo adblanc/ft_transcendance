@@ -7,6 +7,7 @@ json.ladder_unchallengeable user.ladder_unchallengeable
 json.inGame user.inGame?
 json.guild_role user.guild_role?
 json.admin user.admin?
+json.master user.master?
 json.ban user.is_banned?
 json.ban_time user.ban_time
 if user.guild_role?

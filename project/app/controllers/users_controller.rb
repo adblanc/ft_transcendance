@@ -28,8 +28,12 @@ class UsersController < ApplicationController
   def ban_other_user
   	if @current_user.admin?
 		if (@other_user = User.find_by_id(params[:id]))
-			@other_user.update_attributes(:ban => Time.now.to_i)
-			render json: {}, status: :ok
+			if (@other_user.master?)
+				render json: { "User": ["not allowed to do that"] }, status: :unauthorized
+			else
+				@other_user.update_attributes(:ban => Time.now.to_i)
+				render json: {}, status: :ok
+			end
 		else
 			render json: { "User": ["not found"] }, status: :not_found
 		end
@@ -67,8 +71,12 @@ class UsersController < ApplicationController
   def un_admin_other_user
   	if @current_user.admin?
 		if (@other_user = User.find_by_id(params[:id]))
-			@other_user.remove_role :admin
-			render json: {}, status: :ok
+			if (@other_user.master?)
+				render json: { "User": ["not allowed to do that"] }, status: :unauthorized
+			else
+				@other_user.remove_role :admin
+				render json: {}, status: :ok
+			end
 		else
 			render json: { "User": ["not found"] }, status: :not_found
 		end

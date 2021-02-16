@@ -70,4 +70,4 @@ john.add_role(:owner, guild4)
 guild5.members << jack
 jack.add_role(:owner, guild5)
 
-john.add_role :admin
+john.add_role :master

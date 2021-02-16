@@ -43,31 +43,32 @@
 			</div>
 		</div>
 		<img class="w-40 h-40 rounded-full p-2 mx-auto mt-6" src={{avatar_url}} alt="User avatar"/>
-		{{#is_admin}}
-			<div class="flex justify-center items-center">
-				{{#ban}}
-					<button class="btn-primary mt-8 mx-2" id="unban-user" type="button">Unban user</button>
-				{{/ban}}
-				{{^ban}}
-					<button class="btn-primary mt-8 mx-2" id="ban-user" type="button">Ban user</button>
-				{{/ban}}
-				{{#admin}}
-					<button class="btn-primary mt-8 mx-2" id="unadmin-user" type="button">Unmake admin</button>
-				{{/admin}}
-				{{^admin}}
-					<button class="btn-primary mt-8 mx-2" id="admin-user" type="button">Make admin</button>
-				{{/admin}}
-			</div>
+		{{^master}}
+			{{#is_admin}}
+				<div class="flex justify-center items-center">
+					{{#ban}}
+						<button class="btn-primary mt-8 mx-2" id="unban-user" type="button">Unban user</button>
+					{{/ban}}
+					{{^ban}}
+						<button class="btn-primary mt-8 mx-2" id="ban-user" type="button">Ban user</button>
+					{{/ban}}
+					{{#admin}}
+						<button class="btn-primary mt-8 mx-2" id="unadmin-user" type="button">Unmake admin</button>
+					{{/admin}}
+					{{^admin}}
+						<button class="btn-primary mt-8 mx-2" id="admin-user" type="button">Make admin</button>
+					{{/admin}}
+				</div>
 
-		{{/is_admin}}
+			{{/is_admin}}
+		{{/master}}
 		<div class="pb-10 pt-5 px-20 text-center">
 			<h2 class="text-2xl mb-2 font-semibold">Account:</h2>
 			<div>
 				<div><span class="font-bold">Name: </span>{{login}}</div>
 				<div><span class="font-bold">Creation date: </span>{{created_at}}</div>
 				<div><span class="font-bold">Email: </span>{{email}}</div>
-				<div><span class="font-bold">Account type: </span>{{#admin}}Admin{{/admin}}
-					{{^admin}}Regular{{/admin}}</div>
+				<div><span class="font-bold">Account type: </span>{{#master}}Master{{/master}}{{^master}}{{#admin}}Admin{{/admin}}{{^admin}}Regular{{/admin}}{{/master}}</div>
 				{{#ban}}
 					<div><span class="font-bold">Banned on: </span>{{ban_time}}</div>
 				{{/ban}}
