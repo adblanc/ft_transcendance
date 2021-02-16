@@ -23,7 +23,12 @@
 				{{/tournament}}
 				<span class="tooltip-text bg-gray-200 px-2 py-1 rounded text-gray-700">{{#war}}War{{/war}}{{#friendly}}Friendly{{/friendly}}{{#ladder}}Ladder{{/ladder}}{{#tournament}}Tournament{{/tournament}}</span>
 			</div>
+			{{^opponent.id}}
+			<p>Unanswered challenge</p>
+			{{/opponent.id}}
+			{{#opponent.id}}
 			<a class="underline" href="/user/{{opponent.id}}">{{opponent.name}}</a>
+			{{/opponent.id}}
 		</div>
 		<div class="flex flex-row">
 			<div class="w-5 h-5 flex items-center justify-center {{#won}}bg-green-400{{/won}} {{^won}}bg-red-400{{/won}} rounded-md tooltip">
