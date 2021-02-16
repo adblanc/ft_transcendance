@@ -27,10 +27,13 @@ export default class AdminRoomsView extends BaseView {
 
     this.listenTo(this.myRooms, "add", this.renderAdminRoom);
     this.listenTo(this.myRooms, "remove", this.removeAdminRoom);
-	this.listenTo(eventBus, "chat:rooms_global:created", () => this.myRooms.fetch());
-	this.listenTo(eventBus, "chat:rooms_global:admin_created", () => this.myRooms.fetch());
-//	this.listenTo(eventBus, "chat:channel-joined", () => this.onEstLa());
-	this.listenTo(eventBus, "chat:my-room-left", () => this.myRooms.fetch());
+    this.listenTo(eventBus, "chat:rooms_global:created", () =>
+      this.myRooms.fetch()
+    );
+    this.listenTo(eventBus, "chat:rooms_global:admin_created", () =>
+      this.myRooms.fetch()
+    );
+    this.listenTo(eventBus, "chat:my-room-left", () => this.myRooms.fetch());
   }
 
   onClose = () => {

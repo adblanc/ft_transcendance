@@ -52,15 +52,11 @@ export default class CreateJoinChannelView extends BaseView {
       : await this.joinChannel(name, password);
 
     if (success) {
-      this.rooms.add(room);
-      //room.select();
       this.clearInput();
       displaySuccess(
         `Room ${name} successfully ${this.isJoin ? "joined" : "created"}.`
       );
-	  if (this.isJoin) {
-	  	eventBus.trigger("chat:channel-joined");
-	  }
+      eventBus.trigger("chat:channel-joined", room);
     }
   }
 
