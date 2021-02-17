@@ -14,15 +14,15 @@ services:
     build: .
     command: bundle exec sidekiq
     volumes:
-      - ./project:/app
+      - ./src:/app
     depends_on:
       - redis
     env_file:
-      - ./project/.env_redis
+      - ./src/.env_redis
   rails:
     build: .
     volumes:
-      - ./project:/app #things done in container are kept locally
+      - ./src:/app #things done in container are kept locally
       - node_modules:/app/node_modules
     ports:
       - "3000:3000"
@@ -31,7 +31,7 @@ services:
       - db
       - sidekiq
     env_file:
-      - ./project/.env_redis
+      - ./src/.env_redis
 volumes:
   db_data:
   node_modules:
