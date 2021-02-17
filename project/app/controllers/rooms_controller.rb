@@ -1,5 +1,3 @@
-EMPTY_PASSWORD = "empty";
-
 class RoomsController < ApplicationController
 	before_action :authenticate_user!
 
@@ -148,7 +146,7 @@ class RoomsController < ApplicationController
 			@room
 		else
 			@room = Room.create(name: "",
-				password: EMPTY_PASSWORD, is_dm: true, is_private: true)
+				password: nil, is_dm: true, is_private: true)
 
 			if @room.save
 				@room.users.push(@current_user)
