@@ -31,7 +31,8 @@ export default class RoomMessagesView extends BaseView<Room> {
         .find((u) => u.get("id") === message.get("user_id")) ||
       new RoomUser({
         id: message.get("user_id"),
-        login: message.get("pseudo"),
+        name: message.get("pseudo"),
+        login: "",
         roomRole: "Former member",
         avatar_url: message.get("avatar_url"),
       });
