@@ -46,7 +46,7 @@ export default class UserView extends BaseView {
   async onUserAdmin() {
     const success = await currentUser().adminUser(this.user.get("id"));
     if (success) {
-      displaySuccess(`${this.user.get("login")} is no more an administrator`);
+      displaySuccess(`${this.user.get("name")} is no more an administrator`);
     }
     this.actualize();
   }
@@ -54,7 +54,7 @@ export default class UserView extends BaseView {
   async onUserUnAdmin() {
     const success = await currentUser().unAdminUser(this.user.get("id"));
     if (success) {
-      displaySuccess(`${this.user.get("login")} is an administrator now`);
+      displaySuccess(`${this.user.get("name")} is an administrator now`);
     }
     this.actualize();
   }
@@ -62,7 +62,7 @@ export default class UserView extends BaseView {
   async onUserBan() {
     const success = await currentUser().banUser(this.user.get("id"));
     if (success) {
-      displaySuccess(`${this.user.get("login")} has been banned`);
+      displaySuccess(`${this.user.get("name")} has been banned`);
     }
     this.actualize();
   }
@@ -70,7 +70,7 @@ export default class UserView extends BaseView {
   async onUserUnban() {
     const success = await currentUser().unbanUser(this.user.get("id"));
     if (success) {
-      displaySuccess(`${this.user.get("login")} has been unbanned`);
+      displaySuccess(`${this.user.get("name")} has been unbanned`);
     }
     this.actualize();
   }
@@ -85,7 +85,7 @@ export default class UserView extends BaseView {
 
     if (success) {
       displaySuccess(
-        `Your invitation has been sent to ${this.user.get("login")}`
+        `Your invitation has been sent to ${this.user.get("name")}`
       );
       this.actualize();
     }
@@ -95,9 +95,7 @@ export default class UserView extends BaseView {
     const success = await this.user.removeFriend();
 
     if (success) {
-      displaySuccess(
-        `Your are no longer friend with ${this.user.get("login")}`
-      );
+      displaySuccess(`Your are no longer friend with ${this.user.get("name")}`);
       this.actualize();
     }
   }
@@ -123,7 +121,7 @@ export default class UserView extends BaseView {
   }
 
   render() {
-    const ready = !!this.user.get("login");
+    const ready = !!this.user.get("name");
 
     if (!ready) {
       return this.renderLoadingPage();
