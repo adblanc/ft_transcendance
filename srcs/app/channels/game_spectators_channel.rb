@@ -30,7 +30,7 @@ class GameSpectatorsChannel < ApplicationCable::Channel
 		res = {};
 		res["action"] = action;
 		res["payload"] = {};
-		res["payload"] = {"id" => current_user.id, "login" => current_user.login};
+		res["payload"] = {"id" => current_user.id, "name" => current_user.name};
 
 		return res;
 	end

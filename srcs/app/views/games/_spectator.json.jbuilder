@@ -1,1 +1,1 @@
-json.extract! spectator, :id, :login
+json.extract! spectator, :id, :name
