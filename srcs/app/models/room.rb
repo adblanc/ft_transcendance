@@ -22,6 +22,34 @@ class Room < ApplicationRecord
 			id: self.id,
 		}
 		ActionCable.server.broadcast("rooms_global", {"action" => "channel_deleted", "payload" => payload});
+
+		mutes.each do |mute|
+			remove_mute_job(mute.id)
+		end
+
+		bans.each do |ban|
+			remove_ban_job(ban.id)
+		end
+	end
+
+	def remove_mute_job(id)
+		queue = Sidekiq::ScheduledSet.new
+
+		jobs = queue.select do |job|
+			job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/Mute/#{id}"
+		end
+
+		jobs.first&.delete
+	end
+
+	def remove_ban_job(id)
+		queue = Sidekiq::ScheduledSet.new
+
+		jobs = queue.select do |job|
+			job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/Ban/#{id}"
+		end
+
+		jobs.first&.delete
 	end
 
 	def notify_destruction_to_users
