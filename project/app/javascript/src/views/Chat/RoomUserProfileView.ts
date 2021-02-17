@@ -11,14 +11,14 @@ type Options = Backbone.ViewOptions<RoomUser> & {
 };
 
 type Action =
-  | "muted"
-  | "banned"
   | "blocked"
   | "unblocked"
   | "unmuted"
   | "unbanned"
   | "promoted"
   | "demoted";
+
+type SelectAction = "banned" | "muted";
 
 export default class RoomUserProfileView extends ModalView<RoomUser> {
   currentRoomUser?: RoomUser;
@@ -36,8 +36,8 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
   events() {
     return {
       ...super.events(),
-      "click #mute-list > option": (e) => this.performAction(e, "muted"),
-      "click #ban-list > option": (e) => this.performAction(e, "banned"),
+      "change #mute-list": (e) => this.performSelectOption(e, "muted"),
+      "change #ban-list": (e) => this.performSelectOption(e, "banned"),
       "click #block-user": (e) => this.performAction(e, "blocked"),
       "click #unblock-user": (e) => this.performAction(e, "unblocked"),
       "click #unmute-user": (e) => this.performAction(e, "unmuted"),
@@ -51,20 +51,7 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
   async performAction({ currentTarget }: JQuery.ClickEvent, action: Action) {
     let success = false;
 
-    let time: MuteBanTime = undefined;
-    let timeLabel: string = undefined;
-
     switch (action) {
-      case "banned":
-        time = $(currentTarget).val() as MuteBanTime;
-        timeLabel = $(currentTarget).text();
-        success = await this.model.ban(this.model.room.get("id"), time);
-        break;
-      case "muted":
-        time = $(currentTarget).val() as MuteBanTime;
-        timeLabel = $(currentTarget).text();
-        success = await this.model.mute(this.model.room.get("id"), time);
-        break;
       case "blocked":
         success = await currentUser().blockUser(this.model.get("id"));
         if (success) {
@@ -92,15 +79,40 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
     }
 
     if (success) {
-      this.closeModal();
-      displaySuccess(
-        `You successfully ${action} ${this.model.get("login")} ${
-          time
-            ? `${timeLabel !== "Indefinitely" ? `for ${timeLabel}` : timeLabel}`
-            : ""
-        }`
-      );
+      this.displaySuccessAction(action);
     }
+  }
+
+  async performSelectOption(
+    { currentTarget }: JQuery.ChangeEvent,
+    action: SelectAction
+  ) {
+    const option = $(currentTarget).find("option:selected");
+    const time = option.val() as MuteBanTime;
+    const timeLabel = option.text();
+    const success =
+      action === "banned"
+        ? await this.model.ban(this.model.room.get("id"), time)
+        : await this.model.mute(this.model.room.get("id"), time);
+
+    if (success) {
+      this.displaySuccessAction(action, time, timeLabel);
+    }
+  }
+
+  displaySuccessAction(
+    action: Action | SelectAction,
+    time: string = undefined,
+    timeLabel: string = undefined
+  ) {
+    this.closeModal();
+    displaySuccess(
+      `You successfully ${action} ${this.model.get("login")} ${
+        time
+          ? `${timeLabel !== "Indefinitely" ? `for ${timeLabel}` : timeLabel}`
+          : ""
+      }`
+    );
   }
 
   async sendDm() {
