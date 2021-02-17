@@ -33,7 +33,7 @@ export default class JoinPublicChannelView extends ModalView<PublicRoom> {
   }
 
   render() {
-    super.render(); // we render the modal
+    super.render();
     const template = $("#join-public-channel-template").html();
 
     const owner = this.model

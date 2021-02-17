@@ -41,7 +41,7 @@ export default class ModifyProfileView extends ModalView<Profile> {
   }
 
   render() {
-    super.render(); // we render the modal
+    super.render();
     const template = $("#profileFormTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
     this.$content.html(html);

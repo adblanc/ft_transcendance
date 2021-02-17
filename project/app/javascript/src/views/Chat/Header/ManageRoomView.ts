@@ -64,7 +64,7 @@ export default class ManageRoomView extends ModalView<Room> {
   }
 
   render() {
-    super.render(); // we render the modal
+    super.render();
     const template = $("#manage-room-template").html();
 
     const html = Mustache.render(template, {

@@ -121,7 +121,7 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
   }
 
   render() {
-    super.render(); // we render the modal
+    super.render();
     const template = $("#room-user-profile-template").html();
 
     const html = Mustache.render(template, {

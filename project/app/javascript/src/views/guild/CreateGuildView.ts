@@ -69,7 +69,7 @@ export default class CreateGuildView extends ModalView<Guild> {
   }
 
   render() {
-    super.render(); // we render the modal
+    super.render();
     const template = $("#guildFormTemplate").html();
     const html = Mustache.render(template, this.model.toJSON());
     this.$content.html(html);

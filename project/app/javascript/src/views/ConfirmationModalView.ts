@@ -41,7 +41,7 @@ export default class ConfirmationModalView extends ModalView {
   }
 
   render() {
-    super.render(); // we render the modal
+    super.render();
     const template = $("#confirmation-modal-template").html();
     const html = Mustache.render(template, {
       question: this.question,

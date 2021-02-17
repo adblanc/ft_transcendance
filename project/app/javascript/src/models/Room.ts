@@ -126,7 +126,6 @@ export default class Room extends BaseRoom {
   }
 
   select() {
-    //@ts-ignore
     this.collection.setSelected(this);
   }
 

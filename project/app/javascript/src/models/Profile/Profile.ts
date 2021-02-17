@@ -58,10 +58,10 @@ export interface IProfile {
   friend_requests?: FriendRequests;
   friends?: Friends;
   ladder_unchallengeable?: number;
-  won_tournaments?: Tournaments; //only fetched for user page
-  current_tournaments?: Tournaments; //only for profile
+  won_tournaments?: Tournaments;
+  current_tournaments?: Tournaments;
   games?: Games;
-  contribution?: number; // only for guild members
+  contribution?: number;
 }
 
 type ModifiableProfileArgs = {
@@ -126,7 +126,6 @@ export default class Profile extends BaseModel<IProfile> {
 
   initialize() {
     this.notifications = new Notifications();
-    //this.channel = this.createConsumer();
 
     this.listenTo(eventBus, "appeareance", this.reactToAppearance);
   }
