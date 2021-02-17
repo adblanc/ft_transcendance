@@ -23,6 +23,6 @@ RUN gem install bundler -v 2.1.2 && bundle _2.1.2_ install --jobs 20 --retry 5
 #needed to run crontab command
 RUN apk add bash
 
-EXPOSE 3000 3035
+EXPOSE 3000
 
 CMD ["sh", "docker-entrypoint.sh"]
