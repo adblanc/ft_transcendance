@@ -107,7 +107,7 @@ export default class RoomUserProfileView extends ModalView<RoomUser> {
   ) {
     this.closeModal();
     displaySuccess(
-      `You successfully ${action} ${this.model.get("login")} ${
+      `You successfully ${action} ${this.model.get("name")} ${
         time
           ? `${timeLabel !== "Indefinitely" ? `for ${timeLabel}` : timeLabel}`
           : ""

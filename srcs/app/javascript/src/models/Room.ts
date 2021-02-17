@@ -78,7 +78,7 @@ export default class Room extends BaseRoom {
             if (
               !data.message.ancient &&
               data.message.content.includes(
-                `${currentUser().get("login")} has been banned`
+                `${currentUser().get("name")} has been banned`
               )
             ) {
               return this.quit();
@@ -126,7 +126,7 @@ export default class Room extends BaseRoom {
   }
 
   select() {
-	//@ts-ignore
+    //@ts-ignore
     this.collection.setSelected(this);
   }
 

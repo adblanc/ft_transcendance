@@ -30,7 +30,7 @@ export default class ItemFriendView extends BaseView {
 
     if (success) {
       displaySuccess(
-        `Your are no longer friend with ${this.model.get("login")}`
+        `Your are no longer friend with ${this.model.get("name")}`
       );
     }
     this.user.fetch();
