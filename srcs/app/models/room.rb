@@ -82,6 +82,11 @@ class Room < ApplicationRecord
 		when "promoted"
 			if (user.is_member?(self))
 				user.add_role :administrator, self
+			elsif user.has_role?(:administrator, self)
+				owner = User.with_role(:owner, self).first
+				owner&.remove_role(:owner, self)
+				owner&.add_role(:administrator, self)
+				user.add_role(:owner, self)
 			end
 		when "demoted"
 			if (user.is_room_administrator?(self))

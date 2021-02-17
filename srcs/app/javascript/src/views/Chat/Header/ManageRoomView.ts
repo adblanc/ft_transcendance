@@ -12,6 +12,8 @@ export default class ManageRoomView extends ModalView<Room> {
 
     if (!this.model)
       throw Error("Please provide a room model to ModifyProfileView");
+
+    this.listenTo(this.model.get("users"), "update", this.render);
   }
 
   events() {

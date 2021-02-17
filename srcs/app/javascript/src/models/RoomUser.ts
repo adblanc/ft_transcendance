@@ -29,7 +29,7 @@ export default class RoomUser extends BaseModel<IRoomUser> {
   }
 
   canBePromote() {
-    return this.get("roomRole") === "Member";
+    return this.get("roomRole") !== "Owner";
   }
 
   canBeDemote() {

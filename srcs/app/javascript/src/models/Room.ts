@@ -79,15 +79,7 @@ export default class Room extends BaseRoom {
               return this.quit();
             }
 
-            if (
-              (!data.message.ancient &&
-                !this.get("users").find(
-                  (u) => u.get("id") === data.message.user_id
-                )) ||
-              (data.message.is_notification &&
-                (data.message.content.includes("has left") ||
-                  data.message.content.includes("has been banned")))
-            ) {
+            if (!data.message.ancient && data.message.is_notification) {
               this.fetch();
             }
 
@@ -146,7 +138,7 @@ export default class Room extends BaseRoom {
   }
 
   async delete() {
-    const success = await this.asyncDestroy();
+    const success = await this.asyncDestroy({ wait: true });
 
     if (success) {
       this.unsubscribe();
