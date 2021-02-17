@@ -3,7 +3,7 @@ class AppearanceChannel < ApplicationCable::Channel
     stream_from "appearance_channel"
 
     if (current_user.appearing_on == "offline")
-      current_user.appear("online")
+      current_user.appear(current_user.inGame? ? "in game" : "online")
     end
   end
 
