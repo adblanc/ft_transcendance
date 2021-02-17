@@ -35,12 +35,18 @@ else
 	json.matchedGame nil
 end
 
+if user.currentGame
+	json.currentGame user.currentGame
+else
+	json.currentGame nil
+end
+
+
 if user.tournamentToPlay
 	json.tournamentToPlay user.tournamentToPlay
 else
 	json.tournamentToPlay nil
 end
-
 
 if user.pendingGame
 	json.pendingGame do

@@ -98,15 +98,12 @@ export default class LadderView extends BaseView {
         this.$("#waiting").show();
       else this.$("#unavailable-pend").show();
     }
-	else if (currentUser().get("matchedGame"))
+	else if (currentUser().get("matchedGame") || currentUser().get("currentGame"))
 		this.$("#unavailable-start").show();
-    if (currentUser().get("pendingGameToAccept")) {
+    else if (currentUser().get("pendingGameToAccept")) {
       this.$("#accept").show();
     }
-    else if (
-      !currentUser().get("pendingGame") && !currentUser().get("matchedGame") &&
-      !currentUser().get("pendingGameToAccept")
-    ) {
+    else {
       this.$("#default").show();
     }
 

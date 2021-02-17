@@ -259,6 +259,8 @@ export default class Game extends BaseModel<IGame> {
 
   onGameStarted() {
     this.set({ status: "started" });
+	currentUser().set({ currentGame: this.get("id") });
+	currentUser().set({ matchedGame: null });
     this.channel?.perform("game_started", {});
   }
 
@@ -299,7 +301,6 @@ export default class Game extends BaseModel<IGame> {
     const player = this.get("players").find(
       (p) => p.get("id") === data.playerId
     );
-
     player?.set({ status: "ready" });
   }
 

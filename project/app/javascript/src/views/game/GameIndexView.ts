@@ -40,8 +40,9 @@ export default class GameIndexView extends BaseView {
   }
 
   checkCurrentGame() {
-    if (currentUser().get("matchedGame")) {
-      Backbone.history.navigate(`/game/${currentUser().get("matchedGame")}`, {
+	let id: number;
+    if (id = currentUser().get("matchedGame") || currentUser().get("currentGame")) {
+      Backbone.history.navigate(`/game/${id}`, {
         trigger: true,
       });
     }

@@ -231,6 +231,16 @@ class User < ApplicationRecord
 		end
 	end
 
+	def currentGame
+		if games.started.first
+			return games.started.first.id
+		elsif games.paused.first
+				return games.paused.first.id
+		else
+			return nil
+		end
+	end
+
 	def pendingGameToAccept
 		games.pending.where.not(id: game_request).where.not(game_type: :tournament).first
 	end
