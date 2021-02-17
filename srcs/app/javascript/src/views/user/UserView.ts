@@ -46,7 +46,7 @@ export default class UserView extends BaseView {
   async onUserAdmin() {
     const success = await currentUser().adminUser(this.user.get("id"));
     if (success) {
-      displaySuccess(`${this.user.get("name")} is no more an administrator`);
+      displaySuccess(`${this.user.get("name")} is now administrator`);
     }
     this.actualize();
   }
@@ -54,7 +54,7 @@ export default class UserView extends BaseView {
   async onUserUnAdmin() {
     const success = await currentUser().unAdminUser(this.user.get("id"));
     if (success) {
-      displaySuccess(`${this.user.get("name")} is an administrator now`);
+      displaySuccess(`${this.user.get("name")} is not administrator anymore`);
     }
     this.actualize();
   }
