@@ -59,6 +59,7 @@ class UsersController < ApplicationController
   	if @current_user.admin?
 		if (@other_user = User.find_by_id(params[:id]))
 			@other_user.add_role :admin
+			@other_user.send_notification("#{@current_user.name} made you an administrator of the website", "/user/#{@other_user.id}", "administrator")
 			render json: {}, status: :ok
 		else
 			render json: { "User": ["not found"] }, status: :not_found
@@ -75,6 +76,7 @@ class UsersController < ApplicationController
 				render json: { "User": ["not allowed to do that"] }, status: :unauthorized
 			else
 				@other_user.remove_role :admin
+				@other_user.send_notification("#{@current_user.name} removed your administrator's rights of the website", "/user/#{@other_user.id}", "administrator")
 				render json: {}, status: :ok
 			end
 		else
