@@ -3,7 +3,7 @@ import Mustache from "mustache";
 import Rooms from "src/collections/MyRooms";
 import { eventBus } from "src/events/EventBus";
 import BaseView from "src/lib/BaseView";
-import { displaySuccess } from "src/utils";
+import { displayError, displaySuccess } from "src/utils";
 import ConfirmationModalView from "src/views/ConfirmationModalView";
 import _ from "underscore";
 import ManageRoomView from "./ManageRoomView";
@@ -37,11 +37,11 @@ export default class ChatHeaderView extends BaseView {
   askConfirmationQuit() {
     const { selectedRoom } = this.rooms;
 
-    const question = selectedRoom.get("is_dm")
-      ? `Are you sure you want to delete your messages with ${selectedRoom.get(
+    const question = selectedRoom?.get("is_dm")
+      ? `Are you sure you want to delete your messages with ${selectedRoom?.get(
           "name"
         )} ?`
-      : `Are you sure you want to quit ${selectedRoom.get("name")} ?`;
+      : `Are you sure you want to quit ${selectedRoom?.get("name")} ?`;
 
     const confirmationView = new ConfirmationModalView({
       question,
@@ -54,7 +54,7 @@ export default class ChatHeaderView extends BaseView {
   quitRoom = async () => {
     const { selectedRoom } = this.rooms;
 
-    const success = await selectedRoom.quit();
+    const success = await selectedRoom?.quit();
 
     if (success) {
       const action = success.get("is_dm")
@@ -67,15 +67,19 @@ export default class ChatHeaderView extends BaseView {
         eventBus.trigger("chat:my-room-left");
       }
 
-      const msg = selectedRoom.get("is_dm")
-        ? `Messages with ${selectedRoom.get("name")} successfully ${action}`
-        : `Room ${selectedRoom.get("name")} successfully ${action}`;
+      const msg = selectedRoom?.get("is_dm")
+        ? `Messages with ${selectedRoom?.get("name")} successfully ${action}`
+        : `Room ${selectedRoom?.get("name")} successfully ${action}`;
       displaySuccess(msg);
     }
   };
 
   async manageRoom() {
-    new ManageRoomView({ model: this.rooms.selectedRoom }).render();
+    if (this.rooms.selectedRoom) {
+      new ManageRoomView({ model: this.rooms.selectedRoom }).render();
+    } else {
+      displayError("room not found");
+    }
   }
 
   render() {

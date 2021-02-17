@@ -64,12 +64,12 @@ export default class MyRooms extends BaseRooms<Room> {
   setSelected(room: Room) {
     if (
       this.selectedRoom &&
-      this.find((r) => r.get("id") === this.selectedRoom.get("id"))
+      this.find((r) => r.get("id") === this.selectedRoom?.get("id"))
     ) {
-      this.selectedRoom.toggle();
+      this.selectedRoom?.toggle();
     }
     this.selectedRoom = room;
-    this.selectedRoom.toggle();
+    this.selectedRoom?.toggle();
     eventBus.trigger("chatplay:toggle");
   }
 

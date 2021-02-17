@@ -6,7 +6,6 @@ import Message from "src/models/Message";
 import Game from "src/models/Game";
 import ChatPlayView from "./ChatPlayView";
 import _ from "underscore";
-import Room from "src/models/Room";
 import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions & {
@@ -35,7 +34,7 @@ export default class ChatInputView extends BaseView {
     const game = new Game();
     const chatPlayView = new ChatPlayView({
       model: game,
-      room_id: this.rooms.selectedRoom.get("id"),
+      room_id: this.rooms.selectedRoom?.get("id"),
     });
 
     chatPlayView.render();
@@ -59,7 +58,7 @@ export default class ChatInputView extends BaseView {
 
     const message = new Message({
       content,
-      room_id: this.rooms.selectedRoom.get("id"),
+      room_id: this.rooms.selectedRoom?.get("id"),
     });
 
     this.clearInput();
@@ -74,7 +73,7 @@ export default class ChatInputView extends BaseView {
   render() {
     const template = $("#chat-input-template").html();
     const html = Mustache.render(template, {
-      dm: this.rooms.selectedRoom.get("is_dm"),
+      dm: this.rooms.selectedRoom?.get("is_dm"),
     });
     this.$el.html(html);
 
