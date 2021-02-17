@@ -290,68 +290,6 @@ class User < ApplicationRecord
 		return false
 	end
 
-	def war_won?
-		if self.guild
-			i = 0
-			self.guild.wars.each do |war|
-				if war.winner == self.guild.ang
-					return true
-				end
-			end
-		end
-		return false
-	end
-
-	def number_victory
-		i = 0
-		self.games.each do |game|
-			if game.winner == self
-				i+= 1
-			end
-		end
-		return i
-	end
-
-	def number_loss
-		self.games.length - self.number_victory
-	end
-
-	def bronze_medal?
-		return self.number_victory >= 10
-	end
-
-	def silver_medal?
-		return self.number_victory >= 100
-	end
-
-	def gold_medal?
-		return self.number_victory >= 1000
-	end
-
-	def best_guild?
-	 if Guild.order(:points).reverse_order.first == self.guild
-		return true
-	 end
-	 return false
-	end
-
-	def high_rank?
-		ladder_rank == 1
-	end
-
-	def lucky_man?
-		i = 0
-		self.games.each do |game|
-			if game.forfeit? && game.winner == self
-				i+= 1
-			end
-		end
-		if i >= 5
-			return true
-		end
-		return false
-	end
-
 	def current_tournaments
 		tournaments.where.not(status: :finished)
 	end
@@ -376,8 +314,71 @@ class User < ApplicationRecord
 		end
 	end
 
+	#Achievements
+	def number_victory
+		i = 0
+		self.games_finished.each do |game|
+			if game.winner == self
+				i+= 1
+			end
+		end
+		return i
+	end
+
+	def number_loss
+		self.games_finished.length - self.number_victory
+	end
+
+	def bronze_medal?
+		return self.number_victory >= 10
+	end
+
+	def silver_medal?
+		return self.number_victory >= 25
+	end
+
+	def gold_medal?
+		return self.number_victory >= 50
+	end
+
+	def best_guild?
+	 if Guild.order(:points).reverse_order.first == self.guild
+		return true
+	 end
+	 return false
+	end
+
+	def high_rank?
+		ladder_rank == 1
+	end
+
+	def lucky_man?
+		i = 0
+		self.games_finished.each do |game|
+			if game.forfeit? && game.winner == self
+				i+= 1
+			end
+		end
+		if i >= 5
+			return true
+		end
+		return false
+	end
+
+	def war_won?
+		if self.guild
+			i = 0
+			self.guild.wars.each do |war|
+				if war.winner == self.guild.ang
+					return true
+				end
+			end
+		end
+		return false
+	end
+
 	def achievement?
-		if (high_rank? || best_guild? || gold_medal? || silver_medal? || bronze_medal? || lucky_man? || war_won?)
+		if (high_rank? || best_guild? || gold_medal? || silver_medal? || bronze_medal? || war_won?)
 			return true
 		end
 		return false

@@ -78,13 +78,13 @@
 			<p>Rank on permanent ladder : {{ladder_rank}}</p>
 			<p>Number of victory : {{statUser.number_victory}} </p>
 			<p>Number of loss : {{statUser.number_loss}} </p>
+			{{#statUser.lucky_man}} <p>Lucky Man : 5+ games won by forfeit </p>{{/statUser.lucky_man}}
 			{{#statUser.achievement}}<p class="text-2xl mt-2 font-semibold">Achievements: </p> {{/statUser.achievement}}
 			{{#statUser.bronze_medal}}<p>Bronze medal</p> {{/statUser.bronze_medal}}
 			{{#statUser.silver_medal}}<p>Silver medal</p> {{/statUser.silver_medal}}
 			{{#statUser.gold_medal}}<p>Gold medal </p>{{/statUser.gold_medal}}
 			{{#statUser.best_guild}} <p>Best Guild </p>{{/statUser.best_guild}}
 			{{#statUser.high_rank}} <p>Highest Ladder Rank </p>{{/statUser.high_rank}}
-			{{#statUser.lucky_man}} <p>You are a Lucky Man </p>{{/statUser.lucky_man}}
 			{{#statUser.war_won}} <p>Your Guild won a War </p>{{/statUser.war_won}}
 			<h2 id="tour-trophies" class="text-2xl mt-2 font-semibold">Trophies:</h2>
 			<div id="trophies"></div>
