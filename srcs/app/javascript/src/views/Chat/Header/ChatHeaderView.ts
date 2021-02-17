@@ -84,7 +84,9 @@ export default class ChatHeaderView extends BaseView {
 
   render() {
     const template = $("#chat-header-template").html();
-    const html = Mustache.render(template, this.rooms.selectedRoom?.toJSON());
+    const html = Mustache.render(template, {
+      ...this.rooms.selectedRoom?.toJSON(),
+    });
 
     this.$el.html(html);
 
