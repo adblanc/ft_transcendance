@@ -137,6 +137,6 @@ class AuthenticationController < ApplicationController
 	end
 
 	def set_cookie(user)
-		cookies.encrypted[:user_id] = {value: user.id, expires: 4.hour.from_now}
+		cookies.encrypted[:user_id] = {value: user.id, expires: 4.hour.from_now, same_site: :strict}
 	end
   end
