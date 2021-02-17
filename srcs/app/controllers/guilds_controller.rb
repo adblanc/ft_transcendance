@@ -164,6 +164,10 @@ class GuildsController < ApplicationController
 
 	pending_member = User.find_by_id(params[:user_id])
 
+	if (!@guild.pending_members.exists?(pending_member.id))
+		return render json: {"User" => ["not found"]}, status: :not_found
+	end
+
     @guild.pending_members.delete(pending_member)
 	@guild.members.push(pending_member)
 	pending_member.send_notification("#{current_user.name} accepted your request to join #{@guild.name}", "/guild/#{@guild.id}", "guild")
@@ -179,6 +183,10 @@ class GuildsController < ApplicationController
 	end
 
     pending_member = User.find_by_id(params[:user_id])
+
+	if (!@guild.pending_members.exists?(pending_member.id))
+		return render json: {"User" => ["not found"]}, status: :not_found
+	end
 
     @guild.pending_members.delete(pending_member)
 	pending_member.send_notification("#{current_user.name} rejected your request to join #{@guild.name}", "/guild/#{@guild.id}", "guild")
