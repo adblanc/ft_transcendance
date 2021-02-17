@@ -1,11 +1,10 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "../../lib/BaseView";
-import Profile, { currentUser } from "src/models/Profile";
+import { currentUser } from "src/models/Profile";
 import { displaySuccess } from "src/utils/toast";
 import Game from "src/models/Game";
 import User from "src/models/User";
-import { eventBus } from "src/events/EventBus";
 
 type Options = Backbone.ViewOptions & { model: User; challengeable: boolean };
 
@@ -20,7 +19,12 @@ export default class LadderOpponentView extends BaseView {
 
     this.model = options.model;
     this.challengeable = options.challengeable;
-    if (currentUser().get("pendingGame") || currentUser().get("matchedGame") || currentUser().get("currentGame")) this.challengeable = false;
+    if (
+      currentUser().get("pendingGame") ||
+      currentUser().get("matchedGame") ||
+      currentUser().get("currentGame")
+    )
+      this.challengeable = false;
     if (this.model.get("id") == currentUser().get("ladder_unchallengeable")) {
       this.challengeable = false;
       this.justLost = true;
@@ -45,7 +49,7 @@ export default class LadderOpponentView extends BaseView {
   }
 
   gameSaved() {
-    displaySuccess(`Waiting for ${this.model.get("login")}`);
+    displaySuccess(`Waiting for ${this.model.get("name")}`);
     currentUser().fetch();
     this.game.createChannelConsumer();
   }

@@ -23,11 +23,11 @@
 
 			<div id="default" style="margin-top:15px; font-size:15px; display:none" class="justify-center text-white flex flex-row"><b> You have no pending ladder challenge </b></div>
 			<div id="accept" style="text-align: center; margin-top:15px; font-size:15px; display:none">
-				<div style="margin-top:10px" class="justify-center text-white flex flex-row"> {{pendingGameToAccept.opponent.login}}, rank {{pendingGameToAccept.opponent.ladder_rank}} has challenged you. </div>
+				<div style="margin-top:10px" class="justify-center text-white flex flex-row"> {{pendingGameToAccept.opponent.name}}, rank {{pendingGameToAccept.opponent.ladder_rank}} has challenged you. </div>
 				<button id="accept-btn" class="btn-primary mt-3 animate-bounce" type="button">Accept!</button>
 			</div>
 			<div id="waiting" style="text-align: center; margin-top:15px; font-size:15px; display:none">
-				<div style="margin-top:10px" class="justify-center text-white flex flex-row"> You are waiting for {{pendingGame.opponent.login}}, rank {{pendingGame.opponent.ladder_rank}} to accept your ladder challenge. </div>
+				<div style="margin-top:10px" class="justify-center text-white flex flex-row"> You are waiting for {{pendingGame.opponent.name}}, rank {{pendingGame.opponent.ladder_rank}} to accept your ladder challenge. </div>
 			</div>
 			<div id="unavailable-pend" style="text-align: center; margin-top:15px; font-size:15px; display:none">
 				<div style="margin-top:10px" class="justify-center text-white flex flex-row"> You must finish your pending {{pendingGame.game_type}} game before starting or accepting a ladder challenge. </div>
