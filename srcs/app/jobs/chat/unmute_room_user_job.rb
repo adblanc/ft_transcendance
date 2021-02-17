@@ -5,4 +5,5 @@ class UnmuteRoomUserJob < ApplicationJob
     # Do something later
     mute.destroy
   end
+
 end

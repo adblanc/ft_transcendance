@@ -30,12 +30,23 @@ class BansController < ApplicationController
 			render json: {"User" => ["is not banned"]}, status: :unprocessable_entity
 		else
 			@room.send_room_notification("unban", @current_user, @banned_user, @formatted_time)
+			remove_bans_job()
 			UnbanRoomUserJob.perform_now(@ban)
 			@banned_user
 		end
 	end
 
 	private
+
+	def remove_bans_job
+		queue = Sidekiq::ScheduledSet.new
+		queue.each do |job|
+			if job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/Ban/#{@ban.id}"
+				logger.fatal("on delete un job unban")
+				job.delete
+			end
+		end
+	end
 
 	def correct_req(type)
 		if (!@banned_user)

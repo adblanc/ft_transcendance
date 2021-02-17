@@ -30,12 +30,23 @@ class MutesController < ApplicationController
 			render json: {"User" => ["is not muted"]}, status: :unprocessable_entity
 		else
 			@room.send_room_notification("unmute", @current_user, @muted_user, @formatted_time)
+			remove_mutes_job()
 			UnmuteRoomUserJob.perform_now(@mute)
 			@muted_user
 		end
 	end
 
 	private
+
+	def remove_mutes_job
+		queue = Sidekiq::ScheduledSet.new
+		queue.each do |job|
+			if job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/Mute/#{@mute.id}"
+				logger.fatal("on delete un job unmute")
+				job.delete
+			end
+		end
+	end
 
 	def correct_req(type)
 		if (!@muted_user)
