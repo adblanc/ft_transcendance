@@ -165,9 +165,6 @@ export default class Pong extends BaseModel {
     this.ballMovementChannel = consumer.subscriptions.create(
       { channel: "PongBallChannel", id },
       {
-        connected: () => {
-          console.log("connected to the pong ball", id);
-        },
         received: (data: BallMovementData) => {
           if (!this.game.get("isHost")) {
             if (!this.game.get("isSpectator")) {
@@ -175,9 +172,6 @@ export default class Pong extends BaseModel {
             }
             this.ball.setJSON(data);
           }
-        },
-        disconnected: () => {
-          console.log("ball movement disconnected", id);
         },
       }
     );

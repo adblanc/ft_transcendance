@@ -63,12 +63,6 @@ export default class Room extends BaseRoom {
     return consumer.subscriptions.create(
       { channel: "RoomChannel", room_id },
       {
-        connected: () => {
-          console.log("connected to room", room_id);
-        },
-        disconnected: () => {
-          console.log("disconnected from room", room_id);
-        },
         received: (data: RoomData) => {
           if (data.message) {
             const blocked = currentUser()

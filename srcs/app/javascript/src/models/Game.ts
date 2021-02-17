@@ -190,9 +190,6 @@ export default class Game extends BaseModel<IGame> {
     this.channel = consumer.subscriptions.create(
       { channel: "GamingChannel", id: gameId },
       {
-        connected: () => {
-          console.log("connected to the game", gameId);
-        },
         received: (data: GameData) => {
           switch (data.action) {
             case "matched":
@@ -228,9 +225,6 @@ export default class Game extends BaseModel<IGame> {
               );
               break;
           }
-        },
-        disconnected: () => {
-          console.log("disconnected from the game", gameId);
         },
       }
     );

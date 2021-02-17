@@ -43,18 +43,12 @@ export default class GamesToSpectateView extends BaseView {
     return consumer.subscriptions.create(
       { channel: "GamesToSpectateChannel" },
       {
-        connected: () => {
-          console.log("connected to games to spectate channel");
-        },
         received: (data: GameToSpectateData) => {
           if (data.event === "new_game") {
             this.games.addSpectateGame(data.game);
           } else if (data.event === "finished_game") {
             this.games.removeSpectateGame(data.gameId);
           }
-        },
-        disconnected: () => {
-          console.log("disconnected from spectate channel");
         },
       }
     );
