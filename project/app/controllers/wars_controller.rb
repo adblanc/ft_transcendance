@@ -17,6 +17,11 @@ class WarsController < ApplicationController
 
 		return head :unauthorized unless current_user.guild_owner?(@initiator)
 
+		if params[:prize].to_i > @initiator.points || params[:prize].to_i > @recipient.points 
+			render json: {"One" => ["or both guilds cannot wager that many points"]}, status: :unprocessable_entity
+			return
+		end
+
 		if @warTimes.size == 0
 			render json: {"There" => ["must be at least one War Time scheduled"]}, status: :unprocessable_entity
 			return
@@ -118,6 +123,11 @@ class WarsController < ApplicationController
 		@opponent = @war.opponent(@guild)
 		@gw_initiator = GuildWar.where(war: @war, guild: @guild).first
 		@gw_recipient = GuildWar.where(war: @war).where.not(guild: @guild).first
+
+		if params[:prize].to_i > @guild.points || params[:prize].to_i > @opponent.points 
+			render json: {"One" => ["or both guilds cannot wager that many points"]}, status: :unprocessable_entity
+			return
+		end
 
 		if not current_user.guild_owner?(@guild) || current_user.guild_officer?(@guild)
 			render json: {"You" => ["must be a guild owner or officer to do this"]}, status: :unprocessable_entity

@@ -159,10 +159,10 @@ export default class NegotiateView extends ModalView<War> {
 	const wt_dates = this.wt_dates;
 	const wt_change = this.wt_change;
 
-	if (parseInt(prize) > this.model.get("warOpponent").get("points") || parseInt(prize) > this.guild.get("points")) {
+	/*if (parseInt(prize) > this.model.get("warOpponent").get("points") || parseInt(prize) > this.guild.get("points")) {
 		displayError("One or both guilds cannot wager that many points");
 		return;
-	}
+	}*/
 
     const success = await this.model.modifyWar(
 		start,

@@ -84,14 +84,6 @@ export default class DeclareWarView extends ModalView<War> {
     const recipient_id = this.guild.get("id");
 	const wt_dates = this.wt_dates;
 
-    if (
-      parseInt(prize) > currentUser().get("guild").get("points") ||
-      parseInt(prize) > this.guild.get("points")
-    ) {
-      displayError("One or both guilds cannot wager that many points");
-      return;
-    }
-
     const success = await this.model.createWar(
       start,
       end,
