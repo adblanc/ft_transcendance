@@ -71,6 +71,7 @@ export default class Room extends BaseRoom {
 
             if (
               !data.message.ancient &&
+              data.message.is_notification &&
               data.message.content.includes(
                 `${currentUser().get("name")} has been banned`
               )
@@ -79,10 +80,13 @@ export default class Room extends BaseRoom {
             }
 
             if (
-              !data.message.ancient &&
-              !this.get("users").find(
-                (u) => u.get("id") === data.message.user_id
-              )
+              (!data.message.ancient &&
+                !this.get("users").find(
+                  (u) => u.get("id") === data.message.user_id
+                )) ||
+              (data.message.is_notification &&
+                (data.message.content.includes("has left") ||
+                  data.message.content.includes("has been banned")))
             ) {
               this.fetch();
             }

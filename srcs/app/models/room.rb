@@ -80,13 +80,18 @@ class Room < ApplicationRecord
 
 	def remove_owner(user)
 		user.remove_role(:owner, self)
-		if users.blank?
+		if users.blank? || users.size == banned_users.size
 			self.destroy
 			return "destroyed"
 		else
-			new_owner = users.first
-			new_owner.remove_role(:administrator, self) if new_owner.is_room_administrator?(self)
-			new_owner.add_role(:owner, self)
+			users.each do |u|
+				if !self.bans.exists?(banned_user_id: u.id)
+					new_owner = u
+					new_owner.remove_role(:administrator, self) if new_owner.is_room_administrator?(self)
+					new_owner.add_role(:owner, self)
+					return "left";
+				end
+			end
 		end
 		return "left";
 	end
