@@ -6,6 +6,7 @@ export function listenVisibilityChanges() {
 
   if (typeof document.hidden !== "undefined") {
     (hidden = "hidden"), (visibilityChange = "visibilitychange");
+	//@ts-ignore
   } else if (typeof document.msHidden !== "undefined") {
     (hidden = "msHidden"), (visibilityChange = "msvisibilitychange");
   }

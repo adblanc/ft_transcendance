@@ -59,10 +59,12 @@ export default class Player extends BaseModel<IPlayer> {
   }
 
   private get game(): Game {
+	//@ts-ignore
     return this.collection.parents[0];
   }
 
   private get channel(): ActionCable.Channel {
+	//@ts-ignore
     return this.game.channel;
   }
 
