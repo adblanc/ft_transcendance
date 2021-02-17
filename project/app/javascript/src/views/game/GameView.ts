@@ -119,8 +119,7 @@ export default class GameView extends BaseView<Game> {
       this.model.get("status") === "forfeit";
     const isMatched = this.model.get("status") === "matched";
 
-	if (isFinished)
-		currentUser().set({ currentGame: null });
+    if (isFinished) currentUser().set({ currentGame: null });
 
     const firstPlayer = this.model.get("players")?.first();
     const secondPlayer = this.model.get("players")?.last();

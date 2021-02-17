@@ -201,11 +201,13 @@ export default class Pong extends BaseModel {
       this.canvas.height / 2
     );
 
-    this.ctx.fillText(
-      `${this.game.get("pause_duration")}s before game's end`,
-      this.canvas.width / 2,
-      this.canvas.height / 2 + 45
-    );
+    if (!this.game.get("isSpectator")) {
+      this.ctx.fillText(
+        `${this.game.get("pause_duration")}s before game's end`,
+        this.canvas.width / 2,
+        this.canvas.height / 2 + 45
+      );
+    }
   }
 
   update(dt: number) {

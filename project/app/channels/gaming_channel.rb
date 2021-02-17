@@ -5,7 +5,7 @@ class GamingChannel < ApplicationCable::Channel
       @game = Game.find_by_id(@id)
 
 
-      if !@game or @game.finished?
+      if !@game or @game.game_ended?
         reject
       end
 
@@ -15,12 +15,18 @@ class GamingChannel < ApplicationCable::Channel
   end
 
   def player_movement(data)
+    if (@game.paused?)
+      @game.reload
+    end
      if (current_user.is_playing_in?(@game) && @game.started?)
       ActionCable.server.broadcast("game_#{@id}", data);
      end
   end
 
   def player_score(data)
+    if (@game.paused?)
+      @game.reload
+    end
     if (current_user.is_playing_in?(@game) && @game.started?)
       @game.player_score(data);
      end
@@ -36,7 +42,7 @@ class GamingChannel < ApplicationCable::Channel
 
   def game_paused
     @game.reload
-    if (current_user.is_playing_in?(@game) && @game.started?)
+    if (current_user.is_playing_in?(@game) && (@game.started? || @game.paused?))
       @game.user_paused(current_user);
     end
   end
