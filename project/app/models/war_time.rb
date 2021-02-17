@@ -11,10 +11,6 @@ class WarTime < ApplicationRecord
 	validates :end, presence: true
 	validate :date_check
 
-	def my_logger
-		@@my_logger ||= Logger.new("#{Rails.root}/log/my.log")
-	end	
-
 	def date_check
 		if self.start.present? && self.end.present?
 			if self.end < self.start
@@ -35,9 +31,7 @@ class WarTime < ApplicationRecord
 		for wt in @wartimes
 			if wt.id != self.id
 				if not self.start < wt.start && self.end < wt.start
-					/my_logger.info("condition 1")/
 					if self.start <= wt.end
-						/my_logger.info("condition 2")/
 						errors.add :wartimes, 'cannot overlap'
 					end
 				end
