@@ -41,7 +41,7 @@ export default class ItemRequestView extends BaseView {
   }
 
   saved(method: "accepted" | "refused") {
-    displaySuccess(`You ${method} ${this.model.get("login")}'s friend request`);
+    displaySuccess(`You ${method} ${this.model.get("name")}'s friend request`);
     if (this.user.get("friend_requests").size() === 1) {
       closeAllModal();
     }
