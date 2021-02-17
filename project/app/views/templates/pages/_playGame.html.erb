@@ -1,11 +1,14 @@
 <script type="text/html" id="playGameTemplate">
-	<div class="tournament-header"><h1>{{game_type}} Game</h1></div>
 	<div class="relative flex flex-col page-height justify-center items-center text-center text-6xl font-semibold text-gray-800">
 	{{#isTraining}}
 		<h1>Training</h1>
 	{{/isTraining}}
 
 	{{#isMatched}}
+		{{^isTraining}}
+			<div class="mb-6">{{game_type}} game</div>
+		{{/isTraining}}
+
 		{{^isSpectator}}
 		<div class="flex flex-row justify-between content-between w-4/6">
 			<div class="flex flex-col items-center">
@@ -52,6 +55,9 @@
 		{{^isTraining}}
 			{{#firstPlayer}}
 				<h1>{{firstPlayer.name}} vs {{secondPlayer.name}}</h1>
+				{{^isFinished}}
+					<div class="text-xl text-gray-700">({{game_type}} game)</div>
+				{{/isFinished}}
 			{{/firstPlayer}}
 		{{/isTraining}}
 
@@ -84,7 +90,7 @@
 		{{/isFinished}}
 
 		{{#isFinished}}
-			<div class="underline">Game finished</div>
+			<div class="underline">{{game_type}} game finished</div>
 			{{#winner}}
 				<div>{{name}} won {{points}} - {{#looser}} {{points}} {{/looser}} </div>
 			{{/winner}}
