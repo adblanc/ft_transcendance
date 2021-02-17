@@ -204,7 +204,7 @@ class Game < ApplicationRecord
 		self.handle_points_wt
 		self.users.each do |user|
 			user.guild.members.each do |member|
-				member.send_notification("War time challenge: #{self.winner.login} won against #{self.loser.login}", "/wars", "wars")
+				member.send_notification("War time challenge: #{self.winner.name} won against #{self.loser.name}", "/wars", "wars")
 			end
 		end
 	end
