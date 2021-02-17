@@ -15,7 +15,7 @@ RUN mkdir -p /app
 WORKDIR /app
 
 #copy over our entire current directory and place the files in the docker image's work dictory
-COPY ./project ./
+COPY ./src ./
 
 #install bundler and all our gems
 RUN gem install bundler -v 2.1.2 && bundle _2.1.2_ install --jobs 20 --retry 5
