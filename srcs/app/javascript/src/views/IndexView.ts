@@ -16,11 +16,11 @@ export default class IndexView extends BaseView {
     this.indexBoardView = new IndexBoardView();
     this.indexLadderView = new IndexLadderView();
 
-    this.listenTo(currentUser(), "change:login", this.render);
+    this.listenToOnce(currentUser(), "change", this.render);
   }
 
   render() {
-    const ready = !!currentUser().get("login");
+    const ready = !!currentUser().get("name");
 
     if (!ready) {
       return this.renderLoadingPage();

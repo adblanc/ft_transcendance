@@ -17,7 +17,7 @@ import Games from "src/collections/Games";
 import Tournament from "../Tournament";
 
 export interface IBlockedUser {
-  login: string;
+  name: string;
   avatar_url: string;
   id: number;
 }
