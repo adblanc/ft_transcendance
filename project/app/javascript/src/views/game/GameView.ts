@@ -134,6 +134,7 @@ export default class GameView extends BaseView<Game> {
       isFinished,
       isMatched,
       isSpectator: this.model.get("isSpectator"),
+	  game_type: this.model.get("game_type") == "chat" ? "Friendly" : this.model.get("game_type")[0].toUpperCase() + this.model.get("game_type").slice(1),
     });
     this.$el.html(html);
 
