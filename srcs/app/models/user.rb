@@ -132,7 +132,7 @@ class User < ApplicationRecord
 	def	login_with_ang
 		ang = self.guild_ang
 
-		return "#{ang ? "[#{ang}] ": ""}#{self.login}";
+		return "#{ang ? "[#{ang}] ": ""}#{self.name}";
 	end
 
 	def guild_ang
