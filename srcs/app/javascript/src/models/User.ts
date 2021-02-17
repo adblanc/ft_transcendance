@@ -9,7 +9,7 @@ import Games from "src/collections/Games";
 import Tournament from "./Tournament";
 import Tournaments from "src/collections/Tournaments";
 import { eventBus } from "src/events/EventBus";
-import { AppearanceData } from "./Profile/Profile";
+import { AppearanceData, currentUser } from "./Profile/Profile";
 
 export default class User extends BaseModel<IProfile> {
   urlRoot = () => `${BASE_ROOT}/profile/`;
@@ -56,6 +56,28 @@ export default class User extends BaseModel<IProfile> {
         appearing_on,
       });
     }
+  }
+
+  isLadderChallengeable() {
+    if (
+      currentUser().get("pendingGame") ||
+      currentUser().get("matchedGame") ||
+      currentUser().get("currentGame") ||
+      currentUser().get("id") === this.get("id") ||
+      this.get("ladder_rank") >= currentUser().get("ladder_rank") ||
+      this.justLostLadder()
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  justLostLadder() {
+    if (this.get("id") == currentUser().get("ladder_unchallengeable")) {
+      return true;
+    }
+    return false;
   }
 
   addFriend() {

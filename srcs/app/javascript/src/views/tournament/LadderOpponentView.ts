@@ -6,29 +6,12 @@ import { displaySuccess } from "src/utils/toast";
 import Game from "src/models/Game";
 import User from "src/models/User";
 
-type Options = Backbone.ViewOptions & { model: User; challengeable: boolean };
-
-export default class LadderOpponentView extends BaseView {
+export default class LadderOpponentView extends BaseView<User> {
   model: User;
   game: Game;
-  challengeable: boolean;
-  justLost: boolean;
 
-  constructor(options?: Options) {
+  constructor(options?: Backbone.ViewOptions<User>) {
     super(options);
-
-    this.model = options.model;
-    this.challengeable = options.challengeable;
-    if (
-      currentUser().get("pendingGame") ||
-      currentUser().get("matchedGame") ||
-      currentUser().get("currentGame")
-    )
-      this.challengeable = false;
-    if (this.model.get("id") == currentUser().get("ladder_unchallengeable")) {
-      this.challengeable = false;
-      this.justLost = true;
-    }
 
     this.listenTo(currentUser(), "change", this.render);
   }
@@ -56,10 +39,11 @@ export default class LadderOpponentView extends BaseView {
 
   render() {
     const template = $("#ladderOpponentTemplate").html();
+
     const html = Mustache.render(template, {
       ...this.model.toJSON(),
-      challengeable: this.challengeable,
-      justlost: this.justLost,
+      challengeable: this.model.isLadderChallengeable(),
+      justlost: this.model.justLostLadder(),
     });
     this.$el.html(html);
 

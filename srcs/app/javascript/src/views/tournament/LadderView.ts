@@ -23,7 +23,6 @@ export default class LadderView extends BaseView {
     this.listenTo(this.opponents, "update", this.render);
     this.listenTo(this.opponents, "sort", this.render);
     this.listenTo(currentUser(), "change", this.update);
-
   }
 
   update() {
@@ -57,8 +56,6 @@ export default class LadderView extends BaseView {
   renderOpponent(opponent: User) {
     var opponentView = new LadderOpponentView({
       model: opponent,
-      challengeable:
-        opponent.get("ladder_rank") < currentUser().get("ladder_rank"),
     });
     this.$("#list").append(opponentView.render().el);
   }
@@ -70,7 +67,7 @@ export default class LadderView extends BaseView {
     );
     if (opponents.length) {
       opponents.forEach(function (item) {
-          this.renderOpponent(item);
+        this.renderOpponent(item);
       }, this);
       this.count += opponents.length;
     }
@@ -97,13 +94,14 @@ export default class LadderView extends BaseView {
       if (currentUser().get("pendingGame").get("game_type") == "ladder")
         this.$("#waiting").show();
       else this.$("#unavailable-pend").show();
-    }
-	else if (currentUser().get("matchedGame") || currentUser().get("currentGame"))
-		this.$("#unavailable-start").show();
+    } else if (
+      currentUser().get("matchedGame") ||
+      currentUser().get("currentGame")
+    )
+      this.$("#unavailable-start").show();
     else if (currentUser().get("pendingGameToAccept")) {
       this.$("#accept").show();
-    }
-    else {
+    } else {
       this.$("#default").show();
     }
 

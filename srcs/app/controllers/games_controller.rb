@@ -237,6 +237,11 @@ class GamesController < ApplicationController
 			return
 		end
 
+		if current_user.ladder_unchallengeable == @opponent.id
+            render json: {"You" => ["just lost to this user"]}, status: :unprocessable_entity
+            return
+        end
+
 		if current_user.ladder_rank < @opponent.ladder_rank
 			render json: {"This" => [" user must have moved down the ladder while you were choosing. Please refresh to choose an opponent that is ranked higher than you. "]}, status: :unprocessable_entity
 			return

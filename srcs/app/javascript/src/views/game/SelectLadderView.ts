@@ -5,7 +5,7 @@ import { currentUser } from "src/models/Profile";
 import { displaySuccess } from "src/utils/toast";
 import Game from "src/models/Game";
 import User from "src/models/User";
-import { eventBus } from "src/events/EventBus";
+import { closeAllModal } from "src/utils";
 
 type Options = Backbone.ViewOptions & { model: User };
 
@@ -35,7 +35,7 @@ export default class SelectLadderView extends BaseView {
   }
 
   gameSaved() {
-    eventBus.trigger("close:modal");
+    closeAllModal();
     displaySuccess(`Waiting for ${this.model.get("name")}`);
     currentUser().fetch();
     this.game.createChannelConsumer();
@@ -43,7 +43,11 @@ export default class SelectLadderView extends BaseView {
 
   render() {
     const template = $("#selectLadderTemplate").html();
-    const html = Mustache.render(template, this.model.toJSON());
+    const html = Mustache.render(template, {
+      ...this.model.toJSON(),
+      challengeable: this.model.isLadderChallengeable(),
+      justlost: this.model.justLostLadder(),
+    });
     this.$el.html(html);
 
     return this;
