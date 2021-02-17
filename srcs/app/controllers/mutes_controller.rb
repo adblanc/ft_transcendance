@@ -67,6 +67,9 @@ class MutesController < ApplicationController
 		elsif (!@current_user.is_room_administrator?(@room))
 			render json: {"you" => ["must be administrator of this room"]}, status: :unprocessable_entity
 			return false;
+		elsif (@muted_user.is_room_owner?(@room))
+			render json: {"you" => ["can't mute the owner of the room"]}, status: :unprocessable_entity
+			return false;
 		end
 		return true
 	end
