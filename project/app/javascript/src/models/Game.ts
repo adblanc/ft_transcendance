@@ -194,6 +194,7 @@ export default class Game extends BaseModel<IGame> {
           console.log("connected to the game", gameId);
         },
         received: (data: GameData) => {
+			console.log(data);
           switch (data.action) {
             case "matched":
               this.onGameMatched();
