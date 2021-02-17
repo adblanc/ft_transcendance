@@ -143,19 +143,20 @@ class Game < ApplicationRecord
 		duration = pause_duration_sec(player.pause_nbr)
 		pause_time = DateTime.now
 		player.update(status: :paused, pause_duration: duration, last_pause: pause_time);
-		logger.debug("last_pause: #{pause_time}")
 		self.update(status: :paused);
 		self.broadcast(self.data_paused(duration, pause_time));
 
 		if (duration == 0)
-			PauseGameJob.perform_now(self, player)
+			PauseGameJob.perform_now(self.id, player.id)
 		else
-			PauseGameJob.set(wait: duration.seconds).perform_later(self, player)
+			PauseGameJob.set(wait: duration.seconds).perform_later(self.id, player.id)
 		end
 	end
 
 	def check_user_paused(user)
 		player = self.game_users.where(user_id: user.id).first
+
+		remove_pause_game_jobs(player)
 
 		if (player.paused?)
 			player.update(status: :accepted);
@@ -166,6 +167,14 @@ class Game < ApplicationRecord
 		end
 	end
 
+	def remove_pause_game_jobs(player)
+		queue = Sidekiq::ScheduledSet.new
+		queue.each do |job|
+			if job.args.first["job_class"] == "PauseGameJob" && job.args.first["arguments"].first == self.id && job.args.first["arguments"].last == player.id
+				job.delete
+			end
+		end
+	end
 	### end
 
 	def give_up(looser)

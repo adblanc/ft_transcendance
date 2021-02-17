@@ -249,7 +249,7 @@ export default class Game extends BaseModel<IGame> {
   }
 
   navigateToGame() {
-	currentUser().set({ pendingGame: null });
+    currentUser().set({ pendingGame: null });
     currentUser().set({ matchedGame: this.get("id") });
     this.disconnectFromWS();
     Backbone.history.navigate(`/game/${this.get("id")}`, {
@@ -259,8 +259,8 @@ export default class Game extends BaseModel<IGame> {
 
   onGameStarted() {
     this.set({ status: "started" });
-	currentUser().set({ currentGame: this.get("id") });
-	currentUser().set({ matchedGame: null });
+    currentUser().set({ currentGame: this.get("id") });
+    currentUser().set({ matchedGame: null });
     this.channel?.perform("game_started", {});
   }
 
@@ -276,11 +276,14 @@ export default class Game extends BaseModel<IGame> {
   }
 
   onGamePaused(data: GameData) {
-    this.set({ status: "paused", ...data.payload }, { silent: true });
-    this.startPauseTimer();
+    if (this.get("status") !== "paused") {
+      this.set({ status: "paused", ...data.payload }, { silent: true });
+      this.startPauseTimer();
+    }
   }
 
   startPauseTimer() {
+    clearInterval(this._timerInterval);
     this._timerInterval = setInterval(() => {
       if (this.get("pause_duration") <= 0) {
         return clearInterval(this._timerInterval);
