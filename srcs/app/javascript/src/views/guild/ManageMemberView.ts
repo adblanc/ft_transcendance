@@ -49,7 +49,7 @@ export default class ManageMemberView extends ModalView<Profile> {
         displaySuccess(
           `You have successfully transferred ownership to ${this.model.get(
             "name"
-          )}. You are now an officer.`
+          )}.`
         );
         break;
       default:
