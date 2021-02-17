@@ -47,7 +47,7 @@ export default class JoinPublicChannelView extends ModalView<PublicRoom> {
 
     const html = Mustache.render(template, {
       ...this.model.toJSON(),
-      ownerLogin: owner?.get("login"),
+      ownerName: owner?.get("name"),
       ownerAvatar: owner?.get("avatar_url"),
       ownerRole: owner?.get("roomRole"),
       members,
