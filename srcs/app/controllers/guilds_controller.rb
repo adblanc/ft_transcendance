@@ -84,6 +84,10 @@ class GuildsController < ApplicationController
 		return
 	end
     user = User.find_by_id(params[:user_id])
+	if user.has_role?(:officer, @guild)
+		render json: {"User" => ["is already officer"]}, status: :unprocessable_entity
+		return
+	end
 	if user.add_role(:officer, @guild)
 		@guild
 	end
@@ -98,6 +102,10 @@ class GuildsController < ApplicationController
 	end
 
     user = User.find(params[:user_id])
+	if not user.has_role?(:officer, @guild)
+		render json: {"User" => ["is not an officer"]}, status: :unprocessable_entity
+		return
+	end
 	if user.remove_role(:officer, @guild)
 		@guild
 	end
@@ -112,6 +120,9 @@ class GuildsController < ApplicationController
 	end
 
     user = User.find(params[:user_id])
+	if (!@guild.members.exists?(user.id))
+		return render json: {"User" => ["not found"]}, status: :not_found
+	end
 	if @guild.remove_user(user)
 		@guild
 	end
