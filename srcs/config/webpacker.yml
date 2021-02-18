@@ -88,4 +88,8 @@ production:
   <<: *default
 
   # Production depends on precompilation of packs prior to booting for performance.
-  compile: false
+  compile:
+    false
+
+    # we cache it bc production
+  cache_manifest: true
