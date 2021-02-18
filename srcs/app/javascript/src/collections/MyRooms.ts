@@ -14,7 +14,6 @@ export default class MyRooms extends BaseRooms<Room> {
     super();
 
     this.selectedRoom = undefined;
-    this.listenTo(this, "add", this.checkSelectedAdd);
     this.listenTo(this, "remove", this.onRemove);
     this.listenTo(eventBus, "chat:public-channel-joined", this.addPublicRoom);
     this.listenTo(eventBus, "chat:other-user-dm-creation", this.fetch);
@@ -34,16 +33,7 @@ export default class MyRooms extends BaseRooms<Room> {
 
     const room = new Room({ ...publicRoom.toJSON(), isInAdminList: false });
 
-    this.selectedRoom?.toggle();
-
-    this.selectedRoom = undefined;
     this.add(room);
-  }
-
-  checkSelectedAdd(room: Room) {
-    if (!this.selectedRoom) {
-      this.setSelected(room);
-    }
   }
 
   onRemove(room: Room) {
@@ -70,7 +60,7 @@ export default class MyRooms extends BaseRooms<Room> {
     }
     this.selectedRoom = room;
     this.selectedRoom?.toggle();
-    eventBus.trigger("chatplay:toggle");
+    eventBus.trigger("chat:room-selected");
   }
 
   url = () => `${BASE_ROOT}/my-rooms`;

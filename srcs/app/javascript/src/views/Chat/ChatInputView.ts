@@ -19,7 +19,7 @@ export default class ChatInputView extends BaseView {
     super(options);
 
     this.rooms = options.rooms;
-    this.listenTo(eventBus, "chatplay:toggle", this.render);
+    this.listenTo(eventBus, "chat:room-selected", this.render);
   }
 
   events() {
