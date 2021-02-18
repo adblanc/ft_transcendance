@@ -15,7 +15,10 @@ class WarsController < ApplicationController
 		@recipient = Guild.find(params[:recipient_id])
 		@warTimes = JSON.parse(params[:wt_dates])
 
-		return head :unprocessable_entity unless current_user.guild_owner?(@initiator)
+		if not current_user.guild_owner?(@initiator)
+			render json: {"You" => ["must be a guild owner"]}, status: :unprocessable_entity
+			return
+		end
 
 		if params[:prize].to_i > @initiator.points || params[:prize].to_i > @recipient.points
 			render json: {"One" => ["or both guilds cannot wager that many points"]}, status: :unprocessable_entity
@@ -103,7 +106,10 @@ class WarsController < ApplicationController
 			render json: {"You" => ["must be a guild owner or officer to do this"]}, status: :unprocessable_entity
 			return
 		end
-		return head :unprocessable_entity if @guild.atWar? || @guild.warInitiator?
+		if @guild.atWar? || @guild.warInitiator?
+			render json: {"Your" => ["Guild is at war or has already declared war"]}, status: :unprocessable_entity
+			return
+		end
 
 		@war.opponent(@guild).members.each do |member|
 			member.send_notification("#{@guild.name} rejected your guild's war declaration", "/wars", "wars")
