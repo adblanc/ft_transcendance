@@ -2,7 +2,6 @@ class Room < ApplicationRecord
 	resourcify
 
 	after_destroy :notify_destruction_to_rooms_channel
-	before_destroy :notify_destruction_to_users
 	before_destroy :unset_games
 	after_save		:notify_room_creation
 
@@ -50,12 +49,6 @@ class Room < ApplicationRecord
 		end
 
 		jobs.first&.delete
-	end
-
-	def notify_destruction_to_users
-		self.users.each do |user|
-			user.send_notification("#{self.is_dm ? " Your conversation with" : "Room"} #{self.correct_name(user)} has been deleted", "", "room_deleted")
-		end
 	end
 
 	def unset_games
