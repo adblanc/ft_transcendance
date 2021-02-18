@@ -42,7 +42,6 @@ class BansController < ApplicationController
 		queue = Sidekiq::ScheduledSet.new
 		queue.each do |job|
 			if job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/Ban/#{@ban.id}"
-				logger.fatal("on delete un job unban")
 				job.delete
 			end
 		end
@@ -68,7 +67,7 @@ class BansController < ApplicationController
 			render json: {"you" => ["must be administrator of this room"]}, status: :unprocessable_entity
 			return false;
 		elsif (@banned_user.is_room_owner?(@room))
-			render json: {"you" => ["can't ban the owner of the room"]}, status: :unprocessable_entity
+			render json: {"you" => ["can't ban the owner of the room or a global admin"]}, status: :unprocessable_entity
 			return false;
 		end
 		return true

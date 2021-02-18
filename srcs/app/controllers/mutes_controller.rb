@@ -42,7 +42,6 @@ class MutesController < ApplicationController
 		queue = Sidekiq::ScheduledSet.new
 		queue.each do |job|
 			if job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/Mute/#{@mute.id}"
-				logger.fatal("on delete un job unmute")
 				job.delete
 			end
 		end
@@ -68,7 +67,7 @@ class MutesController < ApplicationController
 			render json: {"you" => ["must be administrator of this room"]}, status: :unprocessable_entity
 			return false;
 		elsif (@muted_user.is_room_owner?(@room))
-			render json: {"you" => ["can't mute the owner of the room"]}, status: :unprocessable_entity
+			render json: {"you" => ["can't mute the owner of the room or a global admin"]}, status: :unprocessable_entity
 			return false;
 		end
 		return true
