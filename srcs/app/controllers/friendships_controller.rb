@@ -7,7 +7,7 @@ class FriendshipsController < ApplicationController
 			render json: {"You" => ["are already friends or have a pending friend request"]}, status: :unprocessable_entity
 			return
 		end
-		return head :unauthorized if @current_user == @other_user
+		return head :unprocessable_entity if @current_user == @other_user
 
 		FriendRequest.create(requestor: @current_user, receiver: @other_user)
 		@other_user.send_notification("#{@current_user.name} sent you a friend request", "/user/#{@other_user.id}", "friend_request")
@@ -24,7 +24,7 @@ class FriendshipsController < ApplicationController
 			render json: {"Friend" => ["request doesn't exit anymore"]}, status: :unprocessable_entity
 			return
 		end
-		return head :unauthorized if @current_user == @other_user
+		return head :unprocessable_entity if @current_user == @other_user
 
 		@request = FriendRequest.where(requestor: @other_user, receiver: @current_user).first
 		@request.destroy
@@ -43,7 +43,7 @@ class FriendshipsController < ApplicationController
 			render json: {"Friend" => ["request doesn't exit anymore"]}, status: :unprocessable_entity
 			return
 		end
-		return head :unauthorized if @current_user == @other_user
+		return head :unprocessable_entity if @current_user == @other_user
 
 		@request = FriendRequest.where(requestor: @other_user, receiver: @current_user).first
 		@request.destroy
@@ -53,11 +53,11 @@ class FriendshipsController < ApplicationController
 
 	def remove
 		@other_user = User.find_by_id(params[:id])
-		if not @current_user.is_friend_of?(@other_user) 
+		if not @current_user.is_friend_of?(@other_user)
 			render json: {"You" => ["are not friends"]}, status: :unprocessable_entity
 			return
 		end
-		return head :unauthorized if @current_user == @other_user
+		return head :unprocessable_entity if @current_user == @other_user
 
 		@friendship = look_for_friendship(@current_user, @other_user)
 		@friendship.destroy

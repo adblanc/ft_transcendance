@@ -29,7 +29,7 @@ class UsersController < ApplicationController
   	if @current_user.admin?
 		if (@other_user = User.find_by_id(params[:id]))
 			if (@other_user.master?)
-				render json: { "User": ["not allowed to do that"] }, status: :unauthorized
+				render json: { "User": ["not allowed to do that"] }, status: :unprocessable_entity
 			else
 				@other_user.update_attributes(:ban => Time.now.to_i)
 				render json: {}, status: :ok
@@ -38,7 +38,7 @@ class UsersController < ApplicationController
 			render json: { "User": ["not found"] }, status: :not_found
 		end
 	else
-		render json: { "User": ["not allowed to do that"] }, status: :unauthorized
+		render json: { "User": ["not allowed to do that"] }, status: :unprocessable_entity
 	end
   end
 
@@ -51,7 +51,7 @@ class UsersController < ApplicationController
 			render json: { "User": ["not found"] }, status: :not_found
 		end
 	else
-		render json: { "User": ["not allowed to do that"] }, status: :unauthorized
+		render json: { "User": ["not allowed to do that"] }, status: :unprocessable_entity
 	end
   end
 
@@ -65,7 +65,7 @@ class UsersController < ApplicationController
 			render json: { "User": ["not found"] }, status: :not_found
 		end
 	else
-		render json: { "User": ["not allowed to do that"] }, status: :unauthorized
+		render json: { "User": ["not allowed to do that"] }, status: :unprocessable_entity
 	end
   end
 
@@ -73,7 +73,7 @@ class UsersController < ApplicationController
   	if @current_user.admin?
 		if (@other_user = User.find_by_id(params[:id]))
 			if (@other_user.master?)
-				render json: { "User": ["not allowed to do that"] }, status: :unauthorized
+				render json: { "User": ["not allowed to do that"] }, status: :unprocessable_entity
 			else
 				@other_user.remove_role :admin
 				@other_user.send_notification("#{@current_user.name} removed your administrator's rights of the website", "/user/#{@other_user.id}", "administrator")
@@ -83,7 +83,7 @@ class UsersController < ApplicationController
 			render json: { "User": ["not found"] }, status: :not_found
 		end
 	else
-		render json: { "User": ["not allowed to do that"] }, status: :unauthorized
+		render json: { "User": ["not allowed to do that"] }, status: :unprocessable_entity
 	end
   end
 

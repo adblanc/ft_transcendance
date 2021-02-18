@@ -4,14 +4,17 @@ class ApplicationController < ActionController::Base
 	end
 
 	def current_user
-		begin
 			token = bearer_token
 			return nil unless token
 			payload = TokiToki.decode(token)
 			@current_user ||= User.find_by_login(payload[0]['sub'])
+			if (@current_user.is_banned?)
+				return nil
+			else
+				@current_user
+			end
 		rescue JWT::ExpiredSignature
 			return nil
-		end
 	  end
 
 	  def logged_in?

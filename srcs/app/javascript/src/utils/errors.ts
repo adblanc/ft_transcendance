@@ -1,6 +1,9 @@
-import { displayToast, displayError } from "./toast";
+import { displayError } from "./toast";
 
 export const mapServerErrors = (errors: Record<string, string[]>) => {
+  if (!errors) {
+    return [""];
+  }
   return Object.keys(errors).map((key) => `${key} ${errors[key].join(",")}`);
 };
 
@@ -16,7 +19,9 @@ export const handleServerErrors = async (
 
     return res;
   } catch (errors) {
-    displayErrors(errors);
+    if (typeof errors === "object" && Array.isArray(errors)) {
+      displayErrors(errors);
+    }
 
     return null;
   }

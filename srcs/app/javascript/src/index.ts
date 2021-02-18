@@ -1,5 +1,4 @@
 import Backbone from "backbone";
-import { currentUser } from "./models/Profile";
 import MainRouter from "./routers/MainRouter";
 import {
   addAuthHeaders,
@@ -17,9 +16,6 @@ export function start() {
     statusCode: {
       401: () => {
         router.navigate("auth", { trigger: true });
-      },
-      403: () => {
-        router.navigate("denied", { trigger: true });
       },
     },
   });

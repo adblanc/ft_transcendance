@@ -220,7 +220,7 @@ class GamesController < ApplicationController
 		end
 
 		@game = Game.find_by_id(params[:id])
-		return head :unauthorized if not @game.pending?
+		return head :unprocessable_entity if not @game.pending?
 
 		@game.launch_friendly(@current_user)
 		@game
@@ -262,7 +262,7 @@ class GamesController < ApplicationController
 			return
 		end
 		@game = Game.find_by_id(params[:id])
-		return head :unauthorized if not @game.pending?
+		return head :unprocessable_entity if not @game.pending?
 		current_user.game_users.where(game: @game).first.update(status: :accepted)
 		@game.update(status: :matched)
 		@game.add_player_role(current_user)
