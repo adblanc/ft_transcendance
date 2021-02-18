@@ -38,7 +38,7 @@ class GamesController < ApplicationController
 		end
 		@game = Game.create(game_params)
         if @game.save
-			ExpireGameJob.set(wait_until: DateTime.now + 40.seconds).perform_later(@game, nil)
+			ExpireGameJob.set(wait_until: DateTime.now + 5.minutes).perform_later(@game, nil)
 			@game.add_host(current_user)
 			@game
         else
@@ -206,7 +206,7 @@ class GamesController < ApplicationController
 		if @game.save
 			@game.update(game_type: :chat)
 			@game.add_host(current_user)
-			ExpireGameJob.set(wait_until: DateTime.now + 40.seconds).perform_later(@game, @room)
+			ExpireGameJob.set(wait_until: DateTime.now + 5.minutes).perform_later(@game, @room)
 			@game
 		else
 			render json: @game.errors, status: :unprocessable_entity
