@@ -54,7 +54,7 @@ const DIFFICULTIES: Record<Difficulty, IDifficultyOptions> = {
     initialBallSpeedMin: 500,
     initialBallSpeedMax: 600,
     ballSpeedFactor: 1.15,
-    paddleSpeedAi: 500,
+    paddleSpeedAi: 600,
     ballDetectionRange: 15,
   },
 } as const;
