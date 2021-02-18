@@ -220,8 +220,9 @@ class GamesController < ApplicationController
 		end
 
 		@game = Game.find_by_id(params[:id])
-		return head :unprocessable_entity if not @game.pending?
-
+		if not @game.pending?
+			return render json: {"game" => ["is not pending"]}, status: :unprocessable_entity
+		end
 		@game.launch_friendly(@current_user)
 		@game
 	end
@@ -262,7 +263,9 @@ class GamesController < ApplicationController
 			return
 		end
 		@game = Game.find_by_id(params[:id])
-		return head :unprocessable_entity if not @game.pending?
+		if not @game.pending?
+			return render json: {"game" => ["is not pending"]}, status: :unprocessable_entity
+		end
 		current_user.game_users.where(game: @game).first.update(status: :accepted)
 		@game.update(status: :matched)
 		@game.add_player_role(current_user)
