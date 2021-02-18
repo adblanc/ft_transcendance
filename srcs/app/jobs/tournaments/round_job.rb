@@ -3,11 +3,11 @@ class RoundJob < ApplicationJob
 
 	def perform(tournament)
 		return if tournament.finished?
-	  handle_games(tournament) 
+	  handle_games(tournament)
 
-	  if tournament.quarter? || tournament.semi? 
+	  if tournament.quarter? || tournament.semi?
 		change_round(tournament)
-	  	RoundJob.set(wait_until: DateTime.now + 1.minutes).perform_later(tournament)
+	  	RoundJob.set(wait_until: DateTime.now + 5.minutes).perform_later(tournament)
 	  end
 	end
 
