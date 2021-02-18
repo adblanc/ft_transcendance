@@ -39,6 +39,9 @@ class GuildsController < ApplicationController
 
   def update
 	@guild = Guild.find_by_id(params[:id])
+	if not @guild
+		return render json: {"Guild" => ["does not exist"]}, status: :unprocessable_entity
+	end
 	if not current_user.guild_owner?(@guild)
 		render json: {"You" => ["must be the guild owner"]}, status: :unprocessable_entity
 		return
@@ -54,6 +57,9 @@ class GuildsController < ApplicationController
 
   def destroy
 	@guild = Guild.find_by_id(params[:id])
+	if not @guild
+		return render json: {"Guild" => ["does not exist"]}, status: :unprocessable_entity
+	end
 	if not current_user.guild_owner?(@guild)
 		render json: {"You" => ["must be the guild owner"]}, status: :unprocessable_entity
 		return
@@ -67,6 +73,9 @@ class GuildsController < ApplicationController
 
   def quit
 	@guild = Guild.find_by_id(params[:id])
+	if not @guild
+		return render json: {"Guild" => ["does not exist"]}, status: :unprocessable_entity
+	end
 	if not current_user.guild == @guild
 		render json: {"You" => ["don't belong to this guild"]}, status: :unprocessable_entity
 		return
@@ -79,6 +88,9 @@ class GuildsController < ApplicationController
 
   def promote
 	@guild = Guild.find_by(id: params[:id])
+	if not @guild
+		return render json: {"Guild" => ["does not exist"]}, status: :unprocessable_entity
+	end
 	if not current_user.guild_owner?(@guild) || current_user.admin?
 		render json: {"You" => ["must be the guild owner"]}, status: :unprocessable_entity
 		return
@@ -95,6 +107,9 @@ class GuildsController < ApplicationController
   end
 
   def demote
+	if not @guild
+		return render json: {"Guild" => ["does not exist"]}, status: :unprocessable_entity
+	end
 	@guild = Guild.find_by_id(params[:id])
 	if not current_user.guild_owner?(@guild) || current_user.admin?
 		render json: {"You" => ["must be the guild owner"]}, status: :unprocessable_entity
@@ -114,6 +129,9 @@ class GuildsController < ApplicationController
 
   def fire
 	@guild = Guild.find_by_id(params[:id])
+	if not @guild
+		return render json: {"Guild" => ["does not exist"]}, status: :unprocessable_entity
+	end
 	if not current_user.guild_owner?(@guild)
 		render json: {"You" => ["must be the guild owner"]}, status: :unprocessable_entity
 		return
@@ -132,6 +150,9 @@ class GuildsController < ApplicationController
 
   def transfer
 	@guild = Guild.find_by_id(params[:id])
+	if not @guild
+		return render json: {"Guild" => ["does not exist"]}, status: :unprocessable_entity
+	end
 	user = User.find(params[:user_id])
 	if not current_user.guild_owner?(@guild) || current_user.admin?
 		render json: {"You" => ["must be the guild owner"]}, status: :unprocessable_entity
@@ -154,6 +175,9 @@ class GuildsController < ApplicationController
 
   def join
 	@guild = Guild.find_by_id(params[:id])
+	if not @guild
+		return render json: {"Guild" => ["does not exist"]}, status: :unprocessable_entity
+	end
 	if current_user.guild.present? || current_user.pending_guild.present?
 		render json: {"You" => ["already have a guild or pending guild"]}, status: :unprocessable_entity
 		return
@@ -168,6 +192,9 @@ class GuildsController < ApplicationController
 
   def accept
 	@guild = Guild.find_by_id(params[:id])
+	if not @guild
+		return render json: {"Guild" => ["does not exist"]}, status: :unprocessable_entity
+	end
 	if not authorized_for_guild?(current_user, @guild)
 		render json: {"You" => ["are not authorized to do this"]}, status: :unprocessable_entity
 		return
@@ -188,6 +215,9 @@ class GuildsController < ApplicationController
 
   def reject
 	@guild = Guild.find_by_id(params[:id])
+	if not @guild
+		return render json: {"Guild" => ["does not exist"]}, status: :unprocessable_entity
+	end
 	if not authorized_for_guild?(current_user, @guild)
 		render json: {"You" => ["are not authorized to do this"]}, status: :unprocessable_entity
 		return
@@ -207,6 +237,9 @@ class GuildsController < ApplicationController
 
   def withdraw
 	@guild = Guild.find_by_id(params[:id])
+	if not @guild
+		return render json: {"Guild" => ["does not exist"]}, status: :unprocessable_entity
+	end
 	if not current_user.pending_guild == @guild
 		render json: {"You" => ["have not requested to join this guild"]}, status: :unprocessable_entity
 		return
