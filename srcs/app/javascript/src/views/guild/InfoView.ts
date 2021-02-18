@@ -1,7 +1,6 @@
 import Backbone from "backbone";
 import Mustache from "mustache";
 import BaseView from "src/lib/BaseView";
-import PageImgView from "./imgsViews/PageImgView";
 import { currentUser } from "src/models/Profile";
 import Guild from "src/models/Guild";
 import ModifyGuildView from "./ModifyGuildView";
@@ -14,15 +13,11 @@ type Options = Backbone.ViewOptions & { guild: Guild };
 
 export default class InfoView extends BaseView {
   guild: Guild;
-  imgView: Backbone.View;
 
   constructor(options?: Options) {
     super(options);
 
     this.guild = options.guild;
-    this.imgView = new PageImgView({
-      model: this.guild,
-    });
 
     this.listenTo(this.guild, "change", this.render);
     this.listenTo(this.guild.get("members"), "update", this.render);
@@ -33,6 +28,7 @@ export default class InfoView extends BaseView {
   events() {
     return {
       "click #edit-btn": this.onEditClicked,
+      "click #edit-img": this.onEditClicked,
       "click #quit-btn": this.askConfirmationQuitGuild,
       "click #join-btn": this.onJoinClicked,
       "click #withdraw-btn": this.onWithdrawClicked,
@@ -164,8 +160,6 @@ export default class InfoView extends BaseView {
         this.$("#join-btn").html("You have asked to join another guild");
       }
     }
-
-    this.renderNested(this.imgView, "#pageImg");
 
     return this;
   }
