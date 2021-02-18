@@ -253,7 +253,7 @@ class GamesController < ApplicationController
 		@game.users.push(@opponent)
 		@opponent.game_users.where(game: @game).first.update(status: :pending)
 		@opponent.send_notification("#{current_user.name} has challenged you to a Ladder Game", "/tournaments/ladder", "game")
-		ExpireGameJob.set(wait_until: DateTime.now + 20.seconds).perform_later(@game, nil)
+		ExpireGameJob.set(wait_until: DateTime.now + 2.days).perform_later(@game, nil)
 		@game
 	end
 
@@ -270,7 +270,7 @@ class GamesController < ApplicationController
 		@game.update(status: :matched)
 		@game.add_player_role(current_user)
 		@game.broadcast({"action" => "matched"})
-		ExpireMatchedGameJob.set(wait: 20.seconds).perform_later(@game)
+		ExpireMatchedGameJob.set(wait: 2.minutes).perform_later(@game)
 		@game
 	end
 

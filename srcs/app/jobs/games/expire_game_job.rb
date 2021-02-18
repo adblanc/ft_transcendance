@@ -13,7 +13,7 @@ class ExpireGameJob < ApplicationJob
 		@winner.game_users.where(game: game).update(status: :won)
 		@loser.game_users.where(game: game).update(status: :lose)
 		game.update(status: :forfeit)
-	  	game.handle_points
+		game.handle_end_cases
 		@winner.send_notification("Your Ladder challenge was not answered! You moved up the Ladder", "/tournaments/ladder", "game")
 		@loser.send_notification("You failed to answer a Ladder Challenge! You moved down the Ladder", "/tournaments/ladder", "game")
 		game.broadcast({"action" => "expired"});

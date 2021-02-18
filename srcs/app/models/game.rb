@@ -115,7 +115,7 @@ class Game < ApplicationRecord
 	def launch_friendly(second_user)
 		self.update(status: :matched)
 		self.add_second_player(second_user)
-		ExpireMatchedGameJob.set(wait: 20.seconds).perform_later(self)
+		ExpireMatchedGameJob.set(wait: 2.minutes).perform_later(self)
 	end
 
 	### run
