@@ -182,7 +182,7 @@ class GamesController < ApplicationController
 		@opponent.members.each do |member|
 			member.send_notification("#{current_user.name} has accepted your Guild's War Time challenge. Click to watch the game!", "/game/#{@game.id}", "war")
 		end
-		ExpireMatchedGameJob.set(wait: 20.seconds).perform_later(@game)
+		ExpireMatchedGameJob.set(wait: 2.minutes).perform_later(@game)
 		@game
 	end
 
@@ -295,7 +295,7 @@ class GamesController < ApplicationController
 			@game.add_player_role(current_user)
 			@game.update(status: :matched)
 			@game.broadcast({"action" => "matched"})
-			ExpireTourMatchedGameJob.set(wait: 20.minutes).perform_later(@game, @tournament)
+			ExpireTourMatchedGameJob.set(wait: 2.minutes).perform_later(@game, @tournament)
 		else
 			current_user.remove_role(:spectator, @game);
 			current_user.add_role(:host, @game);

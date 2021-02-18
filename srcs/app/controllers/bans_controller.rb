@@ -42,7 +42,6 @@ class BansController < ApplicationController
 		queue = Sidekiq::ScheduledSet.new
 		queue.each do |job|
 			if job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/Ban/#{@ban.id}"
-				logger.fatal("on delete un job unban")
 				job.delete
 			end
 		end

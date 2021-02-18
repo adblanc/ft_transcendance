@@ -42,7 +42,6 @@ class MutesController < ApplicationController
 		queue = Sidekiq::ScheduledSet.new
 		queue.each do |job|
 			if job.args.first["arguments"].first["_aj_globalid"] == "gid://active-storage/Mute/#{@mute.id}"
-				logger.fatal("on delete un job unmute")
 				job.delete
 			end
 		end
