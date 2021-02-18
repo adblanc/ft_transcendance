@@ -126,6 +126,9 @@ export default class GameView extends BaseView<Game> {
 
     const html = Mustache.render(this.template(), {
       ...this.model?.toJSON(),
+      hostName: this.model.get("isHost")
+        ? firstPlayer?.get("name")
+        : secondPlayer?.get("name"),
       isTraining: this.model.get("isTraining"),
       firstPlayer: { ...firstPlayer?.toJSON(), isReady: firstPlayer?.ready },
       secondPlayer: { ...secondPlayer?.toJSON(), isReady: secondPlayer?.ready },
