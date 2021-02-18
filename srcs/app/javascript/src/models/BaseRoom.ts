@@ -23,7 +23,7 @@ export default class BaseRoom extends BaseModel<IRoom> {
       data: {
         name: this.get("name"),
         password: this.get("password"),
-        is_private: this.get("is_private"),
+        is_private: this.get("is_private") ? true : null,
       },
     });
   }

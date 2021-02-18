@@ -174,7 +174,7 @@ ActiveRecord::Schema.define(version: 2021_02_01_175713) do
     t.string "name", default: ""
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "password", default: ""
+    t.string "password"
     t.boolean "is_private", default: false
     t.boolean "is_dm", default: false
   end

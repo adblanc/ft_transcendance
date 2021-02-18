@@ -40,6 +40,9 @@ export default class CreateJoinChannelView extends BaseView {
 
   switchCreateJoin() {
     this.isJoin = !this.isJoin;
+    if (this.isJoin) {
+      this.isPrivate = true;
+    }
     this.render();
   }
 

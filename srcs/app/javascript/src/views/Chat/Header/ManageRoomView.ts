@@ -33,7 +33,9 @@ export default class ManageRoomView extends ModalView<Room> {
 
     if (success) {
       displaySuccess(
-        `${this.model.get("name")}'s password successfully changed.`
+        `${this.model.get("name")}'s password successfully ${
+          password.length === 0 ? "removed" : "changed"
+        }.`
       );
       this.closeModal();
     }
