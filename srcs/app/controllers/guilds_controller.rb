@@ -107,10 +107,10 @@ class GuildsController < ApplicationController
   end
 
   def demote
+	@guild = Guild.find_by_id(params[:id])
 	if not @guild
 		return render json: {"Guild" => ["does not exist"]}, status: :unprocessable_entity
 	end
-	@guild = Guild.find_by_id(params[:id])
 	if not current_user.guild_owner?(@guild) || current_user.admin?
 		render json: {"You" => ["must be the guild owner"]}, status: :unprocessable_entity
 		return
