@@ -14,7 +14,7 @@ class Tournament < ApplicationRecord
 		:finished
 	]
 
-	validates :name, presence: true, uniqueness: true
+	validates :name, presence: true
 	validates :registration_start, presence: true
 	validates :registration_end, presence: true
 	validates_with RegistrationDateValidator
@@ -46,7 +46,7 @@ class Tournament < ApplicationRecord
 	    create_games(:semi, 2)
 	    create_games(:final, 1)
 	end
-	
+
 	def create_games(round, number)
 	    number.times do
 	        games.push(Game.create(
@@ -108,7 +108,7 @@ class Tournament < ApplicationRecord
 		if self.finished?
 			if self.tournament_users.winner.first.present?
 				self.tournament_users.winner.first.user
-			else 
+			else
 				return nil
 			end
 		end
@@ -136,7 +136,7 @@ class Tournament < ApplicationRecord
 		else
 			TournamentUser.where(tournament: self, user: eliminated).first.update(status: :eliminated)
 		end
-	end 
+	end
 
 	def finish_game(winner, game)
 		game.game_users.where(user_id: winner.id).first.update(status: :won)
